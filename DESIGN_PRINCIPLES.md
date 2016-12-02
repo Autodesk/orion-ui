@@ -25,7 +25,7 @@ When in doubt, do what’s best for the end user experience, even if it means th
 ## Don't Break Our Apps
 
 The primary contract between Orion and it's consumers is trusting in the API. Upgrading
-to a new version should **never** break an existing integration. See [VERSIONING](rational/VERSIONING.md) for more details.
+to a new version should **never** break an existing integration. See [VERSIONING](rationale/VERSIONING.md) for more details.
 
 ## Components are the lowest common denominator
 

@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "orion",
+  "version": "1.0.0",
+  "description": "the autodesk ui library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orion-ui/orion.git"
+  },
+  "author": "Autodesk Inc.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/orion-ui/orion/issues"
+  },
+  "homepage": "https://github.com/orion-ui/orion#readme",
+  "devDependencies": {
+    "lerna": "2.0.0-beta.30"
+  }
+}

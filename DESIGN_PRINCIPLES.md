@@ -22,6 +22,11 @@ These design principles are meant to guide the ongoing design and development of
 
 When in doubt, do what’s best for the end user experience, even if it means that it’s harder for the page creator to build or for the library developer to implement.
 
+## Don't Break Our Apps
+
+The primary contract between Orion and it's consumers is trusting in the API. Upgrading
+to a new version should **never** break an existing integration. See [VERSIONING](rational/VERSIONING.md) for more details.
+
 ## Components are the lowest common denominator
 
 We believe that there will always be a new framework around the corner. Orion is designed originally for Autodesk where there are many front-end frameworks in use. We need to support the current and future UI frameworks.

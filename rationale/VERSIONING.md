@@ -92,8 +92,8 @@ Imagine our design team decides that *outline-buttons* are no longer Autodesk HI
 
 ```
 packages/
-  orion-components/
-    components/
+  components/
+    src/
         button.js
         outline-button.js
     2016-10-01/
@@ -103,8 +103,8 @@ packages/
 
 ```
 packages/
-  orion-components/
-    components/
+  components/
+    src/
       button.js
       outline-button.js
     2016-10-01/
@@ -118,6 +118,6 @@ the old button but not the outline-button. It also means that we can safely upgr
 can control when to remove the 'non-HIG' compliant styles.
 
 ```typescript
-// orion-components-2016-01/index.js
-export {default as button} from '../v1/button.js';
+// components/2016-10-02/index.js
+export {default as button} from '../src/button.js';
 ```

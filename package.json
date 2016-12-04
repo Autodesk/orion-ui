@@ -18,6 +18,14 @@
   },
   "homepage": "https://github.com/orion-ui/orion#readme",
   "devDependencies": {
+    "eslint-config-react-app": "^0.3.0",
+    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.1",
+    "eslint-plugin-react": "^6.7.1",
     "lerna": "2.0.0-beta.30"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }

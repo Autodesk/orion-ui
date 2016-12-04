@@ -1,0 +1,11 @@
+{
+  "name": "@orion-ui/scripts",
+  "version": "1.0.0",
+  "description": "orion ui build tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Autodesk Inc",
+  "license": "Apache-2.0"
+}

@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import {Button} from '@orion-ui/components/2016-12-01'
-
-window.customElements.define('orion-button', Button);
+import '@orion-ui/components/2016-12-01/button';
+import '@orion-ui/components/2016-12-01/inline';
 
 class App extends Component {
   render() {
@@ -17,6 +16,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
           <orion-button>Hello from React!</orion-button>
+          <orion-inline background="black" color="white">Hello orion-inline</orion-inline>
         </p>
       </div>
     );

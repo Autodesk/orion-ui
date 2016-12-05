@@ -35,7 +35,21 @@ const css = `
   ${buildBackgrounds()}
 `;
 
+const attributes = [
+  'background', 'color'
+];
+
+function attributeChangedCallback(attrName, value) {
+  if (attrName === 'background') {
+    return `bg-${value}`;
+  } else if (attrName === 'color') {
+    return value;
+  }
+}
+
 module.exports = {
+  attributes,
+  attributeChangedCallback,
   colors,
   css
 }

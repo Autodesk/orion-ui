@@ -8,7 +8,8 @@
   "dependencies": {
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "@orion-ui/components": "^1.0.0"
+    "@orion-ui/components": "^1.0.0",
+    "@orion-ui/style": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

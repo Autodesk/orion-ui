@@ -1,4 +1,6 @@
-const {BorderRadius, Skins, Spacing, Hovers} = require('@orion-ui/style/2016-12-01');
+require('./inline');
+
+const Registry = require('../utils/private-registry');
 
 class Button extends HTMLElement {
   constructor() {
@@ -6,11 +8,14 @@ class Button extends HTMLElement {
 
     let shadowRoot = this.attachShadow({ mode: 'open'});
     shadowRoot.innerHTML = `
-      <style>${BorderRadius.css}</style>
-      <style>${Spacing.css}</style>
-      <style>${Skins.css}</style>
-      <style>${Hovers.css}</style>
-      <a class="br2 bg-black white ph3 pv2 dim pointer">Hello Web Components</a>
+      <orion-inline
+        border-radius="2"
+        background="black"
+        color="white"
+        padding-horizontal="3"
+        padding-vertical="2"
+        dim
+        pointer><slot /></orion-inline>
     `;
   }
 
@@ -26,5 +31,7 @@ class Button extends HTMLElement {
 
   }
 }
+
+Registry.define('orion-button', Button);
 
 module.exports = Button;

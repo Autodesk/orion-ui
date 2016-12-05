@@ -44,6 +44,24 @@ const css = `
   ${buildSelectors()}
 `;
 
+const attributes = [
+  'padding-horizontal',
+  'padding-vertical'
+];
+
+function attributeChangedCallback(attrName, value) {
+  switch (attrName) {
+    case 'padding-horizontal':
+      return `ph${value}`;
+    case 'padding-vertical':
+      return `pv${value}`;
+    default:
+      throw new Error('unknown style');
+  }
+}
+
 module.exports = {
+  attributes,
+  attributeChangedCallback,
   css
 };

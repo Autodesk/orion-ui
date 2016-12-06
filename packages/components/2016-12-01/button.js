@@ -24,10 +24,10 @@ class Button extends HTMLElement {
   }
 
   disconnectedCallback() {
-    console.log(`Disconnected`);
+
   }
 
-  attributeChangedCallback(attrName, oldVal, newVal)	{
+  attributeChangedCallback() {
 
   }
 }

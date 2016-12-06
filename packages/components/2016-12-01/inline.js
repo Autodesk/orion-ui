@@ -9,7 +9,7 @@ class Inline extends HTMLElement {
 
     let shadowRoot = this.attachShadow({ mode: 'open' });
 
-    shadowRoot.innerHTML = `<span><slot /></span>`;
+    shadowRoot.innerHTML = '<span><slot /></span>';
 
     styles.forEach(style => {
       const element = document.createElement('style');

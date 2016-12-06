@@ -1,0 +1,12 @@
+{
+  "name": "@orion-ui/eslint-config-orion",
+  "version": "1.0.0",
+  "description": "Shareable eslint config for the Orion project",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Autodesk Inc.",
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "eslint": ">= 3"
+  }
+}

@@ -4,12 +4,15 @@
   "description": "orion ui components",
   "main": "index.js",
   "scripts": {
-    "start": "orion-scripts start"
+    "start": "orion-scripts start",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "dependencies": {
     "@orion-ui/scripts": "^1.0.0",
     "@orion-ui/style": "^1.0.0"
+  },
+  "devDependencies": {
   }
 }

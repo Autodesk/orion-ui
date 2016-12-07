@@ -4,13 +4,13 @@ const css = `
 `;
 
 const attributes = [
-  'border-radius'
+  'border-radius',
 ];
 
 
 const scale = {
   2: 'br2',
-  pill: 'br-pill'
+  pill: 'br-pill',
 };
 
 function attributeChangedCallback(attrName, value) {
@@ -20,5 +20,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback
+  attributeChangedCallback,
 };

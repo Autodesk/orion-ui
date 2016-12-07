@@ -1,32 +1,24 @@
-const {BorderRadius, Hovers, Skins, Spacing} = require('@orion-ui/style/2016-12-01');
+const Registry = require('../utils/private-registry.js');
+const { BorderRadius, Hovers, Skins, Spacing } = require('@orion-ui/style/2016-12-01');
+
 const styles = [BorderRadius, Hovers, Skins, Spacing];
 
-const Registry = require('../utils/private-registry.js');
 
 class Inline extends HTMLElement {
   constructor() {
     super();
 
-    let shadowRoot = this.attachShadow({ mode: 'open' });
+    const shadowRoot = this.attachShadow({ mode: 'open' });
 
     shadowRoot.innerHTML = '<span><slot /></span>';
 
-    styles.forEach(style => {
+    styles.forEach((style) => {
       const element = document.createElement('style');
       element.textContent = style.css;
       shadowRoot.appendChild(element);
     });
 
     this._updateClassName();
-
-  }
-
-  connectedCallback() {
-
-  }
-
-  disconnectedCallback() {
-
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
@@ -54,17 +46,19 @@ class Inline extends HTMLElement {
       }
     }
 
-    for (let i = 0; i < this.attributes.length; i++) {
-      const {name, value} = this.attributes[i];
+    this.attributes.forEach((attribute) => {
+      const { name, value } = attribute;
       styles.forEach(style => appendClassName(style, name, value));
-    }
+    });
 
     // Update the class name
     this.shadowRoot.querySelector('span').className = className;
   }
 }
 
-Inline.observedAttributes = styles.map(style => style.attributes).reduce((acc, memo) => acc.concat(memo));
+Inline.observedAttributes = styles
+                              .map(style => style.attributes)
+                              .reduce((acc, memo) => acc.concat(memo));
 
 Registry.define('orion-inline', Inline);
 

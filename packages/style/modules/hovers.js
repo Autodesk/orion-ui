@@ -18,7 +18,7 @@ const css = `
 `;
 
 const attributes = [
-  'dim', 'pointer'
+  'dim', 'pointer',
 ];
 
 function attributeChangedCallback(attrName) {
@@ -28,5 +28,5 @@ function attributeChangedCallback(attrName) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback
+  attributeChangedCallback,
 };

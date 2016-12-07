@@ -1,6 +1,6 @@
 {
-    "extends": ["@orion-ui/eslint-config-orion", "react-app"],
-    "plugins": [
-        "react"
-    ]
+  "extends": "@orion-ui/eslint-config-orion",
+  "globals": {
+    "it": true
+  }
 }

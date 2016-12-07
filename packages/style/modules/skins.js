@@ -13,7 +13,7 @@ function template(dictionary, templateFn) {
  */
 const colors = {
   black: '#000',
-  white: '#fff'
+  white: '#fff',
 };
 
 /**
@@ -36,7 +36,7 @@ const css = `
 `;
 
 const attributes = [
-  'background', 'color'
+  'background', 'color',
 ];
 
 function attributeChangedCallback(attrName, value) {
@@ -45,11 +45,12 @@ function attributeChangedCallback(attrName, value) {
   } else if (attrName === 'color') {
     return value;
   }
+  return null;
 }
 
 module.exports = {
   attributes,
   attributeChangedCallback,
   colors,
-  css
+  css,
 };

@@ -22,7 +22,6 @@ function hasBuildDirectory(directoryName) {
  * - remove all package builds
  * - remove top level build dir
  */
-
 function countTrues(count, bool) {
   return count + (bool) ? 1 : 0;
 }

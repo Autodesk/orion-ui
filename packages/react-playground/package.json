@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@orion-ui/eslint-config-orion": "^1.0.0",
     "eslint-plugin-react": "^6.8.0",
     "react-scripts": "0.8.0"
   },

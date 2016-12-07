@@ -1,5 +1,5 @@
 {
-    "extends": "react-app",
+    "extends": ["@orion-ui/eslint-config-orion", "react-app"],
     "plugins": [
         "react"
     ]

@@ -11,9 +11,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@orion-ui/scripts": "^1.0.0",
-    "@orion-ui/style": "^1.0.0",
-    "@orion-ui/eslint-config-orion": "^1.0.0"
+    "@orion-ui/style": "^1.0.0"
   },
   "devDependencies": {
+    "@orion-ui/eslint-config-orion": "^1.0.0"
   }
 }

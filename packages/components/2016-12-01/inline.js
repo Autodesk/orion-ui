@@ -1,7 +1,7 @@
 const {BorderRadius, Hovers, Skins, Spacing} = require('@orion-ui/style/2016-12-01');
 const styles = [BorderRadius, Hovers, Skins, Spacing];
 
-const Registry = require('../utils/private-registry');
+const Registry = require('../utils/private-registry.js');
 
 class Inline extends HTMLElement {
   constructor() {

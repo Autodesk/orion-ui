@@ -1,6 +1,6 @@
 module.exports = {
-  BorderRadius: require('../modules/border-radius'),
-  Hovers: require('../modules/hovers'),
-  Skins: require('../modules/skins'),
-  Spacing: require('../modules/spacing')
+  BorderRadius: require('../modules/border-radius.js'),
+  Hovers: require('../modules/hovers.js'),
+  Skins: require('../modules/skins.js'),
+  Spacing: require('../modules/spacing.js')
 }

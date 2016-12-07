@@ -4,11 +4,12 @@
   "description": "orion ui styles",
   "main": "index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "eslint ."
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@orion-ui/eslint-config-orion": "^1.0.0"
+    "@orion-ui/eslint-config-orion": "^1.0.0",
+    "eslint": "^3.11.1"
   }
 }

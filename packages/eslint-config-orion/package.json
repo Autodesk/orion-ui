@@ -6,7 +6,7 @@
   "scripts": {},
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
-  "peerDependencies": {
-    "eslint": ">= 3"
+  "dependencies": {
+    "eslint": "^3.11.1"
   }
 }

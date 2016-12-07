@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "orion-scripts start",
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "eslint ."
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

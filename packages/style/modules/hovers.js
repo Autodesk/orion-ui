@@ -18,15 +18,15 @@ const css = `
 `;
 
 const attributes = [
-  'dim', 'pointer'
+  'dim', 'pointer',
 ];
 
-function attributeChangedCallback(attrName, value) {
+function attributeChangedCallback(attrName) {
   return attrName;
 }
 
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback
-}
+  attributeChangedCallback,
+};

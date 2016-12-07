@@ -13,8 +13,8 @@ function template(dictionary, templateFn) {
  */
 const colors = {
   black: '#000',
-  white: '#fff'
-}
+  white: '#fff',
+};
 
 /**
  * Creates a collection of CSS classes setting colors
@@ -27,7 +27,7 @@ function buildColors() {
  * Creates a collection of CSS classes setting background colors
  */
 function buildBackgrounds() {
-  return template(colors, color => `.bg-${color} { background-color: ${colors[color]}}`)
+  return template(colors, color => `.bg-${color} { background-color: ${colors[color]}}`);
 }
 
 const css = `
@@ -36,7 +36,7 @@ const css = `
 `;
 
 const attributes = [
-  'background', 'color'
+  'background', 'color',
 ];
 
 function attributeChangedCallback(attrName, value) {
@@ -45,11 +45,12 @@ function attributeChangedCallback(attrName, value) {
   } else if (attrName === 'color') {
     return value;
   }
+  return null;
 }
 
 module.exports = {
   attributes,
   attributeChangedCallback,
   colors,
-  css
-}
+  css,
+};

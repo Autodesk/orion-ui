@@ -51,12 +51,12 @@ const attributes = [
 
 function attributeChangedCallback(attrName, value) {
   switch (attrName) {
-    case 'padding-horizontal':
-      return `ph${value}`;
-    case 'padding-vertical':
-      return `pv${value}`;
-    default:
-      throw new Error('unknown style');
+  case 'padding-horizontal':
+    return `ph${value}`;
+  case 'padding-vertical':
+    return `pv${value}`;
+  default:
+    throw new Error('unknown style');
   }
 }
 

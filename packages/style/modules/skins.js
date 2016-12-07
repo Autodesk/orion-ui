@@ -14,7 +14,7 @@ function template(dictionary, templateFn) {
 const colors = {
   black: '#000',
   white: '#fff'
-}
+};
 
 /**
  * Creates a collection of CSS classes setting colors
@@ -27,7 +27,7 @@ function buildColors() {
  * Creates a collection of CSS classes setting background colors
  */
 function buildBackgrounds() {
-  return template(colors, color => `.bg-${color} { background-color: ${colors[color]}}`)
+  return template(colors, color => `.bg-${color} { background-color: ${colors[color]}}`);
 }
 
 const css = `
@@ -52,4 +52,4 @@ module.exports = {
   attributeChangedCallback,
   colors,
   css
-}
+};

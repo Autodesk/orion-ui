@@ -21,4 +21,4 @@ module.exports = {
   css,
   attributes,
   attributeChangedCallback
-}
+};

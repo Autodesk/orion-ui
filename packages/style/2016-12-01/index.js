@@ -3,4 +3,4 @@ module.exports = {
   Hovers: require('../modules/hovers.js'),
   Skins: require('../modules/skins.js'),
   Spacing: require('../modules/spacing.js')
-}
+};

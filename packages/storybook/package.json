@@ -1,0 +1,18 @@
+{
+  "name": "storybook",
+  "version": "1.0.0",
+  "description": "Interactive documentation of orion-ui widgets",
+  "main": "index.js",
+  "scripts": {
+    "storybook": "start-storybook -p 9001 -c .storybook"
+  },
+  "author": "Autodesk Inc.",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@kadira/storybook": "^2.34.0"
+  },
+  "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  }
+}

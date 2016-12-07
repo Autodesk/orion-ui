@@ -13,6 +13,7 @@ module.exports = {
         throw new Error(`${tagName} already registered to a different constructor function`);
       }
     } else {
+      if (!window.customElements) { return; }
       window.customElements.define(tagName, constructorFn);
     }
 

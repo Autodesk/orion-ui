@@ -1,6 +1,6 @@
 require('./inline');
 
-const Registry = require('../utils/private-registry');
+const Registry = require('../utils/private-registry.js');
 
 class Button extends HTMLElement {
   constructor() {

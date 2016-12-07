@@ -28,12 +28,14 @@ If you have any questions, feel free to ask on the issue or join us on [Slack](h
 
 1. Install [NodeJS](https://nodejs.org).
 2. In the repo directory, run `npm i` command to install the required npm packages.
+3. Run `npm i -g lerna@^2.0.0-beta` to install [Lerna](https://lernajs.io).
+4. Run `lerna bootstrap` to cross-link and install dependencies for each package.
 
 ### Build & Test
 
-| Command                                                                 | Description                                                           |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| npm start                                                               | runs development server
+| Command          | Description                |
+| ---------------- | -------------------------  |
+| `lerna run test` | runs tests in each package |
 
 ### Manual testing
 

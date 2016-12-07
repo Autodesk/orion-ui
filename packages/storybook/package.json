@@ -4,7 +4,8 @@
   "description": "Interactive documentation of orion-ui widgets",
   "main": "index.js",
   "scripts": {
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "start": "start-storybook -p 9001 -c .storybook",
+    "build": "build-storybook -c .storybook -o .out"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

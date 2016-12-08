@@ -5,7 +5,6 @@ const deployConfig = require('./modules/deploy-config');
 const program = require('commander');
 const s3 = require('s3');
 
-
 program
   .description('deploy build directory')
   .option('--build-id <id>', 'Unique build id')

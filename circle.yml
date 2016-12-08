@@ -1,3 +1,8 @@
+machine:
+  node:
+    verions: 6.9.0
+  environment:
+    NODE_ENV: ci # default is test which suppresses errors in lerna
 dependencies:
   post:
     - lerna bootstrap

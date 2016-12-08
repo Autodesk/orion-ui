@@ -2,9 +2,12 @@
   "name": "@orion-ui/style",
   "version": "1.0.0",
   "description": "orion ui styles",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "lint": "eslint ."
+  },
+  "orion": {
+    "compile": true
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

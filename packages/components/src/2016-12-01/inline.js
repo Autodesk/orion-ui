@@ -1,5 +1,5 @@
 const Registry = require('../utils/private-registry.js');
-const { BorderRadius, Hovers, Skins, Spacing } = require('@orion-ui/style/2016-12-01');
+const { BorderRadius, Hovers, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
 const styles = [BorderRadius, Hovers, Skins, Spacing];
 

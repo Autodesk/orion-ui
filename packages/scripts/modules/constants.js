@@ -7,5 +7,5 @@ module.exports = {
   /**
    * Where we store all the packages
    */
-  packageDirName: 'packages'
-}
+  packageDirName: 'packages',
+};

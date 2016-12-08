@@ -19,5 +19,5 @@ module.exports = {
   /**
    * Top level packages directory
    */
-  packages
+  packages,
 };

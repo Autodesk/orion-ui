@@ -31,9 +31,8 @@ describe('orion-package-builds', () => {
 
   it('copies build directories for packages into root build directory', () => {
     // Run the command
-    expect(
-      exec('node orion.js copy-package-builds', { silent: true }).code
-    ).to.equal(0);
+    const code = exec('node orion.js copy-package-builds', { silent: true }).code;
+    expect(code).to.equal(0);
 
     // Test that the destination path has been created properly
     expect(test('-e', destination)).to.equal(true);

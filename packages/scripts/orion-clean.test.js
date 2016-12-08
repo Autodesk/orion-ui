@@ -12,9 +12,8 @@ describe('orion-clean', () => {
     mkdir('-p', knownPaths.build);
     mkdir('-p', packageBuildPath);
 
-    expect(
-        exec('node orion.js clean', { silent: true }).code
-    ).to.equal(0);
+    const code = exec('node orion.js clean', { silent: true }).code;
+    expect(code).to.equal(0);
   });
 
   it('removes the top level build', () => {

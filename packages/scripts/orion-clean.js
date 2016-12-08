@@ -22,20 +22,25 @@ function hasBuildDirectory(directoryName) {
  * - remove all package builds
  * - remove top level build dir
  */
-const cleanCount = ls(knownPaths.packages).map(directory => {
+
+function countTrues(count, bool) {
+  return count + (bool) ? 1 : 0;
+}
+
+const cleanCount = ls(knownPaths.packages).map((directory) => {
   if (hasBuildDirectory(directory)) {
-    console.log(`- cleaning build ${directory}`)
+    console.log(`- cleaning build ${directory}`);
     rm('-r', path.join(knownPaths.packages, directory, constants.buildDirName));
     return true;
-  } else {
-    return false;
   }
-}).reduce((acc, memo) => acc + (memo) ? 1 : 0, 0);
+
+  return false;
+}).reduce(countTrues, 0);
 
 console.log(`${cleanCount} builds cleaned`);
 
 if (test('-e', knownPaths.build)) {
   rm('-r', knownPaths.build);
-  console.log(`Root build cleaned`);
+  console.log('Root build cleaned');
 }
 

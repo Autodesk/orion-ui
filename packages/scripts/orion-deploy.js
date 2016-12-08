@@ -2,8 +2,8 @@
 
 const knownPaths = require('./modules/known-paths');
 const deployConfig = require('./modules/deploy-config');
-const path = require('path');
 const program = require('commander');
+const s3 = require('s3');
 
 program
   .description('deploy build directory')
@@ -11,7 +11,7 @@ program
   .parse(process.argv);
 
 if (!program.buildId) {
-  console.error(`Error missing buildId`);
+  console.error('Error missing buildId');
   program.outputHelp();
 }
 
@@ -21,14 +21,14 @@ const localDir = knownPaths.build;
 // To the cdn.web-platform.io
 const s3Params = {
   Bucket: deployConfig.Bucket,
-  Prefix: deployConfig.SnapshotPrefix(program.buildId)
+  Prefix: deployConfig.SnapshotPrefix(program.buildId),
 };
 
-const s3 = require('s3');
+
 const client = s3.createClient();
 const uploader = client.uploadDir({ localDir, s3Params });
 
-uploader.on('error', err => {
+uploader.on('error', (err) => {
   console.error(err);
   process.exit(1);
 });

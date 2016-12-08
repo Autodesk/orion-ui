@@ -15,7 +15,7 @@ describe('orion-deploy', () => {
     rm('-R', knownPaths.build);
   });
 
-  it('uploads the top level build directory to s3', function () {
+  it('uploads the top level build directory to s3', function testWithTimeout() {
     // uploading sometimes is slow
     this.timeout(5000);
 
@@ -32,18 +32,17 @@ describe('orion-deploy', () => {
     const buildId = `test-${uuid()}`;
 
     // Do the deploy
-    expect(
-      exec(`node orion.js deploy --build-id=${buildId}`, { silent: true }).code
-    ).to.equal(0);
+    const code = exec(`node orion.js deploy --build-id=${buildId}`, { silent: true }).code;
+    expect(code).to.equal(0);
 
     return new Promise((resolve, reject) => {
       const params = {
         Bucket: deployConfig.Bucket,
-        Key: `${deployConfig.SnapshotPrefix(buildId)}/test.txt`
+        Key: `${deployConfig.SnapshotPrefix(buildId)}/test.txt`,
       };
 
       // Check to make sure the file exists
-      s3.headObject(params, (err, data) => {
+      s3.headObject(params, (err) => {
         if (err) {
           reject(err, err.stack);
         } else {

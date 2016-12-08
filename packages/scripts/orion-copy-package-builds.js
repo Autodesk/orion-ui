@@ -43,15 +43,18 @@ program
 // Make sure we have a build directory
 mkdir('-p', knownPaths.build);
 
+function countTrues(count, bool) {
+  return count + (bool) ? 1 : 0;
+}
+
 // For each package, check for a build directory and if found, copy it into the
 // root build directory
-const buildCount = ls(knownPaths.packages).map(directory => {
+const buildCount = ls(knownPaths.packages).map((directory) => {
   if (hasBuildDirectory(directory)) {
     copyToRootBuild(directory);
     return true;
-  } else {
-    return false;
   }
-}).reduce((acc, memo) => acc + (memo) ? 1 : 0, 0);
+  return false;
+}).reduce(countTrues, 0);
 
 console.log(`${buildCount} builds copied to root`);

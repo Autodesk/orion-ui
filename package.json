@@ -5,7 +5,12 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
-    "test": "lerna run lint && lerna run test"
+    "test": "lerna run lint && lerna run test",
+    "build": "lerna run build",
+    "clean": "node ./packages/scripts/orion.js clean",
+    "deploy-snapshot": "node ./packages/scripts/orion.js deploy --build-id $CIRCLE_BUILD_NUM",
+    "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
+    "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds"
   },
   "repository": {
     "type": "git",

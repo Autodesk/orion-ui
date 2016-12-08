@@ -46,10 +46,10 @@ class Inline extends HTMLElement {
       }
     }
 
-    this.attributes.forEach((attribute) => {
-      const { name, value } = attribute;
+    for (let i = 0; i < this.attributes.length; i += 1) {
+      const { name, value } = this.attributes[i];
       styles.forEach(style => appendClassName(style, name, value));
-    });
+    }
 
     // Update the class name
     this.shadowRoot.querySelector('span').className = className;

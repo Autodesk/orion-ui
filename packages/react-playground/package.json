@@ -3,23 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@orion-ui/eslint-config-orion": "^1.0.0",
-    "eslint": "^3.11.1",
-    "eslint-plugin-react": "^6.8.0",
-    "react-scripts": "0.8.0"
+    "react-scripts": "0.8.2"
   },
   "dependencies": {
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
     "@orion-ui/components": "^1.0.0",
-    "@orion-ui/style": "^1.0.0"
+    "@orion-ui/style": "^1.0.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "CI=true react-scripts test --env=jsdom",
-    "dev-test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }

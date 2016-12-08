@@ -6,10 +6,8 @@
   "scripts": {},
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
-  "dependencies": {
-    "eslint": "^3.11.1"
-  },
-  "devDependencies": {
+
+  "peerDependencies": {
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",

@@ -6,6 +6,7 @@ module.exports = {
   },
   "rules": {
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
-    "arrow-body-style": "off"
+    "arrow-body-style": "off",
+    "react/jsx-filename-extension": "off"
   }
 }

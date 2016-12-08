@@ -5,14 +5,21 @@
   "main": "index.js",
   "scripts": {
     "start": "start-storybook -p 9001 -c .storybook",
-    "build": "build-storybook -c .storybook -o build"
+    "build": "build-storybook -c .storybook -o build",
+    "lint": "eslint ."
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@kadira/storybook": "^2.34.0"
+    "@orion-ui/eslint-config-orion": "^1.0.0",
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0"
   },
   "dependencies": {
+    "@kadira/storybook": "^2.34.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   }

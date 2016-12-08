@@ -1,0 +1,3 @@
+{
+  "extends": "@orion-ui/eslint-config-orion"
+}

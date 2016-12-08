@@ -2,6 +2,7 @@ dependencies:
   post:
     - lerna bootstrap
   cache_directories:
+    - "node_modules"
     - "packages/components/node_modules"
     - "packages/eslint-config-orion/node_modules"
     - "packages/react-playground/node_modules"

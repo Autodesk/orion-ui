@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 6.9.0
+    version: 6.9.2
   environment:
     NODE_ENV: ci # default is test which suppresses errors in lerna
 dependencies:

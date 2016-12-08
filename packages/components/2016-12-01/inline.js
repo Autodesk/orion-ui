@@ -46,7 +46,7 @@ class Inline extends HTMLElement {
       }
     }
 
-    for (let i = 0; i < this.attributes.length; i++) {
+    for (let i = 0; i < this.attributes.length; i += 1) {
       const { name, value } = this.attributes[i];
       styles.forEach(style => appendClassName(style, name, value));
     }

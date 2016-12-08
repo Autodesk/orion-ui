@@ -2,7 +2,7 @@ require('./inline');
 
 const Registry = require('../utils/private-registry.js');
 
-class Button extends window.HTMLElement {
+class Button extends HTMLElement {
   constructor() {
     super();
 

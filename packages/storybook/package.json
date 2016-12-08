@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "storybook",
   "version": "1.0.0",
   "description": "Interactive documentation of orion-ui widgets",

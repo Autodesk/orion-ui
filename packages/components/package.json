@@ -2,10 +2,13 @@
   "name": "@orion-ui/components",
   "version": "1.0.0",
   "description": "orion ui components",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "orion-scripts start",
     "lint": "eslint ."
+  },
+  "orion": {
+    "compile": true
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

@@ -44,7 +44,9 @@ program
 mkdir('-p', knownPaths.build);
 
 function countTrues(count, bool) {
-  return count + (bool) ? 1 : 0;
+  const newCount = (bool) ? count + 1 : count;
+
+  return newCount;
 }
 
 // For each package, check for a build directory and if found, copy it into the

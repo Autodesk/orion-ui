@@ -12,7 +12,7 @@ require('shelljs/global');
 
 describe('orion-deploy', () => {
   afterEach(() => {
-    rm('-R', knownPaths.build);
+    rm('-r', knownPaths.build);
   });
 
   it('uploads the top level build directory to s3', function testWithTimeout() {

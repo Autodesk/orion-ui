@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/orion-ui/orion#readme",
   "devDependencies": {
-    "lerna": "2.0.0-beta.30",
-    "eslint": "^3.11.1"
+    "babel-preset-react-app": "^2.0.1",
+    "eslint": "^3.11.1",
+    "lerna": "2.0.0-beta.30"
   }
 }

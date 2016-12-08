@@ -23,7 +23,9 @@ function hasBuildDirectory(directoryName) {
  * - remove top level build dir
  */
 function countTrues(count, bool) {
-  return count + (bool) ? 1 : 0;
+  const newCount = (bool) ? count + 1 : count;
+
+  return newCount;
 }
 
 const cleanCount = ls(knownPaths.packages).map((directory) => {

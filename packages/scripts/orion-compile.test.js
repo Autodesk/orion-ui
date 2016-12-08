@@ -39,7 +39,7 @@ describe('orion-compile', () => {
   });
 
   it('builds all packages which have orion.compile=true in package.json', function testWithTimeout() {
-    this.timeout(5000); // this might get slow since we compile everything in packages
+    this.timeout(30000); // this might get slow since we compile everything in packages
 
     const path1 = createPackage('package1', true);
     const path2 = createPackage('package2', true);

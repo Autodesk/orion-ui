@@ -1,5 +1,5 @@
-import '@orion-ui/components/2016-12-01/button';
-import '@orion-ui/components/2016-12-01/inline';
+import '@orion-ui/components/2016-12-01/button.js';
+import '@orion-ui/components/2016-12-01/inline.js';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';

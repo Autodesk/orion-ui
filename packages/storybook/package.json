@@ -21,10 +21,10 @@
   },
   "dependencies": {
     "@kadira/storybook": "^2.34.0",
+    "@kadira/storybook-addon-knobs": "^1.7.1",
+    "@kadira/storybook-addons": "^1.6.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "@kadira/storybook": "^2.34.0",
-    "@kadira/storybook-addon-knobs": "^1.7.1",
-    "@kadira/storybook-addons": "^1.6.1"
+    "react-syntax-highlighter": "^3.0.2"
   }
 }

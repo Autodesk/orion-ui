@@ -18,7 +18,15 @@ class SourceViewer extends React.Component {
 
   renderTabs() {
     return this.props.sources.map(([label, source], i) => {
-      return <SourceViewerButton key={i} index={i} label={label} onClick={this._setActiveIndex} />;
+      return (
+        <SourceViewerButton
+          active={this.state.activeIndex === i}
+          key={i}
+          index={i}
+          label={label}
+          onClick={this._setActiveIndex}
+        />
+      );
     });
   }
 

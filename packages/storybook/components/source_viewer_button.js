@@ -11,7 +11,11 @@ class SourceViewerButton extends React.Component {
   }
 
   render() {
-    return <button onClick={this._handleClick}>{this.props.label}</button>;
+    const style = {
+      color: this.props.active ? 'blue' : null,
+    };
+
+    return <button style={style} onClick={this._handleClick}>{this.props.label}</button>;
   }
 }
 
@@ -19,6 +23,7 @@ SourceViewerButton.propTypes = {
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
+  active: PropTypes.bool,
 };
 
 

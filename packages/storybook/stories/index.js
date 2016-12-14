@@ -20,24 +20,29 @@ storiesOf('Button', module)
     };
 
     const sources = [
-      ['React', `
-        <OrionButton
-          backgroundColor={"${props.backgroundColor}"}
-          color={"${props.color}"}
-          onClick={action('clicked')}
-        >
-          {"${buttonText}"}
-        </OrionButton>
-      `],
-      ['Web components', `
-        <orion-button
-          backgroundColor={"${props.backgroundColor}"}
-          color={"${props.color}"}
-          onClick={action('clicked')}
-        >
-          {"${buttonText}"}
-        </orion-button>
-      `],
+      {
+        label: 'React',
+        source: `
+          <OrionButton
+            backgroundColor={"${props.backgroundColor}"}
+            color={"${props.color}"}
+            onClick={action('clicked')}
+          >
+            {"${buttonText}"}
+          </OrionButton>
+        `,
+      }, {
+        label: 'Web components',
+        source: `
+          <orion-button
+            backgroundColor={"${props.backgroundColor}"}
+            color={"${props.color}"}
+            onClick={action('clicked')}
+          >
+            {"${buttonText}"}
+          </orion-button>
+        `,
+      },
     ];
 
     return (

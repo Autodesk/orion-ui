@@ -17,7 +17,7 @@ class SourceViewer extends React.Component {
   }
 
   renderTabs() {
-    return this.props.sources.map(([label, source], i) => {
+    return this.props.sources.map(({ label, source }, i) => {
       return (
         <SourceViewerButton
           active={this.state.activeIndex === i}
@@ -31,7 +31,7 @@ class SourceViewer extends React.Component {
   }
 
   render() {
-    const source = this.props.sources[this.state.activeIndex][1];
+    const source = this.props.sources[this.state.activeIndex].source;
     return (
       <div>
         {this.renderTabs()}
@@ -47,7 +47,10 @@ class SourceViewer extends React.Component {
 }
 
 SourceViewer.propTypes = {
-  sources: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  sources: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    source: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default SourceViewer;

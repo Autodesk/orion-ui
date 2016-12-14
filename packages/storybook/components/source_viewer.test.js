@@ -13,8 +13,8 @@ describe('<SourceViewer />', () => {
   before(() => {
     const props = {
       sources: [
-        ['React', '<Foo>It\'s a react component</Foo>'],
-        ['Web components', '<foo>It\'s a web component</foo>'],
+        { label: 'React', source: '<Foo>It\'s a react component</Foo>' },
+        { label: 'Web components', source: '<foo>It\'s a web component</foo>' },
       ],
     };
     wrapper = mount(<SourceViewer {...props} />);

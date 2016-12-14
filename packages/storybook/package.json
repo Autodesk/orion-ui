@@ -7,24 +7,34 @@
   "scripts": {
     "start": "start-storybook -p 9001 -c .storybook",
     "build": "build-storybook -c .storybook -o build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "NODE_ENV=test mocha --require babel-register \"./components/**/*.test.js\""
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
     "@orion-ui/eslint-config-orion": "^1.0.0",
+    "babel-preset-react-app": "^2.0.1",
+    "babel-register": "^6.18.0",
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.6.1",
+    "enzyme": "^2.6.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.8.0"
+    "eslint-plugin-react": "^6.8.0",
+    "jsdom": "9.8.3",
+    "jsdom-global": "2.1.0",
+    "mocha": "^3.2.0",
+    "react-addons-test-utils": "^15.4.1"
   },
   "dependencies": {
     "@kadira/storybook": "^2.34.0",
+    "@kadira/storybook-addon-knobs": "^1.7.1",
+    "@kadira/storybook-addons": "^1.6.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "@kadira/storybook": "^2.34.0",
-    "@kadira/storybook-addon-knobs": "^1.7.1",
-    "@kadira/storybook-addons": "^1.6.1"
+    "react-syntax-highlighter": "^3.0.2"
   }
 }

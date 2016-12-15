@@ -6,6 +6,7 @@ const path = require('path');
 const knownPaths = require('./modules/known-paths');
 const fs = require('fs');
 const glob = require('glob');
+const prependFile = require('prepend-file');
 
 require('shelljs/global');
 
@@ -41,18 +42,26 @@ function noticeForFile(file) {
   }
 }
 
+function addCopyrightNotice(file) {
+  prependFile.sync(file, noticeForFile(file));
+}
+
 function hasCopyrightNotice(file) {
   const notice = noticeForFile(file);
   const fileHead = fs.readFileSync(file).toString().slice(0, notice.length);
+  const hasCopyright = notice === fileHead;
 
-  return notice === fileHead;
+  if (hasCopyright) {
+    return true;
+  } else if (program.fix) {
+    addCopyrightNotice(file);
+    return true;
+  }
+  return false;
 }
 
 function ensureCopyright(dir) {
-  const pattern = path.join(dir, '**/*.js');
-  const files = glob.sync(pattern);
-  console.log(pattern);
-  console.log(files);
+  const files = glob.sync(path.join(dir, '**/*.js')).filter(file => !file.match('node_modules'));
   const result = files.reduce((memo, file) => {
     if (hasCopyrightNotice(file)) {
       memo.pass.push(file);

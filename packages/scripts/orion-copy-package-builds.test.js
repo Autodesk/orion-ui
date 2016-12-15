@@ -4,8 +4,6 @@ const expect = require('chai').expect;
 const knownPaths = require('./modules/known-paths');
 const path = require('path');
 
-require('shelljs/global');
-
 describe('orion-package-builds', () => {
   const source = path.join(knownPaths.packages, 'test', 'build', 'sub-directory');
   const destination = path.join(knownPaths.build, 'test', 'sub-directory');

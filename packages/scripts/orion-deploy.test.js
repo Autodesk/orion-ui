@@ -8,7 +8,6 @@ const path = require('path');
 const uuid = require('uuid/v1');
 
 const s3 = new AWS.S3();
-require('shelljs/global');
 
 describe('orion-deploy', () => {
   afterEach(() => {

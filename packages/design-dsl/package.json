@@ -1,0 +1,14 @@
+{
+  "name": "@orion-ui/design-dsl",
+  "version": "1.0.0",
+  "description": "Exploring a JSON based design language",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc"
+  },
+  "author": "Autodesk Inc.",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^2.1.4"
+  }
+}

@@ -6,7 +6,6 @@ const path = require('path');
 const knownPaths = require('./modules/known-paths');
 const fs = require('fs');
 const glob = require('glob');
-const prependFile = require('prepend-file');
 
 require('shelljs/global');
 
@@ -33,31 +32,9 @@ function reportResult(result) {
   }
 }
 
-function noticeForFile(file) {
-  switch (path.extname(file)) {
-    case '.js':
-      return `/**\n${LICENCE}*/`.trim();
-    default:
-      return true;
-  }
-}
-
-function addCopyrightNotice(file) {
-  prependFile.sync(file, noticeForFile(file));
-}
-
 function hasCopyrightNotice(file) {
-  const notice = noticeForFile(file);
-  const fileHead = fs.readFileSync(file).toString().slice(0, notice.length);
-  const hasCopyright = notice === fileHead;
-
-  if (hasCopyright) {
-    return true;
-  } else if (program.fix) {
-    addCopyrightNotice(file);
-    return true;
-  }
-  return false;
+  const fileContent = fs.readFileSync(file).toString();
+  return fileContent.indexOf(LICENCE) !== -1;
 }
 
 function ensureCopyright(dir) {

@@ -13,9 +13,8 @@ describe.only('orion-ensure-copyright', () => {
     fs.writeFileSync(path.join(knownPaths.tmp, name), content);
   }
 
-  function runScript(fixIt) {
-    let command = `node orion.js ensure-copyright --dir ${knownPaths.tmp}`;
-    if (fixIt) { command += ' --fix'; }
+  function runScript() {
+    const command = `node orion.js ensure-copyright --dir ${knownPaths.tmp}`;
     return exec(command, { silent: true }).code;
   }
 
@@ -28,35 +27,22 @@ describe.only('orion-ensure-copyright', () => {
   });
 
   it('fails if a js file is missing a copyright notice', () => {
-    createFile('somefile.js', false);
+    createFile('somefile.js');
     const code = runScript();
     expect(code).to.equal(1);
   });
 
   it('passes if all files have a copyright notice', () => {
-    createFile('somefile.js', true);
+    createFile('somefile.js');
     const code = runScript();
     expect(code).to.equal(0);
-  });
-
-  describe('with the --fix flag', () => {
-    it('adds the copyright notice', function testWithTimeout() {
-      this.timeout(30000); // this might get slow since we write to the file system
-
-      createFile('failingfile.js', false);
-      createFile('passingfile.js', false);
-
-      expect(runScript()).to.equal(1);
-      expect(runScript(true)).to.equal(0);
-      expect(runScript()).to.equal(0);
-    });
   });
 
   describe('given a node_modules directory', () => {
     beforeEach(() => {
       const modulePath = path.join(knownPaths.tmp, 'node_modules');
       mkdir(modulePath);
-      createFile('node_modules/somemodule.js', false);
+      createFile('node_modules/somemodule.js');
     });
 
     it('ignores it', () => {

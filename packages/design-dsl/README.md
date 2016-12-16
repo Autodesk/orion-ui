@@ -17,6 +17,7 @@ How do we describe the properties of primitives efficiently?
 ## 3. abstraction
 
 * How do we hide lower level implementation details
+* How do we transform data into primitives
 
 ## Assumptions
 

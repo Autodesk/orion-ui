@@ -21,7 +21,7 @@ const path = require('path');
 const knownPaths = require('./modules/known-paths');
 const fs = require('fs');
 
-describe.only('orion-ensure-copyright', () => {
+describe('orion-ensure-copyright', () => {
   const LICENCE = fs.readFileSync(path.join(knownPaths.root, 'LICENSE')).toString();
   const TEMP_DIR = path.join(knownPaths.root, 'tmp/');
 

@@ -3,7 +3,7 @@ export type Display = 'inline' | 'flex';
 export type FontFamily = 'san-serif' | 'serif' | 'monospace';
 export type FontSize = 'f1' | 'f2' | 'f3' | 'f4' | 'f5';
 export type FontStyle = 'normal' | 'italic';
-export type FontWeight = 'normal' | 'bold' | 'fw1' | 'fw2'
+export type FontWeight = 'normal' | 'bold' | '100' | '200'
 export type Layout = 'column' | 'row';
 export type LineHeight = 'solid' | 'title' | 'copy';
 export type Measure = 'measure' | 'wide' | 'narrow';
@@ -13,7 +13,7 @@ export type TextDecoration = 'strike' | 'underline' | 'no-underline';
 export type TextTransform = 'capitalize' | 'lowercase' | 'uppercase';
 export type Tracking = 'tracked' | 'tight' | 'mega';
 
-export type Primitive = OContainer | OText | OImage;
+export type Primitive = OContainer | OText | OImage | OMapper;
 
 export interface OContainer {
   type: 'container';
@@ -58,4 +58,21 @@ export interface OImage {
 
   src?: string;
 
+}
+
+import { Primitive, OContainer, OText, OImage } from './primitives';
+
+export interface Mapping {
+  source: string;
+  destination: string;
+}
+
+export interface OMapper {
+  type: 'map',
+  collection: string;
+  refs: {
+    [key: string]: string;
+  }
+  mappings: Mapping[];
+  template: Primitive;
 }

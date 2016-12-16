@@ -1,4 +1,5 @@
 import {OContainer, OText} from './primitives';
+import {primitiveToHtml} from './utils/gen-html';
 
 const hello: OContainer = {
   type: 'container',
@@ -19,3 +20,9 @@ const hello: OContainer = {
 }
 
 console.log(JSON.stringify(hello, null, 4));
+
+console.log();
+console.log('Converted to HTML');
+console.log();
+
+console.log(JSON.stringify(primitiveToHtml(hello), null, 4));

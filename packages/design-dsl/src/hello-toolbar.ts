@@ -1,6 +1,7 @@
 import { Primitive } from './primitives';
 import { primitiveToComponent } from './utils/gen-functional-component';
 import { primitiveToHtml } from './utils/gen-html';
+import { toolbarTemplate } from './demo-components/toolbar';
 
 interface ToolbarProps {
   items: ToolbarItem[];
@@ -13,49 +14,8 @@ interface ToolbarItem {
   height: number
 }
 
-const toolbarTemplate: Primitive = {
-  type: 'container',
-  props: {
-    display: 'flex',
-    layout: 'row',
-    paddingAll: 'small',
-    background: 'black'
-  },
-
-  children: [
-    {
-      type: 'map',
-      collection: 'items',
-      refs: {
-        image: 'children[0]',
-        label: 'children[1]'
-      },
-      mappings: [
-        { source: 'width', destination: 'image.props.width' },
-        { source: 'height', destination: 'image.props.height' },
-        { source: 'icon', destination: 'image.src' },
-        { source: 'label', destination: 'label.textContent' }
-      ],
-      template: {
-        type: 'container',
-        props: {
-          display: 'flex',
-          layout: 'row',
-          paddingAll: 'medium',
-          background: 'grey'
-        },
-
-        children: [
-          { type: 'image' },
-          { type: 'text' }
-        ]
-      }
-    }
-  ]
-}
-
 console.log();
-console.log('A Component Template');
+console.log('A template which uses a map type');
 console.log();
 
 console.log(JSON.stringify(toolbarTemplate, null, 4));

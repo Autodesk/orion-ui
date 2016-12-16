@@ -13,7 +13,7 @@ export type TextDecoration = 'strike' | 'underline' | 'no-underline';
 export type TextTransform = 'capitalize' | 'lowercase' | 'uppercase';
 export type Tracking = 'tracked' | 'tight' | 'mega';
 
-export type Primitive = OContainer | OText | OImage | OMapper;
+export type Primitive = OContainer | OText | OImage | OComponent | OMapper;
 
 export interface OContainer {
   type: 'container';
@@ -60,7 +60,15 @@ export interface OImage {
 
 }
 
-import { Primitive, OContainer, OText, OImage } from './primitives';
+export interface OComponent {
+  type: 'component',
+  component: {
+    type: string;
+    props: {},
+    children?: any[];
+  }
+}
+
 
 export interface Mapping {
   source: string;

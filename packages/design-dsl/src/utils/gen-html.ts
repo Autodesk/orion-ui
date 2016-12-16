@@ -34,7 +34,7 @@ export function primitiveToHtml(primitive: Primitive): OHTMLElement {
     case 'image':
       return imageToHtml(primitive);
     default:
-      throw new Error('unknown type');
+      throw new Error('unknown type. maybe use primitiveToComponent');
   }
 }
 

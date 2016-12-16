@@ -6,7 +6,8 @@
   "scripts": {
     "compile": "tsc",
     "hello-primitives": "node lib/hello-primitives.js",
-    "hello-toolbar": "node lib/hello-toolbar.js"
+    "hello-toolbar": "node lib/hello-toolbar.js",
+    "hello-panel": "node lib/hello-panel.js"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

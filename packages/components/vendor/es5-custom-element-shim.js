@@ -59,6 +59,12 @@
 */
 (() => {
   'use strict';
+
+  if (!window.customElements) {
+    console.warn('Custom elements are not available');
+    return;
+  }
+
   const NativeHTMLElement = window.HTMLElement;
   const nativeDefine = window.customElements.define;
   const nativeGet = window.customElements.get;

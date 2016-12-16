@@ -4,11 +4,16 @@
   "description": "Exploring a JSON based design language",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc"
+    "compile": "tsc",
+    "hello-primitives": "node lib/hello-primitives.js",
+    "hello-toolbar": "node lib/hello-toolbar.js"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
     "typescript": "^2.1.4"
+  },
+  "dependencies": {
+    "clone-deep": "^0.2.4"
   }
 }

@@ -17,6 +17,7 @@
     "outDir": "lib"
   },
   "include": [
+    "typings_custom/custom.d.ts",
     "src/*.ts"
   ]
 }

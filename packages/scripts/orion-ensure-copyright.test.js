@@ -40,15 +40,14 @@ describe.only('orion-ensure-copyright', () => {
   });
 
   describe('with the --fix flag', () => {
-    it('adds the copyright notice', () => {
+    it('adds the copyright notice', function testWithTimeout() {
+      this.timeout(30000); // this might get slow since we write to the file system
+
       createFile('failingfile.js', false);
       createFile('passingfile.js', false);
 
-      console.log('initial test');
       expect(runScript()).to.equal(1);
-      console.log('time to fix it');
       expect(runScript(true)).to.equal(0);
-      console.log('verify fix');
       expect(runScript()).to.equal(0);
     });
   });

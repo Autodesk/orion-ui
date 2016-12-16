@@ -1,4 +1,4 @@
-export type Color = 'black' | 'white';
+export type Color = 'black' | 'white' | 'grey';
 export type Display = 'inline' | 'flex';
 export type FontFamily = 'san-serif' | 'serif' | 'monospace';
 export type FontSize = 'f1' | 'f2' | 'f3' | 'f4' | 'f5';
@@ -13,7 +13,7 @@ export type TextDecoration = 'strike' | 'underline' | 'no-underline';
 export type TextTransform = 'capitalize' | 'lowercase' | 'uppercase';
 export type Tracking = 'tracked' | 'tight' | 'mega';
 
-export type Entity = OContainer | OText;
+export type Primitive = OContainer | OText | OImage;
 
 export interface OContainer {
   type: 'container';
@@ -27,7 +27,7 @@ export interface OContainer {
     paddingAll?: Spacing;
   };
 
-  children: Entity[];
+  children: Primitive[];
 }
 
 export interface OText {
@@ -46,5 +46,16 @@ export interface OText {
     tracking?: Tracking;
   };
 
-  textContent: string;
+  textContent?: string;
+}
+
+export interface OImage {
+  type: 'image';
+  props?: {
+    width?: number;
+    height?: number;
+  },
+
+  src?: string;
+
 }

@@ -1,28 +1,54 @@
 import { Primitive, OMapper, OContainer } from '../primitives';
 import * as cloneDeep from 'clone-deep';
 
-export function primitiveToComponent<T>(p: Primitive): (obj: T) => Primitive {
-  return (props: any) => {
-    visit(p, (container, node) => {
-      switch (node.type) {
-        case 'map':
-          if (container) {
-            // remove node
-            container.children.splice(container.children.indexOf(node), 1);
+export function primitiveToComponent<T>(p: Primitive, registry: ComponentRegistry = {}): (obj: T) => Primitive {
+  return (props: any) => flattenPrimitive(p, props, registry);
+}
 
-            // Merge mapped primitives into other children
-            container.children = [
-              ...container.children,
-              ...mapPrimitive(node, props)
-            ];
-          }
-        default:
-        /* no-op */
-      }
-    });
+export interface ComponentRegistry {
+  [key: string]: Primitive;
+}
 
-    return p;
-  }
+export function flattenPrimitive<T>(p: Primitive, props: any, registry: ComponentRegistry): Primitive {
+  visit(p, (container, node) => {
+    switch (node.type) {
+      case 'map':
+        if (container) {
+          const prevIndex = container.children.indexOf(node);
+
+          // remove node and splice in new children
+          const newChildren = mapPrimitive(node, props);
+          container.children.splice(prevIndex, 1, ...newChildren);
+        } else {
+          throw new Error('need a container for map');
+        }
+        break;
+      case 'component':
+        // Guard not registered
+        if (!registry[node.component.type]) {
+          throw new Error(`${node.component.type} must be in the Component Registry`);
+        }
+
+        if (container) {
+          // get the template from the registry
+          const template = registry[node.component.type];
+
+          // create a primitive out of item
+          const primitive = flattenPrimitive(template, node.component.props, registry);
+
+          // slice it into place
+          const prevIndex = container.children.indexOf(node);
+          container.children.splice(prevIndex, 1, primitive);
+        } else {
+          throw new Error('need a container for components');
+        }
+
+      default:
+      /* no-op */
+    }
+  });
+
+  return p;
 }
 
 export function visit<T extends Primitive>(root: T, callbackFn: (container: OContainer | null, node: T) => void): void {
@@ -35,7 +61,7 @@ export function visit<T extends Primitive>(root: T, callbackFn: (container: OCon
       lastContainer = node as OContainer;
       const newChildren = lastContainer.children.forEach(recur);
     } else {
-      lastContainer = null;
+      // Keep container for all children until we encounter the next
     }
   }
 

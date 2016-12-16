@@ -23,9 +23,9 @@ How do we describe the properties of primitives efficiently?
 
 * Bottom out on a CSS style box model
 
-
 ## Experiments
 
 * `npm run compile` builds the Experiments
 * `npm run hello-primitives`
 * `npm run hello-toolbar`
+* `npm run hello-panel`;

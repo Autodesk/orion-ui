@@ -8,12 +8,13 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha './{,!(node_modules)/**/}*.test.js'"
+    "test": "mocha --require shelljs/global './{,!(node_modules)/**/}*.test.js'"
   },
   "author": "Autodesk Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "commander": "^2.9.0",
+    "glob": "^7.1.1",
     "s3": "^4.4.0",
     "shelljs": "^0.7.5"
   },

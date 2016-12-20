@@ -243,11 +243,21 @@ function tokenize(source: string): ASTNode {
   }
 
   function lessThan() {
-    transition('node-keyword');
+    // node-attributes value state takes precendance over transitioning
+    if (env.state === 'node-attributes' && env.attrState === 'value') {
+      env.attributeValueBuffer += '<';
+    } else {
+      transition('node-keyword');
+    }
   }
 
   function greaterThan() {
-    transition('node-children');
+    // node-attributes value state takes precendance over transitioning
+    if (env.state === 'node-attributes' && env.attrState === 'value') {
+      env.attributeValueBuffer += '>';
+    } else {
+      transition('node-children');
+    }
   }
 
 
@@ -327,11 +337,10 @@ function tokenize(source: string): ASTNode {
 
   function equals() {
     if (env.state === 'node-attributes') {
-      // if there is something in the buffer
-      // when equals is pressed, move to collect
-      // the argument value
-      if (env.attributeNameBuffer) {
+      if (env.attrState == 'name') {
         env.attrState = 'value';
+      } else {
+        env.attributeValueBuffer += '=';
       }
     }
   }
@@ -432,7 +441,7 @@ const withForwardSlashAst: ASTNode = {
 const withJSONValues = `
   <orion
     number=1
-    string="hello world"
+    string="<hello world='thing' />"
     boolean=true
     array=[
       "item1",
@@ -457,7 +466,7 @@ const withJSONValuesAST: ASTNode = {
     {
       type: 'jsobject',
       identifier: 'string',
-      value: 'hello world'
+      value: `<hello world='thing' />`
     },
     {
       type: 'jsobject',
@@ -478,7 +487,7 @@ const withJSONValuesAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withSpaceInValue), withSpaceInValueAST);
+deepEqual(tokenize(withJSONValues), withJSONValuesAST);
 
 const withChild = `
   <orion import=["toolbar"]>

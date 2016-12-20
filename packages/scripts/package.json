@@ -7,8 +7,7 @@
     "orion": "node orion.js"
   },
   "scripts": {
-    "lint": "eslint .",
-    "test": "mocha --require shelljs/global './{,!(node_modules)/**/}*.test.js'"
+    "lint": "eslint ."
   },
   "author": "Autodesk Inc",
   "license": "Apache-2.0",
@@ -16,19 +15,18 @@
     "commander": "^2.9.0",
     "glob": "^7.1.1",
     "s3": "^4.4.0",
-    "shelljs": "^0.7.5"
+    "shelljs": "^0.7.5",
+    "chai": "^3.5.0"
   },
   "devDependencies": {
     "@orion-ui/eslint-config-orion": "^1.0.0",
     "aws-sdk": "^2.7.11",
     "babel-cli": "^6.18.0",
-    "chai": "^3.5.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.8.0",
-    "mocha": "^3.2.0",
     "uuid": "^3.0.1"
   }
 }

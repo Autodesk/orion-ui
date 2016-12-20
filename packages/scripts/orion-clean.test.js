@@ -26,7 +26,7 @@ describe('orion-clean', () => {
     mkdir('-p', knownPaths.build);
     mkdir('-p', packageBuildPath);
 
-    const code = exec('node orion.js clean', { silent: true }).code;
+    const code = exec(`node ${knownPaths.scripts}/orion.js clean`, { silent: true }).code;
     expect(code).to.equal(0);
   });
 

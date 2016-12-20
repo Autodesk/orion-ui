@@ -53,7 +53,7 @@ describe('orion-deploy', () => {
     const buildId = `test-${uuid()}`;
 
     // Do the deploy
-    const code = exec(`node orion.js deploy --build-id=${buildId}`, { silent: true }).code;
+    const code = exec(`node ${knownPaths.scripts}/orion.js deploy --build-id=${buildId}`, { silent: true }).code;
     expect(code).to.equal(0);
 
     return new Promise((resolve, reject) => {

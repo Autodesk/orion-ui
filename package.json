@@ -5,14 +5,15 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
-    "test": "npm run compile && lerna run lint && lerna run test && npm run ensure-copyright",
+    "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright",
     "build": "lerna run build",
     "clean": "node ./packages/scripts/orion.js clean",
     "compile": "node ./packages/scripts/orion.js compile",
     "deploy-snapshot": "node ./packages/scripts/orion.js deploy --build-id $CIRCLE_BUILD_NUM",
     "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
     "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds",
-    "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./"
+    "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./",
+    "specs": "NODE_ENV=test mocha --require shelljs/global --compilers js:babel-core/register './packages/!(react-playground)/{,!(node_modules)/**/}*.test.js'"
   },
   "repository": {
     "type": "git",
@@ -25,8 +26,11 @@
   },
   "homepage": "https://github.com/orion-ui/orion#readme",
   "devDependencies": {
+    "chai": "^3.5.0",
     "babel-preset-react-app": "^2.0.1",
+    "babel-cli": "^6.18.0",
     "eslint": "^3.11.1",
-    "lerna": "2.0.0-beta.31"
+    "lerna": "2.0.0-beta.31",
+    "mocha": "^3.2.0"
   }
 }

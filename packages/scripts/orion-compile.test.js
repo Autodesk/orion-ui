@@ -61,7 +61,7 @@ describe('orion-compile', () => {
     const path2 = createPackage('package2', true);
     const path3 = createPackage('package3', false);
 
-    const code = exec('node orion.js compile', { silent: true }).code;
+    const code = exec(`node ${knownPaths.scripts}/orion.js compile`, { silent: true }).code;
     expect(code).to.equal(0);
 
     expect(test('-e', path.join(path1, 'lib', 'index.js'))).to.equal(true);
@@ -73,7 +73,7 @@ describe('orion-compile', () => {
     const path1 = createPackage('package1', true);
     const path2 = createPackage('package2', true);
 
-    const code = exec('node orion.js compile --packages=package1', { silent: true }).code;
+    const code = exec(`node ${knownPaths.scripts}/orion.js compile --packages=package1`, { silent: true }).code;
     expect(code).to.equal(0);
 
     expect(test('-e', path.join(path1, 'lib', 'index.js'))).to.equal(true);

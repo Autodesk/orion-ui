@@ -31,7 +31,7 @@ describe('orion-ensure-copyright', () => {
   }
 
   function runScript() {
-    const command = `node orion.js ensure-copyright --dir ${TEMP_DIR}`;
+    const command = `node ${knownPaths.scripts}/orion.js ensure-copyright --dir ${TEMP_DIR}`;
     return exec(command, { silent: true }).code;
   }
 

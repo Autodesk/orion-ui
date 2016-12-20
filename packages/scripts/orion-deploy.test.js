@@ -22,6 +22,7 @@ const expect = require('chai').expect;
 const knownPaths = require('./modules/known-paths');
 const path = require('path');
 const uuid = require('uuid/v1');
+require('shelljs/global');
 
 const s3 = new AWS.S3();
 

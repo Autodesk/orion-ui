@@ -20,6 +20,7 @@ const expect = require('chai').expect;
 const path = require('path');
 const knownPaths = require('./modules/known-paths');
 const fs = require('fs');
+require('shelljs/global');
 
 describe('orion-compile', () => {
   /**

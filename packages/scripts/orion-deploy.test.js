@@ -31,6 +31,12 @@ describe('orion-deploy', () => {
   });
 
   it('uploads the top level build directory to s3', function testWithTimeout() {
+    // mark pending if no AWS creds present
+    if (!process.env.AWS_ACCESS_KEY_ID) {
+      console.log('Skipping orion-deploy.test.js - No AWS credencials set.');
+      return null;
+    }
+
     // uploading sometimes is slow
     this.timeout(5000);
 

@@ -54,7 +54,13 @@ function tokenize(source: string): ASTNode {
      * Describes a concurrent substate of the node-attributes
      * state. We are either reading the name or value of the attribute
      */
-    argstate: 'name' | 'value';
+    attrState: 'name' | 'value';
+
+    /**
+     * For the given attribute value, what is the close characters
+     * if it is null it hasn't been determined yet
+     */
+    attrValueTerminator: RegExp | null;
 
     /**
      * Tokenizer reads to this when argstate is name
@@ -100,11 +106,12 @@ function tokenize(source: string): ASTNode {
   // env starts at root scope
   const env: Environment = {
     state: 'init',
-    argstate: 'name',
-    closingNode: false,
-    keywordBuffer: '',
+    attrState: 'name',
+    attrValueTerminator: null,
     attributeNameBuffer: '',
     attributeValueBuffer: '',
+    closingNode: false,
+    keywordBuffer: '',
     currentScope: rootScope,
     rootScope
   }
@@ -211,7 +218,8 @@ function tokenize(source: string): ASTNode {
     // Reset and get ready for next attribute
     env.attributeNameBuffer = '';
     env.attributeValueBuffer = '';
-    env.argstate = 'name';
+    env.attrState = 'name';
+    env.attrValueTerminator = null;
   }
 
   function saveNodeToScope() {
@@ -250,7 +258,7 @@ function tokenize(source: string): ASTNode {
    * <image src="/image.png" /> is valid
    */
   function forwardSlash() {
-    if (env.state === 'node-attributes' && env.argstate === 'value') {
+    if (env.state === 'node-attributes' && env.attrState === 'value') {
       // This is a part of the value, buffer it like a char
       keyword('/');
     } else {
@@ -258,12 +266,18 @@ function tokenize(source: string): ASTNode {
     }
   }
 
-  function space() {
+  function whitespace(char: string) {
     if (env.state === 'node-keyword') {
       transition('node-attributes');
     } else if (env.state === 'node-attributes') {
-      console.log('next attribute');
-      saveBufferedAttribute();
+      // We buffer whitespace for attribute values
+      if (env.attrState === 'value') {
+        env.attributeValueBuffer += char;
+      }
+
+      if (env.attrValueTerminator && ' '.match(env.attrValueTerminator)) {
+        saveBufferedAttribute();
+      }
     }
   }
 
@@ -271,11 +285,43 @@ function tokenize(source: string): ASTNode {
     env.keywordBuffer += char;
   }
 
-  function bufferArgumentChar(char: string) {
-    if (env.argstate === 'name') {
+  function isNumber(char: any): boolean {
+    return !isNaN(char);
+  }
+
+  const WHITESPACE = /\s/;
+
+  function setAttrValueTerminator(char: string) {
+    // Numbers, true, or false are whitespace terminated
+    if (isNumber(char) || char === 't' || char === 'f') {
+      env.attrValueTerminator = WHITESPACE;
+      // Strings are double-quote terminated
+    } else if (char === '"') {
+      env.attrValueTerminator = /"/;
+    } else if (char === "{") {
+      env.attrValueTerminator = /}/;
+    } else if (char === '[') {
+      env.attrValueTerminator = /]/;
+    } else {
+      throw new SyntaxError(`${env.attributeNameBuffer} must be a valid JSON value`);
+    }
+  }
+
+  function bufferAttributeChar(char: string) {
+    if (env.attrState === 'name') {
       env.attributeNameBuffer += char;
     } else {
       env.attributeValueBuffer += char;
+
+      // If this hasn't been set yet then set it here
+      if (!env.attrValueTerminator) {
+        setAttrValueTerminator(char);
+      } else {
+        if (char.match(env.attrValueTerminator)) {
+          saveBufferedAttribute();
+        }
+      }
+
     }
   }
 
@@ -285,7 +331,7 @@ function tokenize(source: string): ASTNode {
       // when equals is pressed, move to collect
       // the argument value
       if (env.attributeNameBuffer) {
-        env.argstate = 'value';
+        env.attrState = 'value';
       }
     }
   }
@@ -296,7 +342,7 @@ function tokenize(source: string): ASTNode {
         bufferKeywordChar(char);
         break;
       case 'node-attributes':
-        bufferArgumentChar(char);
+        bufferAttributeChar(char);
         break;
       default:
         throw new SyntaxError(`unknown char ${char}`);
@@ -312,12 +358,10 @@ function tokenize(source: string): ASTNode {
       greaterThan();
     } else if (char === '/') {
       forwardSlash();
-    } else if (char === ' ') {
-      space();
+    } else if (char.match(WHITESPACE)) {
+      whitespace(char);
     } else if (char === '=') {
       equals();
-    } else if (char === '\n') {
-
     } else {
       keyword(char);
     }
@@ -385,6 +429,57 @@ const withForwardSlashAst: ASTNode = {
 
 // deepEqual(tokenize(withForwardSlash), withForwardSlashAst);
 
+const withJSONValues = `
+  <orion
+    number=1
+    string="hello world"
+    boolean=true
+    array=[
+      "item1",
+      "item2",
+      "item3"
+    ]
+    object={
+      "key": "value",
+      "key2": ["value2"]
+    }>
+  </orion>
+`
+
+const withJSONValuesAST: ASTNode = {
+  keyword: 'orion',
+  attributes: [
+    {
+      type: 'jsobject',
+      identifier: 'number',
+      value: 1
+    },
+    {
+      type: 'jsobject',
+      identifier: 'string',
+      value: 'hello world'
+    },
+    {
+      type: 'jsobject',
+      identifier: 'boolean',
+      value: true
+    },
+    {
+      type: 'jsobject',
+      identifier: 'array',
+      value: ['item1', 'item2', 'item3']
+    },
+    {
+      type: 'jsobject',
+      identifier: 'object',
+      value: { key: 'value', key2: ['value2'] }
+    }
+  ],
+  children: []
+};
+
+// deepEqual(tokenize(withSpaceInValue), withSpaceInValueAST);
+
 const withChild = `
   <orion import=["toolbar"]>
     <image src="hello.png" />
@@ -415,7 +510,7 @@ const withChildAST: ASTNode = {
   ]
 }
 
-deepEqual(tokenize(withChild), withChildAST);
+// deepEqual(tokenize(withChild), withChildAST);
 
 
 const source = `

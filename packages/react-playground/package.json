@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@orion-ui/components": "^1.0.0",
+    "@orion-ui/react": "^1.0.0",
     "@orion-ui/style": "^1.0.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"

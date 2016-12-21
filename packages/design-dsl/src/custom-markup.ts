@@ -281,9 +281,17 @@ function tokenize(source: string): ASTNode {
     // Set the currentNode to this node so attributes get added correctly
     env.currentScope.currentNode = newNode;
 
-    // TODO: take the last node from the parent scope and add this node to its children
+    // Associate with the parent node
+    if (env.currentScope.parent) {
+      if (env.currentScope.parent.currentNode) {
+        env.currentScope.parent.currentNode.children.push(newNode);
+      } else {
+        throw new Error('how did we get into this state?');
+      }
+    } else {
+      // no parent - must be root node?
+    }
   }
-
 
   function lessThan() {
     // attributes value state takes precendance over transitioning
@@ -472,7 +480,7 @@ const withImportAST: ASTNode = {
   children: []
 };
 
-deepEqual(tokenize(withImport), withImportAST);
+// deepEqual(tokenize(withImport), withImportAST);
 
 const withForwardSlash = `
   <orion import=["toolbar/new"]>
@@ -574,7 +582,7 @@ const withChildAST: ASTNode = {
   ]
 }
 
-// deepEqual(tokenize(withChild), withChildAST);
+deepEqual(tokenize(withChild), withChildAST);
 
 
 const source = `

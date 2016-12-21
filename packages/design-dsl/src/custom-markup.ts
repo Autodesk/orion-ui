@@ -89,6 +89,12 @@ interface Environment {
   closingNode: boolean;
 
   /**
+   * Set to true when in attributes.name state and the scanner
+   * encounters a /
+   */
+  selfClosing: boolean;
+
+  /**
    * Buffer which accumulates characters when in keyword
    */
   keywordBuffer: string;
@@ -117,8 +123,8 @@ interface Transition {
 function tokenize(source: string): ASTNode {
   const rootScope: Scope = {
     currentNode: null,
-    astBuffer: [],
     children: [],
+    astBuffer: [],
     parent: null
   }
 
@@ -132,6 +138,7 @@ function tokenize(source: string): ASTNode {
     attributeNameBuffer: '',
     attributeValueBuffer: '',
     closingNode: false,
+    selfClosing: false,
     keywordBuffer: '',
     currentScope: rootScope,
     rootScope
@@ -177,27 +184,36 @@ function tokenize(source: string): ASTNode {
     }
   }
 
+  function testClosingTag(): void {
+    if (env.currentScope.parent) {
+      const testNode = env.selfClosing
+        ? env.currentScope.astBuffer[env.currentScope.astBuffer.length - 1]
+        : env.currentScope.parent.astBuffer[env.currentScope.parent.astBuffer.length - 1];
+
+      if (testNode.keyword !== env.keywordBuffer) {
+        throw new SyntaxError('unbalanced tags');
+      }
+    } else {
+      // no parent node - could be root?
+    }
+  }
+
   function setCurrentScopeToParent(): void {
     const parentScope = env.currentScope.parent;
 
-    if (parentScope) {
-      const lastAstNode: ASTNode = parentScope.astBuffer[parentScope.astBuffer.length - 1];
-
-      if (lastAstNode.keyword === env.keywordBuffer) {
-        env.currentScope = parentScope;
-      } else {
-        throw new SyntaxError('closing tag does not match');
-      }
-    } else {
-      throw new SyntaxError(`How did we get here?`);
+    if (!env.currentScope.parent) {
+      // we must be at the root scope already
+      return;
     }
+
+    env.currentScope = env.currentScope.parent;
   }
 
   function createChildScope(): void {
     const newScope: Scope = {
       currentNode: null,
-      astBuffer: [],
       children: [],
+      astBuffer: [],
       parent: env.currentScope
     }
 
@@ -225,6 +241,7 @@ function tokenize(source: string): ASTNode {
     // If the last node is a closing node, go up a scope
     // Otherwise create a child scope
     if (env.closingNode) {
+      testClosingTag();
       setCurrentScopeToParent();
     } else {
       createChildScope();
@@ -232,6 +249,7 @@ function tokenize(source: string): ASTNode {
 
     // Entering children resets closingNode state
     env.closingNode = false;
+    env.selfClosing = false;
   }
 
   function exitChildren() {
@@ -268,15 +286,14 @@ function tokenize(source: string): ASTNode {
   }
 
   function saveNodeToScope() {
-    const {astBuffer} = env.currentScope;
-
     const newNode: ASTNode = {
       keyword: env.keywordBuffer,
       attributes: [],
       children: []
     };
 
-    astBuffer.push(newNode);
+    // Store reference in astBuffer
+    env.currentScope.astBuffer.push(newNode);
 
     // Set the currentNode to this node so attributes get added correctly
     env.currentScope.currentNode = newNode;
@@ -322,7 +339,13 @@ function tokenize(source: string): ASTNode {
       // This is a part of the value, buffer it like a char
       keyword('/');
     } else {
+      if (env.state === 'attributes') {
+        env.selfClosing = true;
+      }
+
       env.closingNode = true;
+
+
     }
   }
 
@@ -440,13 +463,10 @@ function tokenize(source: string): ASTNode {
   scan(source);
 
   if (env.rootScope.astBuffer.length === 0) {
-    throw new SyntaxError('no nodes defined');
+    throw new Error('no nodes defined');
   }
 
-  if (env.rootScope.astBuffer.length > 1) {
-    throw new SyntaxError('there must be only 1 root node');
-  }
-
+  // Return first node
   return env.rootScope.astBuffer[0];
 }
 
@@ -461,7 +481,7 @@ const minAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(minimum), minAST);
+deepEqual(tokenize(minimum), minAST);
 
 const withImport = `
   <orion import=["toolbar"]>
@@ -480,7 +500,7 @@ const withImportAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withImport), withImportAST);
+deepEqual(tokenize(withImport), withImportAST);
 
 const withForwardSlash = `
   <orion import=["toolbar/new"]>
@@ -499,7 +519,7 @@ const withForwardSlashAst: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withForwardSlash), withForwardSlashAst);
+deepEqual(tokenize(withForwardSlash), withForwardSlashAst);
 
 const withJSONValues = `
   <orion
@@ -550,7 +570,7 @@ const withJSONValuesAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withJSONValues), withJSONValuesAST);
+deepEqual(tokenize(withJSONValues), withJSONValuesAST);
 
 const withChild = `
   <orion import=["toolbar"]>
@@ -584,6 +604,31 @@ const withChildAST: ASTNode = {
 
 deepEqual(tokenize(withChild), withChildAST);
 
+const withSelfClosing = `
+  <orion>
+    <image src="hello.png" />
+  </orion>
+`
+
+const withSelfClosingAST: ASTNode = {
+  keyword: 'orion',
+  attributes: [],
+  children: [
+    {
+      keyword: 'image',
+      attributes: [
+        {
+          identifier: 'src',
+          type: 'jsobject',
+          value: 'hello.png'
+        }
+      ],
+      children: []
+    }
+  ]
+}
+
+deepEqual(tokenize(withSelfClosing), withSelfClosingAST);
 
 const source = `
 <orion>

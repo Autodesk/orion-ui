@@ -261,24 +261,34 @@ function tokenize(source: string): ASTNode {
       throw new SyntaxError('no value for attribute');
     }
 
-    // try parsing JSON. if that doesn't work it must be a binding OR lambda
+    // Try parsing the json and if it throws an exception that is a JSON unexpected
+    // end of input, we should continue buffering... if we get to the end of the buffer then we error out
     try {
-      const json = JSON.parse(env.attributeValueBuffer);
-      if (env.currentScope.currentNode) {
-        env.currentScope.currentNode.attributes.push({
-          type: 'jsobject',
-          identifier: env.attributeNameBuffer,
-          value: json
-        });
-      } else {
-        throw new SyntaxError('currentNode should not be null');
-      }
+      saveJSONAttributeValue();
+      resetAttributeState();
     } catch (e) {
-      // write to current node
-
+      // TODO this might be flaky way to catch JSON errors
+      if (e.message !== 'Unexpected end of JSON input') {
+        throw e;
+      }
     }
+  }
 
-    // Reset and get ready for next attribute
+  function saveJSONAttributeValue() {
+    const json = JSON.parse(env.attributeValueBuffer);
+    if (env.currentScope.currentNode) {
+      env.currentScope.currentNode.attributes.push({
+        type: 'jsobject',
+        identifier: env.attributeNameBuffer,
+        value: json
+      });
+    } else {
+      throw new SyntaxError('currentNode should not be null');
+    }
+  }
+
+  // Reset and get ready for next attribute
+  function resetAttributeState() {
     env.attributeNameBuffer = '';
     env.attributeValueBuffer = '';
     env.attrState = 'name';
@@ -328,12 +338,6 @@ function tokenize(source: string): ASTNode {
     }
   }
 
-  /**
-   * TODO: if we're reading an attribute value we should let
-   * forward slashes buffer instead
-   *
-   * <image src="/image.png" /> is valid
-   */
   function forwardSlash() {
     if (env.state === 'attributes' && env.attrState === 'value') {
       // This is a part of the value, buffer it like a char
@@ -344,8 +348,6 @@ function tokenize(source: string): ASTNode {
       }
 
       env.closingNode = true;
-
-
     }
   }
 
@@ -431,6 +433,12 @@ function tokenize(source: string): ASTNode {
     }
   }
 
+  function testForBadJson() {
+    if (env.state === 'attributes' && env.attrState === 'value') {
+      throw new SyntaxError(`${env.attributeNameBuffer} has a bad value.`)
+    }
+  }
+
   function scan(source: string): void {
     for (var i = 0; i < source.length; i++) {
       const char = source.charAt(i);
@@ -461,6 +469,8 @@ function tokenize(source: string): ASTNode {
   }
 
   scan(source);
+
+  testForBadJson();
 
   if (env.rootScope.astBuffer.length === 0) {
     throw new Error('no nodes defined');
@@ -629,6 +639,62 @@ const withSelfClosingAST: ASTNode = {
 }
 
 deepEqual(tokenize(withSelfClosing), withSelfClosingAST);
+
+const withNestedJson = `
+  <orion
+  array=[
+    ["foo1", "bar1"],
+    ["foo2", "bar2"]
+  ]
+
+  object={
+    "key": {
+      "sub-key": "value"
+    }
+  }>
+  </orion>
+`
+
+const withNestedJsonAST: ASTNode = {
+  keyword: 'orion',
+  attributes: [
+    {
+      type: 'jsobject',
+      identifier: 'array',
+      value: [
+        ['foo1', 'bar1'],
+        ['foo2', 'bar2']
+      ]
+    },
+    {
+      type: 'jsobject',
+      identifier: 'object',
+      value: {
+        key: {
+          'sub-key': 'value'
+        }
+      }
+    }
+  ],
+  children: []
+}
+
+deepEqual(tokenize(withNestedJson), withNestedJsonAST);
+
+const withBadJson = `
+  <orion
+    good="value"
+    array=[
+      ["foo1", "bar"
+    ]>
+  </orion>
+`;
+
+try {
+  tokenize(withBadJson)
+} catch (e) {
+  deepEqual(e.message, 'array has a bad value.');
+}
 
 const source = `
 <orion>

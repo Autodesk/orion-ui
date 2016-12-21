@@ -28,83 +28,104 @@ interface ASTNode {
 
 const NOOP = (): void => { /* no-op */ }
 
+type State =
+  'init'
+  | 'keyword'
+  | 'attributes'
+  | 'children';
+
+
+interface Scope {
+  attributesBuffer: Attribute[];
+  astBuffer: ASTNode[];
+  children: Scope[];
+  // Only the root scope has a null parent
+  parent: Scope | null;
+}
+
+interface Environment {
+  /**
+   * What line of source code the tokenizer is currently on
+   */
+  line: number;
+
+  /**
+   * What column of source code the tokenizer is currently on
+   */
+  column: number;
+
+  /**
+   * Describes the primary state of the tokenizer
+   */
+  state: State;
+
+  /**
+   * Describes a concurrent substate of the attributes
+   * state. We are either reading the name or value of the attribute
+   */
+  attrState: 'name' | 'value';
+
+  /**
+   * For the given attribute value, what is the close characters
+   * if it is null it hasn't been determined yet
+   */
+  attrValueTerminator: RegExp | null;
+
+  /**
+   * Tokenizer reads to this when argstate is name
+   */
+  attributeNameBuffer: string;
+
+  /**
+   * Tokenizer reads to this when artstate is value
+   */
+  attributeValueBuffer: string;
+
+  /**
+   * Set to true when a forward slash is encountered
+   * - while in keyword state (closing tag)
+   * - while in attributes state (self closing tag)
+   */
+  closingNode: boolean;
+
+  /**
+   * Buffer which accumulates characters when in keyword
+   */
+  keywordBuffer: string;
+
+  /**
+   * Tree of AST nodes plus related metadata
+   * - this value is never overridden
+   */
+  rootScope: Scope;
+
+  /**
+   * The current scope
+   * - this value is overriden when we move to child nodes of a keyword
+   */
+  currentScope: Scope;
+}
+
+interface Transition {
+  enter: () => void;
+  exit: () => void;
+}
+
 /**
  * Read source in and return ASTNode
  */
 function tokenize(source: string): ASTNode {
-  type State =
-    'init'
-    | 'keyword'
-    | 'attributes'
-    | 'children';
-
-  interface Scope {
-    attributesBuffer: Attribute[];
-    astBuffer: ASTNode[];
-    children: Scope[];
-  }
-
-  interface Environment {
-    /**
-     * Describes the primary state of the tokenizer
-     */
-    state: State;
-
-    /**
-     * Describes a concurrent substate of the attributes
-     * state. We are either reading the name or value of the attribute
-     */
-    attrState: 'name' | 'value';
-
-    /**
-     * For the given attribute value, what is the close characters
-     * if it is null it hasn't been determined yet
-     */
-    attrValueTerminator: RegExp | null;
-
-    /**
-     * Tokenizer reads to this when argstate is name
-     */
-    attributeNameBuffer: string;
-
-    /**
-     * Tokenizer reads to this when artstate is value
-     */
-    attributeValueBuffer: string;
-
-    /**
-     * Set to true when a forward slash is encountered
-     * - while in keyword state (closing tag)
-     * - while in attributes state (self closing tag)
-     */
-    closingNode: boolean;
-
-    /**
-     * Buffer which accumulates characters when in keyword
-     */
-    keywordBuffer: string;
-
-    /**
-     * Tree of AST nodes plus related metadata
-     * - this value is never overridden
-     */
-    rootScope: Scope;
-
-    /**
-     * The current scope
-     * - this value is overriden when we move to child nodes of a keyword
-     */
-    currentScope: Scope;
-  }
-
   const rootScope: Scope = {
     attributesBuffer: [],
     astBuffer: [],
-    children: []
+    children: [],
+    parent: null
   }
 
   // env starts at root scope
   const env: Environment = {
+    line: 0,
+    column: 0,
     state: 'init',
     attrState: 'name',
     attrValueTerminator: null,
@@ -114,11 +135,6 @@ function tokenize(source: string): ASTNode {
     keywordBuffer: '',
     currentScope: rootScope,
     rootScope
-  }
-
-  interface Transition {
-    enter: () => void;
-    exit: () => void;
   }
 
   function transition(next: State) {
@@ -132,7 +148,6 @@ function tokenize(source: string): ASTNode {
 
     env.state = next;
   }
-
 
   const transitions: { [key: string]: Transition } = {
     keyword: {
@@ -153,16 +168,48 @@ function tokenize(source: string): ASTNode {
 
   function enterKeyword() {
     console.log('enter keyword');
-
-    // Always reset closingNode on enter
-    env.closingNode = false;
-
     // Start a new keywordBuffer
     env.keywordBuffer = '';
   }
 
   function exitKeyword() {
-    saveNodeToScope();
+    // If this keyword is a closing tag, set current scope to parent
+    // Otherwise, save the node to the current scope and create a child scope
+    if (env.closingNode) {
+      setCurrentScopeToParent();
+      env.closingNode = false;
+    } else {
+      saveNodeToScope();
+      createChildScope();
+    }
+  }
+
+  function setCurrentScopeToParent(): void {
+    const parentScope = env.currentScope.parent;
+
+    if (parentScope) {
+      const lastAstNode: ASTNode = parentScope.astBuffer[parentScope.astBuffer.length - 1];
+
+      if (lastAstNode.keyword === env.keywordBuffer) {
+        env.currentScope = parentScope;
+      } else {
+        throw new SyntaxError('closing tag does not match');
+      }
+    } else {
+      throw new SyntaxError(`How did we get here?`);
+    }
+  }
+
+  function createChildScope(): void {
+    const newScope: Scope = {
+      attributesBuffer: [],
+      astBuffer: [],
+      children: [],
+      parent: env.currentScope
+    }
+
+    env.currentScope.children.push(newScope);
+    env.currentScope = newScope;
   }
 
   function enterAttributes() {
@@ -172,13 +219,7 @@ function tokenize(source: string): ASTNode {
 
   function exitAttributes() {
     console.log('exit attributes');
-
     saveBufferedAttribute();
-
-    if (env.closingNode) {
-      // self closing node
-      saveNodeToScope();
-    }
   }
 
   /**
@@ -189,15 +230,6 @@ function tokenize(source: string): ASTNode {
    * - creates a new scope which is nested on the current scope
    */
   function enterChildren() {
-    const newScope: Scope = {
-      attributesBuffer: [],
-      astBuffer: [],
-      children: []
-    }
-
-    env.currentScope.children.push(newScope);
-    env.currentScope = newScope;
-
   }
 
   function exitChildren() {
@@ -261,7 +293,6 @@ function tokenize(source: string): ASTNode {
       transition('children');
     }
   }
-
 
   /**
    * TODO: if we're reading an attribute value we should let
@@ -360,23 +391,36 @@ function tokenize(source: string): ASTNode {
     }
   }
 
-  for (var i = 0; i < source.length; i++) {
-    const char = source.charAt(i);
+  function scan(source: string): void {
+    for (var i = 0; i < source.length; i++) {
+      const char = source.charAt(i);
 
-    if (char === '<') {
-      lessThan();
-    } else if (char === '>') {
-      greaterThan();
-    } else if (char === '/') {
-      forwardSlash();
-    } else if (char.match(WHITESPACE)) {
-      whitespace(char);
-    } else if (char === '=') {
-      equals();
-    } else {
-      keyword(char);
+      // increment column count
+      env.column += 1;
+
+      if (char === '<') {
+        lessThan();
+      } else if (char === '>') {
+        greaterThan();
+      } else if (char === '/') {
+        forwardSlash();
+      } else if (char.match(WHITESPACE)) {
+        // TODO: windows newlines?
+        if (char === '\n') {
+          env.line += 1;
+          env.column = 0;
+        }
+
+        whitespace(char);
+      } else if (char === '=') {
+        equals();
+      } else {
+        keyword(char);
+      }
     }
   }
+
+  scan(source);
 
   if (env.rootScope.astBuffer.length === 0) {
     throw new SyntaxError('no nodes defined');
@@ -400,7 +444,7 @@ const minAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(minimum), minAST);
+deepEqual(tokenize(minimum), minAST);
 
 const withImport = `
   <orion import=["toolbar"]>
@@ -493,7 +537,7 @@ const withJSONValuesAST: ASTNode = {
 
 const withChild = `
   <orion import=["toolbar"]>
-    <image src="hello.png" />
+    <image src="hello.png"></image>
   </orion>
 `;
 

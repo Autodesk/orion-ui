@@ -36,7 +36,7 @@ type State =
 
 
 interface Scope {
-  attributesBuffer: Attribute[];
+  currentNode: ASTNode | null;
   astBuffer: ASTNode[];
   children: Scope[];
   // Only the root scope has a null parent
@@ -116,7 +116,7 @@ interface Transition {
  */
 function tokenize(source: string): ASTNode {
   const rootScope: Scope = {
-    attributesBuffer: [],
+    currentNode: null,
     astBuffer: [],
     children: [],
     parent: null
@@ -167,20 +167,13 @@ function tokenize(source: string): ASTNode {
   }
 
   function enterKeyword() {
-    console.log('enter keyword');
-    // Start a new keywordBuffer
     env.keywordBuffer = '';
   }
 
   function exitKeyword() {
-    // If this keyword is a closing tag, set current scope to parent
-    // Otherwise, save the node to the current scope and create a child scope
-    if (env.closingNode) {
-      setCurrentScopeToParent();
-      env.closingNode = false;
-    } else {
+    // Only save nodes for opening tags
+    if (!env.closingNode) {
       saveNodeToScope();
-      createChildScope();
     }
   }
 
@@ -202,7 +195,7 @@ function tokenize(source: string): ASTNode {
 
   function createChildScope(): void {
     const newScope: Scope = {
-      attributesBuffer: [],
+      currentNode: null,
       astBuffer: [],
       children: [],
       parent: env.currentScope
@@ -219,7 +212,6 @@ function tokenize(source: string): ASTNode {
 
   function exitAttributes() {
     console.log('exit attributes');
-    saveBufferedAttribute();
   }
 
   /**
@@ -230,6 +222,16 @@ function tokenize(source: string): ASTNode {
    * - creates a new scope which is nested on the current scope
    */
   function enterChildren() {
+    // If the last node is a closing node, go up a scope
+    // Otherwise create a child scope
+    if (env.closingNode) {
+      setCurrentScopeToParent();
+    } else {
+      createChildScope();
+    }
+
+    // Entering children resets closingNode state
+    env.closingNode = false;
   }
 
   function exitChildren() {
@@ -237,21 +239,25 @@ function tokenize(source: string): ASTNode {
   }
 
   function saveBufferedAttribute() {
-    if (env.attributeValueBuffer) {
-      // try parsing JSON. if that doesn't work it must be a binding OR lambda
-      try {
-        const json = JSON.parse(env.attributeValueBuffer);
-        const {attributesBuffer} = env.currentScope;
+    if (!env.attributeValueBuffer) {
+      throw new SyntaxError('no value for attribute');
+    }
 
-        attributesBuffer.push({
+    // try parsing JSON. if that doesn't work it must be a binding OR lambda
+    try {
+      const json = JSON.parse(env.attributeValueBuffer);
+      if (env.currentScope.currentNode) {
+        env.currentScope.currentNode.attributes.push({
           type: 'jsobject',
           identifier: env.attributeNameBuffer,
           value: json
         });
-      } catch (e) {
-        // write to current node
-
+      } else {
+        throw new SyntaxError('currentNode should not be null');
       }
+    } catch (e) {
+      // write to current node
+
     }
 
     // Reset and get ready for next attribute
@@ -262,15 +268,18 @@ function tokenize(source: string): ASTNode {
   }
 
   function saveNodeToScope() {
-    const {astBuffer, attributesBuffer} = env.currentScope;
+    const {astBuffer} = env.currentScope;
 
     const newNode: ASTNode = {
       keyword: env.keywordBuffer,
-      attributes: attributesBuffer,
+      attributes: [],
       children: []
     };
 
     astBuffer.push(newNode);
+
+    // Set the currentNode to this node so attributes get added correctly
+    env.currentScope.currentNode = newNode;
 
     // TODO: take the last node from the parent scope and add this node to its children
   }
@@ -444,7 +453,7 @@ const minAST: ASTNode = {
   children: []
 };
 
-deepEqual(tokenize(minimum), minAST);
+// deepEqual(tokenize(minimum), minAST);
 
 const withImport = `
   <orion import=["toolbar"]>
@@ -463,7 +472,7 @@ const withImportAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withImport), withImportAST);
+deepEqual(tokenize(withImport), withImportAST);
 
 const withForwardSlash = `
   <orion import=["toolbar/new"]>

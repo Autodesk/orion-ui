@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import React from 'react';
+import React, { PropTypes } from 'react';
 import button from '@orion-ui/components/lib/2016-12-01/button';
 
 class Button extends React.Component {
@@ -22,5 +22,10 @@ class Button extends React.Component {
     return <button {...this.props} />
   }
 }
+
+Button.propTypes = {
+  backgroundColor: PropTypes.string,
+  color: PropTypes.string,
+};
 
 export default Button;

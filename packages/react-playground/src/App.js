@@ -21,6 +21,9 @@ import logo from './logo.svg';
 import './App.css';
 
 const App = function App() {
+  function clickHandler() {
+    console.log('Clicked it!');
+  }
   return (
     <div className="App">
       <div className="App-header">
@@ -31,7 +34,7 @@ const App = function App() {
         To get started, edit <code>src/App.js</code> and save to reload.
         <orion-button>Hello from React!</orion-button>
         <orion-inline background="black" color="white">Hello orion-inline</orion-inline>
-        <Button backgroundColor="#000000" color="#FFFFFF">Hello, Button!</Button>
+        <Button backgroundColor="#000000" color="#FFFFFF" onClick={clickHandler}>Hello, Button!</Button>
       </p>
     </div>
   );

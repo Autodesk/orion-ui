@@ -27,10 +27,10 @@ export interface ASTNode {
 const NOOP = (): void => { /* no-op */ }
 
 type State =
-  'init'
+  'children'
   | 'keyword'
   | 'attributes'
-  | 'children';
+  | 'lambda';
 
 
 interface Scope {
@@ -108,17 +108,48 @@ interface Environment {
    * - this value is overriden when we move to child nodes of a keyword
    */
   currentScope: Scope;
+
+  maybeLambda: boolean;
+
+  handleChar: ((char: string) => void);
 }
 
 interface Transition {
   enter: () => void;
   exit: () => void;
+  handleChar: (char: string) => void;
 }
 
 /**
  * Read source in and return ASTNode
  */
 export function tokenize(source: string): ASTNode {
+  const transitions: { [key: string]: Transition } = {
+    keyword: {
+      enter: enterKeyword,
+      exit: exitKeyword,
+      handleChar: handleKeywordChar
+    },
+
+    attributes: {
+      enter: enterAttributes,
+      exit: exitAttributes,
+      handleChar: handleAttributesChar
+    },
+
+    children: {
+      enter: enterChildren,
+      exit: exitChildren,
+      handleChar: handleChildrenChar
+    },
+
+    lambda: {
+      enter: enterLambda,
+      exit: exitLambda,
+      handleChar: handleLambdaChar
+    }
+  }
+
   const rootScope: Scope = {
     currentNode: null,
     children: [],
@@ -130,7 +161,7 @@ export function tokenize(source: string): ASTNode {
   const env: Environment = {
     line: 0,
     column: 0,
-    state: 'init',
+    state: 'children',
     attrState: 'name',
     attrValueTerminator: null,
     attributeNameBuffer: '',
@@ -139,7 +170,10 @@ export function tokenize(source: string): ASTNode {
     selfClosing: false,
     keywordBuffer: '',
     currentScope: rootScope,
-    rootScope
+    rootScope,
+
+    maybeLambda: false,
+    handleChar: transitions['children'].handleChar
   }
 
   function transition(next: State) {
@@ -149,26 +183,10 @@ export function tokenize(source: string): ASTNode {
 
     if (transitions[next]) {
       transitions[next].enter();
+      env.handleChar = transitions[next].handleChar;
     }
 
     env.state = next;
-  }
-
-  const transitions: { [key: string]: Transition } = {
-    keyword: {
-      enter: enterKeyword,
-      exit: exitKeyword
-    },
-
-    attributes: {
-      enter: enterAttributes,
-      exit: exitAttributes
-    },
-
-    children: {
-      enter: enterChildren,
-      exit: exitChildren
-    }
   }
 
   function enterKeyword() {
@@ -179,6 +197,18 @@ export function tokenize(source: string): ASTNode {
     // Only save nodes for opening tags
     if (!env.closingNode) {
       saveNodeToScope();
+    }
+  }
+
+  function handleKeywordChar(char: string) {
+    if (char === '>') {
+      transition('children');
+    } else if (char.match(WHITESPACE)) {
+      transition('attributes');
+    } else if (char === '/') {
+      env.closingNode = true;
+    } else {
+      bufferKeywordChar(char);
     }
   }
 
@@ -228,6 +258,40 @@ export function tokenize(source: string): ASTNode {
     console.log('exit attributes');
   }
 
+  function handleAttributesChar(char: string): void {
+    if (env.attrState === 'value') {
+      bufferAttributeChar(char);
+    } else {
+      if (char === '>') {
+        if (env.maybeLambda) {
+          transition('lambda');
+          env.maybeLambda = false;
+        } else {
+          transition('children');
+        }
+      } else if (char === '/') {
+        env.selfClosing = true;
+        env.closingNode = true;
+      } else if (char.match(WHITESPACE)) {
+        if (env.attrValueTerminator && ' '.match(env.attrValueTerminator)) {
+          saveBufferedAttribute();
+        } else {
+          // ignore whitespace
+        }
+      } else if (char === '=') {
+        // If there is no attribute name, it may be a lambda
+        // The next scan will confirm if the > is also passed
+        if (env.attributeNameBuffer == '') {
+          env.maybeLambda = true;
+        } else {
+          env.attrState = 'value'
+        }
+      } else {
+        bufferAttributeChar(char);
+      }
+    }
+  }
+
   /**
    * Entering children does the following:
    *
@@ -252,6 +316,12 @@ export function tokenize(source: string): ASTNode {
 
   function exitChildren() {
     console.log('exit children');
+  }
+
+  function handleChildrenChar(char: string): void {
+    if (char === '<') {
+      transition('keyword');
+    }
   }
 
   function saveBufferedAttribute() {
@@ -318,52 +388,6 @@ export function tokenize(source: string): ASTNode {
     }
   }
 
-  function lessThan() {
-    // attributes value state takes precendance over transitioning
-    if (env.state === 'attributes' && env.attrState === 'value') {
-      env.attributeValueBuffer += '<';
-    } else {
-      transition('keyword');
-    }
-  }
-
-  function greaterThan() {
-    // attributes value state takes precendance over transitioning
-    if (env.state === 'attributes' && env.attrState === 'value') {
-      env.attributeValueBuffer += '>';
-    } else {
-      transition('children');
-    }
-  }
-
-  function forwardSlash() {
-    if (env.state === 'attributes' && env.attrState === 'value') {
-      // This is a part of the value, buffer it like a char
-      keyword('/');
-    } else {
-      if (env.state === 'attributes') {
-        env.selfClosing = true;
-      }
-
-      env.closingNode = true;
-    }
-  }
-
-  function whitespace(char: string) {
-    if (env.state === 'keyword') {
-      transition('attributes');
-    } else if (env.state === 'attributes') {
-      // We buffer whitespace for attribute values
-      if (env.attrState === 'value') {
-        env.attributeValueBuffer += char;
-      }
-
-      if (env.attrValueTerminator && ' '.match(env.attrValueTerminator)) {
-        saveBufferedAttribute();
-      }
-    }
-  }
-
   function bufferKeywordChar(char: string) {
     env.keywordBuffer += char;
   }
@@ -408,33 +432,22 @@ export function tokenize(source: string): ASTNode {
     }
   }
 
-  function equals() {
-    if (env.state === 'attributes') {
-      if (env.attrState == 'name') {
-        env.attrState = 'value';
-      } else {
-        env.attributeValueBuffer += '=';
-      }
-    }
-  }
-
-  function keyword(char: string) {
-    switch (env.state) {
-      case 'keyword':
-        bufferKeywordChar(char);
-        break;
-      case 'attributes':
-        bufferAttributeChar(char);
-        break;
-      default:
-        throw new SyntaxError(`unknown char ${char}`);
-    }
-  }
-
   function testForBadJson() {
     if (env.state === 'attributes' && env.attrState === 'value') {
       throw new SyntaxError(`${env.attributeNameBuffer} has a bad value.`)
     }
+  }
+
+  function enterLambda(): void {
+    console.log('enter lambda');
+  }
+
+  function exitLambda(): void {
+    console.log('exit lambda');
+  }
+
+  function handleLambdaChar(): void {
+    console.log('scanCharLambda')
   }
 
   function scan(source: string): void {
@@ -444,25 +457,13 @@ export function tokenize(source: string): ASTNode {
       // increment column count
       env.column += 1;
 
-      if (char === '<') {
-        lessThan();
-      } else if (char === '>') {
-        greaterThan();
-      } else if (char === '/') {
-        forwardSlash();
-      } else if (char.match(WHITESPACE)) {
-        // TODO: windows newlines?
-        if (char === '\n') {
-          env.line += 1;
-          env.column = 0;
-        }
-
-        whitespace(char);
-      } else if (char === '=') {
-        equals();
-      } else {
-        keyword(char);
+      // TODO: windows newlines?
+      if (char === '\n') {
+        env.line += 1;
+        env.column = 0;
       }
+
+      env.handleChar(char);
     }
   }
 

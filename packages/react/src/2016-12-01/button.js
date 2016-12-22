@@ -16,15 +16,14 @@ limitations under the License.
 
 */
 import React, { PropTypes } from 'react';
-import button from '@orion-ui/components/lib/2016-12-01/button';
+import '@orion-ui/components/lib/2016-12-01/button';
 
 function Button(props) {
-  return <button {...props} />;
+  return <orion-button>{props.children}</orion-button>;
 }
 
 Button.propTypes = {
-  backgroundColor: PropTypes.string,
-  color: PropTypes.string,
+  children: PropTypes.node,
 };
 
 export default Button;

@@ -13,7 +13,7 @@
     "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
     "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds",
     "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./",
-    "specs": "NODE_ENV=test mocha --compilers js:babel-core/register './packages/!(react-playground)/{,!(node_modules)/**/}*.test.js'"
+    "specs": "NODE_ENV=test mocha --compilers js:babel-core/register './packages/!(react-playground)/src/**/*.test.js'"
   },
   "repository": {
     "type": "git",

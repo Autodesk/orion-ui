@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -20,7 +21,7 @@ import { mount } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import chaiEnzyme from 'chai-enzyme';
-import OrionButton from './button.js';
+import OrionButton from './button';
 
 chai.use(chaiEnzyme());
 
@@ -28,11 +29,9 @@ describe('<OrionButton />', () => {
   it('passes props to button web component', () => {
     const props = {
       backgroundColor: '#FFFFFF',
-      color: '#000000'
-    }
-    const wrapper = mount(
-      <OrionButton {...props} />
-    );
+      color: '#000000',
+    };
+    const wrapper = mount(<OrionButton {...props} />);
     const passedProps = wrapper.find('button').props();
     expect(passedProps.backgroundColor).to.equal(props.backgroundColor);
     expect(passedProps.color).to.equal(props.color);
@@ -40,9 +39,7 @@ describe('<OrionButton />', () => {
 
   it('simulates click events', () => {
     const onClick = sinon.spy();
-    const wrapper = mount(
-      <OrionButton onClick={onClick} />
-    );
+    const wrapper = mount(<OrionButton onClick={onClick} />);
     wrapper.find('button').simulate('click');
     expect(onClick).to.have.property('callCount', 1);
   });

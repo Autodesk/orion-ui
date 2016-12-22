@@ -1,3 +1,4 @@
+
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -17,10 +18,8 @@ limitations under the License.
 import React, { PropTypes } from 'react';
 import button from '@orion-ui/components/lib/2016-12-01/button';
 
-class Button extends React.Component {
-  render() {
-    return <button {...this.props} />
-  }
+function Button(props) {
+  return <button {...props} />;
 }
 
 Button.propTypes = {

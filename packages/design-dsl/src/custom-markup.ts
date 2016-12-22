@@ -217,6 +217,48 @@ try {
   deepEqual(e.message, 'array has a bad value.');
 }
 
+const lambda = `
+  <orion collection=["one", "two", "three"] => item, index>
+    <image />
+  </orion>
+`;
+
+const lambdaAST: ASTNode = {
+  keyword: 'orion',
+  attributes: [
+    {
+      type: 'jsobject',
+      identifier: 'collection',
+      value: ['one', 'two', 'three']
+    },
+    {
+      type: 'lambda',
+      bindings: ['item', 'index'],
+      children: [
+        {
+          keyword: 'image',
+          attributes: [],
+          children: []
+        }
+      ]
+    }
+  ],
+  children: []
+}
+
+// deepEqual(tokenize(lambda), lambdaAST);
+
+const lambda2 = `
+  <container>
+    <let collection=["one", "two", "three"]>
+      <map collection=collection => item, index>
+        <text>{ index + 1 } {item}</text>
+      </map>
+      <text>{ count(collection) }</text>
+    </let>
+  </container>
+`;
+
 const source = `
 <orion>
   <component => items>

@@ -1,4 +1,7 @@
+import { ES2015_IDENTIFIER } from './utils/es6-identifier-regex';
+
 export type Attribute = Binding | JSObject | Lambda;
+
 
 export interface Lambda {
   type: 'lambda';
@@ -35,6 +38,7 @@ type State =
 
 interface Scope {
   currentNode: ASTNode | null;
+  currentLambda: Lambda | null;
   astBuffer: ASTNode[];
   children: Scope[];
   // Only the root scope has a null parent
@@ -112,6 +116,8 @@ interface Environment {
   maybeLambda: boolean;
 
   handleChar: ((char: string) => void);
+
+  lambdaBindingBuffer: string;
 }
 
 interface Transition {
@@ -152,6 +158,7 @@ export function tokenize(source: string): ASTNode {
 
   const rootScope: Scope = {
     currentNode: null,
+    currentLambda: null,
     children: [],
     astBuffer: [],
     parent: null
@@ -173,6 +180,7 @@ export function tokenize(source: string): ASTNode {
     rootScope,
 
     maybeLambda: false,
+    lambdaBindingBuffer: '',
     handleChar: transitions['children'].handleChar
   }
 
@@ -210,43 +218,6 @@ export function tokenize(source: string): ASTNode {
     } else {
       bufferKeywordChar(char);
     }
-  }
-
-  function testClosingTag(): void {
-    if (env.currentScope.parent) {
-      const testNode = env.selfClosing
-        ? env.currentScope.astBuffer[env.currentScope.astBuffer.length - 1]
-        : env.currentScope.parent.astBuffer[env.currentScope.parent.astBuffer.length - 1];
-
-      if (testNode.keyword !== env.keywordBuffer) {
-        throw new SyntaxError('unbalanced tags');
-      }
-    } else {
-      // no parent node - could be root?
-    }
-  }
-
-  function setCurrentScopeToParent(): void {
-    const parentScope = env.currentScope.parent;
-
-    if (!env.currentScope.parent) {
-      // we must be at the root scope already
-      return;
-    }
-
-    env.currentScope = env.currentScope.parent;
-  }
-
-  function createChildScope(): void {
-    const newScope: Scope = {
-      currentNode: null,
-      children: [],
-      astBuffer: [],
-      parent: env.currentScope
-    }
-
-    env.currentScope.children.push(newScope);
-    env.currentScope = newScope;
   }
 
   function enterAttributes() {
@@ -302,7 +273,7 @@ export function tokenize(source: string): ASTNode {
   function enterChildren() {
     // If the last node is a closing node, go up a scope
     // Otherwise create a child scope
-    if (env.closingNode) {
+   if (env.closingNode) {
       testClosingTag();
       setCurrentScopeToParent();
     } else {
@@ -313,6 +284,46 @@ export function tokenize(source: string): ASTNode {
     env.closingNode = false;
     env.selfClosing = false;
   }
+
+
+  function testClosingTag(): void {
+    if (env.currentScope.parent) {
+      const testNode = env.selfClosing
+        ? env.currentScope.astBuffer[env.currentScope.astBuffer.length - 1]
+        : env.currentScope.parent.astBuffer[env.currentScope.parent.astBuffer.length - 1];
+
+      if (testNode.keyword !== env.keywordBuffer) {
+        throw new SyntaxError('unbalanced tags');
+      }
+    } else {
+      // no parent node - could be root?
+    }
+  }
+
+  function setCurrentScopeToParent(): void {
+    const parentScope = env.currentScope.parent;
+
+    if (!env.currentScope.parent) {
+      // we must be at the root scope already
+      return;
+    }
+
+    env.currentScope = env.currentScope.parent;
+  }
+
+  function createChildScope(): void {
+    const newScope: Scope = {
+      currentNode: null,
+      currentLambda: null,
+      children: [],
+      astBuffer: [],
+      parent: env.currentScope
+    }
+
+    env.currentScope.children.push(newScope);
+    env.currentScope = newScope;
+  }
+
 
   function exitChildren() {
     console.log('exit children');
@@ -379,7 +390,12 @@ export function tokenize(source: string): ASTNode {
     // Associate with the parent node
     if (env.currentScope.parent) {
       if (env.currentScope.parent.currentNode) {
-        env.currentScope.parent.currentNode.children.push(newNode);
+        // If the parent scope has a lambda, add this node to the lambdas children
+        if (env.currentScope.parent.currentLambda) {
+          env.currentScope.parent.currentLambda.children.push(newNode);
+        } else {
+          env.currentScope.parent.currentNode.children.push(newNode);
+        }
       } else {
         throw new Error('how did we get into this state?');
       }
@@ -440,15 +456,57 @@ export function tokenize(source: string): ASTNode {
 
   function enterLambda(): void {
     console.log('enter lambda');
+
+    // Create lambda node
+    const newNode: Lambda = {
+      type: 'lambda',
+      bindings: [],
+      children: []
+    }
+
+    if (env.currentScope.currentNode) {
+      env.currentScope.currentNode.attributes.push(newNode);
+    }
+
+    env.currentScope.currentLambda = newNode;
+    env.lambdaBindingBuffer = '';
   }
 
   function exitLambda(): void {
     console.log('exit lambda');
   }
 
-  function handleLambdaChar(): void {
-    console.log('scanCharLambda')
+  function handleLambdaChar(char: string): void {
+    console.log('scanCharLambda');
+
+    if (char === ',') {
+      saveLambdaBinding();
+    } else if (char === '>') {
+      saveLambdaBinding();
+      transition('children');
+    } else if (char.match(WHITESPACE)) {
+      // ignore
+    } else {
+      env.lambdaBindingBuffer += char;
+    }
   }
+
+  function saveLambdaBinding(): void {
+    if (env.lambdaBindingBuffer.match(ES2015_IDENTIFIER)) {
+      if (env.currentScope.currentLambda) {
+        env.currentScope.currentLambda.bindings.push(env.lambdaBindingBuffer);
+      } else {
+        throw new Error('lambda not defined');
+        // throw error - lambda not defined
+      }
+    } else {
+      throw new Error(`${env.lambdaBindingBuffer} is not an ES2015 compatible identifier`);
+      // throw error - bad identifier
+    }
+
+    env.lambdaBindingBuffer = '';
+  }
+
 
   function scan(source: string): void {
     for (var i = 0; i < source.length; i++) {

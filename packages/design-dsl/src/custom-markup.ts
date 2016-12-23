@@ -246,7 +246,31 @@ const lambdaAST: ASTNode = {
   children: []
 }
 
-// deepEqual(tokenize(lambda), lambdaAST);
+deepEqual(tokenize(lambda), lambdaAST);
+
+const lambdaWithNoBindings = `
+  <orion =>
+    <image />
+  </orion>`
+
+const lambdaWithNoBindingsAST: ASTNode = {
+  keyword: 'orion',
+  attributes: [
+    {
+      type: 'lambda',
+      bindings: [],
+      children: [
+        {
+          keyword: 'image',
+          attributes: [],
+          children: []
+        }
+
+      ]
+    }
+  ],
+  children: []
+}
 
 const lambda2 = `
   <container>

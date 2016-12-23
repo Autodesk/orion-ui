@@ -27,13 +27,22 @@ class Button extends HTMLElement {
     shadowRoot.innerHTML = `
       <orion-inline
         border-radius="2"
-        background="black"
-        color="white"
+        background="white"
+        color="black"
         padding-horizontal="3"
         padding-vertical="2"
         dim
         pointer><slot /></orion-inline>
     `;
+    this.shadowEl = shadowRoot.children[0];
+  }
+
+  static get observedAttributes() {
+    return ['background', 'color', 'disabled'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    this.shadowEl.setAttribute(name, newValue);
   }
 }
 

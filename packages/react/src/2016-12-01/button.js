@@ -17,13 +17,22 @@ limitations under the License.
 */
 import React, { PropTypes } from 'react';
 import '@orion-ui/components/lib/2016-12-01/button';
+import { Skins } from '@orion-ui/style/lib/2016-12-01';
 
 function Button(props) {
-  return <orion-button>{props.children}</orion-button>;
+  return (
+    <orion-button onClick={props.onClick} color={props.color} background={props.background}>
+      {props.children}
+    </orion-button>);
 }
+
+const colors = Object.keys(Skins.colors);
 
 Button.propTypes = {
   children: PropTypes.node,
+  onClick: PropTypes.func,
+  background: PropTypes.oneOf(colors),
+  color: PropTypes.oneOf(colors),
 };
 
 export default Button;

@@ -17,7 +17,7 @@ limitations under the License.
 */
 import 'jsdom-global/register';
 import React from 'react';
-import { render } from 'enzyme';
+import { mount } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import chaiEnzyme from 'chai-enzyme';
@@ -25,22 +25,22 @@ import OrionButton from './button';
 
 chai.use(chaiEnzyme());
 
-describe.only('<OrionButton />', () => {
+describe('<OrionButton />', () => {
   it('passes props to button web component', () => {
     const props = {
-      backgroundColor: '#FFFFFF',
-      color: '#000000',
+      background: 'white',
+      color: 'black',
     };
-    const wrapper = render(<OrionButton {...props} />);
-    const passedProps = wrapper.find('button').props();
-    expect(passedProps.backgroundColor).to.equal(props.backgroundColor);
+    const wrapper = mount(<OrionButton {...props} />);
+    const passedProps = wrapper.find('orion-button').props();
+    expect(passedProps.background).to.equal(props.background);
     expect(passedProps.color).to.equal(props.color);
   });
 
   it('simulates click events', () => {
     const onClick = sinon.spy();
-    const wrapper = render(<OrionButton onClick={onClick} />);
-    wrapper.find('button').simulate('click');
+    const wrapper = mount(<OrionButton onClick={onClick} />);
+    wrapper.find('orion-button').simulate('click');
     expect(onClick).to.have.property('callCount', 1);
   });
 });

@@ -67,6 +67,9 @@ interface Environment {
    */
   attrState: 'name' | 'value';
 
+  attrValueMaybeBinding: boolean;
+  attrValueIsBinding: boolean;
+
   /**
    * For the given attribute value, what is the close characters
    * if it is null it hasn't been determined yet
@@ -171,6 +174,8 @@ export function tokenize(source: string): ASTNode {
     state: 'children',
     attrState: 'name',
     attrValueTerminator: null,
+    attrValueMaybeBinding: false,
+    attrValueIsBinding: false,
     attributeNameBuffer: '',
     attributeValueBuffer: '',
     closingNode: false,
@@ -221,12 +226,12 @@ export function tokenize(source: string): ASTNode {
   }
 
   function enterAttributes() {
-    console.log('enter attributes');
+    // console.log('enter attributes');
 
   }
 
   function exitAttributes() {
-    console.log('exit attributes');
+    // console.log('exit attributes');
   }
 
   function handleAttributesChar(char: string): void {
@@ -273,7 +278,7 @@ export function tokenize(source: string): ASTNode {
   function enterChildren() {
     // If the last node is a closing node, go up a scope
     // Otherwise create a child scope
-   if (env.closingNode) {
+    if (env.closingNode) {
       testClosingTag();
       setCurrentScopeToParent();
     } else {
@@ -326,7 +331,7 @@ export function tokenize(source: string): ASTNode {
 
 
   function exitChildren() {
-    console.log('exit children');
+    // console.log('exit children');
   }
 
   function handleChildrenChar(char: string): void {
@@ -340,20 +345,36 @@ export function tokenize(source: string): ASTNode {
       throw new SyntaxError('no value for attribute');
     }
 
-    // Try parsing the json and if it throws an exception that is a JSON unexpected
-    // end of input, we should continue buffering... if we get to the end of the buffer then we error out
-    try {
-      saveJSONAttributeValue();
+    if (env.attrValueIsBinding) {
+      saveAttributeBinding();
       resetAttributeState();
-    } catch (e) {
-      // TODO this might be flaky way to catch JSON errors
-      if (e.message !== 'Unexpected end of JSON input') {
-        throw e;
+    } else {
+      // Try parsing the json and if it throws an exception that is a JSON unexpected
+      // end of input, we should continue buffering... if we get to the end of the buffer then we error out
+      try {
+        saveAttributeJSObject();
+        resetAttributeState();
+      } catch (e) {
+        // TODO this might be flaky way to catch JSON errors
+        if (e.message !== 'Unexpected end of JSON input') {
+          throw e;
+        }
       }
     }
   }
 
-  function saveJSONAttributeValue() {
+  function saveAttributeBinding(): void {
+    if (env.currentScope.currentNode) {
+      env.currentScope.currentNode.attributes.push({
+        type: 'binding',
+        identifier: env.attributeNameBuffer,
+        // strip the start and ending curly braces
+        value: env.attributeValueBuffer.slice(1, env.attributeValueBuffer.length - 1)
+      });
+    }
+  }
+
+  function saveAttributeJSObject() {
     const json = JSON.parse(env.attributeValueBuffer);
     if (env.currentScope.currentNode) {
       env.currentScope.currentNode.attributes.push({
@@ -368,6 +389,8 @@ export function tokenize(source: string): ASTNode {
 
   // Reset and get ready for next attribute
   function resetAttributeState() {
+    env.attrValueIsBinding = false;
+    env.attrValueMaybeBinding = false;
     env.attributeNameBuffer = '';
     env.attributeValueBuffer = '';
     env.attrState = 'name';
@@ -415,18 +438,34 @@ export function tokenize(source: string): ASTNode {
   const WHITESPACE = /\s/;
 
   function setAttrValueTerminator(char: string) {
-    // Numbers, true, or false are whitespace terminated
-    if (isNumber(char) || char === 't' || char === 'f') {
-      env.attrValueTerminator = WHITESPACE;
-      // Strings are double-quote terminated
-    } else if (char === '"') {
-      env.attrValueTerminator = /"/;
-    } else if (char === "{") {
-      env.attrValueTerminator = /}/;
-    } else if (char === '[') {
-      env.attrValueTerminator = /]/;
+    if (env.attrValueMaybeBinding) {
+      if (!char.match(WHITESPACE)) {
+        // JSON objects always have a double quote as the next characters
+        // After the opening object, bindings never do
+        if (char !== '"') {
+          env.attrValueIsBinding = true;
+        }
+
+        // Both objects and bindings have the same terminator
+        env.attrValueTerminator = /}/;
+      } else {
+        // Ignore whitespace
+      }
     } else {
-      throw new SyntaxError(`${env.attributeNameBuffer} must be a valid JSON value`);
+      // Numbers, true, or false are whitespace terminated
+      if (isNumber(char) || char === 't' || char === 'f') {
+        env.attrValueTerminator = WHITESPACE;
+        // Strings are double-quote terminated
+      } else if (char === '"') {
+        env.attrValueTerminator = /"/;
+      } else if (char === "{") {
+        // Defer deciding terminator until later
+        env.attrValueMaybeBinding = true;
+      } else if (char === '[') {
+        env.attrValueTerminator = /]/;
+      } else {
+        throw new SyntaxError(`${env.attributeNameBuffer} must be a valid JSON value`);
+      }
     }
   }
 
@@ -455,8 +494,6 @@ export function tokenize(source: string): ASTNode {
   }
 
   function enterLambda(): void {
-    console.log('enter lambda');
-
     // Create lambda node
     const newNode: Lambda = {
       type: 'lambda',
@@ -473,7 +510,7 @@ export function tokenize(source: string): ASTNode {
   }
 
   function exitLambda(): void {
-    console.log('exit lambda');
+    // console.log('exit lambda');
   }
 
   function handleLambdaChar(char: string): void {

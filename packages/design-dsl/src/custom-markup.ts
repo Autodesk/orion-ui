@@ -12,7 +12,7 @@ const minAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(minimum), minAST);
+deepEqual(tokenize(minimum), minAST);
 
 const withImport = `
   <orion import=["toolbar"]>
@@ -31,7 +31,7 @@ const withImportAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withImport), withImportAST);
+deepEqual(tokenize(withImport), withImportAST);
 
 const withForwardSlash = `
   <orion import=["toolbar/new"]>
@@ -50,7 +50,7 @@ const withForwardSlashAst: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withForwardSlash), withForwardSlashAst);
+deepEqual(tokenize(withForwardSlash), withForwardSlashAst);
 
 const withJSONValues = `
   <orion
@@ -101,7 +101,7 @@ const withJSONValuesAST: ASTNode = {
   children: []
 };
 
-// deepEqual(tokenize(withJSONValues), withJSONValuesAST);
+deepEqual(tokenize(withJSONValues), withJSONValuesAST);
 
 const withChild = `
   <orion import=["toolbar"]>
@@ -133,7 +133,7 @@ const withChildAST: ASTNode = {
   ]
 }
 
-// deepEqual(tokenize(withChild), withChildAST);
+deepEqual(tokenize(withChild), withChildAST);
 
 const withSelfClosing = `
   <orion>
@@ -159,7 +159,7 @@ const withSelfClosingAST: ASTNode = {
   ]
 }
 
-// deepEqual(tokenize(withSelfClosing), withSelfClosingAST);
+deepEqual(tokenize(withSelfClosing), withSelfClosingAST);
 
 const withNestedJson = `
   <orion
@@ -200,7 +200,7 @@ const withNestedJsonAST: ASTNode = {
   children: []
 }
 
-// deepEqual(tokenize(withNestedJson), withNestedJsonAST);
+deepEqual(tokenize(withNestedJson), withNestedJsonAST);
 
 const withBadJson = `
   <orion
@@ -211,11 +211,11 @@ const withBadJson = `
   </orion>
 `;
 
-// try {
-//   tokenize(withBadJson)
-// } catch (e) {
-//   deepEqual(e.message, 'array has a bad value.');
-// }
+try {
+  tokenize(withBadJson)
+} catch (e) {
+  deepEqual(e.message, 'array has a bad value.');
+}
 
 const lambda = `
   <orion collection=["one", "two", "three"] => item, index>
@@ -246,18 +246,18 @@ const lambdaAST: ASTNode = {
   children: []
 }
 
-// deepEqual(tokenize(lambda), lambdaAST);
+deepEqual(tokenize(lambda), lambdaAST);
 
 const lambadWithIdError = `
   <orion => 123>
   </orion>
 `
 
-// try {
-//   tokenize(lambadWithIdError)
-// } catch (e) {
-//   deepEqual(e.message, '123 is not an ES2015 compatible identifier.');
-// }
+try {
+  tokenize(lambadWithIdError)
+} catch (e) {
+  deepEqual(e.message, '123 is not an ES2015 compatible identifier.');
+}
 
 const lambdaWithNoBindings = `
   <orion =>
@@ -269,6 +269,47 @@ try {
 } catch (e) {
   deepEqual(e.message, '<image/ is not an ES2015 compatible identifier.');
 }
+
+const attributeBinding = `
+<orion collection={ count(collection) } object={ "key": "value" }>
+  <child label={ item } />
+</orion>
+`
+
+const attributeBindingAST: ASTNode = {
+  keyword: 'orion',
+  attributes: [
+    {
+      type: 'binding',
+      identifier: 'collection',
+      value: ' count(collection) '
+    },
+    {
+      type: 'jsobject',
+      identifier: 'object',
+      value: {
+        "key": "value"
+      }
+    }
+  ],
+
+  children: [
+    {
+      keyword: 'child',
+      attributes: [
+        {
+          type: 'binding',
+          identifier: 'label',
+          value: ' item '
+        }
+      ],
+
+      children: []
+    }
+  ]
+}
+
+deepEqual(tokenize(attributeBinding), attributeBindingAST)
 
 const lambda2 = `
   <container>

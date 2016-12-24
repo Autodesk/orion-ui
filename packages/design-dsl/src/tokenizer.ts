@@ -397,7 +397,7 @@ export function tokenize(source: string): ASTNode {
           env.currentScope.parent.currentNode.children.push(newNode);
         }
       } else {
-        throw new Error('how did we get into this state?');
+        throw new SyntaxError('how did we get into this state?');
       }
     } else {
       // no parent - must be root node?
@@ -477,8 +477,6 @@ export function tokenize(source: string): ASTNode {
   }
 
   function handleLambdaChar(char: string): void {
-    console.log('scanCharLambda');
-
     if (char === ',') {
       saveLambdaBinding();
     } else if (char === '>') {
@@ -496,11 +494,11 @@ export function tokenize(source: string): ASTNode {
       if (env.currentScope.currentLambda) {
         env.currentScope.currentLambda.bindings.push(env.lambdaBindingBuffer);
       } else {
-        throw new Error('lambda not defined');
+        throw new SyntaxError('lambda not defined');
         // throw error - lambda not defined
       }
     } else {
-      throw new Error(`${env.lambdaBindingBuffer} is not an ES2015 compatible identifier`);
+      throw new SyntaxError(`${env.lambdaBindingBuffer} is not an ES2015 compatible identifier.`);
       // throw error - bad identifier
     }
 
@@ -530,7 +528,7 @@ export function tokenize(source: string): ASTNode {
   testForBadJson();
 
   if (env.rootScope.astBuffer.length === 0) {
-    throw new Error('no nodes defined');
+    throw new SyntaxError('no nodes defined');
   }
 
   // Return first node

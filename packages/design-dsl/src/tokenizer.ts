@@ -22,7 +22,7 @@ export interface Binding {
 }
 
 export interface ASTNode {
-  keyword: string;
+  tagName: string;
   attributes: Attribute[];
   children: ASTNode[];
 }
@@ -31,7 +31,7 @@ const NOOP = (): void => { /* no-op */ }
 
 type State =
   'children'
-  | 'keyword'
+  | 'tagName'
   | 'attributes'
   | 'lambda';
 
@@ -88,7 +88,7 @@ interface Environment {
 
   /**
    * Set to true when a forward slash is encountered
-   * - while in keyword state (closing tag)
+   * - while in tagName state (closing tag)
    * - while in attributes state (self closing tag)
    */
   closingNode: boolean;
@@ -100,9 +100,9 @@ interface Environment {
   selfClosing: boolean;
 
   /**
-   * Buffer which accumulates characters when in keyword
+   * Buffer which accumulates characters when in tagName
    */
-  keywordBuffer: string;
+  tagNameBuffer: string;
 
   /**
    * Tree of AST nodes plus related metadata
@@ -112,7 +112,7 @@ interface Environment {
 
   /**
    * The current scope
-   * - this value is overriden when we move to child nodes of a keyword
+   * - this value is overriden when we move to child nodes
    */
   currentScope: Scope;
 
@@ -134,10 +134,10 @@ interface Transition {
  */
 export function tokenize(source: string): ASTNode {
   const transitions: { [key: string]: Transition } = {
-    keyword: {
-      enter: enterKeyword,
-      exit: exitKeyword,
-      handleChar: handleKeywordChar
+    tagName: {
+      enter: enterTagName,
+      exit: exitTagName,
+      handleChar: handleTagNameChar
     },
 
     attributes: {
@@ -180,7 +180,7 @@ export function tokenize(source: string): ASTNode {
     attributeValueBuffer: '',
     closingNode: false,
     selfClosing: false,
-    keywordBuffer: '',
+    tagNameBuffer: '',
     currentScope: rootScope,
     rootScope,
 
@@ -202,18 +202,18 @@ export function tokenize(source: string): ASTNode {
     env.state = next;
   }
 
-  function enterKeyword() {
-    env.keywordBuffer = '';
+  function enterTagName() {
+    env.tagNameBuffer = '';
   }
 
-  function exitKeyword() {
+  function exitTagName() {
     // Only save nodes for opening tags
     if (!env.closingNode) {
       saveNodeToScope();
     }
   }
 
-  function handleKeywordChar(char: string) {
+  function handleTagNameChar(char: string) {
     if (char === '>') {
       transition('children');
     } else if (char.match(WHITESPACE)) {
@@ -221,7 +221,7 @@ export function tokenize(source: string): ASTNode {
     } else if (char === '/') {
       env.closingNode = true;
     } else {
-      bufferKeywordChar(char);
+      bufferTagNameChar(char);
     }
   }
 
@@ -271,7 +271,7 @@ export function tokenize(source: string): ASTNode {
   /**
    * Entering children does the following:
    *
-   * - creates the ASTNode for the keyword which was just defined
+   * - creates the ASTNode for the tagName which was just defined
    * - adds attributes
    * - creates a new scope which is nested on the current scope
    */
@@ -297,7 +297,7 @@ export function tokenize(source: string): ASTNode {
         ? env.currentScope.astBuffer[env.currentScope.astBuffer.length - 1]
         : env.currentScope.parent.astBuffer[env.currentScope.parent.astBuffer.length - 1];
 
-      if (testNode.keyword !== env.keywordBuffer) {
+      if (testNode.tagName !== env.tagNameBuffer) {
         throw new SyntaxError('unbalanced tags');
       }
     } else {
@@ -336,7 +336,7 @@ export function tokenize(source: string): ASTNode {
 
   function handleChildrenChar(char: string): void {
     if (char === '<') {
-      transition('keyword');
+      transition('tagName');
     }
   }
 
@@ -399,7 +399,7 @@ export function tokenize(source: string): ASTNode {
 
   function saveNodeToScope() {
     const newNode: ASTNode = {
-      keyword: env.keywordBuffer,
+      tagName: env.tagNameBuffer,
       attributes: [],
       children: []
     };
@@ -427,8 +427,8 @@ export function tokenize(source: string): ASTNode {
     }
   }
 
-  function bufferKeywordChar(char: string) {
-    env.keywordBuffer += char;
+  function bufferTagNameChar(char: string) {
+    env.tagNameBuffer += char;
   }
 
   function isNumber(char: any): boolean {

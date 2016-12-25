@@ -7,7 +7,7 @@ const minimum = `
 `;
 
 const minAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [],
   children: []
 };
@@ -20,7 +20,7 @@ const withImport = `
 `
 
 const withImportAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -39,7 +39,7 @@ const withForwardSlash = `
 `;
 
 const withForwardSlashAst: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -70,7 +70,7 @@ const withJSONValues = `
 `
 
 const withJSONValuesAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -110,7 +110,7 @@ const withChild = `
 `;
 
 const withChildAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -120,7 +120,7 @@ const withChildAST: ASTNode = {
   ],
   children: [
     {
-      keyword: 'image',
+      tagName: 'image',
       attributes: [
         {
           type: 'jsobject',
@@ -142,11 +142,11 @@ const withSelfClosing = `
 `
 
 const withSelfClosingAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [],
   children: [
     {
-      keyword: 'image',
+      tagName: 'image',
       attributes: [
         {
           identifier: 'src',
@@ -177,7 +177,7 @@ const withNestedJson = `
 `
 
 const withNestedJsonAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -224,7 +224,7 @@ const lambda = `
 `;
 
 const lambdaAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -236,7 +236,7 @@ const lambdaAST: ASTNode = {
       bindings: ['item', 'index'],
       children: [
         {
-          keyword: 'image',
+          tagName: 'image',
           attributes: [],
           children: []
         }
@@ -277,7 +277,7 @@ const attributeBinding = `
 `
 
 const attributeBindingAST: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'binding',
@@ -295,7 +295,7 @@ const attributeBindingAST: ASTNode = {
 
   children: [
     {
-      keyword: 'child',
+      tagName: 'child',
       attributes: [
         {
           type: 'binding',
@@ -357,7 +357,7 @@ const exampleArray = `
 // curly braces {} are bindings, everything inside is captured as a string to be evaled later when the env is present
 
 const newSourceJSON: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -367,14 +367,14 @@ const newSourceJSON: ASTNode = {
   ],
   children: [
     {
-      keyword: 'component',
+      tagName: 'component',
       attributes: [
         {
           type: 'lambda',
           bindings: ['items'],
           children: [
             {
-              keyword: 'container',
+              tagName: 'container',
               attributes: [
                 { type: 'jsobject', identifier: 'display', value: 'flex' },
                 { type: 'jsobject', identifier: 'layout', value: 'row' },
@@ -384,7 +384,7 @@ const newSourceJSON: ASTNode = {
 
               children: [
                 {
-                  keyword: 'map',
+                  tagName: 'map',
                   attributes: [
                     {
                       type: 'jsobject',
@@ -396,7 +396,7 @@ const newSourceJSON: ASTNode = {
                       bindings: ['item', 'index'],
                       children: [
                         {
-                          keyword: 'container',
+                          tagName: 'container',
                           attributes: [
                             { type: 'jsobject', identifier: 'display', value: 'flex' },
                             { type: 'jsobject', identifier: 'layout', value: 'row' },
@@ -405,7 +405,7 @@ const newSourceJSON: ASTNode = {
                           ],
                           children: [
                             {
-                              keyword: 'image',
+                              tagName: 'image',
                               attributes: [
                                 {
                                   type: 'binding',
@@ -426,7 +426,7 @@ const newSourceJSON: ASTNode = {
                               children: []
                             },
                             {
-                              keyword: 'text',
+                              tagName: 'text',
                               attributes: [
                                 {
                                   type: 'binding',
@@ -457,7 +457,7 @@ const newSourceJSON: ASTNode = {
 // const sourceAST = tokenize(source);
 
 const newExampleArrayJson: ASTNode = {
-  keyword: 'orion',
+  tagName: 'orion',
   attributes: [
     {
       type: 'jsobject',
@@ -468,7 +468,7 @@ const newExampleArrayJson: ASTNode = {
 
   children: [
     {
-      keyword: 'toolbar',
+      tagName: 'toolbar',
       attributes: [
         {
           type: 'jsobject',

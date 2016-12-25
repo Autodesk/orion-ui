@@ -132,7 +132,7 @@ interface Transition {
 /**
  * Read source in and return ASTNode
  */
-export function tokenize(source: string): ASTNode {
+export function parse(source: string): ASTNode {
   const transitions: { [key: string]: Transition } = {
     tagName: {
       enter: enterTagName,

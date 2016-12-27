@@ -109,7 +109,7 @@ deepEqual(actualIntegration, expectedIntegration);
   try {
     getNextToken(prev, char);
     throw new Error('did not cause exception');
-  } catch(e) {
+  } catch (e) {
     deepEqual(e.message, 'unknown character');
   }
 });
@@ -146,7 +146,7 @@ deepEqual(actualIntegration, expectedIntegration);
   try {
     getNextToken(prev, char);
     throw new Error('did not cause exception');
-  } catch(e) {
+  } catch (e) {
     deepEqual(e.message, 'unknown character');
   }
 });
@@ -175,7 +175,7 @@ deepEqual(actualIntegration, expectedIntegration);
   try {
     getNextToken(prev, '>');
     throw new Error('did not cause exception');
-  } catch(e) {
+  } catch (e) {
     deepEqual(e.message, 'unknown character');
   }
 }
@@ -244,7 +244,7 @@ deepEqual(actualIntegration, expectedIntegration);
   try {
     getNextToken(prev, '>');
     throw new Error('did not cause exception');
-  } catch(e) {
+  } catch (e) {
     deepEqual(e.message, 'unknown character');
   }
 }
@@ -522,10 +522,50 @@ deepEqual(actualIntegration, expectedIntegration);
 
 // uppercase ASCII
 // = start new attribute, set name to lowercase version and value to empty string
+// transition to attribute-name
+{
+  const prev = initWorld();
+  prev.state = 'before-attribute-name';
+  prev.currentToken = startTag('a');
+
+  const next = initWorld();
+  next.state = 'attribute-name';
+  next.currentAttribute = { name: 'b', value: '' };
+  next.currentToken = startTag('a', [
+    { name: 'b', value: '' }
+  ]);
+
+  deepEqual(getNextToken(prev, 'B'), next);
+}
 
 // quote, single-quote, <, or = are parse errors
+[`"`, `'`, '<', '='].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-attribute-name';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
 
 // anything else start new attribute, set name to character and value to empty string
+{
+  const prev = initWorld();
+  prev.state = 'before-attribute-name';
+  prev.currentToken = startTag('a');
+
+  const next = initWorld();
+  next.state = 'attribute-name';
+  next.currentAttribute = { name: 'b', value: '' };
+  next.currentToken = startTag('a', [
+    { name: 'b', value: '' }
+  ]);
+
+  deepEqual(getNextToken(prev, 'b'), next);
+}
 
 
 // const minAST: ASTNode = {

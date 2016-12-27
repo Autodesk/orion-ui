@@ -1,7 +1,7 @@
 import { ES2015_IDENTIFIER } from './utils/es6-identifier-regex';
 
 export type Attribute = Binding | JSObject | Lambda;
-
+export const WHITESPACE = /\s/;
 
 export interface Lambda {
   type: 'lambda';
@@ -435,7 +435,7 @@ export function parse(source: string): ASTNode {
     return !isNaN(char);
   }
 
-  const WHITESPACE = /\s/;
+
 
   function setAttrValueTerminator(char: string) {
     if (env.attrValueMaybeBinding) {

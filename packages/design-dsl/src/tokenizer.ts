@@ -499,9 +499,11 @@ function handleBeforeAttributeName(char: string): Action[] {
       { type: 'emit-tag-token' },
       createTransition('data')
     ];
+  } else if ([`"`, `'`, '<', '='].indexOf(char) !== -1) {
+    throw unknownCharacter();
   } else {
     return [
-      { type: 'create-attribute', payload: char },
+      { type: 'create-attribute', payload: char.toLowerCase() },
       createTransition('attribute-name')
     ]
   }

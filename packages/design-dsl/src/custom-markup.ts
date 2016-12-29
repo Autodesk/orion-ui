@@ -1,5 +1,5 @@
 import { deepEqual } from 'assert';
-import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, bindingAttr } from './tokenizer';
+import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, bindingAttr, spaces, word} from './tokenizer';
 
 const integration = `
   <!--awesome comments-->
@@ -10,6 +10,9 @@ const integration = `
     array=["item1", ["item2", "item3"], "item4"]
     object={"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}
     binding={hello()}>
+    <container key="value">
+      <child /> and some text
+    </container>
   </orion>
 `;
 
@@ -17,12 +20,10 @@ const actualIntegration = getTokens(integration);
 
 const expectedIntegration = [
   character('\n'),
-  character(' '),
-  character(' '),
+  ...spaces(2),
   comment('awesome comments'),
   character('\n'),
-  character(' '),
-  character(' '),
+  ...spaces(2),
   startTag('orion', [
     jsonAttr('something'),
     jsonAttr('number', '10'),
@@ -32,8 +33,19 @@ const expectedIntegration = [
     bindingAttr('binding', 'hello()')
   ]),
   character('\n'),
-  character(' '),
-  character(' '),
+  ...spaces(4),
+  startTag('container', [
+    jsonAttr('key', '"value"')
+  ]),
+  character('\n'),
+  ...spaces(6),
+  startTag('child', [], true),
+  ...word(' and some text'),
+  character('\n'),
+  ...spaces(4),
+  endTag('container'),
+  character('\n'),
+  ...spaces(2),
   endTag('orion'),
   character('\n')
 ];

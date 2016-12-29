@@ -555,6 +555,20 @@ export function character(data: string): Character {
   };
 }
 
+export function spaces(count: number): Character[] {
+  const chars = [];
+
+  for (let i = 0; i < count; i ++) {
+    chars.push(character(' '));
+  }
+
+  return chars;
+}
+
+export function word(word: string): Character[] {
+  return word.split('').map(char => character(char))
+}
+
 export function startTag(tagName: string, attributes: Attribute[] = [], selfClosing: boolean = false): StartTag {
   return {
     type: 'start-tag',

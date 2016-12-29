@@ -1,9 +1,15 @@
 import { deepEqual } from 'assert';
-import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens } from './tokenizer';
+import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, bindingAttr } from './tokenizer';
 
 const integration = `
   <!--awesome comments-->
-  <orion>
+  <orion
+    something
+    number=10
+    string="<hello world='thing' />"
+    array=["item1", ["item2", "item3"], "item4"]
+    object={"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}
+    binding={hello()}>
   </orion>
 `;
 
@@ -17,7 +23,14 @@ const expectedIntegration = [
   character('\n'),
   character(' '),
   character(' '),
-  startTag('orion'),
+  startTag('orion', [
+    jsonAttr('something'),
+    jsonAttr('number', '10'),
+    jsonAttr('string', `"<hello world='thing' />"`),
+    jsonAttr('array', `["item1", ["item2", "item3"], "item4"]`),
+    jsonAttr('object', `{"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}`),
+    bindingAttr('binding', 'hello()')
+  ]),
   character('\n'),
   character(' '),
   character(' '),
@@ -530,9 +543,9 @@ deepEqual(actualIntegration, expectedIntegration);
 
   const next = initWorld();
   next.state = 'attribute-name';
-  next.currentAttribute = { name: 'b', value: '' };
+  next.currentAttribute = jsonAttr('b', '');
   next.currentToken = startTag('a', [
-    { name: 'b', value: '' }
+    jsonAttr('b', '')
   ]);
 
   deepEqual(getNextToken(prev, 'B'), next);
@@ -559,14 +572,795 @@ deepEqual(actualIntegration, expectedIntegration);
 
   const next = initWorld();
   next.state = 'attribute-name';
-  next.currentAttribute = { name: 'b', value: '' };
+  next.currentAttribute = jsonAttr('b', '');
   next.currentToken = startTag('a', [
-    { name: 'b', value: '' }
+    jsonAttr('b', '')
   ]);
 
   deepEqual(getNextToken(prev, 'b'), next);
 }
 
+/**
+ * attribute-name state
+ */
+
+// tab, LF, space switch to after attribute name state
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+
+  const next = initWorld();
+  next.state = 'after-attribute-name';
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// / switch to self-closing-start-tag state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+
+  const next = initWorld();
+  next.state = 'self-closing-start-tag';
+
+  deepEqual(getNextToken(prev, '/'), next);
+}
+
+// = switch to before-attribute-value state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+
+  const next = initWorld();
+  next.state = 'before-attribute-value';
+
+  deepEqual(getNextToken(prev, '='), next);
+}
+
+// > switch to data state, emit current tag token
+{
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+  prev.currentAttribute = jsonAttr('b', '');
+  prev.currentToken = startTag('a', [
+    jsonAttr('b', '')
+  ]);
+  prev.tokens = [character('a')];
+
+  const next = initWorld();
+  next.state = 'data';
+  next.currentAttribute = null;
+  next.currentToken = null;
+  next.tokens = [character('a'), startTag('a', [
+    jsonAttr('b', '')
+  ])];
+
+  deepEqual(getNextToken(prev, '>'), next);
+}
+
+// Uppercase letter = append lowercase version to current attribute name
+{
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+  prev.currentAttribute = jsonAttr('b', '');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-name';
+  next.currentAttribute = jsonAttr('ba', '');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, 'A'), next);
+}
+
+// quote, singlequote, < are parse errors
+[`"`, `'`, '<'].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
+
+// anything else is append to current attribute name
+{
+  const prev = initWorld();
+  prev.state = 'attribute-name';
+  prev.currentAttribute = jsonAttr('b', '');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-name';
+  next.currentAttribute = jsonAttr('bq', '');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, 'q'), next);
+}
+
+/**
+ * after-attribute-name state
+ */
+
+// tab, LF, space are ignored
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+
+  const next = initWorld();
+  next.state = 'after-attribute-name';
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// / switch to self-closing-start-tag state
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+
+  const next = initWorld();
+  next.state = 'self-closing-start-tag';
+
+  deepEqual(getNextToken(prev, '/'), next);
+}
+
+// = switch to before-attribute-value state
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+
+  const next = initWorld();
+  next.state = 'before-attribute-value';
+
+  deepEqual(getNextToken(prev, '='), next);
+}
+
+// > switch to data state and emit current tag token
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+  prev.currentAttribute = jsonAttr('b', '');
+  prev.currentToken = startTag('a', [
+    jsonAttr('b', '')
+  ]);
+  prev.tokens = [character('a')];
+
+  const next = initWorld();
+  next.state = 'data';
+  next.currentAttribute = null;
+  next.currentToken = null;
+  next.tokens = [character('a'), startTag('a', [
+    jsonAttr('b', '')
+  ])];
+
+  deepEqual(getNextToken(prev, '>'), next);
+}
+
+// Uppercase ASCII Letter
+// - start new attribute in current tag token
+// - set name to lowercase character
+// - set value to empty string
+// - switch to attribute-name state
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+  prev.currentAttribute = null;
+  prev.currentToken = startTag('a', [
+    jsonAttr('prev', 'foo')
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-name';
+  next.currentAttribute = jsonAttr('a', '');
+  next.currentToken = startTag('a', [
+    jsonAttr('prev', 'foo'),
+    jsonAttr('a', '')
+  ]);
+
+  deepEqual(getNextToken(prev, 'A'), next);
+}
+
+// quote, singlequote, < are parser errors
+[`"`, `'`, '<'].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
+
+// anything else is same as uppercase ASCII letter
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-name';
+  prev.currentAttribute = null;
+  prev.currentToken = startTag('a', [
+    jsonAttr('prev', 'foo')
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-name';
+  next.currentAttribute = jsonAttr('z', '');
+  next.currentToken = startTag('a', [
+    jsonAttr('prev', 'foo'),
+    jsonAttr('z', '')
+  ]);
+
+  deepEqual(getNextToken(prev, 'z'), next);
+}
+
+/**
+ * before-attribute-value state
+ */
+
+// tab, LF, space are ignored
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-attribute-value';
+
+  const next = initWorld();
+  next.state = 'before-attribute-value';
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// quote switches to attribute-value-string state + append value
+{
+  const prev = initWorld();
+  prev.state = 'before-attribute-value';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-string';
+  next.currentAttribute = jsonAttr('name', '"');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '"'), next);
+}
+
+// [0-9] switches to attribute-value-number state + append value
+for (let i = 0; i < 10; i++) {
+  const char = i.toString();
+
+  const prev = initWorld();
+  prev.state = 'before-attribute-value';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-number';
+  next.currentAttribute = jsonAttr('name', char);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, char), next);
+}
+
+// [ switches to attribute-value-array state + append value
+{
+  const prev = initWorld();
+  prev.state = 'before-attribute-value';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-array';
+  next.currentAttribute = jsonAttr('name', '[');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '['), next);
+}
+
+// { switches to attribute-value-object-or-binding state
+{
+  const prev = initWorld();
+  prev.state = 'before-attribute-value';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-object-or-binding';
+  next.currentAttribute = jsonAttr('name');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '{'), next);
+}
+
+// anything else is a parse error
+['>', 'r', '='].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-attribute-value';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
+
+/**
+ * attribute-value-string state
+ */
+
+// quotation mark switches to after-attribute-value state + append value
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-string';
+  prev.currentAttribute = jsonAttr('name', `"something`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'after-attribute-value';
+  next.currentAttribute = jsonAttr('name', `"something"`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, `"`), next);
+}
+
+// anything else - append to value
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-string';
+  prev.currentAttribute = jsonAttr('name', `"somethin`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-string';
+  next.currentAttribute = jsonAttr('name', `"something`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, `g`), next);
+}
+
+/**
+ * attribute-value-number state
+ */
+
+// tab, new line, space switches to before-attribute-name state
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'attribute-value-number';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'before-attribute-name';
+  next.currentAttribute = jsonAttr('name');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// / switches to self-closing-start-tag state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-number';
+  prev.currentAttribute = jsonAttr('name', '1');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'self-closing-start-tag';
+  next.currentAttribute = jsonAttr('name', '1');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '/'), next);
+}
+
+// > switches to data state and emits current tag token
+{
+ const prev = initWorld();
+  prev.state = 'attribute-value-number';
+  prev.currentAttribute = jsonAttr('name', '10');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+  prev.tokens = [character('c')];
+
+  const next = initWorld();
+  next.state = 'data';
+  next.currentAttribute = null;
+  next.currentToken = null;
+  next.tokens = [character('c'), startTag('a', [jsonAttr('name', '10')])]
+
+  deepEqual(getNextToken(prev, '>'), next);
+}
+
+// [0-9] appends to value
+for (let i = 0; i < 10; i++) {
+  const char = i.toString();
+
+  const prev = initWorld();
+  prev.state = 'attribute-value-number';
+  prev.currentAttribute = jsonAttr('name', '1');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-number';
+  next.currentAttribute = jsonAttr('name', `1${char}`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, char), next);
+}
+
+// anything else is parse error
+['r', '='].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'attribute-value-number';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
+
+/**
+ * attribute-value-array state
+ */
+
+// ]
+// - append value
+// - if parsable by json it switches to after-attribute-value state
+
+// ] when parsable by json switches to after-attribute-value state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-array';
+  prev.currentAttribute = jsonAttr('name', `["one", "two"`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'after-attribute-value';
+  next.currentAttribute = jsonAttr('name', `["one", "two"]`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, ']'), next);
+}
+
+// ] when not parsable by json appends the value and stays in same state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-array';
+  prev.currentAttribute = jsonAttr('name', `["one", "two`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-array';
+  next.currentAttribute = jsonAttr('name', `["one", "two]`)
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, ']'), next);
+}
+
+// anything else
+// - append value
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-array';
+  prev.currentAttribute = jsonAttr('name', `[`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-array';
+  next.currentAttribute = jsonAttr('name', `["`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '"'), next);
+}
+
+/**
+ * attribute-value-object-or-binding state
+ */
+
+// tab, newline, space is ignored
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'attribute-value-object-or-binding';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-object-or-binding';
+  next.currentAttribute = jsonAttr('name');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// quote
+// - switches to attribute-value-object state
+// - append { to value
+// - append " to value
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-object-or-binding';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-object';
+  next.currentAttribute = jsonAttr('name', `{"`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '"'), next);
+}
+
+// anything else
+// - switches to attribute-value-binding state
+// - append value
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-object-or-binding';
+  prev.currentAttribute = jsonAttr('name');
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-binding';
+  next.currentAttribute = bindingAttr('name', 'l');
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, 'l'), next);
+}
+
+/**
+ * attribute-value-object state
+ */
+
+// }
+// - append value
+// - if parsable by json it switches to after-attribute-value state
+
+// } when parsable by json switches to after-attribute-value state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-object';
+  prev.currentAttribute = jsonAttr('name', `{"key": "value"`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'after-attribute-value';
+  next.currentAttribute = jsonAttr('name', `{"key": "value"}`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '}'), next);
+}
+
+// } when not parsable by json buffers the value and keeps same state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-object';
+  prev.currentAttribute = jsonAttr('name', `{"`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-object';
+  next.currentAttribute = jsonAttr('name', `{"}`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '}'), next);
+}
+
+// anything else
+// - append value
+
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-object';
+  prev.currentAttribute = jsonAttr('name', `{`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-object';
+  next.currentAttribute = jsonAttr('name', `{ `);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, ' '), next);
+}
+
+/**
+ * attribute-value-binding state
+ */
+
+// } switch to after-attribute-value state
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-binding';
+  prev.currentAttribute = jsonAttr('name', `a`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'after-attribute-value';
+  next.currentAttribute = jsonAttr('name', `a`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '}'), next);
+}
+
+// anything else, append value
+{
+  const prev = initWorld();
+  prev.state = 'attribute-value-binding';
+  prev.currentAttribute = jsonAttr('name', `a`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'attribute-value-binding';
+  next.currentAttribute = jsonAttr('name', `ab`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, 'b'), next);
+}
+
+/**
+ * after-attribute-value state
+ */
+
+// tab, lf, ff, space switches to before-attribute-name state
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'after-attribute-value';
+  prev.currentAttribute = jsonAttr('name', `a`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'before-attribute-name';
+  next.currentAttribute = jsonAttr('name', `a`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// / switches to self-closing start tag state
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-value';
+  prev.currentAttribute = jsonAttr('name', `a`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+
+  const next = initWorld();
+  next.state = 'self-closing-start-tag';
+  next.currentAttribute = jsonAttr('name', `a`);
+  next.currentToken = startTag('a', [
+    next.currentAttribute
+  ]);
+
+  deepEqual(getNextToken(prev, '/'), next);
+}
+
+// > switches to data state and emits current tag token
+{
+  const prev = initWorld();
+  prev.state = 'after-attribute-value';
+  prev.currentAttribute = jsonAttr('name', `a`);
+  prev.currentToken = startTag('a', [
+    prev.currentAttribute
+  ]);
+  prev.tokens = [character('c')];
+
+  const next = initWorld();
+  next.state = 'data';
+  next.currentAttribute = null;
+  next.currentToken = null;
+  next.tokens = [character('c'), startTag('a', [jsonAttr('name', 'a')])]
+
+  deepEqual(getNextToken(prev, '>'), next);
+}
+
+// anything else is parse error
+['a', '1', '<'].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'after-attribute-value';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
 
 // const minAST: ASTNode = {
 //   tagName: 'orion',

@@ -38,6 +38,26 @@ function appendAttribute(token: StartTag, next: Attribute): StartTag {
   };
 }
 
+function createBlockParameter(token: StartTag, parameter: string): StartTag {
+  return {
+    ...token,
+    hasBlock: true,
+    blockParameters: [
+      ...token.blockParameters,
+      parameter
+    ]
+  };
+}
+
+function replaceBlockParameter(token: StartTag, prev: string, next: string): StartTag {
+  const index = token.blockParameters.indexOf(prev);
+
+  return {
+    ...token,
+    blockParameters: replaceItem(token.blockParameters, prev, next)
+  }
+}
+
 export interface Attribute {
   type: 'json' | 'binding';
   name: string;
@@ -90,7 +110,9 @@ export interface StartTag {
   type: 'start-tag';
   tagName: string;
   selfClosing: boolean;
+  hasBlock: boolean;
   attributes: Attribute[];
+  blockParameters: string[];
 }
 
 export interface EndTag {
@@ -165,6 +187,9 @@ export type TokenizerState =
   | 'attribute-value-binding'
   | 'after-attribute-value'
   | 'self-closing-start-tag'
+  | 'before-block'
+  | 'before-block-parameter'
+  | 'block-parameter'
   | CommentState;
 
 interface EmitCharacter {
@@ -200,8 +225,18 @@ interface CreateAttribute {
   payload: string;
 }
 
+interface CreateBlockParameter {
+  type: 'create-block-parameter';
+  payload: string;
+}
+
 interface AppendTagName {
   type: 'append-tag-name';
+  payload: string;
+}
+
+interface AppendBlockParameter {
+  type: 'append-block-parameter';
   payload: string;
 }
 
@@ -240,6 +275,7 @@ type Action = TransitionAction
   | CreateStartTagToken
   | CreateEndTagToken
   | CreateAttribute
+  | CreateBlockParameter
   | AppendTagName
   | AppendBuffer
   | ClearBuffer
@@ -249,6 +285,7 @@ type Action = TransitionAction
   | SetSelfClosing
   | AppendAttributeName
   | AppendAttributeValue
+  | AppendBlockParameter
   | ChangeAttrToBinding
   | OtherAction;
 
@@ -302,6 +339,12 @@ function getActions(char: string, world: World): Action[] {
       return handleCommentEndDash(char);
     case 'comment-end':
       return handleCommentEnd(char);
+    case 'before-block':
+      return handleBeforeBlock(char);
+    case 'before-block-parameter':
+      return handleBeforeBlockParameter(char);
+    case 'block-parameter':
+      return handleBlockParameter(char);
     default:
       throw new SyntaxError('unknown state');
   }
@@ -362,6 +405,19 @@ function mutateWorld(world: World, action: Action): World {
         currentAttribute: newAttribute,
         tokens: world.tokens
       }
+    case 'create-block-parameter':
+      if (!world.currentToken) {
+        throw new SyntaxError('no current token');
+      }
+
+      if (world.currentToken.type !== 'start-tag') {
+        throw new SyntaxError('current token is not start tag');
+      }
+
+      return {
+        ...world,
+        currentToken: createBlockParameter(world.currentToken, action.payload)
+      };
     case 'create-comment':
       return {
         ...world,
@@ -513,6 +569,22 @@ function mutateWorld(world: World, action: Action): World {
         currentToken: replaceAttribute(world.currentToken, prev, next)
       }
     }
+    case 'append-block-parameter':
+      if (!world.currentToken) {
+        throw new SyntaxError('no current token');
+      }
+
+      if (world.currentToken.type !== 'start-tag') {
+        throw new SyntaxError('current token is not start tag');
+      }
+
+      const prev = world.currentToken.blockParameters[world.currentToken.blockParameters.length - 1];
+      const next = `${prev}${action.payload}`;
+
+      return {
+        ...world,
+        currentToken: replaceBlockParameter(world.currentToken, prev, next)
+      };
     case 'change-attr-to-binding': {
       if (!world.currentAttribute) {
         throw new SyntaxError('no current attribute');
@@ -558,7 +630,7 @@ export function character(data: string): Character {
 export function spaces(count: number): Character[] {
   const chars = [];
 
-  for (let i = 0; i < count; i ++) {
+  for (let i = 0; i < count; i++) {
     chars.push(character(' '));
   }
 
@@ -569,12 +641,17 @@ export function word(word: string): Character[] {
   return word.split('').map(char => character(char))
 }
 
-export function startTag(tagName: string, attributes: Attribute[] = [], selfClosing: boolean = false): StartTag {
+
+export function startTag(tagName: string, attributes: Attribute[] = [], selfClosing: boolean = false, blockParameters: string[] = []): StartTag {
+  const hasBlock = (blockParameters.length) ? true : false;
+
   return {
     type: 'start-tag',
     tagName,
     selfClosing,
-    attributes
+    hasBlock,
+    attributes,
+    blockParameters
   };
 }
 
@@ -678,7 +755,11 @@ function handleBeforeAttributeName(char: string): Action[] {
       { type: 'emit-tag-token' },
       createTransition('data')
     ];
-  } else if ([`"`, `'`, '<', '='].indexOf(char) !== -1) {
+  } else if (char === '=') {
+    return [
+      createTransition('before-block')
+    ];
+  } else if ([`"`, `'`, '<'].indexOf(char) !== -1) {
     throw unknownCharacter();
   } else {
     return [
@@ -1000,6 +1081,48 @@ function handleCommentEnd(char: string): Action[] {
       { type: 'append-comment', payload: char },
       createTransition('comment')
     ];
+  }
+}
+
+function handleBeforeBlock(char: string): Action[] {
+  if (char === '>') {
+    return [
+      createTransition('before-block-parameter')
+    ];
+  } else {
+    throw unknownCharacter();
+  }
+}
+
+function handleBeforeBlockParameter(char: string): Action[] {
+  if (char.match(WHITESPACE)) {
+    return [];
+  } else if (char.match(ASCII)) {
+    return [
+      { type: 'create-block-parameter', payload: char },
+      createTransition('block-parameter')
+    ];
+  } else {
+    throw unknownCharacter();
+  }
+}
+
+function handleBlockParameter(char: string): Action[] {
+  if (char.match(ASCII)) {
+    return [
+      { type: 'append-block-parameter', payload: char }
+    ]
+  } else if (char === ',') {
+    return [
+      createTransition('before-block-parameter')
+    ];
+  } else if (char === '>') {
+    return [
+      createTransition('data'),
+      { type: 'emit-tag-token' }
+    ]
+  } else {
+    throw unknownCharacter();
   }
 }
 

@@ -20,6 +20,7 @@ const expect = require('chai').expect;
 const path = require('path');
 const knownPaths = require('./modules/known-paths');
 const fs = require('fs');
+require('shelljs/global');
 
 describe('orion-ensure-copyright', () => {
   const LICENCE = fs.readFileSync(path.join(knownPaths.root, 'LICENSE')).toString();
@@ -31,7 +32,7 @@ describe('orion-ensure-copyright', () => {
   }
 
   function runScript() {
-    const command = `node orion.js ensure-copyright --dir ${TEMP_DIR}`;
+    const command = `node ${knownPaths.scripts}/orion.js ensure-copyright --dir ${TEMP_DIR}`;
     return exec(command, { silent: true }).code;
   }
 

@@ -19,6 +19,7 @@ limitations under the License.
 const expect = require('chai').expect;
 const knownPaths = require('./modules/known-paths');
 const path = require('path');
+require('shelljs/global');
 
 describe('orion-package-builds', () => {
   const source = path.join(knownPaths.packages, 'test', 'build', 'sub-directory');
@@ -45,7 +46,7 @@ describe('orion-package-builds', () => {
 
   it('copies build directories for packages into root build directory', () => {
     // Run the command
-    const code = exec('node orion.js copy-package-builds', { silent: true }).code;
+    const code = exec(`node ${knownPaths.scripts}/orion.js copy-package-builds`, { silent: true }).code;
     expect(code).to.equal(0);
 
     // Test that the destination path has been created properly

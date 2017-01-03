@@ -24,4 +24,9 @@ module.exports = {
    * Where we store all the packages
    */
   packageDirName: 'packages',
+
+  /**
+   * Scripts for development and deployment of the project
+   */
+  scriptsPackageDirName: 'scripts',
 };

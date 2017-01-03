@@ -19,6 +19,7 @@ limitations under the License.
 const expect = require('chai').expect;
 const knownPaths = require('./modules/known-paths');
 const path = require('path');
+require('shelljs/global');
 
 describe('orion-clean', () => {
   const packageBuildPath = path.join(knownPaths.packages, 'test', 'build');
@@ -26,7 +27,7 @@ describe('orion-clean', () => {
     mkdir('-p', knownPaths.build);
     mkdir('-p', packageBuildPath);
 
-    const code = exec('node orion.js clean', { silent: true }).code;
+    const code = exec(`node ${knownPaths.scripts}/orion.js clean`, { silent: true }).code;
     expect(code).to.equal(0);
   });
 

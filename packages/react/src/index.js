@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const Button = require('./button');
-const Inline = require('./inline');
+const lib20161201 = require('./2016-12-01');
 
-module.exports = { Button, Inline };
+module.exports = {
+  '2016-12-01': lib20161201,
+};

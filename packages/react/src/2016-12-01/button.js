@@ -1,3 +1,4 @@
+
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -14,29 +15,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
-require('./inline');
+require('@orion-ui/components/lib/2016-12-01/button');
 
-const Registry = require('../utils/private-registry.js');
+const React = require('react');
+const { Skins } = require('@orion-ui/style/lib/2016-12-01');
 
-class Button extends HTMLElement {
-  constructor() {
-    super();
+const PropTypes = React.PropTypes;
 
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.innerHTML = `
-      <orion-inline
-        border-radius="2"
-        background="black"
-        color="white"
-        padding-horizontal="3"
-        padding-vertical="2"
-        dim
-        pointer><slot /></orion-inline>
-    `;
-  }
+function Button(props) {
+  return (
+    <orion-button onClick={props.onClick} color={props.color} background={props.background}>
+      {props.children}
+    </orion-button>);
 }
 
-Registry.define('orion-button', Button);
+const colors = Object.keys(Skins.colors);
+
+Button.propTypes = {
+  children: PropTypes.node,
+  onClick: PropTypes.func,
+  background: PropTypes.oneOf(colors),
+  color: PropTypes.oneOf(colors),
+};
 
 module.exports = Button;

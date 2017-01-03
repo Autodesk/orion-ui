@@ -19,23 +19,41 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const App = function App() {
-  function clickHandler() {
-    alert('Clicked it!');
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isInverted: false
+    }
+    this.invertButton = this.invertButton.bind(this);
   }
 
-  return (
-    <div className="App">
-      <div className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h2>Welcome to React</h2>
+  invertButton() {
+    this.setState({ isInverted: !this.state.isInverted });
+  }
+
+  buttonProps() {
+    if (this.state.isInverted) {
+      return { background: 'black', color: 'white' }
+    } else {
+      return { background: 'white', color: 'black' }
+    }
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+          <Button {...this.buttonProps()} onClick={this.invertButton}>Hello, Button!</Button>
+        </p>
       </div>
-      <p className="App-intro">
-        To get started, edit <code>src/App.js</code> and save to reload.
-        <Button backgroundColor="black" color="white" onClick={clickHandler}>Hello, Button!</Button>
-      </p>
-    </div>
-  );
+    );
+  }
 };
 
 export default App;

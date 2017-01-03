@@ -23,7 +23,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isInverted: false,
       disabled: false,
     }
     this.handleClick = this.handleClick.bind(this);

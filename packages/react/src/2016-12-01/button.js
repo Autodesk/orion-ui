@@ -15,9 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import React, { PropTypes } from 'react';
-import '@orion-ui/components/lib/2016-12-01/button';
-import { Skins } from '@orion-ui/style/lib/2016-12-01';
+require('@orion-ui/components/lib/2016-12-01/button');
+
+const React = require('react');
+const { Skins } = require('@orion-ui/style/lib/2016-12-01');
+
+const PropTypes = React.PropTypes;
 
 function Button(props) {
   return (
@@ -35,4 +38,4 @@ Button.propTypes = {
   color: PropTypes.oneOf(colors),
 };
 
-export default Button;
+module.exports = Button;

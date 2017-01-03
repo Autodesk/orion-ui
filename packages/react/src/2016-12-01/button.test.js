@@ -15,13 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import 'jsdom-global/register';
-import React from 'react';
-import { mount } from 'enzyme';
-import chai, { expect } from 'chai';
-import sinon from 'sinon';
-import chaiEnzyme from 'chai-enzyme';
-import OrionButton from './button';
+require('jsdom-global/register');
+
+const React = require('react');
+const { mount } = require('enzyme');
+const chai = require('chai');
+const sinon = require('sinon');
+const chaiEnzyme = require('chai-enzyme');
+
+const expect = chai.expect;
+
+const OrionButton = require('./button');
 
 chai.use(chaiEnzyme());
 

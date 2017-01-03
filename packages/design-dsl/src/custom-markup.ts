@@ -1,5 +1,5 @@
 import { deepEqual } from 'assert';
-import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, bindingAttr, spaces, word} from './tokenizer';
+import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, bindingAttr, spaces, word } from './tokenizer';
 
 const integration = `
   <!--awesome comments-->
@@ -10,9 +10,10 @@ const integration = `
     array=["item1", ["item2", "item3"], "item4"]
     object={"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}
     binding={hello()}>
-    <container key="value">
-      <child /> and some text
-    </container>
+    <!--take each item and convert it to a text item-->
+    <map collection=["item1", "item2"] => item, index>
+      <text size=1>{item} {index + 1}</text>
+    </map>
   </orion>
 `;
 
@@ -34,16 +35,22 @@ const expectedIntegration = [
   ]),
   character('\n'),
   ...spaces(4),
-  startTag('container', [
-    jsonAttr('key', '"value"')
-  ]),
-  character('\n'),
-  ...spaces(6),
-  startTag('child', [], true),
-  ...word(' and some text'),
+  comment('take each item and convert it to a text item'),
   character('\n'),
   ...spaces(4),
-  endTag('container'),
+  startTag('map', [
+    jsonAttr('collection', '["item1", "item2"]')
+  ], false, ['item', 'index']),
+  character('\n'),
+  ...spaces(6),
+  startTag('text', [
+    jsonAttr('size', '1')
+  ]),
+  ...word('{item} {index + 1}'),
+  endTag('text'),
+  character('\n'),
+  ...spaces(4),
+  endTag('map'),
   character('\n'),
   ...spaces(2),
   endTag('orion'),
@@ -563,8 +570,19 @@ deepEqual(actualIntegration, expectedIntegration);
   deepEqual(getNextToken(prev, 'B'), next);
 }
 
+// = switch to before-block state
+{
+  const prev = initWorld();
+  prev.state = 'before-attribute-name';
+
+  const next = initWorld();
+  next.state = 'before-block';
+
+  deepEqual(getNextToken(prev, '='), next);
+}
+
 // quote, single-quote, <, or = are parse errors
-[`"`, `'`, '<', '='].forEach(char => {
+[`"`, `'`, '<'].forEach(char => {
   const prev = initWorld();
   prev.state = 'before-attribute-name';
 
@@ -591,6 +609,134 @@ deepEqual(actualIntegration, expectedIntegration);
 
   deepEqual(getNextToken(prev, 'b'), next);
 }
+
+/**
+ * before-block state
+ */
+
+// > switch to before-block-parameter state
+{
+  const prev = initWorld();
+  prev.state = 'before-block';
+
+  const next = initWorld();
+  next.state = 'before-block-parameter';
+
+  deepEqual(getNextToken(prev, '>'), next);
+}
+
+// anything else is a parse error
+['a', '\n', '\t', ' ', '1'].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-block';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
+
+/**
+ * before-block-parameter state
+ */
+
+// tab, LF, space are ignored
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-block-parameter';
+
+  const next = initWorld();
+  next.state = 'before-block-parameter';
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// ASCII letter
+// - creates a new block parameter with value on current tag token
+// - switches to block-parameter state
+['a', 'A', 'z', 'Z'].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-block-parameter'
+  prev.currentToken = startTag('a');
+
+  const next = initWorld();
+  next.currentToken = startTag('a', [], false, [char]);
+  next.state = 'block-parameter';
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
+// anything else is a parse error
+['1', '>', '='].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'before-block-parameter';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
+
+
+/**
+ * block-parameter-state
+ */
+
+// ASCII letter appends character to current block parameter value
+{
+  const prev = initWorld();
+  prev.state = 'block-parameter';
+  prev.currentToken = startTag('a', [], false, ['a']);
+
+  const next = initWorld();
+  next.state = 'block-parameter';
+  next.currentToken = startTag('a', [], false, ['ab']);
+
+  deepEqual(getNextToken(prev, 'b'), next);
+}
+
+
+// , switches to before-block-parameter state
+{
+  const prev = initWorld();
+  prev.state = 'block-parameter';
+
+  const next = initWorld();
+  next.state = 'before-block-parameter';
+
+  deepEqual(getNextToken(prev, ','), next);
+}
+
+// > switch to data state, emit current tag token
+{
+  const prev = initWorld();
+  prev.state = 'block-parameter';
+  prev.currentToken = startTag('a', [], false, ['a']);
+
+  const next = initWorld();
+  next.state = 'data';
+  next.currentToken = null;
+  next.tokens = [startTag('a', [], false, ['a'])];
+
+  deepEqual(getNextToken(prev, '>'), next);
+}
+
+// anything else is a parse error
+['\t', ' ', '\n', '1', '<', '='].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'block-parameter';
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unknown character');
+  }
+});
 
 /**
  * attribute-name state
@@ -1008,7 +1154,7 @@ for (let i = 0; i < 10; i++) {
 
 // > switches to data state and emits current tag token
 {
- const prev = initWorld();
+  const prev = initWorld();
   prev.state = 'attribute-value-number';
   prev.currentAttribute = jsonAttr('name', '10');
   prev.currentToken = startTag('a', [
@@ -1373,145 +1519,6 @@ for (let i = 0; i < 10; i++) {
     deepEqual(e.message, 'unknown character');
   }
 });
-
-// const minAST: ASTNode = {
-//   tagName: 'orion',
-//   attributes: [],
-//   children: []
-// };
-
-// deepEqual(parse(minimum), minAST);
-
-// const withJSONValues = `
-//   <orion
-//     number=1
-//     string="<hello world='thing' />"
-//     boolean=true
-//     array=[
-//       "item1",
-//       "item2",
-//       "item3"
-//     ]
-//     object={
-//       "key": "value",
-//       "key2": ["value2"]
-//     }>
-//   </orion>
-// `
-// deepEqual(
-//   getNextToken({
-//     buffer: '',
-//     state: 'tag-name',
-//     currentToken: startTag('orion'),
-//     currentAttribute: null,
-//     tokens: [
-//       character('\n'),
-//       character(' '),
-//       character(' ')
-//     ]
-//   }, '\n'),
-//   {
-//     buffer: '',
-//     state: 'before-attribute-name',
-//     currentToken: startTag('orion'),
-//     currentAttribute: null,
-//     tokens: [
-//       character('\n'),
-//       character(' '),
-//       character(' ')
-//     ]
-//   }
-// );
-
-// // Ignore whitespace
-// ['\t', '\r', '\n', ' '].forEach(char => {
-//   deepEqual(
-//     getNextToken({
-//       buffer: '',
-//       state: 'before-attribute-name',
-//       currentToken: startTag('orion'),
-//       currentAttribute: null,
-//       tokens: [
-//         character('\n'),
-//         character(' '),
-//         character(' ')
-//       ]
-//     }, char),
-//     {
-//       buffer: '',
-//       state: 'before-attribute-name',
-//       currentToken: startTag('orion'),
-//       currentAttribute: null,
-//       tokens: [
-//         character('\n'),
-//         character(' '),
-//         character(' ')
-//       ]
-//     }
-//   )
-// });
-
-// // ASCII Letter moves to attribute name state
-// deepEqual(
-//   getNextToken({
-//     buffer: '',
-//     state: 'before-attribute-name',
-//     currentToken: startTag('orion'),
-//     currentAttribute: null,
-//     tokens: [
-//       character('\n'),
-//       character(' '),
-//       character(' ')
-//     ]
-//   }, 'n'),
-//   {
-//     buffer: '',
-//     state: 'attribute-name',
-//     currentToken: startTag('orion', [
-//       { name: 'n', value: '' }
-//     ]),
-//     currentAttribute: { name: 'n', value: '' },
-//     tokens: [
-//       character('\n'),
-//       character(' '),
-//       character(' ')
-//     ]
-//   }
-// );
-
-// // whitespace switches to after-attribute-name state
-// ['\t', '\n', '\r', ' '].forEach(char => {
-//   deepEqual(
-//     getNextToken({
-//       buffer: '',
-//       state: 'attribute-name',
-//       currentToken: startTag('orion', [
-//         { name: 'n', value: '' }
-//       ]),
-//       currentAttribute: { name: 'n', value: '' },
-//       tokens: [
-//         character('\n'),
-//         character(' '),
-//         character(' ')
-//       ]
-//     }, char),
-//     {
-//       buffer: '',
-//       state: 'after-attribute-name',
-//       currentToken: startTag('orion', [
-//         { name: 'n', value: '' }
-//       ]),
-//       currentAttribute: { name: 'n', value: '' },
-//       tokens: [
-//         character('\n'),
-//         character(' '),
-//         character(' ')
-//       ]
-//     }
-//   )
-// });
-
-
 
 // const withJSONValuesAST: ASTNode = {
 //   tagName: 'orion',

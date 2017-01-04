@@ -2,6 +2,7 @@ import { WHITESPACE } from './parser';
 
 const ASCII = /[a-zA-Z]/;
 const DIGIT = /[0-9]/;
+export const EOF_CHARACTER = '@@EOF@@';
 
 /**
  * Replace an item in the collection and return a new collection
@@ -93,7 +94,7 @@ export function getTokens(source: string): Token[] {
     return getNextToken(world, char);
   }, initWorld())
 
-  return world.tokens;
+  return getNextToken(world, EOF_CHARACTER).tokens;
 }
 
 export function initWorld(): World {
@@ -204,6 +205,10 @@ interface EmitCharacter {
   payload: string;
 };
 
+interface EmitEOF {
+  type: 'emit-eof';
+}
+
 interface EmitCurrentToken {
   type: 'emit-current-token';
 }
@@ -298,6 +303,7 @@ type Action = TransitionAction
   | AppendBuffer
   | ClearBuffer
   | EmitCharacter
+  | EmitEOF
   | EmitCurrentToken
   | CommentAction
   | SetSelfClosing
@@ -378,6 +384,14 @@ function mutateWorld(world: World, action: Action): World {
         tokens: [
           ...world.tokens,
           character(action.payload)
+        ]
+      }
+    case 'emit-eof':
+      return {
+        ...world,
+        tokens: [
+          ...world.tokens,
+          EOF()
         ]
       }
     case 'transition':
@@ -657,6 +671,9 @@ export function word(word: string): Character[] {
   return word.split('').map(char => character(char))
 }
 
+export function EOF(): EOF {
+  return { type: 'eof' };
+}
 
 export function startTag(tagName: string, attributes: Attribute[] = [], selfClosing: boolean = false, blockParameters: string[] = []): StartTag {
   const hasBlock = (blockParameters.length) ? true : false;
@@ -701,12 +718,16 @@ function handleData(char: string): Action[] {
         createTransition('expression'),
         { type: 'create-expression' }
       ]
+    case EOF_CHARACTER:
+      return [{ type: 'emit-eof' }];
     default:
       return [{ type: 'emit-character', payload: char }];
   }
 }
 
 function handleExpression(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '}') {
     return [
       { type: 'emit-current-token' },
@@ -719,7 +740,15 @@ function handleExpression(char: string): Action[] {
   }
 }
 
+function handleEOF(char: string): void {
+  if (char === EOF_CHARACTER) {
+    throw unexpectedEndOfFile();
+  }
+}
+
 function handleTagOpen(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '/') {
     return [
       createTransition('end-tag-open')
@@ -739,6 +768,8 @@ function handleTagOpen(char: string): Action[] {
 }
 
 function handleTagName(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [
       createTransition('before-attribute-name')
@@ -761,6 +792,8 @@ function handleTagName(char: string): Action[] {
 }
 
 function handleEndTagOpen(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(ASCII)) {
     return [
       { type: 'create-end-tag', payload: char.toLowerCase() },
@@ -772,6 +805,8 @@ function handleEndTagOpen(char: string): Action[] {
 }
 
 function handleSelfClosingStartTag(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '>') {
     return [
       { type: 'set-self-closing' },
@@ -784,6 +819,8 @@ function handleSelfClosingStartTag(char: string): Action[] {
 }
 
 function handleBeforeAttributeName(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [];
   } else if (char === '/') {
@@ -810,6 +847,8 @@ function handleBeforeAttributeName(char: string): Action[] {
 }
 
 function handleAttributeName(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [
       createTransition('after-attribute-name')
@@ -837,6 +876,8 @@ function handleAttributeName(char: string): Action[] {
 }
 
 function handleAfterAttributeName(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return []; // ignore whitespace
   } else if (char === '/') {
@@ -863,6 +904,8 @@ function handleAfterAttributeName(char: string): Action[] {
 }
 
 function handleBeforeAttributeValue(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [];
   } else if (char === '"') {
@@ -890,6 +933,8 @@ function handleBeforeAttributeValue(char: string): Action[] {
 }
 
 function handleAttributeValueString(char: string): Action[] {
+  handleEOF(char);
+
   if (char === `"`) {
     return [
       { type: 'append-attribute-value', payload: char },
@@ -903,6 +948,8 @@ function handleAttributeValueString(char: string): Action[] {
 }
 
 function handleAttributeValueNumber(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [
       createTransition('before-attribute-name')
@@ -927,6 +974,8 @@ function handleAttributeValueNumber(char: string): Action[] {
 
 
 function handleAttributeValueArray(char: string, world: World): Action[] {
+  handleEOF(char);
+
   if (char === ']') {
     if (world.currentAttribute) {
       try {
@@ -954,6 +1003,8 @@ function handleAttributeValueArray(char: string, world: World): Action[] {
 }
 
 function handleAttributeValueObjectOrExpression(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [];
   } else if (char === '"') {
@@ -972,6 +1023,8 @@ function handleAttributeValueObjectOrExpression(char: string): Action[] {
 }
 
 function handleAttributeValueObject(char: string, world: World): Action[] {
+  handleEOF(char);
+
   if (char === '}') {
     if (world.currentAttribute) {
       try {
@@ -999,6 +1052,8 @@ function handleAttributeValueObject(char: string, world: World): Action[] {
 }
 
 function handleAttributeValueExpression(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '}') {
     return [
       createTransition('after-attribute-value')
@@ -1011,6 +1066,8 @@ function handleAttributeValueExpression(char: string): Action[] {
 }
 
 function handleAfterAttributeValue(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [
       createTransition('before-attribute-name')
@@ -1030,6 +1087,8 @@ function handleAfterAttributeValue(char: string): Action[] {
 }
 
 function handleMarkupDeclarationOpen(char: string, world: World): Action[] {
+  handleEOF(char);
+
   if (char === '-') {
     if (world.buffer === '-') {
       return [
@@ -1048,6 +1107,8 @@ function handleMarkupDeclarationOpen(char: string, world: World): Action[] {
 }
 
 function handleCommentStart(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '-') {
     return [
       createTransition('comment-start-dash')
@@ -1063,6 +1124,8 @@ function handleCommentStart(char: string): Action[] {
 }
 
 function handleComment(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '-') {
     return [
       createTransition('comment-end-dash')
@@ -1075,6 +1138,8 @@ function handleComment(char: string): Action[] {
 }
 
 function handleCommentStartDash(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '-') {
     return [
       createTransition('comment-end')
@@ -1091,6 +1156,8 @@ function handleCommentStartDash(char: string): Action[] {
 }
 
 function handleCommentEndDash(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '-') {
     return [
       createTransition('comment-end')
@@ -1105,6 +1172,8 @@ function handleCommentEndDash(char: string): Action[] {
 }
 
 function handleCommentEnd(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '>') {
     return [
       { type: 'emit-comment' },
@@ -1125,6 +1194,8 @@ function handleCommentEnd(char: string): Action[] {
 }
 
 function handleBeforeBlock(char: string): Action[] {
+  handleEOF(char);
+
   if (char === '>') {
     return [
       createTransition('before-block-parameter')
@@ -1135,6 +1206,8 @@ function handleBeforeBlock(char: string): Action[] {
 }
 
 function handleBeforeBlockParameter(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(WHITESPACE)) {
     return [];
   } else if (char.match(ASCII)) {
@@ -1148,6 +1221,8 @@ function handleBeforeBlockParameter(char: string): Action[] {
 }
 
 function handleBlockParameter(char: string): Action[] {
+  handleEOF(char);
+
   if (char.match(ASCII)) {
     return [
       { type: 'append-block-parameter', payload: char }
@@ -1168,4 +1243,8 @@ function handleBlockParameter(char: string): Action[] {
 
 function unknownCharacter(): SyntaxError {
   return new SyntaxError('unknown character');
+}
+
+function unexpectedEndOfFile(): SyntaxError {
+  return new SyntaxError('unexpected end of file');
 }

@@ -14,11 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 import { withKnobs, text, select, number, boolean } from '@kadira/storybook-addon-knobs';
+import React from 'react';
 import SourceViewer from '../components/source_viewer';
-
 
 storiesOf('Select', module)
   .addDecorator(withKnobs)
@@ -42,9 +41,7 @@ storiesOf('Select', module)
                 { value: 'two', label: 'Two' }
               ];
 
-              return (
-                <Select options={options} open={${props.open}} />
-              )
+              return <Select open={${props.open}} options={options} />;
             }
           }
 
@@ -346,10 +343,6 @@ storiesOf('Select', module)
           import {Select} from '@orion-ui/react/lib/2016-12-01';
 
           class App extends React.Component {
-            constructor(props) {
-              super(props);
-              this.state = { selectedIndex: 1 };
-            }
             render() {
               const options = [
                 { value: 'one', label: 'One' },
@@ -357,12 +350,49 @@ storiesOf('Select', module)
               ];
 
               return (
-                <Select options={options} selectedIndex={this.state.selectedIndex} clearable={${props.clearable}} onClear={this.handleClear} />
+                <Select options={options} selectedIndex={1} clearable={${props.clearable}} />
               )
             }
+          }
 
-            handleClear() {
-              this.setState({ selectedIndex: null });
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('interactive', () => {
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            constructor(props) {
+              super(props);
+
+              this.state = {
+                selectState: Select.State.create()
+              };
+
+              this.onChange = (selectState) => this.setState({ selectState });
+            }
+
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
             }
           }
 

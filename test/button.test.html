@@ -1,0 +1,63 @@
+<!--
+
+Copyright 2016 Autodesk,Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../build/bundle.js"></script>
+</head>
+
+<body>
+  <test-fixture id="Button">
+    <template>
+      <orion-button background="black">I'm a button</orion-button>
+    </template>
+  </test-fixture>
+
+  <script>
+    describe('<orion-button>', function() {
+      var button, inline;
+
+      beforeEach(function() {
+        button = fixture('Button');
+        inline = button.shadowEl.shadowRoot;
+      });
+
+      it('have the passed background color', function() {
+        expect(inline.querySelector('.bg-white')).to.be.null;
+
+        button.setAttribute('background', 'white');
+        expect(inline.querySelector('.bg-white')).not.to.be.null;
+      });
+
+      it('calls the click handler', function() {
+        clickHandler = sinon.spy();
+        button.addEventListener('click', clickHandler);
+
+        button.dispatchEvent(new Event('click'));
+        expect(clickHandler.called).to.be.true;
+      });
+
+      it('dims on hover', function() {
+        expect(inline.querySelector('.dim')).not.to.be.null;
+      });
+    });
+
+    a11ySuite('Button');
+  </script>
+</body>
+</html>

@@ -54,7 +54,7 @@ function hasCopyrightNotice(file) {
 }
 
 function ensureCopyright(dir) {
-  const files = glob.sync(path.join(dir, '**/*.js'), { ignore: ['**/node_modules/**', '**/vendor/**'] });
+  const files = glob.sync(path.join(dir, '**/*.js'), { ignore: ['**/node_modules/**', '**/bower_components/**', '**/vendor/**'] });
   const result = files.reduce((memo, file) => {
     if (hasCopyrightNotice(file)) {
       memo.pass.push(file);

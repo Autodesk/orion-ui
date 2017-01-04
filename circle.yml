@@ -5,6 +5,7 @@ machine:
     NODE_ENV: ci # default is test which suppresses errors in lerna
 dependencies:
   post:
+    - bower install
     - lerna bootstrap
   cache_directories:
     - "node_modules"
@@ -14,3 +15,7 @@ dependencies:
     - "packages/scripts/node_modules"
     - "packages/storybook/node_modules"
     - "packages/style/node_modules"
+    - "bower_components"
+test:
+  override:
+    - npm run test-ci

@@ -1,0 +1,379 @@
+/**
+Copyright 2016 Autodesk,Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+import React from 'react';
+import { storiesOf, action } from '@kadira/storybook';
+import { withKnobs, text, select, number, boolean } from '@kadira/storybook-addon-knobs';
+import SourceViewer from '../components/source_viewer';
+
+
+storiesOf('Select', module)
+  .addDecorator(withKnobs)
+  .add('collapsed', () => {
+    const props = {
+      open: boolean('Open', false)
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} open={${props.open}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('disabled option', () => {
+    const props = {
+      open: boolean('Open', false)
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One', disabled: true },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} open={${props.open}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('disabled', () => {
+    const props = {
+      disabled: boolean('Disabled', true)
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} disabled={${props.disabled}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('option focus', () => {
+    const props = {
+      focusIndex: number('Focus Index', 0, {
+        range: true,
+        min: 0,
+        max: 1,
+        step: 1
+      })
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} open={true} focusIndex={${props.focusIndex}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('focus', () => {
+    const props = {
+      focus: boolean('Focus', true)
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} focus={${props.focus}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('selectedIndex', () => {
+    const props = {
+      open: boolean('Open', false),
+      selectedIndex: number('Selected Index', 0, {
+        range: true,
+        min: 0,
+        max: 1,
+        step: 1
+      })
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} open={${props.open}} selectedIndex={${props.selectedIndex}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('no search results', () => {
+    const props = {
+      // query text makes the select open
+      query: text('Query', 'Hello World')
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} query="${props.query}" />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('some search results', () => {
+    const props = {
+      // query text makes the select open
+      query: text('Query', 'one')
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} query="${props.query}" />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  })
+  .add('clearable', () => {
+    const props = {
+      // query text makes the select open
+      clearable: boolean('Clearable', true)
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = { selectedIndex: 1 };
+            }
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select options={options} selectedIndex={this.state.selectedIndex} clearable={${props.clearable}} onClear={this.handleClear} />
+              )
+            }
+
+            handleClear() {
+              this.setState({ selectedIndex: null });
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
+  });

@@ -1,5 +1,5 @@
 import { deepEqual } from 'assert';
-import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, expressionAttr, expression, spaces, word } from './tokenizer';
+import { TokenizerState, getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, expressionAttr, expression, spaces, word, EOF, EOF_CHARACTER } from './tokenizer';
 
 const integration = `
   <!--awesome comments-->
@@ -16,6 +16,7 @@ const integration = `
     </map>
   </orion>
 `;
+
 
 const actualIntegration = getTokens(integration);
 
@@ -56,7 +57,8 @@ const expectedIntegration = [
   character('\n'),
   ...spaces(2),
   endTag('orion'),
-  character('\n')
+  character('\n'),
+  EOF()
 ];
 
 deepEqual(actualIntegration, expectedIntegration);
@@ -88,6 +90,13 @@ deepEqual(actualIntegration, expectedIntegration);
   deepEqual(getNextToken(prev, '{'), next);
 }
 
+// empty emits an EOF character
+{
+  const prev = initWorld();
+  const next = initWorld();
+  next.tokens = [EOF()];
+  deepEqual(getNextToken(prev, EOF_CHARACTER), next);
+}
 
 // anything else emits as character
 {
@@ -98,6 +107,51 @@ deepEqual(actualIntegration, expectedIntegration);
     deepEqual(getNextToken(prev, char), next);
   });
 }
+
+/**
+ * EOF Handling
+ */
+
+// parse errors
+const states: TokenizerState[] =
+  [
+    'expression',
+    'tag-open',
+    'tag-name',
+    'end-tag-open',
+    'self-closing-start-tag',
+    'before-attribute-name',
+    'attribute-name',
+    'after-attribute-name',
+    'before-attribute-value',
+    'attribute-value-string',
+    'attribute-value-number',
+    'attribute-value-array',
+    'attribute-value-object-or-expression',
+    'attribute-value-object',
+    'attribute-value-expression',
+    'after-attribute-value',
+    'markup-declaration-open',
+    'comment-start',
+    'comment',
+    'comment-start-dash',
+    'comment-end-dash',
+    'comment-end',
+    'before-block',
+    'before-block-parameter',
+    'block-parameter'
+  ];
+
+states.forEach(state => {
+  const prev = initWorld();
+  prev.state = state;
+  try {
+    getNextToken(prev, '@@EOF@@');
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, 'unexpected end of file');
+  }
+});
 
 /**
  * expression state

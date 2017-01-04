@@ -1,5 +1,5 @@
 import { deepEqual } from 'assert';
-import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, bindingAttr, spaces, word } from './tokenizer';
+import { getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, expressionAttr, expression, spaces, word } from './tokenizer';
 
 const integration = `
   <!--awesome comments-->
@@ -9,7 +9,7 @@ const integration = `
     string="<hello world='thing' />"
     array=["item1", ["item2", "item3"], "item4"]
     object={"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}
-    binding={hello()}>
+    expression={hello()}>
     <!--take each item and convert it to a text item-->
     <map collection=["item1", "item2"] => item, index>
       <text size=1>{item} {index + 1}</text>
@@ -31,7 +31,7 @@ const expectedIntegration = [
     jsonAttr('string', `"<hello world='thing' />"`),
     jsonAttr('array', `["item1", ["item2", "item3"], "item4"]`),
     jsonAttr('object', `{"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}`),
-    bindingAttr('binding', 'hello()')
+    expressionAttr('expression', 'hello()')
   ]),
   character('\n'),
   ...spaces(4),
@@ -46,7 +46,9 @@ const expectedIntegration = [
   startTag('text', [
     jsonAttr('size', '1')
   ]),
-  ...word('{item} {index + 1}'),
+  expression('item'),
+  character(' '),
+  expression('index + 1'),
   endTag('text'),
   character('\n'),
   ...spaces(4),
@@ -73,6 +75,20 @@ deepEqual(actualIntegration, expectedIntegration);
   deepEqual(getNextToken(prev, '<'), next);
 }
 
+// { switches to expression state and creates empty expression
+
+{
+  const prev = initWorld();
+  prev.state = 'data';
+
+  const next = initWorld();
+  next.state = 'expression';
+  next.currentToken = expression('');
+
+  deepEqual(getNextToken(prev, '{'), next);
+}
+
+
 // anything else emits as character
 {
   ['\n', 'f', '1', ' '].forEach(char => {
@@ -81,6 +97,39 @@ deepEqual(actualIntegration, expectedIntegration);
     next.tokens = [character(char)];
     deepEqual(getNextToken(prev, char), next);
   });
+}
+
+/**
+ * expression state
+ */
+
+// } switch to data state and emit expression token
+{
+  const prev = initWorld();
+  prev.state = 'expression';
+  prev.currentToken = expression('abc123');
+  prev.tokens = [character(' ')];
+
+  const next = initWorld();
+  next.state = 'data';
+  next.currentToken = null;
+  next.tokens = [character(' '), expression('abc123')];
+
+  deepEqual(getNextToken(prev, '}'), next);
+}
+
+// anything else append value to current expression token
+
+{
+  const prev = initWorld();
+  prev.state = 'expression';
+  prev.currentToken = expression('abc');
+
+  const next = initWorld();
+  next.state = 'expression';
+  next.currentToken = expression('abcd');
+
+  deepEqual(getNextToken(prev, 'd'), next);
 }
 
 /**
@@ -1036,7 +1085,7 @@ for (let i = 0; i < 10; i++) {
   deepEqual(getNextToken(prev, '['), next);
 }
 
-// { switches to attribute-value-object-or-binding state
+// { switches to attribute-value-object-or-expression state
 {
   const prev = initWorld();
   prev.state = 'before-attribute-value';
@@ -1046,7 +1095,7 @@ for (let i = 0; i < 10; i++) {
   ]);
 
   const next = initWorld();
-  next.state = 'attribute-value-object-or-binding';
+  next.state = 'attribute-value-object-or-expression';
   next.currentAttribute = jsonAttr('name');
   next.currentToken = startTag('a', [
     next.currentAttribute
@@ -1272,20 +1321,20 @@ for (let i = 0; i < 10; i++) {
 }
 
 /**
- * attribute-value-object-or-binding state
+ * attribute-value-object-or-expression state
  */
 
 // tab, newline, space is ignored
 ['\t', '\n', ' '].forEach(char => {
   const prev = initWorld();
-  prev.state = 'attribute-value-object-or-binding';
+  prev.state = 'attribute-value-object-or-expression';
   prev.currentAttribute = jsonAttr('name');
   prev.currentToken = startTag('a', [
     prev.currentAttribute
   ]);
 
   const next = initWorld();
-  next.state = 'attribute-value-object-or-binding';
+  next.state = 'attribute-value-object-or-expression';
   next.currentAttribute = jsonAttr('name');
   next.currentToken = startTag('a', [
     next.currentAttribute
@@ -1300,7 +1349,7 @@ for (let i = 0; i < 10; i++) {
 // - append " to value
 {
   const prev = initWorld();
-  prev.state = 'attribute-value-object-or-binding';
+  prev.state = 'attribute-value-object-or-expression';
   prev.currentAttribute = jsonAttr('name');
   prev.currentToken = startTag('a', [
     prev.currentAttribute
@@ -1317,19 +1366,19 @@ for (let i = 0; i < 10; i++) {
 }
 
 // anything else
-// - switches to attribute-value-binding state
+// - switches to attribute-value-expression state
 // - append value
 {
   const prev = initWorld();
-  prev.state = 'attribute-value-object-or-binding';
+  prev.state = 'attribute-value-object-or-expression';
   prev.currentAttribute = jsonAttr('name');
   prev.currentToken = startTag('a', [
     prev.currentAttribute
   ]);
 
   const next = initWorld();
-  next.state = 'attribute-value-binding';
-  next.currentAttribute = bindingAttr('name', 'l');
+  next.state = 'attribute-value-expression';
+  next.currentAttribute = expressionAttr('name', 'l');
   next.currentToken = startTag('a', [
     next.currentAttribute
   ]);
@@ -1405,13 +1454,13 @@ for (let i = 0; i < 10; i++) {
 }
 
 /**
- * attribute-value-binding state
+ * attribute-value-expression state
  */
 
 // } switch to after-attribute-value state
 {
   const prev = initWorld();
-  prev.state = 'attribute-value-binding';
+  prev.state = 'attribute-value-expression';
   prev.currentAttribute = jsonAttr('name', `a`);
   prev.currentToken = startTag('a', [
     prev.currentAttribute
@@ -1430,14 +1479,14 @@ for (let i = 0; i < 10; i++) {
 // anything else, append value
 {
   const prev = initWorld();
-  prev.state = 'attribute-value-binding';
+  prev.state = 'attribute-value-expression';
   prev.currentAttribute = jsonAttr('name', `a`);
   prev.currentToken = startTag('a', [
     prev.currentAttribute
   ]);
 
   const next = initWorld();
-  next.state = 'attribute-value-binding';
+  next.state = 'attribute-value-expression';
   next.currentAttribute = jsonAttr('name', `ab`);
   next.currentToken = startTag('a', [
     next.currentAttribute
@@ -1684,7 +1733,7 @@ for (let i = 0; i < 10; i++) {
 //     },
 //     {
 //       type: 'lambda',
-//       bindings: ['item', 'index'],
+//       es: ['item', 'index'],
 //       children: [
 //         {
 //           tagName: 'image',

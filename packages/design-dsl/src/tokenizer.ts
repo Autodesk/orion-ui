@@ -59,7 +59,7 @@ function replaceBlockParameter(token: StartTag, prev: string, next: string): Sta
 }
 
 export interface Attribute {
-  type: 'json' | 'binding';
+  type: 'json' | 'expression';
   name: string;
   value: string; // TODO handle more types?
 }
@@ -72,9 +72,9 @@ export function jsonAttr(name: string, value: string = ''): Attribute {
   };
 }
 
-export function bindingAttr(name: string, value: string = ''): Attribute {
+export function expressionAttr(name: string, value: string = ''): Attribute {
   return {
-    type: 'binding',
+    type: 'expression',
     name,
     value
   }
@@ -118,6 +118,11 @@ export interface StartTag {
 export interface EndTag {
   type: 'end-tag';
   tagName: string;
+}
+
+export interface Expression {
+  type: 'expression';
+  value: string;
 }
 
 /**
@@ -167,10 +172,12 @@ export type TagToken = StartTag | EndTag;
 export type Token = TagToken
   | Comment
   | Character
+  | Expression
   | EOF;
 
 export type TokenizerState =
   'data'
+  | 'expression'
   | 'tag-open'
   | 'markup-declaration-open'
   | 'end-tag-open'
@@ -182,9 +189,9 @@ export type TokenizerState =
   | 'attribute-value-string'
   | 'attribute-value-number'
   | 'attribute-value-array'
-  | 'attribute-value-object-or-binding'
+  | 'attribute-value-object-or-expression'
   | 'attribute-value-object'
-  | 'attribute-value-binding'
+  | 'attribute-value-expression'
   | 'after-attribute-value'
   | 'self-closing-start-tag'
   | 'before-block'
@@ -197,8 +204,8 @@ interface EmitCharacter {
   payload: string;
 };
 
-interface EmitTagToken {
-  type: 'emit-tag-token';
+interface EmitCurrentToken {
+  type: 'emit-current-token';
 }
 
 interface SetSelfClosing {
@@ -213,6 +220,10 @@ interface TransitionAction {
 interface CreateStartTagToken {
   type: 'create-start-tag';
   payload: string;
+}
+
+interface CreateExpression {
+  type: 'create-expression';
 }
 
 interface CreateEndTagToken {
@@ -232,6 +243,11 @@ interface CreateBlockParameter {
 
 interface AppendTagName {
   type: 'append-tag-name';
+  payload: string;
+}
+
+interface AppendExpression {
+  type: 'append-expression';
   payload: string;
 }
 
@@ -259,8 +275,8 @@ interface ClearBuffer {
   type: 'clear-buffer';
 }
 
-interface ChangeAttrToBinding {
-  type: 'change-attr-to-binding';
+interface ChangeAttrToExpression {
+  type: 'change-attr-to-expression';
 }
 
 export interface OtherAction {
@@ -273,20 +289,22 @@ function createTransition(payload: TokenizerState): TransitionAction {
 
 type Action = TransitionAction
   | CreateStartTagToken
+  | CreateExpression
   | CreateEndTagToken
   | CreateAttribute
   | CreateBlockParameter
   | AppendTagName
+  | AppendExpression
   | AppendBuffer
   | ClearBuffer
   | EmitCharacter
-  | EmitTagToken
+  | EmitCurrentToken
   | CommentAction
   | SetSelfClosing
   | AppendAttributeName
   | AppendAttributeValue
   | AppendBlockParameter
-  | ChangeAttrToBinding
+  | ChangeAttrToExpression
   | OtherAction;
 
 export function getNextToken(world: World, char: string): World {
@@ -297,6 +315,8 @@ function getActions(char: string, world: World): Action[] {
   switch (world.state) {
     case 'data':
       return handleData(char);
+    case 'expression':
+      return handleExpression(char);
     case 'tag-open':
       return handleTagOpen(char);
     case 'tag-name':
@@ -319,12 +339,12 @@ function getActions(char: string, world: World): Action[] {
       return handleAttributeValueNumber(char);
     case 'attribute-value-array':
       return handleAttributeValueArray(char, world);
-    case 'attribute-value-object-or-binding':
-      return handleAttributeValueObjectOrBinding(char);
+    case 'attribute-value-object-or-expression':
+      return handleAttributeValueObjectOrExpression(char);
     case 'attribute-value-object':
       return handleAttributeValueObject(char, world);
-    case 'attribute-value-binding':
-      return handleAttributeValueBinding(char);
+    case 'attribute-value-expression':
+      return handleAttributeValueExpression(char);
     case 'after-attribute-value':
       return handleAfterAttributeValue(char);
     case 'markup-declaration-open':
@@ -354,10 +374,7 @@ function mutateWorld(world: World, action: Action): World {
   switch (action.type) {
     case 'emit-character':
       return {
-        buffer: world.buffer,
-        state: world.state,
-        currentToken: world.currentToken,
-        currentAttribute: world.currentAttribute,
+        ...world,
         tokens: [
           ...world.tokens,
           character(action.payload)
@@ -365,27 +382,23 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'transition':
       return {
-        buffer: world.buffer,
-        state: action.payload,
-        currentToken: world.currentToken,
-        currentAttribute: world.currentAttribute,
-        tokens: world.tokens
+        ...world,
+        state: action.payload
       }
     case 'create-start-tag':
       return {
-        buffer: world.buffer,
-        state: world.state,
-        currentToken: startTag(action.payload),
-        currentAttribute: world.currentAttribute,
-        tokens: world.tokens
+        ...world,
+        currentToken: startTag(action.payload)
       }
+    case 'create-expression':
+      return {
+        ...world,
+        currentToken: expression('')
+      };
     case 'create-end-tag':
       return {
-        buffer: world.buffer,
-        state: world.state,
-        currentToken: endTag(action.payload),
-        currentAttribute: world.currentAttribute,
-        tokens: world.tokens
+        ...world,
+        currentToken: endTag(action.payload)
       }
     case 'create-attribute':
       if (!world.currentToken) {
@@ -399,11 +412,9 @@ function mutateWorld(world: World, action: Action): World {
       const newAttribute: Attribute = jsonAttr(action.payload);
 
       return {
-        buffer: world.buffer,
-        state: world.state,
+        ...world,
         currentToken: appendAttribute(world.currentToken, newAttribute),
-        currentAttribute: newAttribute,
-        tokens: world.tokens
+        currentAttribute: newAttribute
       }
     case 'create-block-parameter':
       if (!world.currentToken) {
@@ -433,15 +444,25 @@ function mutateWorld(world: World, action: Action): World {
       }
 
       return {
-        buffer: world.buffer,
-        state: world.state,
+        ...world,
         currentToken: {
           ...world.currentToken,
           tagName: `${world.currentToken.tagName}${action.payload}`
-        },
-        currentAttribute: world.currentAttribute,
-        tokens: world.tokens
+        }
       }
+    case 'append-expression':
+      if (!world.currentToken) {
+        throw SyntaxError('no current token');
+      }
+
+      if (world.currentToken.type !== 'expression') {
+        throw new SyntaxError('current token is not an expression');
+      }
+
+      return {
+        ...world,
+        currentToken: expression(`${world.currentToken.value}${action.payload}`)
+      };
     case 'append-buffer':
       return {
         ...world,
@@ -465,18 +486,13 @@ function mutateWorld(world: World, action: Action): World {
         ...world,
         buffer: ''
       }
-    case 'emit-tag-token':
+    case 'emit-current-token':
       if (!world.currentToken) {
         throw new SyntaxError('no tag token to emit');
       }
 
-      if (!isTagToken(world.currentToken)) {
-        throw new SyntaxError('cannot emit tag token because not a tag');
-      }
-
       return {
-        buffer: world.buffer,
-        state: world.state,
+        ...world,
         currentToken: null,
         currentAttribute: null,
         tokens: [
@@ -585,7 +601,7 @@ function mutateWorld(world: World, action: Action): World {
         ...world,
         currentToken: replaceBlockParameter(world.currentToken, prev, next)
       };
-    case 'change-attr-to-binding': {
+    case 'change-attr-to-expression': {
       if (!world.currentAttribute) {
         throw new SyntaxError('no current attribute');
       }
@@ -602,7 +618,7 @@ function mutateWorld(world: World, action: Action): World {
 
       const next: Attribute = {
         ...prev,
-        type: 'binding'
+        type: 'expression'
       };
 
       return {
@@ -655,6 +671,13 @@ export function startTag(tagName: string, attributes: Attribute[] = [], selfClos
   };
 }
 
+export function expression(value: string): Expression {
+  return {
+    type: 'expression',
+    value
+  };
+}
+
 export function endTag(tagName: string): EndTag {
   return {
     type: 'end-tag',
@@ -673,11 +696,28 @@ function handleData(char: string): Action[] {
   switch (char) {
     case '<':
       return [createTransition('tag-open')]
+    case '{':
+      return [
+        createTransition('expression'),
+        { type: 'create-expression' }
+      ]
     default:
       return [{ type: 'emit-character', payload: char }];
   }
 }
 
+function handleExpression(char: string): Action[] {
+  if (char === '}') {
+    return [
+      { type: 'emit-current-token' },
+      createTransition('data')
+    ];
+  } else {
+    return [
+      { type: 'append-expression', payload: char }
+    ];
+  }
+}
 
 function handleTagOpen(char: string): Action[] {
   if (char === '/') {
@@ -710,7 +750,7 @@ function handleTagName(char: string): Action[] {
   } else if (char === '>') {
     return [
       createTransition('data'),
-      { type: 'emit-tag-token' }
+      { type: 'emit-current-token' }
     ];
 
   } else {
@@ -736,7 +776,7 @@ function handleSelfClosingStartTag(char: string): Action[] {
     return [
       { type: 'set-self-closing' },
       createTransition('data'),
-      { type: 'emit-tag-token' }
+      { type: 'emit-current-token' }
     ]
   } else {
     throw unknownCharacter();
@@ -752,7 +792,7 @@ function handleBeforeAttributeName(char: string): Action[] {
     ];
   } else if (char === '>') {
     return [
-      { type: 'emit-tag-token' },
+      { type: 'emit-current-token' },
       createTransition('data')
     ];
   } else if (char === '=') {
@@ -784,7 +824,7 @@ function handleAttributeName(char: string): Action[] {
     ];
   } else if (char === '>') {
     return [
-      { type: 'emit-tag-token' },
+      { type: 'emit-current-token' },
       createTransition('data')
     ];
   } else if ([`'`, `"`, `<`].indexOf(char) !== -1) {
@@ -809,7 +849,7 @@ function handleAfterAttributeName(char: string): Action[] {
     ];
   } else if (char === '>') {
     return [
-      { type: 'emit-tag-token' },
+      { type: 'emit-current-token' },
       createTransition('data')
     ];
   } else if ([`'`, `"`, `<`].indexOf(char) !== -1) {
@@ -842,7 +882,7 @@ function handleBeforeAttributeValue(char: string): Action[] {
     ];
   } else if (char === '{') {
     return [
-      createTransition('attribute-value-object-or-binding')
+      createTransition('attribute-value-object-or-expression')
     ];
   } else {
     throw unknownCharacter();
@@ -873,7 +913,7 @@ function handleAttributeValueNumber(char: string): Action[] {
     ];
   } else if (char === '>') {
     return [
-      { type: 'emit-tag-token' },
+      { type: 'emit-current-token' },
       createTransition('data')
     ];
   } else if (char.match(DIGIT)) {
@@ -913,7 +953,7 @@ function handleAttributeValueArray(char: string, world: World): Action[] {
   }
 }
 
-function handleAttributeValueObjectOrBinding(char: string): Action[] {
+function handleAttributeValueObjectOrExpression(char: string): Action[] {
   if (char.match(WHITESPACE)) {
     return [];
   } else if (char === '"') {
@@ -925,8 +965,8 @@ function handleAttributeValueObjectOrBinding(char: string): Action[] {
   } else {
     return [
       { type: 'append-attribute-value', payload: char },
-      { type: 'change-attr-to-binding' },
-      createTransition('attribute-value-binding')
+      { type: 'change-attr-to-expression' },
+      createTransition('attribute-value-expression')
     ];
   }
 }
@@ -958,7 +998,7 @@ function handleAttributeValueObject(char: string, world: World): Action[] {
   }
 }
 
-function handleAttributeValueBinding(char: string): Action[] {
+function handleAttributeValueExpression(char: string): Action[] {
   if (char === '}') {
     return [
       createTransition('after-attribute-value')
@@ -981,7 +1021,7 @@ function handleAfterAttributeValue(char: string): Action[] {
     ];
   } else if (char === '>') {
     return [
-      { type: 'emit-tag-token' },
+      { type: 'emit-current-token' },
       createTransition('data')
     ];
   } else {
@@ -1119,7 +1159,7 @@ function handleBlockParameter(char: string): Action[] {
   } else if (char === '>') {
     return [
       createTransition('data'),
-      { type: 'emit-tag-token' }
+      { type: 'emit-current-token' }
     ]
   } else {
     throw unknownCharacter();

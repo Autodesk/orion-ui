@@ -376,4 +376,63 @@ storiesOf('Select', module)
         <SourceViewer sources={sources} />
       </div>
     );
+  })
+  .add('kitchen sink', () => {
+    const props = {
+      open: boolean('Open', false),
+      disabled: boolean('Disabled', true),
+      focusIndex: select('Focus Index', {
+        undefined: 'undefined',
+        0: '0',
+        1: '1'
+      }, 'undefined'),
+      focus: boolean('Focus', true),
+      selectedIndex: select('Selected Index', {
+        undefined: 'undefined',
+        0: '0',
+        1: '1'
+      }, 'undefined'),
+      query: text('Query', 'Hello World'),
+      clearable: boolean('Clearable', true)
+    };
+
+    const sources = [
+      {
+        label: 'React',
+        source: `
+          import React from 'react';
+          import ReactDOM from 'react-dom';
+          import {Select} from '@orion-ui/react/lib/2016-12-01';
+
+          class App extends React.Component {
+            render() {
+              const options = [
+                { value: 'one', label: 'One' },
+                { value: 'two', label: 'Two' }
+              ];
+
+              return (
+                <Select
+                  options={options}
+                  open={${props.open}}
+                  disabled={${props.disabled}}
+                  focusIndex={${props.focusIndex}}
+                  focus={${props.focus}}
+                  selectedIndex={${props.selectedIndex}}
+                  query="${props.query}"
+                  clearable={${props.clearable}} />
+              )
+            }
+          }
+
+          ReactDOM.render(React.createElement(App), document.body);
+        `
+      }
+    ];
+
+    return (
+      <div>
+        <SourceViewer sources={sources} />
+      </div>
+    );
   });

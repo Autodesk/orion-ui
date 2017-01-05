@@ -30,22 +30,49 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return <Select open={${props.open}} options={options} />;
-            }
-          }
+    return <Select options={options} open={${props.open}} />;
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.open = ${props.open};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" open="{{app.open}}"  />
+  </body>
+</html>
         `
       }
     ];
@@ -65,24 +92,49 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One', disabled: true },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One', disabled: true },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} open={${props.open}} />
-              )
-            }
-          }
+    return <Select options={options} open={${props.open}} />;
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One', disabled: true },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.open = ${props.open};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" open="{{app.open}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -102,24 +154,51 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} disabled={${props.disabled}} />
-              )
-            }
-          }
+    return (
+      <Select options={options} disabled={${props.disabled}} />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.disabled = ${props.disabled};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" disabled="{{app.disabled}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -144,24 +223,51 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} open={true} focusIndex={${props.focusIndex}} />
-              )
-            }
-          }
+    return (
+      <Select options={options} open={true} focusIndex={${props.focusIndex}} />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.focusIndex = ${props.focusIndex};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" focusIndex="{{app.focusIndex}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -181,24 +287,51 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} focus={${props.focus}} />
-              )
-            }
-          }
+    return (
+      <Select options={options} focus={${props.focus}} />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.focus = ${props.focus};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" focus="{{app.focus}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -224,24 +357,52 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} open={${props.open}} selectedIndex={${props.selectedIndex}} />
-              )
-            }
-          }
+    return (
+      <Select options={options} open={${props.open}} selectedIndex={${props.selectedIndex}} />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.open = ${props.open};
+    app.selectedIndex = ${props.selectedIndex};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" open="{{app.open}}" selectedIndex="{{app.selectedIndex}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -262,24 +423,52 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} query="${props.query}" />
-              )
-            }
-          }
+    return (
+      <Select options={options} query="${props.query}" />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.open = ${props.open};
+    app.query = "${props.query}";
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" query="{{app.query}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -300,24 +489,52 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} query="${props.query}" />
-              )
-            }
-          }
+    return (
+      <Select options={options} query="${props.query}" />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.open = ${props.open};
+    app.query = "${props.query}";
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" query="{{app.query}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -338,24 +555,52 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select options={options} selectedIndex={1} clearable={${props.clearable}} />
-              )
-            }
-          }
+    return (
+      <Select options={options} selectedIndex={1} clearable={${props.clearable}} />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+
+angular.module('app', [])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.selectedIndex = 1;
+    app.clearable = ${props.clearable};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select options="{{app.options}}" selectedIndex="{{app.selectedIndex}}" clearable="{{app.clearable}}" />
+  </body>
+</html>
         `
       }
     ];
@@ -371,32 +616,67 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            constructor(props) {
-              super(props);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-              this.state = {
-                selectState: Select.State.create()
-              };
+    this.state = {
+      selectState: Select.State.create()
+    };
 
-              this.onChange = (selectState) => this.setState({ selectState });
-            }
+    this.onChange = (selectState) => this.setState({ selectState });
+  }
 
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
-            }
-          }
+    return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+import {SelectState, Select} from '@orion-ui/react/lib/2016-12-01/select';
+
+angular.module('app', [Select.moduleName])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.selectState = Select.State.create();
+
+    app.onChange = (selectState) => {
+      app.selectState = selectState;
+    }
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select
+      options="{{app.options}}"
+      selectState="{{app.selectState}}"
+      ng-change="app.onChange(selectState)" />
+  </body>
+</html>
         `
       }
     ];
@@ -430,32 +710,74 @@ storiesOf('Select', module)
       {
         label: 'React',
         source: `
-          import React from 'react';
-          import ReactDOM from 'react-dom';
-          import {Select} from '@orion-ui/react/lib/2016-12-01';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react/lib/2016-12-01';
 
-          class App extends React.Component {
-            render() {
-              const options = [
-                { value: 'one', label: 'One' },
-                { value: 'two', label: 'Two' }
-              ];
+class App extends React.Component {
+  render() {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
 
-              return (
-                <Select
-                  options={options}
-                  open={${props.open}}
-                  disabled={${props.disabled}}
-                  focusIndex={${props.focusIndex}}
-                  focus={${props.focus}}
-                  selectedIndex={${props.selectedIndex}}
-                  query="${props.query}"
-                  clearable={${props.clearable}} />
-              )
-            }
-          }
+    return (
+      <Select
+        options={options}
+        open={${props.open}}
+        disabled={${props.disabled}}
+        focusIndex={${props.focusIndex}}
+        focus={${props.focus}}
+        selectedIndex={${props.selectedIndex}}
+        query="${props.query}"
+        clearable={${props.clearable}} />
+    )
+  }
+}
 
-          ReactDOM.render(React.createElement(App), document.body);
+ReactDOM.render(React.createElement(App), document.body);
+        `
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+import 'angular';
+import {SelectState, Select} from '@orion-ui/react/lib/2016-12-01/select';
+
+angular.module('app', [Select.moduleName])
+  .controller('AppController', function() {
+    var app = this;
+    app.options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' }
+    ];
+
+    app.open = ${props.open};
+    app.disabled = ${props.disabled};
+    app.focusIndex = ${props.focusIndex};
+    app.focus = ${props.focus};
+    app.selectedIndex = ${props.selectedIndex};
+    app.query = "${props.query}"
+    app.clearable = ${props.clearable};
+}]);
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-select
+      options="{{app.options}}"
+      open="{{app.open}}"
+      disabled="{{app.disabled}}"
+      focusIndex="{{app.focusIndex}}"
+      focus="{{app.focus}}"
+      selectedIndex="{{app.selectedIndex}}"
+      query="{{app.query}}"
+      clearable="{{app.clearable}}" />
+  </body>
+</html>
         `
       }
     ];

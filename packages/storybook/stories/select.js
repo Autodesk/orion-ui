@@ -628,7 +628,13 @@ class App extends React.Component {
       selectState: Select.State.create()
     };
 
-    this.onChange = (selectState) => this.setState({ selectState });
+    this.onChange = (event) => {
+      if (event.type === 'selectedIndexChange') {
+        // do something
+      }
+
+      this.setState({ selectState: event.state });
+    }
   }
 
   render() {
@@ -649,7 +655,7 @@ ReactDOM.render(React.createElement(App), document.body);
         source: `
 // app controller
 import 'angular';
-import {SelectState, Select} from '@orion-ui/react/lib/2016-12-01/select';
+import {Select} from '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', [Select.moduleName])
   .controller('AppController', function() {
@@ -661,8 +667,12 @@ angular.module('app', [Select.moduleName])
 
     app.selectState = Select.State.create();
 
-    app.onChange = (selectState) => {
-      app.selectState = selectState;
+    app.onChange = (event) => {
+      if (event.type === 'selectedIndexChange') {
+        // do something
+      }
+
+      app.selectState = event.state;
     }
 }]);
 

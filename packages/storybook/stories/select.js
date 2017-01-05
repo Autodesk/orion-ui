@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 import { withKnobs, text, select, number, boolean } from '@kadira/storybook-addon-knobs';
 import React from 'react';
 import SourceViewer from '../components/source_viewer';
@@ -23,7 +23,7 @@ storiesOf('Select', module)
   .addDecorator(withKnobs)
   .add('collapsed', () => {
     const props = {
-      open: boolean('Open', false)
+      open: boolean('Open', false),
     };
 
     const sources = [
@@ -46,7 +46,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -73,8 +73,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" open="{{app.open}}"  />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -85,7 +85,7 @@ angular.module('app', [])
   })
   .add('disabled option', () => {
     const props = {
-      open: boolean('Open', false)
+      open: boolean('Open', false),
     };
 
     const sources = [
@@ -108,7 +108,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -135,8 +135,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" open="{{app.open}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -147,7 +147,7 @@ angular.module('app', [])
   })
   .add('disabled', () => {
     const props = {
-      disabled: boolean('Disabled', true)
+      disabled: boolean('Disabled', true),
     };
 
     const sources = [
@@ -172,7 +172,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -199,8 +199,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" disabled="{{app.disabled}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -215,8 +215,8 @@ angular.module('app', [])
         range: true,
         min: 0,
         max: 1,
-        step: 1
-      })
+        step: 1,
+      }),
     };
 
     const sources = [
@@ -241,7 +241,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -268,8 +268,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" focusIndex="{{app.focusIndex}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -280,7 +280,7 @@ angular.module('app', [])
   })
   .add('focus', () => {
     const props = {
-      focus: boolean('Focus', true)
+      focus: boolean('Focus', true),
     };
 
     const sources = [
@@ -305,7 +305,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -332,8 +332,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" focus="{{app.focus}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -349,8 +349,8 @@ angular.module('app', [])
         range: true,
         min: 0,
         max: 1,
-        step: 1
-      })
+        step: 1,
+      }),
     };
 
     const sources = [
@@ -375,7 +375,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -403,8 +403,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" open="{{app.open}}" selectedIndex="{{app.selectedIndex}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -416,7 +416,7 @@ angular.module('app', [])
   .add('no search results', () => {
     const props = {
       // query text makes the select open
-      query: text('Query', 'Hello World')
+      query: text('Query', 'Hello World'),
     };
 
     const sources = [
@@ -441,7 +441,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -469,8 +469,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" query="{{app.query}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -482,7 +482,7 @@ angular.module('app', [])
   .add('some search results', () => {
     const props = {
       // query text makes the select open
-      query: text('Query', 'one')
+      query: text('Query', 'one'),
     };
 
     const sources = [
@@ -507,7 +507,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -535,8 +535,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" query="{{app.query}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -548,7 +548,7 @@ angular.module('app', [])
   .add('clearable', () => {
     const props = {
       // query text makes the select open
-      clearable: boolean('Clearable', true)
+      clearable: boolean('Clearable', true),
     };
 
     const sources = [
@@ -573,7 +573,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -601,8 +601,8 @@ angular.module('app', [])
     <orion-select options="{{app.options}}" selectedIndex="{{app.selectedIndex}}" clearable="{{app.clearable}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -642,7 +642,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -677,8 +677,8 @@ angular.module('app', [Select.moduleName])
       ng-change="app.onChange(selectState)" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (
@@ -694,16 +694,16 @@ angular.module('app', [Select.moduleName])
       focusIndex: select('Focus Index', {
         undefined: 'undefined',
         0: '0',
-        1: '1'
+        1: '1',
       }, 'undefined'),
       focus: boolean('Focus', true),
       selectedIndex: select('Selected Index', {
         undefined: 'undefined',
         0: '0',
-        1: '1'
+        1: '1',
       }, 'undefined'),
       query: text('Query', 'Hello World'),
-      clearable: boolean('Clearable', true)
+      clearable: boolean('Clearable', true),
     };
 
     const sources = [
@@ -736,7 +736,7 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-        `
+        `,
       },
       {
         label: 'Angular 1.5.x',
@@ -778,8 +778,8 @@ angular.module('app', [Select.moduleName])
       clearable="{{app.clearable}}" />
   </body>
 </html>
-        `
-      }
+        `,
+      },
     ];
 
     return (

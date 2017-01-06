@@ -56,8 +56,8 @@ class Button extends HTMLElement {
 
   get state() {
     return {
-      hover: this.getAttribute('hover') === 'true',
-      disabled: this.getAttribute('disabled') === 'true',
+      hover: this.hover,
+      disabled: this.disabled,
     };
   }
 
@@ -68,9 +68,15 @@ class Button extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'disabled':
+        this.disabled = newValue === 'true';
         this.handleDisabledChange(newValue);
         break;
+      case 'hover':
+        this.hover = newValue === 'true';
+        this.render(this.state);
+        break;
       default:
+        this[name] = newValue;
         this.render(this.state);
         break;
     }
@@ -88,14 +94,14 @@ class Button extends HTMLElement {
 
   render(state) {
     if (state.disabled) {
-      this.shadowEl.setAttribute('background', 'grey');
-      this.shadowEl.setAttribute('color', 'white');
+      this.shadowEl.background = 'grey';
+      this.shadowEl.color = 'white';
     } else if (state.hover) {
-      this.shadowEl.setAttribute('background', 'blue');
-      this.shadowEl.setAttribute('color', 'white');
+      this.shadowEl.background = 'blue';
+      this.shadowEl.color = 'white';
     } else {
-      this.shadowEl.setAttribute('background', this.getAttribute('background'));
-      this.shadowEl.setAttribute('color', this.getAttribute('color'));
+      this.shadowEl.background = this.background;
+      this.shadowEl.color = this.color;
     }
   }
 }

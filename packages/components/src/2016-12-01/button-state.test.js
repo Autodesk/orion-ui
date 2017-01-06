@@ -56,4 +56,18 @@ describe('ButtonState', () => {
       expect(nextState.hover).to.be.false;
     });
   });
+
+  describe('enterDisabled', () => {
+    it('sets disabled to true', () => {
+      const nextState = ButtonState.enterDisabled({ disabled: false });
+      expect(nextState.disabled).to.be.true;
+    });
+  });
+
+  describe('leaveDisabled', () => {
+    it('sets disabled to false', () => {
+      const nextState = ButtonState.leaveDisabled({ disabled: true });
+      expect(nextState.disabled).to.be.false;
+    });
+  });
 });

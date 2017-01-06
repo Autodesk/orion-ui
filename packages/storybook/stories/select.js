@@ -85,7 +85,7 @@ angular.module('app', [])
   })
   .add('disabled option', () => {
     const props = {
-      open: boolean('Open', false),
+      open: boolean('Open', true),
     };
 
     const sources = [

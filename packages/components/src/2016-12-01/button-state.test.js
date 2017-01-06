@@ -23,9 +23,9 @@ const expect = chai.expect;
 const ButtonState = require('./button-state.js');
 
 describe('ButtonState', () => {
-  describe('create', () => {
+  describe('getInitialState', () => {
     it('returns a default state', () => {
-      const initialState = ButtonState.create();
+      const initialState = ButtonState.getInitialState();
       expect(initialState.disabled).to.be.false;
       expect(initialState.focus).to.be.false;
       expect(initialState.hover).to.be.false;
@@ -34,7 +34,7 @@ describe('ButtonState', () => {
 
     context('with a state', () => {
       it('extends default state with passed state', () => {
-        const initialState = ButtonState.create({ disabled: true });
+        const initialState = ButtonState.getInitialState({ disabled: true });
         expect(initialState.disabled).to.be.true;
         expect(initialState.focus).to.be.false;
         expect(initialState.hover).to.be.false;

@@ -26,7 +26,7 @@ const PropTypes = React.PropTypes;
 class Button extends React.Component {
   constructor(props) {
     super(props);
-    this.state = ButtonState.create({ disabled: props.disabled });
+    this.state = ButtonState.getInitialState({ disabled: props.disabled });
     this.updateState = this.updateState.bind(this);
     this.registerListeners = this.registerListeners.bind(this);
   }

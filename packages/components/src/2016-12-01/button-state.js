@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 const ButtonState = {
-  create(state = {}) {
+  getInitialState(state = {}) {
     return Object.assign({
       disabled: false,
       focus: false,

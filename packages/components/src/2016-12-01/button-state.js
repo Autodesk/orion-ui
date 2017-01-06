@@ -25,17 +25,17 @@ const ButtonState = {
   },
 
   enterHover(state) {
-    return Object.assign({}, state, { hover: true });
+    return { ...state, hover: true };
   },
   leaveHover(state) {
-    return Object.assign({}, state, { hover: false });
+    return { ...state, hover: false };
   },
 
   enterDisabled(state) {
-    return Object.assign({}, state, { disabled: true });
+    return { ...state, disabled: true };
   },
   leaveDisabled(state) {
-    return Object.assign({}, state, { disabled: false });
+    return { ...state, disabled: false };
   },
 };
 

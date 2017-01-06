@@ -415,6 +415,7 @@ angular.module('app', [])
   })
   .add('no search results', () => {
     const props = {
+      searchable: boolean('Searchable', true),
       // query text makes the select open
       query: text('Query', 'Hello World'),
     };
@@ -435,7 +436,7 @@ class App extends React.Component {
     ];
 
     return (
-      <Select options={options} query="${props.query}" />
+      <Select options={options} searchable={${props.searchable}} query="${props.query}" />
     )
   }
 }
@@ -458,6 +459,7 @@ angular.module('app', [])
     ];
 
     app.open = ${props.open};
+    app.searchable = ${props.searchable};
     app.query = "${props.query}";
 }]);
 
@@ -466,7 +468,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-select options="{{app.options}}" query="{{app.query}}" />
+    <orion-select options="{{app.options}}" searchable="{{app.searchable}}" query="{{app.query}}" />
   </body>
 </html>
         `,
@@ -481,6 +483,8 @@ angular.module('app', [])
   })
   .add('some search results', () => {
     const props = {
+      searchable: boolean('Searchable', true),
+
       // query text makes the select open
       query: text('Query', 'one'),
     };
@@ -501,7 +505,7 @@ class App extends React.Component {
     ];
 
     return (
-      <Select options={options} query="${props.query}" />
+      <Select options={options} searchable={${props.searchable}} query="${props.query}" />
     )
   }
 }
@@ -524,6 +528,7 @@ angular.module('app', [])
     ];
 
     app.open = ${props.open};
+    app.searchable = ${props.searchable};
     app.query = "${props.query}";
 }]);
 
@@ -532,7 +537,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-select options="{{app.options}}" query="{{app.query}}" />
+    <orion-select options="{{app.options}}" searchable="{{app.searchable}}" query="{{app.query}}" />
   </body>
 </html>
         `,
@@ -547,7 +552,6 @@ angular.module('app', [])
   })
   .add('clearable', () => {
     const props = {
-      // query text makes the select open
       clearable: boolean('Clearable', true),
     };
 
@@ -712,6 +716,7 @@ angular.module('app', [Select.moduleName])
         0: '0',
         1: '1',
       }, 'undefined'),
+      searchable: boolean('Searchable', false),
       query: text('Query', 'Hello World'),
       clearable: boolean('Clearable', true),
     };
@@ -739,6 +744,7 @@ class App extends React.Component {
         focusIndex={${props.focusIndex}}
         focus={${props.focus}}
         selectedIndex={${props.selectedIndex}}
+        searchable={${props.searchable}}
         query="${props.query}"
         clearable={${props.clearable}} />
     )
@@ -768,6 +774,7 @@ angular.module('app', [Select.moduleName])
     app.focusIndex = ${props.focusIndex};
     app.focus = ${props.focus};
     app.selectedIndex = ${props.selectedIndex};
+    app.searchable = ${props.searchable};
     app.query = "${props.query}"
     app.clearable = ${props.clearable};
 }]);
@@ -784,6 +791,7 @@ angular.module('app', [Select.moduleName])
       focusIndex="{{app.focusIndex}}"
       focus="{{app.focus}}"
       selectedIndex="{{app.selectedIndex}}"
+      searchable="{{app.searchable}}"
       query="{{app.query}}"
       clearable="{{app.clearable}}" />
   </body>

@@ -30,6 +30,8 @@ function template(dictionary, templateFn) {
 const colors = {
   black: '#000',
   white: '#fff',
+  blue: '#00f',
+  grey: '#ddd',
 };
 
 /**

@@ -16,6 +16,7 @@ limitations under the License.
 */
 require('../../vendor/es5-custom-element-shim.js');
 require('./inline');
+const ButtonState = require('./button-state.js');
 
 const Registry = require('../utils/private-registry.js');
 
@@ -31,18 +32,71 @@ class Button extends HTMLElement {
         color="black"
         padding-horizontal="3"
         padding-vertical="2"
-        dim
         pointer><slot /></orion-inline>
     `;
     this.shadowEl = shadowRoot.children[0];
+
+    this.addEventListener('mouseenter', () => {
+      if (this.state.disabled) { return; }
+      const nextState = ButtonState.enterHover(this.state);
+      this.dispatchEvent(new CustomEvent('change', { detail: nextState }));
+    });
+
+    this.addEventListener('mouseleave', () => {
+      const nextState = ButtonState.leaveHover(this.state);
+      this.dispatchEvent(new CustomEvent('change', { detail: nextState }));
+    });
+
+    this.addEventListener('click', (event) => {
+      if (this.state.disabled) {
+        event.stopImmediatePropagation();
+      }
+    });
+  }
+
+  get state() {
+    return {
+      hover: this.getAttribute('hover') === 'true',
+      disabled: this.getAttribute('disabled') === 'true',
+    };
   }
 
   static get observedAttributes() {
-    return ['background', 'color', 'disabled'];
+    return ['background', 'color', 'disabled', 'hover'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this.shadowEl.setAttribute(name, newValue);
+    switch (name) {
+      case 'disabled':
+        this.handleDisabledChange(newValue);
+        break;
+      default:
+        this.render(this.state);
+        break;
+    }
+  }
+
+  handleDisabledChange(newValue) {
+    let nextState;
+    if (newValue === 'true') {
+      nextState = ButtonState.enterDisabled(this.state);
+    } else {
+      nextState = ButtonState.leaveDisabled(this.state);
+    }
+    this.render(nextState);
+  }
+
+  render(state) {
+    if (state.disabled) {
+      this.shadowEl.setAttribute('background', 'grey');
+      this.shadowEl.setAttribute('color', 'white');
+    } else if (state.hover) {
+      this.shadowEl.setAttribute('background', 'blue');
+      this.shadowEl.setAttribute('color', 'white');
+    } else {
+      this.shadowEl.setAttribute('background', this.getAttribute('background'));
+      this.shadowEl.setAttribute('color', this.getAttribute('color'));
+    }
   }
 }
 

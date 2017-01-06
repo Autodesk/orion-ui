@@ -19,14 +19,39 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const React = require('react');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
+const ButtonState = require('@orion-ui/components/lib/2016-12-01/button-state.js');
 
 const PropTypes = React.PropTypes;
 
-function Button(props) {
-  return (
-    <orion-button onClick={props.onClick} color={props.color} background={props.background}>
-      {props.children}
-    </orion-button>);
+class Button extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = ButtonState.create({ disabled: props.disabled });
+    this.updateState = this.updateState.bind(this);
+    this.registerListeners = this.registerListeners.bind(this);
+  }
+
+  registerListeners(el) {
+    el.addEventListener('change', this.updateState);
+    el.addEventListener('click', this.props.onClick);
+  }
+
+  updateState(event) {
+    this.setState(event.detail);
+  }
+
+  render() {
+    return (
+      <orion-button
+        {...this.state}
+        ref={this.registerListeners}
+        color={this.props.color}
+        background={this.props.background}
+      >
+        {this.props.children}
+      </orion-button>
+    );
+  }
 }
 
 const colors = Object.keys(Skins.colors);
@@ -36,6 +61,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   background: PropTypes.oneOf(colors),
   color: PropTypes.oneOf(colors),
+  disabled: PropTypes.bool,
 };
 
 module.exports = Button;

@@ -23,21 +23,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isInverted: false
+      isInverted: false,
+      disabled: false,
     }
-    this.invertButton = this.invertButton.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  invertButton() {
-    this.setState({ isInverted: !this.state.isInverted });
-  }
-
-  buttonProps() {
-    if (this.state.isInverted) {
-      return { background: 'black', color: 'white' }
-    } else {
-      return { background: 'white', color: 'black' }
-    }
+  handleClick() {
+    alert('Clicked it.');
   }
 
   render() {
@@ -49,7 +42,7 @@ class App extends React.Component {
         </div>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
-          <Button {...this.buttonProps()} onClick={this.invertButton}>Hello, Button!</Button>
+          <Button background="black" color="white" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </p>
       </div>
     );

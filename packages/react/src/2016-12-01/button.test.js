@@ -44,7 +44,17 @@ describe('<OrionButton />', () => {
   it('simulates click events', () => {
     const onClick = sinon.spy();
     const wrapper = mount(<OrionButton onClick={onClick} />);
-    wrapper.find('orion-button').simulate('click');
+    wrapper.find('orion-button').get(0).dispatchEvent(new Event('click'));
     expect(onClick).to.have.property('callCount', 1);
+  });
+
+  context('when disabled', () => {
+    it('does not simulate click events', () => {
+      const onClick = sinon.spy();
+      const wrapper = mount(<OrionButton onClick={onClick} disabled />);
+      wrapper.find('orion-button').simulate('click');
+
+      expect(onClick).to.have.property('callCount', 0);
+    });
   });
 });

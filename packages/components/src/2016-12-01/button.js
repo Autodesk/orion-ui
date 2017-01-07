@@ -139,6 +139,10 @@ class Button extends HTMLElement {
       this.shadowEl.color = this.color;
     }
   }
+
+  static get observedAttributes() {
+    return ['background', 'color', 'disabled', 'hover'];
+  }
 }
 
 Registry.define('orion-button', Button);

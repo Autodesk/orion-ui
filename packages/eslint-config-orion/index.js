@@ -26,6 +26,7 @@ module.exports = {
     "arrow-body-style": "off",
     "react/jsx-filename-extension": "off",
     "no-console": "off",
+    "no-param-reassign": "off",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js"]}]
   }
 }

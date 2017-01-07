@@ -36,6 +36,8 @@ class Button extends HTMLElement {
     `;
     this.shadowEl = shadowRoot.children[0];
 
+    this.state = {};
+
     this.addEventListener('mouseenter', () => {
       if (this.state.disabled) { return; }
       const nextState = ButtonState.enterHover(this.state);
@@ -54,25 +56,24 @@ class Button extends HTMLElement {
     });
   }
 
-  get state() {
-    return {
-      hover: this.hover,
-      disabled: this.disabled,
-    };
+  set disabled(val) {
+    this.state.disabled = val;
+    this.render(this.state);
   }
 
-  static get observedAttributes() {
-    return ['background', 'color', 'disabled', 'hover'];
+  set hover(val) {
+    this.state.hover = val;
+    this.render(this.state);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'disabled':
-        this.disabled = newValue === 'true';
+        this.state.disabled = newValue === 'true';
         this.handleDisabledChange(newValue);
         break;
       case 'hover':
-        this.hover = newValue === 'true';
+        this.state.hover = newValue === 'true';
         this.render(this.state);
         break;
       default:
@@ -103,6 +104,10 @@ class Button extends HTMLElement {
       this.shadowEl.background = this.background;
       this.shadowEl.color = this.color;
     }
+  }
+
+  static get observedAttributes() {
+    return ['background', 'color', 'disabled', 'hover'];
   }
 }
 

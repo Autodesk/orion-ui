@@ -27,10 +27,15 @@ class App extends React.Component {
       disabled: false,
     }
     this.handleClick = this.handleClick.bind(this);
+    this.toggleDisabled = this.toggleDisabled.bind(this);
   }
 
   handleClick() {
     alert('Clicked it.');
+  }
+
+  toggleDisabled() {
+    this.setState({ disabled: !this.state.disabled });
   }
 
   render() {
@@ -42,6 +47,7 @@ class App extends React.Component {
         </div>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
+          <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <Button background="black" color="white" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </p>
       </div>

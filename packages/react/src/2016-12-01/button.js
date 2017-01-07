@@ -26,14 +26,30 @@ const PropTypes = React.PropTypes;
 class Button extends React.Component {
   constructor(props) {
     super(props);
-    this.state = ButtonState.getInitialState({ disabled: props.disabled });
+    this.state = {};
     this.updateState = this.updateState.bind(this);
     this.registerListeners = this.registerListeners.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setProperties(this.state.el, nextProps);
+  }
+
+  setProperties(el, properties) {
+    if (!this.state.el) { return; }
+
+    el.disabled = properties.disabled;
+    el.hover = properties.hover;
+    el.background = properties.background;
+    el.color = properties.color;
+  }
+
   registerListeners(el) {
+    this.setState({ el });
     el.addEventListener('change', this.updateState);
     el.addEventListener('click', this.props.onClick);
+
+    this.setProperties(el, ButtonState.getInitialState({ disabled: this.props.disabled }));
   }
 
   updateState(event) {

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /**
 Copyright 2016 Autodesk,Inc.
 

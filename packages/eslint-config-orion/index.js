@@ -27,6 +27,7 @@ module.exports = {
     "react/jsx-filename-extension": "off",
     "no-console": "off",
     "no-param-reassign": "off",
+    "react/no-unused-prop-types": "off",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js"]}]
   }
 }

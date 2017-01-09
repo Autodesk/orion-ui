@@ -24,6 +24,16 @@ const intersection = require('@orion-ui/components/lib/utils/intersection.js');
 
 const PropTypes = React.PropTypes;
 
+function setProperties(el, properties) {
+  // Get an intersection of provided and supported properties
+  const supportedProps = ['background', 'color', 'size', 'disabled', 'hover'];
+  const propsToSet = intersection(supportedProps, Object.keys(properties));
+
+  propsToSet.forEach((name) => {
+    el[name] = properties[name];
+  });
+}
+
 class Button extends React.Component {
   constructor(props) {
     super(props);
@@ -33,17 +43,7 @@ class Button extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setProperties(this.state.el, nextProps);
-  }
-
-  setProperties(el, properties) {
-    // Get an intersection of provided and supported properties
-    const supportedProps = ['background', 'color', 'size', 'disabled', 'hover'];
-    const propsToSet = intersection(supportedProps, Object.keys(properties));
-
-    propsToSet.forEach((name) => {
-      el[name] = properties[name];
-    });
+    setProperties(this.state.el, nextProps);
   }
 
   registerListeners(el) {
@@ -53,7 +53,7 @@ class Button extends React.Component {
 
     const initialState = ButtonState.getInitialState({ disabled: this.props.disabled });
     const initialProps = Object.assign({}, this.props, initialState);
-    this.setProperties(el, initialProps);
+    setProperties(el, initialProps);
   }
 
   updateState(event) {
@@ -75,6 +75,7 @@ class Button extends React.Component {
 }
 
 const colors = Object.keys(Skins.colors);
+const sizes = ['small', 'large'];
 
 Button.propTypes = {
   children: PropTypes.node,
@@ -82,6 +83,7 @@ Button.propTypes = {
   background: PropTypes.oneOf(colors),
   color: PropTypes.oneOf(colors),
   disabled: PropTypes.bool,
+  size: PropTypes.oneOf(sizes),
 };
 
 module.exports = Button;

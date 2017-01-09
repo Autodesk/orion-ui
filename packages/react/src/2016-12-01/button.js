@@ -19,7 +19,12 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const React = require('react');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
+<<<<<<< HEAD
 const applyProps = require('./apply-props');
+=======
+const ButtonState = require('@orion-ui/components/lib/2016-12-01/button-state.js');
+const intersection = require('@orion-ui/components/lib/utils/intersection.js');
+>>>>>>> Reliably set properties on button
 
 const PropTypes = React.PropTypes;
 

@@ -29,7 +29,6 @@ describe('ButtonState', () => {
       expect(initialState.disabled).to.be.false;
       expect(initialState.focus).to.be.false;
       expect(initialState.hover).to.be.false;
-      expect(initialState.active).to.be.false;
     });
 
     context('with a state', () => {
@@ -38,7 +37,6 @@ describe('ButtonState', () => {
         expect(initialState.disabled).to.be.true;
         expect(initialState.focus).to.be.false;
         expect(initialState.hover).to.be.false;
-        expect(initialState.active).to.be.false;
       });
     });
   });

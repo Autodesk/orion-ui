@@ -16,12 +16,12 @@ limitations under the License.
 */
 const ButtonState = {
   getInitialState(state = {}) {
-    return Object.assign({
+    return {
       disabled: false,
       focus: false,
       hover: false,
-      active: false,
-    }, state);
+      ...state,
+    };
   },
 
   enterHover(state) {

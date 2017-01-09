@@ -36,9 +36,11 @@ describe('<OrionButton />', () => {
       color: 'black',
     };
     const wrapper = mount(<OrionButton {...props} />);
-    const passedProps = wrapper.find('orion-button').props();
-    expect(passedProps.background).to.equal(props.background);
-    expect(passedProps.color).to.equal(props.color);
+
+    const element = wrapper.find('orion-button').getDOMNode();
+
+    expect(element.background).to.equal(props.background);
+    expect(element.color).to.equal(props.color);
   });
 
   it('simulates click events', () => {

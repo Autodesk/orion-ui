@@ -19,54 +19,42 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const React = require('react');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
-const ButtonState = require('@orion-ui/components/lib/2016-12-01/button-state.js');
+const applyProps = require('./apply-props');
 
 const PropTypes = React.PropTypes;
 
 class Button extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
     this.updateState = this.updateState.bind(this);
     this.registerListeners = this.registerListeners.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setProperties(this.state.el, nextProps);
+  componentDidMount() {
+    applyProps(this._el, this.props);
   }
 
-  setProperties(el, properties) {
-    if (!this.state.el) { return; }
-
-    el.disabled = properties.disabled;
-    el.hover = properties.hover;
-    el.background = properties.background;
-    el.color = properties.color;
+  componentWillReceiveProps(props) {
+    applyProps(this._el, props);
   }
 
   registerListeners(el) {
-    this.setState({ el });
-    el.addEventListener('change', this.updateState);
-    el.addEventListener('click', this.props.onClick);
+    this._el = el;
 
-    this.setProperties(el, ButtonState.getInitialState({ disabled: this.props.disabled }));
+    /**
+     * In general, this will be exposed to the end user and they'll manage it directly by setting an
+     * onChange prop. In the case of a button it's silly since the only purpose is to transition
+     * between hoverered, focus, and active states.
+     */
+    this._el.addEventListener('change', this.updateState);
   }
 
   updateState(event) {
-    this.setState(event.detail);
+    this.componentWillReceiveProps(event.detail.state);
   }
 
   render() {
-    return (
-      <orion-button
-        {...this.state}
-        ref={this.registerListeners}
-        color={this.props.color}
-        background={this.props.background}
-      >
-        {this.props.children}
-      </orion-button>
-    );
+    return <orion-button ref={this.registerListeners}>{this.props.children}</orion-button>;
   }
 }
 
@@ -74,10 +62,10 @@ const colors = Object.keys(Skins.colors);
 
 Button.propTypes = {
   children: PropTypes.node,
-  onClick: PropTypes.func,
-  background: PropTypes.oneOf(colors),
-  color: PropTypes.oneOf(colors),
-  disabled: PropTypes.bool,
+  onClick: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
+  background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
+  color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
+  disabled: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Button;

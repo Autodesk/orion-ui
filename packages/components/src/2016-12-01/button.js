@@ -36,17 +36,30 @@ class Button extends HTMLElement {
     `;
     this.shadowEl = shadowRoot.children[0];
 
-    this.state = {};
+    this.state = ButtonState.getInitialState();
+
+    // render initial state
+    this._queueRender();
 
     this.addEventListener('mouseenter', () => {
       if (this.state.disabled) { return; }
       const nextState = ButtonState.enterHover(this.state);
-      this.dispatchEvent(new CustomEvent('change', { detail: nextState }));
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: {
+          type: 'mouseenter',
+          state: nextState,
+        },
+      }));
     });
 
     this.addEventListener('mouseleave', () => {
       const nextState = ButtonState.leaveHover(this.state);
-      this.dispatchEvent(new CustomEvent('change', { detail: nextState }));
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: {
+          type: 'mouseleave',
+          state: nextState,
+        },
+      }));
     });
 
     this.addEventListener('click', (event) => {
@@ -56,58 +69,75 @@ class Button extends HTMLElement {
     });
   }
 
+  set background(val) {
+    this.state.background = val;
+    this._queueRender();
+  }
+
+  get background() {
+    return this.state.background;
+  }
+
+  set color(val) {
+    this.state.color = val;
+    this._queueRender();
+  }
+
+  get color() {
+    return this.state.color;
+  }
+
   set disabled(val) {
-    this.state.disabled = val;
-    this.render(this.state);
+    if (val) {
+      this.state = ButtonState.enterDisabled(this.state);
+    } else {
+      this.state = ButtonState.leaveDisabled(this.state);
+    }
+
+    this._queueRender();
+  }
+
+  get disabled() {
+    return this.state.disabled;
   }
 
   set hover(val) {
-    this.state.hover = val;
-    this.render(this.state);
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case 'disabled':
-        this.state.disabled = newValue === 'true';
-        this.handleDisabledChange(newValue);
-        break;
-      case 'hover':
-        this.state.hover = newValue === 'true';
-        this.render(this.state);
-        break;
-      default:
-        this[name] = newValue;
-        this.render(this.state);
-        break;
-    }
-  }
-
-  handleDisabledChange(newValue) {
-    let nextState;
-    if (newValue === 'true') {
-      nextState = ButtonState.enterDisabled(this.state);
+    if (val) {
+      this.state = ButtonState.enterHover(this.state);
     } else {
-      nextState = ButtonState.leaveDisabled(this.state);
+      this.state = ButtonState.leaveHover(this.state);
     }
-    this.render(nextState);
+
+    this._queueRender();
   }
 
-  render(state) {
-    if (state.disabled) {
+  get hover() {
+    return this.state.hover;
+  }
+
+  _queueRender() {
+    if (this._renderQueued) {
+      return;
+    }
+
+    this._renderQueued = true;
+    requestAnimationFrame(() => {
+      this._renderQueued = false;
+      this._render();
+    });
+  }
+
+  _render() {
+    if (this.state.disabled) {
       this.shadowEl.background = 'grey';
       this.shadowEl.color = 'white';
-    } else if (state.hover) {
+    } else if (this.state.hover) {
       this.shadowEl.background = 'blue';
       this.shadowEl.color = 'white';
     } else {
       this.shadowEl.background = this.background;
       this.shadowEl.color = this.color;
     }
-  }
-
-  static get observedAttributes() {
-    return ['background', 'color', 'disabled', 'hover'];
   }
 }
 

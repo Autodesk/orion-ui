@@ -1,19 +1,30 @@
 import { OContainer } from './primitives';
 
-// attributes
-
-const keyMaps = {
-  container: ['background', 'color', 'display', 'gap', 'layout', 'marginAll', 'paddingAll']
+interface ElementNode {
+  type: 'element';
+  identifier: string;
+  attributes: Attribute[];
+  children: (ElementNode | TextNode)[];
 }
 
-const s = {
-  title: 'Background Schema',
-  type: 'string',
-
-
+interface Attribute {
+  identifier: string;
+  value: StringValue;
 }
 
-const integration = `
+interface StringValue {
+  type: 'string';
+  data: string;
+}
+
+interface TextNode {
+  type: 'text';
+  attributes: {
+    textContent: string;
+  }
+}
+
+const simple = `
   <!-- root element must always be orion -->
   <orion>
     <container display="inline" paddingAll="small">
@@ -22,42 +33,77 @@ const integration = `
   </orion>
 `;
 
-interface Node {
-  type: string;
-  props: {
-    [key: string]: any;
-  }
+const simpleTypeError1 = `
+1  <!-- root element must always be orion -->
+2  <orion>
+3    <container display="inline" paddingAll="small">
+                        ^ 1                 ^ 2
+4      <text color="white" fontSize="f1" lineHeight="title">Hello World!</text>
 
-  children: Node[];
-}
+Errors:
 
-const result: Node =
+1 - "inline" is not assignable to display. Acceptable values are: "block", "tile".
+2 - "small" is not assignable to paddingAll. Acceptable values are: 1, 2, 3, 4, 5.
+`;
+
+const simpleTypeError2 = `
+1  <!-- root element must always be orion -->
+2  <orion>
+3    <container display="inline" paddingAll="small">
+                                           ^ 1
+4      <text color="white" fontSize="f1" lineHeight="title">Hello World!</text>
+
+Errors:
+
+1 - "small" is no longer supported. Replacement value is 2.
+    Previous: <container paddingAll="small">
+    New:      <container paddingAll=2>
+`;
+
+const simpleAST: ElementNode =
   {
-    type: 'orion',
-    props: {},
+    type: 'element',
+    identifier: 'orion',
+    attributes: [],
     children: [
       {
-        type: 'container',
-        props: {
-          display: 'inline',
-          paddingAll: 'small'
-        },
+        type: 'element',
+        identifier: 'container',
+        attributes: [
+          {
+            identifier: 'display',
+            value: { type: 'string', data: 'inline' }
+          },
+          {
+            identifier: 'paddingAll',
+            value: { type: 'string', data: 'small' }
+          }
+        ],
 
         children: [
           {
-            type: 'text',
-            props: {
-              color: 'white',
-              fontSize: 'f1',
-              lineHeight: 'title'
-            },
+            type: 'element',
+            identifier: 'text',
+            attributes: [
+              {
+                identifier: 'color',
+                value: { type: 'string', data: 'white' },
+              },
+              {
+                identifier: 'fontSize',
+                value: { type: 'string', data: 'f1' }
+              },
+              {
+                identifier: 'lineHeight',
+                value: { type: 'string', data: 'title' }
+              }
+            ],
             children: [
               {
-                type: 'textNode',
-                props: {
+                type: 'text',
+                attributes: {
                   textContent: 'Hello World!'
-                },
-                children: []
+                }
               }
             ]
           }
@@ -65,4 +111,3 @@ const result: Node =
       }
     ]
   }
-

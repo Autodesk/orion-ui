@@ -47,7 +47,9 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
+          <Button background="black" color="white" size="small" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
           <Button background="black" color="white" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+          <Button background="black" color="white" size="large" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </p>
       </div>
     );

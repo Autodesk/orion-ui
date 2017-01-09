@@ -66,6 +66,11 @@ class Button extends HTMLElement {
     this.render(this.state);
   }
 
+  set size(val) {
+    this.state.size = val;
+    this.render(this.state);
+  }
+
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'disabled':
@@ -103,6 +108,21 @@ class Button extends HTMLElement {
     } else {
       this.shadowEl.background = this.background;
       this.shadowEl.color = this.color;
+    }
+
+    switch (state.size) {
+      case 'small':
+        this.shadowEl.paddingHorizontal = 2;
+        this.shadowEl.paddingVertical = 1;
+        break;
+      case 'large':
+        this.shadowEl.paddingHorizontal = 4;
+        this.shadowEl.paddingVertical = 3;
+        break;
+      default:
+        this.shadowEl.paddingHorizontal = 3;
+        this.shadowEl.paddingVertical = 2;
+        break;
     }
   }
 

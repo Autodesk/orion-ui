@@ -20,6 +20,7 @@ require('@orion-ui/components/lib/2016-12-01/button');
 const React = require('react');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
 const ButtonState = require('@orion-ui/components/lib/2016-12-01/button-state.js');
+const intersection = require('@orion-ui/components/lib/utils/intersection.js');
 
 const PropTypes = React.PropTypes;
 
@@ -36,12 +37,13 @@ class Button extends React.Component {
   }
 
   setProperties(el, properties) {
-    if (!this.state.el) { return; }
+    // Get an intersection of provided and supported properties
+    const supportedProps = ['background', 'color', 'size', 'disabled', 'hover'];
+    const propsToSet = intersection(supportedProps, Object.keys(properties));
 
-    el.disabled = properties.disabled;
-    el.hover = properties.hover;
-    el.background = properties.background;
-    el.color = properties.color;
+    propsToSet.forEach((name) => {
+      el[name] = properties[name];
+    });
   }
 
   registerListeners(el) {
@@ -49,7 +51,9 @@ class Button extends React.Component {
     el.addEventListener('change', this.updateState);
     el.addEventListener('click', this.props.onClick);
 
-    this.setProperties(el, ButtonState.getInitialState({ disabled: this.props.disabled }));
+    const initialState = ButtonState.getInitialState({ disabled: this.props.disabled });
+    const initialProps = Object.assign({}, this.props, initialState);
+    this.setProperties(el, initialProps);
   }
 
   updateState(event) {

@@ -19,14 +19,19 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const React = require('react');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
-<<<<<<< HEAD
 const applyProps = require('./apply-props');
-=======
-const ButtonState = require('@orion-ui/components/lib/2016-12-01/button-state.js');
-const intersection = require('@orion-ui/components/lib/utils/intersection.js');
->>>>>>> Reliably set properties on button
 
 const PropTypes = React.PropTypes;
+
+function setProperties(el, properties) {
+  // Get an intersection of provided and supported properties
+  const supportedProps = ['background', 'color', 'size', 'disabled', 'hover'];
+  const propsToSet = intersection(supportedProps, Object.keys(properties));
+
+  propsToSet.forEach((name) => {
+    el[name] = properties[name];
+  });
+}
 
 class Button extends React.Component {
   constructor(props) {
@@ -64,6 +69,7 @@ class Button extends React.Component {
 }
 
 const colors = Object.keys(Skins.colors);
+const sizes = ['small', 'large'];
 
 Button.propTypes = {
   children: PropTypes.node,
@@ -71,6 +77,7 @@ Button.propTypes = {
   background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   disabled: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
+  size: PropTypes.oneOf(sizes), // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Button;

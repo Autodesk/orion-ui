@@ -101,6 +101,15 @@ class Button extends HTMLElement {
     return this.state.disabled;
   }
 
+  set size(val) {
+    this.state.size = val;
+    this._queueRender();
+  }
+
+  get size() {
+    return this.state.size;
+  }
+
   set hover(val) {
     if (val) {
       this.state = ButtonState.enterHover(this.state);
@@ -137,6 +146,21 @@ class Button extends HTMLElement {
     } else {
       this.shadowEl.background = this.background;
       this.shadowEl.color = this.color;
+    }
+
+    switch (this.state.size) {
+      case 'small':
+        this.shadowEl.paddingHorizontal = 2;
+        this.shadowEl.paddingVertical = 1;
+        break;
+      case 'large':
+        this.shadowEl.paddingHorizontal = 4;
+        this.shadowEl.paddingVertical = 3;
+        break;
+      default:
+        this.shadowEl.paddingHorizontal = 3;
+        this.shadowEl.paddingVertical = 2;
+        break;
     }
   }
 }

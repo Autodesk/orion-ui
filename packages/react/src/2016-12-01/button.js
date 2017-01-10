@@ -59,6 +59,7 @@ class Button extends React.Component {
 }
 
 const colors = Object.keys(Skins.colors);
+const sizes = ['small', 'large'];
 
 Button.propTypes = {
   children: PropTypes.node,
@@ -66,6 +67,7 @@ Button.propTypes = {
   background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   disabled: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
+  size: PropTypes.oneOf(sizes), // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Button;

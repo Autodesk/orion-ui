@@ -61,6 +61,16 @@ class Inline extends HTMLElement {
     this._updateClassName();
   }
 
+  set paddingVertical(newValue) {
+    this.state['padding-vertical'] = newValue;
+    this._updateClassName();
+  }
+
+  set paddingHorizontal(newValue) {
+    this.state['padding-horizontal'] = newValue;
+    this._updateClassName();
+  }
+
   _updateClassName() {
     // Send each attribute to the style modules and concatenate a new class and apply it
     let className = '';

@@ -35,6 +35,8 @@ class Inline extends HTMLElement {
       shadowRoot.appendChild(element);
     });
 
+    this.state = {};
+
     this._updateClassName();
   }
 
@@ -44,6 +46,18 @@ class Inline extends HTMLElement {
       return;
     }
 
+    this.state[attrName] = newVal;
+
+    this._updateClassName();
+  }
+
+  set background(newValue) {
+    this.state.background = newValue;
+    this._updateClassName();
+  }
+
+  set color(newValue) {
+    this.state.color = newValue;
     this._updateClassName();
   }
 
@@ -63,10 +77,9 @@ class Inline extends HTMLElement {
       }
     }
 
-    for (let i = 0; i < this.attributes.length; i += 1) {
-      const { name, value } = this.attributes[i];
+    Object.entries(this.state).forEach(([name, value]) => {
       styles.forEach(style => appendClassName(style, name, value));
-    }
+    });
 
     // Update the class name
     this.shadowRoot.querySelector('span').className = className;

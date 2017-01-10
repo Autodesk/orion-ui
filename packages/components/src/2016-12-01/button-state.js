@@ -14,19 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-module.exports = {
-  "extends": "eslint-config-airbnb",
-  "env": {
-    "browser": true,
-    "node": true,
-    "mocha": true
+const ButtonState = {
+  getInitialState(state = {}) {
+    return {
+      disabled: false,
+      focus: false,
+      hover: false,
+      ...state,
+    };
   },
-  "rules": {
-    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
-    "arrow-body-style": "off",
-    "react/jsx-filename-extension": "off",
-    "no-console": "off",
-    "no-param-reassign": "off",
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js"]}]
-  }
-}
+
+  enterHover(state) {
+    return { ...state, hover: true };
+  },
+  leaveHover(state) {
+    return { ...state, hover: false };
+  },
+
+  enterDisabled(state) {
+    return { ...state, disabled: true };
+  },
+  leaveDisabled(state) {
+    return { ...state, disabled: false };
+  },
+};
+
+module.exports = ButtonState;

@@ -19,23 +19,53 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const React = require('react');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
+const applyProps = require('./apply-props');
 
 const PropTypes = React.PropTypes;
 
-function Button(props) {
-  return (
-    <orion-button onClick={props.onClick} color={props.color} background={props.background}>
-      {props.children}
-    </orion-button>);
+class Button extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateState = this.updateState.bind(this);
+    this.registerListeners = this.registerListeners.bind(this);
+  }
+
+  componentDidMount() {
+    applyProps(this._el, this.props);
+  }
+
+  componentWillReceiveProps(props) {
+    applyProps(this._el, props);
+  }
+
+  registerListeners(el) {
+    this._el = el;
+
+    /**
+     * In general, this will be exposed to the end user and they'll manage it directly by setting an
+     * onChange prop. In the case of a button it's silly since the only purpose is to transition
+     * between hoverered, focus, and active states.
+     */
+    this._el.addEventListener('change', this.updateState);
+  }
+
+  updateState(event) {
+    this.componentWillReceiveProps(event.detail.state);
+  }
+
+  render() {
+    return <orion-button ref={this.registerListeners}>{this.props.children}</orion-button>;
+  }
 }
 
 const colors = Object.keys(Skins.colors);
 
 Button.propTypes = {
   children: PropTypes.node,
-  onClick: PropTypes.func,
-  background: PropTypes.oneOf(colors),
-  color: PropTypes.oneOf(colors),
+  onClick: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
+  background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
+  color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
+  disabled: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Button;

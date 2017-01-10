@@ -36,15 +36,27 @@ describe('<OrionButton />', () => {
       color: 'black',
     };
     const wrapper = mount(<OrionButton {...props} />);
-    const passedProps = wrapper.find('orion-button').props();
-    expect(passedProps.background).to.equal(props.background);
-    expect(passedProps.color).to.equal(props.color);
+
+    const element = wrapper.find('orion-button').getDOMNode();
+
+    expect(element.background).to.equal(props.background);
+    expect(element.color).to.equal(props.color);
   });
 
   it('simulates click events', () => {
     const onClick = sinon.spy();
     const wrapper = mount(<OrionButton onClick={onClick} />);
-    wrapper.find('orion-button').simulate('click');
+    wrapper.find('orion-button').get(0).dispatchEvent(new Event('click'));
     expect(onClick).to.have.property('callCount', 1);
+  });
+
+  context('when disabled', () => {
+    it('does not simulate click events', () => {
+      const onClick = sinon.spy();
+      const wrapper = mount(<OrionButton onClick={onClick} disabled />);
+      wrapper.find('orion-button').simulate('click');
+
+      expect(onClick).to.have.property('callCount', 0);
+    });
   });
 });

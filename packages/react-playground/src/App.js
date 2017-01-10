@@ -19,23 +19,40 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const App = function App() {
-  function clickHandler() {
-    alert('Clicked it!');
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isInverted: false,
+      disabled: false,
+    }
+    this.handleClick = this.handleClick.bind(this);
+    this.toggleDisabled = this.toggleDisabled.bind(this);
   }
 
-  return (
-    <div className="App">
-      <div className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h2>Welcome to React</h2>
+  handleClick() {
+    alert('Clicked it.');
+  }
+
+  toggleDisabled() {
+    this.setState({ disabled: !this.state.disabled });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+          <button onClick={this.toggleDisabled}>Toggle disabled</button>
+          <Button background="black" color="white" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+        </p>
       </div>
-      <p className="App-intro">
-        To get started, edit <code>src/App.js</code> and save to reload.
-        <Button backgroundColor="black" color="white" onClick={clickHandler}>Hello, Button!</Button>
-      </p>
-    </div>
-  );
+    );
+  }
 };
 
 export default App;

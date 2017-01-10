@@ -14,15 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+
 import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 import { withKnobs, text, select } from '@kadira/storybook-addon-knobs';
-import Button from '../components/button';
+import { Button } from '../../react/lib/2016-12-01';
 import SourceViewer from '../components/source_viewer';
 
+const Example = require('../components/example');
+
 const colorOptions = {
-  '#000000': 'Black',
-  '#ffffff': 'White',
+  black: 'Black',
+  white: 'White',
+  blue: 'Blue',
+
 };
 
 storiesOf('Button', module)
@@ -30,8 +35,8 @@ storiesOf('Button', module)
   .add('with text', () => {
     const buttonText = text('Text', 'Hello, button!');
     const props = {
-      backgroundColor: select('Background Color', colorOptions, '#ffffff'),
-      color: select('Color', colorOptions, '#000000'),
+      background: select('Background Color', colorOptions, 'black'),
+      color: select('Color', colorOptions, 'white'),
       onClick: action('clicked'),
     };
 
@@ -39,19 +44,19 @@ storiesOf('Button', module)
       {
         label: 'React',
         source: `
-          <OrionButton
-            backgroundColor={"${props.backgroundColor}"}
+          <Button
+            background={"${props.background}"}
             color={"${props.color}"}
             onClick={action('clicked')}
           >
             {"${buttonText}"}
-          </OrionButton>
+          </Button>
         `,
       }, {
         label: 'Web components',
         source: `
           <orion-button
-            backgroundColor={"${props.backgroundColor}"}
+            background={"${props.background}"}
             color={"${props.color}"}
             onClick={action('clicked')}
           >
@@ -63,11 +68,204 @@ storiesOf('Button', module)
 
     return (
       <div>
-        <Button {...props}>
-          {buttonText}
-        </Button>
+        <Example {...props}>
+          <Button {...props}>
+            {buttonText}
+          </Button>
+        </Example>
         <SourceViewer sources={sources} />
       </div>
     );
   },
-);
+)
+
+.add('disabled', () => {
+  const buttonText = text('Text', 'Disabled button!');
+  const props = {
+    background: select('Background Color', colorOptions, 'black'),
+    color: select('Color', colorOptions, 'white'),
+    disabled: true,
+  };
+
+  const sources = [
+    {
+      label: 'React',
+      source: `
+        <Button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+          disabled={${props.disabled}}
+        >
+          {"${buttonText}"}
+        </Button>
+      `,
+    }, {
+      label: 'Web components',
+      source: `
+        <orion-button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+          disabled={${props.disabled}}
+        >
+          {"${buttonText}"}
+        </orion-button>
+      `,
+    },
+  ];
+
+  return (
+    <div>
+      <Example {...props}>
+        <Button {...props}>
+          {buttonText}
+        </Button>
+      </Example>
+      <SourceViewer sources={sources} />
+    </div>
+  );
+})
+//
+.add('hover state', () => {
+  const buttonText = text('Text', 'Hover state');
+  const props = {
+    background: select('Background Color', colorOptions, 'blue'),
+    color: select('Color', colorOptions, 'white'),
+  };
+
+  const sources = [
+    {
+      label: 'React',
+      source: `
+        <Button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+        >
+          {"${buttonText}"}
+        </Button>
+      `,
+    }, {
+      label: 'Web components',
+      source: `
+        <orion-button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+        >
+          {"${buttonText}"}
+        </orion-button>
+      `,
+    },
+  ];
+
+  return (
+    <div>
+      <Example {...props}>
+        <Button {...props}>
+          {buttonText}
+        </Button>
+      </Example>
+      <SourceViewer sources={sources} />
+    </div>
+  );
+})
+
+.add('small button', () => {
+  const buttonText = text('Text', 'Hover state');
+  const props = {
+    background: select('Background Color', colorOptions, 'black'),
+    color: select('Color', colorOptions, 'white'),
+    size: 'small',
+
+  };
+
+  const sources = [
+    {
+      label: 'React',
+      source: `
+        <Button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+          size={${props.size}}
+        >
+          {"${buttonText}"}
+        </Button>
+      `,
+    }, {
+      label: 'Web components',
+      source: `
+        <orion-button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+          size={${props.size}}
+        >
+          {"${buttonText}"}
+        </orion-button>
+      `,
+    },
+  ];
+
+  return (
+    <div>
+      <Example {...props}>
+        <Button {...props}>
+          {buttonText}
+        </Button>
+      </Example>
+      <SourceViewer sources={sources} />
+    </div>
+  );
+})
+
+.add('large button', () => {
+  const buttonText = text('Text', 'Hover state');
+  const props = {
+    background: select('Background Color', colorOptions, 'black'),
+    color: select('Color', colorOptions, 'white'),
+    size: 'large',
+
+  };
+
+  const sources = [
+    {
+      label: 'React',
+      source: `
+        <Button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+          size={${props.size}}
+        >
+          {"${buttonText}"}
+        </Button>
+      `,
+    }, {
+      label: 'Web components',
+      source: `
+        <orion-button
+          background={"${props.background}"}
+          color={"${props.color}"}
+          onClick={action('clicked')}
+          size={${props.size}}
+        >
+          {"${buttonText}"}
+        </orion-button>
+      `,
+    },
+  ];
+
+  return (
+    <div>
+      <Example {...props}>
+        <Button {...props}>
+          {buttonText}
+        </Button>
+      </Example>
+      <SourceViewer sources={sources} />
+    </div>
+  );
+});

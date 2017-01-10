@@ -47,6 +47,7 @@ class Button extends React.Component {
   }
 
   registerListeners(el) {
+    if (el === null) { return; }
     this.setState({ el });
     el.addEventListener('change', this.updateState);
     el.addEventListener('click', this.props.onClick);

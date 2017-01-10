@@ -41,6 +41,7 @@ class ProfilePage extends React.Component {
 
 // profile-view.orn source
 const profileView = `
+<!-- other component dependencies are injected via orion block -->
 <orion => error-box, anchor>
   <component => loading, data, error, onVisit>
     <condition visible={error}>

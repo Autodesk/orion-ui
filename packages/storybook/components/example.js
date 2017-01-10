@@ -14,22 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import React, { PropTypes } from 'react';
 
-const Button = function Button(props) {
-  const styles = {
-    color: props.color,
-    backgroundColor: props.backgroundColor,
-  };
+const React = require('react');
 
-  return <button style={styles} onClick={props.onClick}>{props.children}</button>;
+const PropTypes = React.PropTypes;
+
+
+const Example = function example(props) {
+  return (
+    <div style={{ marginTop: '30px', marginBottom: '30px' }}>{props.children}</div>
+  );
 };
 
-Button.propTypes = {
-  onClick: PropTypes.func,
-  color: PropTypes.string.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
+Example.propTypes = {
   children: PropTypes.node,
 };
 
-export default Button;
+module.exports = Example;

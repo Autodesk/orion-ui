@@ -23,16 +23,6 @@ const applyProps = require('./apply-props');
 
 const PropTypes = React.PropTypes;
 
-function setProperties(el, properties) {
-  // Get an intersection of provided and supported properties
-  const supportedProps = ['background', 'color', 'size', 'disabled', 'hover'];
-  const propsToSet = intersection(supportedProps, Object.keys(properties));
-
-  propsToSet.forEach((name) => {
-    el[name] = properties[name];
-  });
-}
-
 class Button extends React.Component {
   constructor(props) {
     super(props);

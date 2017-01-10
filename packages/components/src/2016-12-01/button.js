@@ -148,7 +148,7 @@ class Button extends HTMLElement {
       this.shadowEl.color = this.color;
     }
 
-    switch (state.size) {
+    switch (this.state.size) {
       case 'small':
         this.shadowEl.paddingHorizontal = 2;
         this.shadowEl.paddingVertical = 1;

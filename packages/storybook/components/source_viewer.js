@@ -50,7 +50,7 @@ class SourceViewer extends React.Component {
     const source = this.props.sources[this.state.activeIndex].source;
 
     return (
-      <div style={{ marginTop: '30px', marginBottom: '30px' }}>
+      <div className="source-viewer" style={{ marginTop: '30px', marginBottom: '30px' }}>
         {this.renderTabs()}
         <SyntaxHighlighter
           language="javascript"

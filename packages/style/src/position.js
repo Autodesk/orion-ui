@@ -14,11 +14,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const BorderRadius = require('../border-radius.js');
-const Display = require('../display.js');
-const Hovers = require('../hovers.js');
-const Position = require('../position.js');
-const Skins = require('../skins.js');
-const Spacing = require('../spacing.js');
+const css = `
+  .pos-st {
+    position: static;
+  }
 
-module.exports = { BorderRadius, Display, Hovers, Position, Skins, Spacing };
+  .pos-rel {
+    position: relative;
+  }
+
+  .pos-abs {
+    position: absolute;
+  }
+`;
+
+const attributes = [
+  'position',
+];
+
+function attributeChangedCallback(attrName, value) {
+  switch (value) {
+    case 'absolute':
+      return 'pos-abs';
+    case 'relative':
+      return 'pos-rel';
+    case 'static':
+      return 'pos-sta';
+    default:
+      throw new Error('unknown style');
+  }
+}
+
+module.exports = {
+  css,
+  attributes,
+  attributeChangedCallback,
+};

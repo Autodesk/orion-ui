@@ -16,9 +16,9 @@ limitations under the License.
 */
 require('../../vendor/es5-custom-element-shim.js');
 const Registry = require('../utils/private-registry.js');
-const { BorderRadius, Hovers, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
+const { BorderRadius, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
-const styles = [BorderRadius, Hovers, Skins, Spacing];
+const styles = [BorderRadius, Display, Hovers, Position, Skins, Spacing];
 
 
 class Inline extends HTMLElement {

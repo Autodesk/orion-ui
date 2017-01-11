@@ -16,5 +16,6 @@ limitations under the License.
 */
 const Button = require('./button');
 const Inline = require('./inline');
+const Select = require('./select');
 
-module.exports = { Button, Inline };
+module.exports = { Button, Inline, Select };

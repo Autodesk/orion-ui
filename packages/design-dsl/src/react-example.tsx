@@ -3,7 +3,8 @@
  */
 const React = { Component: class { public state: any; constructor(props: any) { }; setState(state: any) { } } };
 function fetch(url: string): Promise<any> { return Promise.resolve(); };
-function Orion() { };
+// import {ProfileView} from './ProfileView.orn';
+function ProfileView() {};
 
 /** React Component component, akin to a Controller. */
 class ProfilePage extends React.Component {
@@ -31,36 +32,35 @@ class ProfilePage extends React.Component {
     /**
      * Renders an Orion component just like an image passing in props
      */
-    <Orion src="assets/components/profile-view.orn"
-      loading={this.state.loading}
+    <ProfileView loading={this.state.loading}
       error={this.state.error}
       data={this.state.data}
       onVisit={this.handleVisit} />
   }
 }
 
-// profile-view.orn source
-const profileView = `
+// ProfileView.orn source
+const ProfileViewSrc = `
 <!-- other component dependencies are injected via orion block -->
-<orion => error-box, anchor>
+<orion => ErrorBox, Anchor>
   <component => loading, data, error, onVisit>
     <condition visible={error}>
-      <error-box>{error}</error-box>
+      <ErrorBox>{error}</ErrorBox>
     </condition>
     <condition visible={data}>
       <container orient="vertical">
         <text size=3>{data.name}</text>
         <text size=2>{data.bio}</text>
-        <anchor onClick={onVisit} detail={data.urlValue}>
+        <Anchor onClick={onVisit} detail={data.urlValue}>
           {data.urlName}
-        </anchor>
+        </Anchor>
       </container>
     </condition>
   </component>
 </orion>
 `
 
-// error-box.orn
+// ErrorBox.orn
 const ErrorBox = `
 <orion>
   <component>
@@ -71,7 +71,7 @@ const ErrorBox = `
  </orion>
 `;
 
-// anchor.orn
+// Anchor.orn
 const Anchor = `
 <orion>
   <component => detail, onClick>

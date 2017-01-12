@@ -27,19 +27,10 @@ class Button extends React.Component {
   constructor(props) {
     super(props);
     this.updateState = this.updateState.bind(this);
-    this.registerListeners = this.registerListeners.bind(this);
   }
 
   componentDidMount() {
     applyProps(this._el, this.props);
-  }
-
-  componentWillReceiveProps(props) {
-    applyProps(this._el, props);
-  }
-
-  registerListeners(el) {
-    this._el = el;
 
     /**
      * In general, this will be exposed to the end user and they'll manage it directly by setting an
@@ -49,12 +40,20 @@ class Button extends React.Component {
     this._el.addEventListener('change', this.updateState);
   }
 
+  componentWillReceiveProps(props) {
+    applyProps(this._el, props);
+  }
+
+  componentWillUnmount() {
+    this._el.removeEventListener('change', this.updateState);
+  }
+
   updateState(event) {
     this.componentWillReceiveProps(event.detail.state);
   }
 
   render() {
-    return <orion-button ref={this.registerListeners}>{this.props.children}</orion-button>;
+    return <orion-button ref={(el) => { this._el = el; }} >{this.props.children}</orion-button>;
   }
 }
 

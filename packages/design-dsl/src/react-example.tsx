@@ -42,24 +42,30 @@ class ProfilePage extends React.Component {
 // ProfileView.orn source
 const ProfileViewSrc = `
 <!-- other component dependencies are injected via orion block -->
-<orion => ErrorBox, Anchor>
-  <component => loading, data, error, onVisit>
-    <condition visible={error}>
-      <ErrorBox>{error}</ErrorBox>
-    </condition>
-    <condition visible={data}>
-      <container orient="vertical">
-        <text size=3>{data.name}</text>
-        <text size=2>{data.bio}</text>
-        <Anchor onClick={onVisit} detail={data.urlValue}>
-          {data.urlName}
-        </Anchor>
-      </container>
-    </condition>
+<orion => Anchor>
+  <component => loading, error, data, onVisit>
+    <!--
+      if loading=truthy and error=truthy loading takes priority since
+      it was defined first. The order of block parameters matters.
+    -->
+    <label size=3
+      text="Loaded"
+      text.loading="Loading"
+      text.error={error} color.error="red"  />
+
+    <!--
+      include property defined on any element will make the component
+    -->
+    <container orient="vertical" includeIn={data}>
+      <text size=3>{data.name}</text>
+      <text size=2>{data.bio}</text>
+      <Anchor onClick={onVisit} detail={data.urlValue}>
+        {data.urlName}
+      </Anchor>
+    </container>
   </component>
 </orion>
 `
-
 // ErrorBox.orn
 const ErrorBox = `
 <orion>

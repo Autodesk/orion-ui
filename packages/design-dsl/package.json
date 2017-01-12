@@ -1,0 +1,21 @@
+{
+  "name": "@orion-ui/design-dsl",
+  "version": "1.0.0",
+  "description": "Exploring a JSON based design language",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "hello-primitives": "node lib/hello-primitives.js",
+    "hello-toolbar": "node lib/hello-toolbar.js",
+    "hello-panel": "node lib/hello-panel.js"
+  },
+  "author": "Autodesk Inc.",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^6.0.52",
+    "typescript": "^2.1.4"
+  },
+  "dependencies": {
+    "clone-deep": "^0.2.4"
+  }
+}

@@ -3,9 +3,30 @@
   "version": "1.0.0",
   "description": "orion ui build tools",
   "main": "index.js",
+  "bin": {
+    "orion": "node orion.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ."
   },
   "author": "Autodesk Inc",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "glob": "^7.1.1",
+    "s3": "^4.4.0",
+    "shelljs": "^0.7.5",
+    "chai": "^3.5.0"
+  },
+  "devDependencies": {
+    "@orion-ui/eslint-config-orion": "^1.0.0",
+    "aws-sdk": "^2.7.11",
+    "babel-cli": "^6.18.0",
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0",
+    "uuid": "^3.0.1"
+  }
 }

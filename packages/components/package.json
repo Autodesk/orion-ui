@@ -2,14 +2,26 @@
   "name": "@orion-ui/components",
   "version": "1.0.0",
   "description": "orion ui components",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "start": "orion-scripts start"
+    "start": "orion-scripts start",
+    "lint": "eslint ."
+  },
+  "orion": {
+    "compile": true
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "dependencies": {
     "@orion-ui/scripts": "^1.0.0",
     "@orion-ui/style": "^1.0.0"
+  },
+  "devDependencies": {
+    "@orion-ui/eslint-config-orion": "^1.0.0",
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0"
   }
 }

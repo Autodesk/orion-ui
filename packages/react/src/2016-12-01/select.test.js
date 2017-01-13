@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -14,29 +15,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const css = `
-  .br0 { border-radius: 0;}
-  .br2 { border-radius: 0.25rem;}
-  .br-pill { border-radius: 9999px; }
-`;
+require('jsdom-global/register');
 
-const attributes = [
-  'border-radius',
-];
+const React = require('react');
+const { mount } = require('enzyme');
+const chai = require('chai');
+const chaiEnzyme = require('chai-enzyme');
 
+const expect = chai.expect;
 
-const scale = {
-  0: 'br0',
-  2: 'br2',
-  pill: 'br-pill',
-};
+const OrionSelect = require('./select');
 
-function attributeChangedCallback(attrName, value) {
-  return scale[value];
-}
+chai.use(chaiEnzyme());
 
-module.exports = {
-  css,
-  attributes,
-  attributeChangedCallback,
-};
+describe('<OrionSelect />', () => {
+  it('passes props to select web component', () => {
+  });
+});

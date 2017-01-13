@@ -16,12 +16,9 @@ limitations under the License.
 */
 require('../../vendor/es5-custom-element-shim.js');
 const Registry = require('../utils/private-registry.js');
-const { BorderRadius, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
+const Element = require('./element');
 
-const styles = [BorderRadius, Display, Hovers, Position, Skins, Spacing];
-
-
-class Inline extends HTMLElement {
+class Inline extends Element {
   constructor() {
     super();
 
@@ -95,10 +92,6 @@ class Inline extends HTMLElement {
     this.shadowRoot.querySelector('span').className = className;
   }
 }
-
-Inline.observedAttributes = styles
-                              .map(style => style.attributes)
-                              .reduce((acc, memo) => acc.concat(memo));
 
 Registry.define('orion-inline', Inline);
 

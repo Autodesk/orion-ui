@@ -1,20 +1,18 @@
-const Display = require('./display');
+const Container = require('./container');
 const chai = require('chai');  // eslint-disable import/no-extraneous-dependencies
 
 const expect = chai.expect;
 
-describe('Display', () => {
+describe('Container', () => {
   describe('attributeChangedCallback', () => {
     context('with a valid value', () => {
       [
-        { value: 'block', result: 'dis-blk' },
-        { value: 'flex', result: 'dis-flx' },
-        { value: 'inline', result: 'dis-inl' },
-        { value: 'inline-block', result: 'dis-inb' },
+        { value: 'column', result: 'con-col' },
+        { value: 'row', result: 'con-row' },
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(Display.attributeChangedCallback('display', value)).to.eq(result);
+            expect(Container.attributeChangedCallback('container', value)).to.eq(result);
           });
         });
       });
@@ -23,7 +21,7 @@ describe('Display', () => {
     context('with an invalid value', () => {
       it('raises an error', () => {
         expect(() => {
-          Display.attributeChangedCallback('display', 'foobar');
+          Container.attributeChangedCallback('container', 'foobar');
         }).to.throw(Error);
       });
     });

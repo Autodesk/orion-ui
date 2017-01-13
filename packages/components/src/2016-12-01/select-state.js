@@ -6,14 +6,28 @@ const SelectState = {
     };
   },
 
-  enterOpen(state) {
+  activated(state) {
     return {
       ...state,
       open: true,
     };
   },
 
-  leaveOpen(state) {
+  optionChosen(state, chosenIndex) {
+    let chosenValue;
+    const chosenOption = state.options[chosenIndex];
+    if (typeof chosenOption !== 'undefined') {
+      chosenValue = chosenOption.value;
+    }
+
+    return {
+      ...state,
+      value: chosenValue,
+      open: false,
+    };
+  },
+
+  deactivated(state) {
     return {
       ...state,
       open: false,

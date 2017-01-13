@@ -32,23 +32,24 @@ const css = `
   }
 `;
 
-const attributes = [
-  'display',
-];
+const attrMap = {
+  display: {
+    block: 'dis-blk',
+    flex: 'dis-flx',
+    inline: 'dis-inl',
+    'inline-block': 'dis-inb',
+  },
+};
+
+const attributes = Object.keys(attrMap);
 
 function attributeChangedCallback(attrName, value) {
-  switch (value) {
-    case 'block':
-      return 'dis-blk';
-    case 'flex':
-      return 'dis-flx';
-    case 'inline':
-      return 'dis-inl';
-    case 'inline-block':
-      return 'dis-inb';
-    default:
-      throw new Error('unknown style');
+  const styleClass = attrMap[attrName][value];
+  if (typeof styleClass === 'undefined') {
+    throw new Error(`Unknown style for ${attrName}="${value}"`);
   }
+
+  return styleClass;
 }
 
 module.exports = {

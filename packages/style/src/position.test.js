@@ -3,13 +3,14 @@ const chai = require('chai');  // eslint-disable import/no-extraneous-dependenci
 
 const expect = chai.expect;
 
-describe('Position', () => {
+describe.only('Position', () => {
   describe('attributeChangedCallback', () => {
     context('with a valid value', () => {
       [
         { value: 'absolute', result: 'pos-abs' },
         { value: 'relative', result: 'pos-rel' },
         { value: 'static', result: 'pos-sta' },
+        { value: 'cover', result: 'pos-cov' },
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {

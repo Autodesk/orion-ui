@@ -16,24 +16,41 @@ limitations under the License.
 */
 require('../../vendor/es5-custom-element-shim.js');
 require('./inline');
+require('./button');
+require('./select-options');
+const Element = require('./element');
 const SelectState = require('./select-state.js');
 
 const Registry = require('../utils/private-registry.js');
 
-class Select extends HTMLElement {
+class Select extends Element {
   constructor() {
     super();
 
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.innerHTML = `
-      <select></select>
-    `;
-    this.shadowEl = shadowRoot.children[0];
-
     this.state = SelectState.getInitialState();
 
-    // render initial state
-    this._queueRender();
+    this.shadowEl.addEventListener('click', () => {
+      const nextState = SelectState.activated(this.state);
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: {
+          type: 'activated',
+          state: nextState,
+        },
+      }));
+    });
+  }
+
+  initMenu() {
+    this.menu = document.createElement('orion-select-options');
+    this.menu.addEventListener('closed', () => {
+      const nextState = SelectState.deactivated(this.state);
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: {
+          type: 'deactivated',
+          state: nextState,
+        },
+      }));
+    });
   }
 
   set options(newOptions) {
@@ -41,27 +58,33 @@ class Select extends HTMLElement {
     this._queueRender();
   }
 
-  _queueRender() {
-    if (this._renderQueued) {
-      return;
-    }
-
-    this._renderQueued = true;
-    requestAnimationFrame(() => {
-      this._renderQueued = false;
-      this._render();
-    });
+  set open(newValue) {
+    this.state.open = newValue;
+    this._queueRender();
   }
 
   _render() {
-    this.state.options.forEach((option) => {
-      const optionEl = new HTMLOptionElement.Option();
-      optionEl.label = option.label;
-      optionEl.value = option.value;
-      this.shadowEl.add(HTMLOptionElement.Option(option.label, option.value));
-    });
+    if (this.state.open) {
+      if (typeof this.menu === 'undefined') { this.initMenu(); }
+
+      this.menu.options = this.state.options;
+      this.menu.top = `${this.offsetTop + this.offsetHeight}px`;
+      this.menu.left = `${this.offsetLeft}px`;
+      this.menu.width = `${this.offsetWidth}px`;
+      document.body.appendChild(this.menu);
+    } else if (typeof this.menu !== 'undefined') {
+      this.menu.remove();
+    }
+    super._render();
   }
 }
+
+Select.prototype.shadowSpec = {
+  innerHTML: `
+    <orion-button background="black" color="white">Select</orion-button>
+  `,
+  props: {},
+};
 
 Registry.define('orion-select', Select);
 

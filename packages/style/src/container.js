@@ -15,44 +15,33 @@ limitations under the License.
 
 */
 const css = `
-  .pos-st {
-    position: static;
+  .con-col {
+    display: flex;
+    flex-direction: column;
   }
 
-  .pos-rel {
-    position: relative;
-  }
-
-  .pos-abs {
-    position: absolute;
-  }
-
-  .pos-cov {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .con-row {
+    display: flex;
+    flex-direction: row;
   }
 `;
 
-const attributes = [
-  'position',
-];
+const attrMap = {
+  container: {
+    column: 'con-col',
+    row: 'con-row',
+  },
+};
+
+const attributes = Object.keys(attrMap);
 
 function attributeChangedCallback(attrName, value) {
-  switch (value) {
-    case 'absolute':
-      return 'pos-abs';
-    case 'relative':
-      return 'pos-rel';
-    case 'static':
-      return 'pos-sta';
-    case 'cover':
-      return 'pos-cov';
-    default:
-      throw new Error('unknown style');
+  const styleClass = attrMap[attrName][value];
+  if (typeof styleClass === 'undefined') {
+    throw new Error(`Unknown style for ${attrName}="${value}"`);
   }
+
+  return styleClass;
 }
 
 module.exports = {

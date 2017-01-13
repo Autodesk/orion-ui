@@ -19,7 +19,7 @@ require('@orion-ui/components/lib/2016-12-01/select');
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
 
 const React = require('react');
-const applyProps = require('./apply-props');
+const applyProps = require('@orion-ui/components/lib/utils/apply-props');
 
 const PropTypes = React.PropTypes;
 

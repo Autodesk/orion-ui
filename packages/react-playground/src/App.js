@@ -24,9 +24,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       disabled: false,
-    }
-    this.handleClick = this.handleClick.bind(this);
-    this.toggleDisabled = this.toggleDisabled.bind(this);
+    };
+    
+    ['handleClick', 'toggleDisabled', 'setSize'].forEach((fn) => {
+      this[fn] = this[fn].bind(this);
+    });
   }
 
   handleClick() {

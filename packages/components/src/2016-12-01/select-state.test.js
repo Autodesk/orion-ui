@@ -24,7 +24,8 @@ const SelectState = require('./select-state.js');
 
 describe('SelectState', () => {
   describe('getInitialState', () => {
-    it('returns a default state', () => {
+
+    it('is not open', () => {
       const initialState = SelectState.getInitialState();
       expect(initialState.open).to.be.false;
     });
@@ -37,17 +38,56 @@ describe('SelectState', () => {
     });
   });
 
-  describe('enterOpen', () => {
+  describe('activated', () => {
     it('sets open to true', () => {
-      const result = SelectState.enterOpen({});
+      const result = SelectState.activated({});
       expect(result.open).to.be.true;
     });
   });
 
-  describe('leaveOpen', () => {
+  describe('optionChosen', () => {
+    let state;
+    let nextState;
+    before(() => {
+      state = {
+        open: true,
+        value: undefined,
+        options: [
+          { label: 'Red', value: '#F00' },
+          { label: 'Green', value: '#0F0' },
+          { label: 'Blue', value: '#00F' },
+        ],
+      };
+      nextState = SelectState.optionChosen(state, 1);
+    });
+
+    it('sets value to the chosen option', () => {
+      expect(nextState.value).to.eq('#0F0');
+    });
+
+    it('closes the menu', () => {
+      expect(nextState.open).to.be.false;
+    });
+
+    context('with an non-existant option index', () => {
+      before(() => {
+        nextState = SelectState.optionChosen(state, 5);
+      });
+
+      it('set value to undefined', () => {
+        expect(nextState.value).to.be.undefined;
+      });
+    });
+  });
+
+  describe('deactivated', () => {
+    let nextState;
+    before(() => {
+      nextState = SelectState.deactivated({ open: true });
+    });
+
     it('sets open to false', () => {
-      const result = SelectState.leaveOpen({ open: true });
-      expect(result.open).to.be.false;
+      expect(nextState.open).to.be.false;
     });
   });
 });

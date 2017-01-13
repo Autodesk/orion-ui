@@ -14,29 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const css = `
-  .br0 { border-radius: 0;}
-  .br2 { border-radius: 0.25rem;}
-  .br-pill { border-radius: 9999px; }
-`;
+require('../../vendor/es5-custom-element-shim.js');
+const Registry = require('../utils/private-registry.js');
+const Element = require('./element');
 
-const attributes = [
-  'border-radius',
-];
-
-
-const scale = {
-  0: 'br0',
-  2: 'br2',
-  pill: 'br-pill',
-};
-
-function attributeChangedCallback(attrName, value) {
-  return scale[value];
+class Container extends Element {
 }
 
-module.exports = {
-  css,
-  attributes,
-  attributeChangedCallback,
-};
+Registry.define('orion-container', Container);
+
+module.exports = Container;

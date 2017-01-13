@@ -15,24 +15,15 @@ limitations under the License.
 
 */
 require('../../vendor/es5-custom-element-shim.js');
-require('./inline');
+const Element = require('./element');
 const ButtonState = require('./button-state.js');
 
 const Registry = require('../utils/private-registry.js');
+const applyProps = require('../utils/apply-props.js');
 
-class Button extends HTMLElement {
+class Button extends Element {
   constructor() {
     super();
-
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.innerHTML = `
-      <orion-inline
-        border-radius="2"
-        padding-horizontal="3"
-        padding-vertical="2"
-        pointer><slot /></orion-inline>
-    `;
-    this.shadowEl = shadowRoot.children[0];
 
     this.defaults = {
       background: 'black',
@@ -41,8 +32,15 @@ class Button extends HTMLElement {
 
     this.state = ButtonState.getInitialState(this.defaults);
 
-    // render initial state
-    this._queueRender();
+    applyProps(this, {
+      display: 'inline-block',
+      'border-radius': 2,
+      background: 'white',
+      color: 'black',
+      'padding-horizontal': 3,
+      'padding-vertical': 2,
+      pointer: true,
+    });
 
     this.addEventListener('mouseenter', () => {
       if (this.state.disabled) { return; }
@@ -128,18 +126,6 @@ class Button extends HTMLElement {
     return this.state.hover;
   }
 
-  _queueRender() {
-    if (this._renderQueued) {
-      return;
-    }
-
-    this._renderQueued = true;
-    requestAnimationFrame(() => {
-      this._renderQueued = false;
-      this._render();
-    });
-  }
-
   _render() {
     if (this.state.disabled) {
       this.shadowEl.background = 'grey';
@@ -166,6 +152,8 @@ class Button extends HTMLElement {
         this.shadowEl.paddingVertical = 2;
         break;
     }
+
+    super._render();
   }
 }
 

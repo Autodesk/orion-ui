@@ -27,7 +27,6 @@ const colorOptions = {
   black: 'Black',
   white: 'White',
   blue: 'Blue',
-
 };
 
 storiesOf('Button', module)

@@ -6,4 +6,4 @@ lib
 /bower_components
 /coverage
 /gemini/gemini-report/*
-.idea/
+.idea/*

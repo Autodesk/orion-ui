@@ -122,20 +122,33 @@ class Button extends Element {
     this._queueRender();
   }
 
+  set skin(val) {
+    switch(val) {
+      case 'black':
+        this._background = 'black';
+        this._color = 'white';
+        break;
+      default:
+        this._background = 'white';
+        this._color = 'black';
+        break;
+    }
+  }
+
   get hover() {
     return this.state.hover;
   }
 
   _render() {
     if (this.state.disabled) {
-      this.shadowEl.background = 'grey';
-      this.shadowEl.color = 'white';
+      this.background = 'grey';
+      this.color = 'white';
     } else if (this.state.hover) {
-      this.shadowEl.background = 'blue';
-      this.shadowEl.color = 'white';
+      this.background = 'blue';
+      this.color = 'white';
     } else {
-      this.shadowEl.background = this.background;
-      this.shadowEl.color = this.color;
+      this.background = this._background;
+      this.color = this._color;
     }
 
     switch (this.state.size) {

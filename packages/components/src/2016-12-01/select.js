@@ -20,6 +20,7 @@ require('./button');
 require('./select-options');
 const Element = require('./element');
 const SelectState = require('./select-state.js');
+const SelectMenu = require('./select-menu.js');
 
 const Registry = require('../utils/private-registry.js');
 
@@ -41,7 +42,7 @@ class Select extends Element {
   }
 
   initMenu() {
-    this.menu = document.createElement('orion-select-options');
+    this.menu = document.createElement('orion-select-menu');
     this.menu.addEventListener('closed', () => {
       const nextState = SelectState.deactivated(this.state);
       this.dispatchEvent(new CustomEvent('change', {

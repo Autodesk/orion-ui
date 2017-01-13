@@ -27,8 +27,16 @@ class SelectOptions extends Element {
   constructor() {
     super();
 
-    this.menu = this.shadowRoot.getElementById('menu');
-    this.menu.addEventListener('clickedAway', (event) => {
+    this.shadowEl.addEventListener('click', (event) => {
+      if (event.target !== event.currentTarget) {
+        var clickedItem = event.target.id;
+        console.log('select menu - something clicked', clickedItem);
+      }
+      event.stopPropagation();
+    });
+
+    this.popover = this.shadowRoot.getElementById('popover');
+    this.popover.addEventListener('clickedAway', (event) => {
       this.dispatchEvent(new CustomEvent('closed'));
     });
 
@@ -61,22 +69,22 @@ class SelectOptions extends Element {
 
   _render() {
     this.list.items = this.state.options;
-    this.menu.top = this.state.top;
-    this.menu.left = this.state.left;
-    this.menu.width = this.state.width;
+    this.popover.top = this.state.top;
+    this.popover.left = this.state.left;
+    this.popover.width = this.state.width;
     super._render();
   }
 }
 
 SelectOptions.prototype.shadowSpec = {
   innerHTML: `
-    <orion-popover id="menu">
+    <orion-popover id="popover">
       <orion-list id="list"></orion-list>
     </orion-popover>
   `,
   props: {},
 };
 
-Registry.define('orion-select-options', SelectOptions);
+Registry.define('orion-select-menu', SelectOptions);
 
 module.exports = SelectOptions;

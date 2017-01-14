@@ -1,5 +1,5 @@
 const Position = require('./position');
-const chai = require('chai');  // eslint-disable import/no-extraneous-dependencies
+const chai = require('chai'); // eslint-disable-line import/no-extraneous-dependencies
 
 const expect = chai.expect;
 

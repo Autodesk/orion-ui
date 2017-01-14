@@ -15,12 +15,10 @@ limitations under the License.
 
 */
 require('../../vendor/es5-custom-element-shim.js');
-require('./inline');
 require('./button');
-require('./select-options');
+require('./select-menu.js');
 const Element = require('./element');
 const SelectState = require('./select-state.js');
-const SelectMenu = require('./select-menu.js');
 
 const Registry = require('../utils/private-registry.js');
 

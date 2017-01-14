@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
@@ -16,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const chai = require('chai');
+const chai = require('chai'); // eslint-disable-line import/no-extraneous-dependencies
 
 const expect = chai.expect;
 
@@ -24,7 +23,6 @@ const SelectState = require('./select-state.js');
 
 describe('SelectState', () => {
   describe('getInitialState', () => {
-
     it('is not open', () => {
       const initialState = SelectState.getInitialState();
       expect(initialState.open).to.be.false;

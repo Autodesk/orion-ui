@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -15,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('jsdom-global/register');
+require('jsdom-global/register'); // eslint-disable-line import/no-extraneous-dependencies
 
 const React = require('react');
 const { mount } = require('enzyme');

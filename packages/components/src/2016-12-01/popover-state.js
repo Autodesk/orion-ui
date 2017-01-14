@@ -10,8 +10,8 @@ const PopoverState = {
     return {
       ...state,
       open: false,
-    }
-  }
+    };
+  },
 };
 
 module.exports = PopoverState;

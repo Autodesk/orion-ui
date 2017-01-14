@@ -38,14 +38,14 @@ const SelectState = {
     return {
       ...state,
       open: true,
-    }
+    };
   },
 
   focusNext(state) {
     return {
       ...state,
       open: true,
-    }
+    };
   },
 };
 

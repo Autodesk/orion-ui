@@ -33,6 +33,20 @@ const SelectState = {
       open: false,
     };
   },
+
+  focusPrevious(state) {
+    return {
+      ...state,
+      open: true,
+    }
+  },
+
+  focusNext(state) {
+    return {
+      ...state,
+      open: true,
+    }
+  },
 };
 
 module.exports = SelectState;

@@ -90,4 +90,30 @@ describe('SelectState', () => {
       expect(nextState.open).to.be.false;
     });
   });
+
+  describe('focusPrevious', () => {
+    context('when closed', () => {
+      let nextState;
+      before(() => {
+        nextState = SelectState.focusPrevious({ open: false });
+      });
+
+      it('opens', () => {
+        expect(nextState.open).to.be.true;
+      });
+    });
+  });
+
+  describe('focusNext', () => {
+    context('when closed', () => {
+      let nextState;
+      before(() => {
+        nextState = SelectState.focusPrevious({ open: false });
+      });
+
+      it('opens', () => {
+        expect(nextState.open).to.be.true;
+      });
+    });
+  });
 });

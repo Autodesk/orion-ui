@@ -30,15 +30,41 @@ class Select extends Element {
 
     this.state = SelectState.getInitialState();
 
-    this.shadowEl.addEventListener('click', () => {
-      const nextState = SelectState.activated(this.state);
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: {
-          type: 'activated',
-          state: nextState,
-        },
-      }));
-    });
+    this.addEventListener('keydown', this._handleKeydown);
+  }
+
+  _handleKeydown(event) {
+    let nextState;
+    switch (event.key) {
+      case 'Escape':
+        nextState = SelectState.deactivated(this.state);
+        this.dispatchEvent(new CustomEvent('change', {
+          detail: {
+            type: 'deactivated',
+            state: nextState,
+          },
+        }));
+        break;
+      case 'ArrowUp':
+        nextState = SelectState.focusPrevious(this.state);
+        this.dispatchEvent(new CustomEvent('change', {
+          detail: {
+            type: 'focusPrevious',
+            state: nextState,
+          },
+        }));
+        break;
+      case 'ArrowDown':
+        nextState = SelectState.focusNext(this.state);
+        this.dispatchEvent(new CustomEvent('change', {
+          detail: {
+            type: 'focusNext',
+            state: nextState,
+          },
+        }));
+        break;
+      default:
+    }
   }
 
   initMenu() {

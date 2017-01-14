@@ -23,20 +23,16 @@ const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props.js');
 const Element = require('./element.js');
 
-class SelectOptions extends Element {
+class SelectMenu extends Element {
   constructor() {
     super();
 
-    this.shadowEl.addEventListener('click', (event) => {
-      if (event.target !== event.currentTarget) {
-        var clickedItem = event.target.id;
-        console.log('select menu - something clicked', clickedItem);
-      }
-      event.stopPropagation();
+    this.shadowEl.addEventListener('click', () => {
+      this.dispatchEvent(new CustomEvent('closed'));
     });
 
     this.popover = this.shadowRoot.getElementById('popover');
-    this.popover.addEventListener('clickedAway', (event) => {
+    this.popover.addEventListener('clickedAway', () => {
       this.dispatchEvent(new CustomEvent('closed'));
     });
 
@@ -76,7 +72,7 @@ class SelectOptions extends Element {
   }
 }
 
-SelectOptions.prototype.shadowSpec = {
+SelectMenu.prototype.shadowSpec = {
   innerHTML: `
     <orion-popover id="popover">
       <orion-list id="list"></orion-list>
@@ -85,6 +81,6 @@ SelectOptions.prototype.shadowSpec = {
   props: {},
 };
 
-Registry.define('orion-select-menu', SelectOptions);
+Registry.define('orion-select-menu', SelectMenu);
 
-module.exports = SelectOptions;
+module.exports = SelectMenu;

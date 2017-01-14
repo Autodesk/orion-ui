@@ -120,7 +120,7 @@ Element.observedAttributes.forEach((attr) => {
   });
 });
 
-['top', 'left', 'width'].forEach((attr) => {
+nativeStyles.forEach((attr) => {
   Object.defineProperty(Element.prototype, attr, {
     get() {
       return this.state[attr];

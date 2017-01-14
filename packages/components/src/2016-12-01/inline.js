@@ -21,75 +21,7 @@ const Element = require('./element');
 class Inline extends Element {
   constructor() {
     super();
-
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-
-    shadowRoot.innerHTML = '<span><slot /></span>';
-
-    styles.forEach((style) => {
-      const element = document.createElement('style');
-      element.textContent = style.css;
-      shadowRoot.appendChild(element);
-    });
-
-    this.state = {};
-
-    this._updateClassName();
-  }
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    // Guard no change
-    if (oldVal === newVal) {
-      return;
-    }
-
-    this.state[attrName] = newVal;
-
-    this._updateClassName();
-  }
-
-  set background(newValue) {
-    this.state.background = newValue;
-    this._updateClassName();
-  }
-
-  set color(newValue) {
-    this.state.color = newValue;
-    this._updateClassName();
-  }
-
-  set paddingVertical(newValue) {
-    this.state['padding-vertical'] = newValue;
-    this._updateClassName();
-  }
-
-  set paddingHorizontal(newValue) {
-    this.state['padding-horizontal'] = newValue;
-    this._updateClassName();
-  }
-
-  _updateClassName() {
-    // Send each attribute to the style modules and concatenate a new class and apply it
-    let className = '';
-
-    function appendClassName(style, name, value) {
-      // Guard style does not handle attribute
-      if (style.attributes.indexOf(name) === -1) {
-        return;
-      }
-
-      const additionalClass = style.attributeChangedCallback(name, value);
-      if (additionalClass) {
-        className += ` ${additionalClass}`;
-      }
-    }
-
-    Object.entries(this.state).forEach(([name, value]) => {
-      styles.forEach(style => appendClassName(style, name, value));
-    });
-
-    // Update the class name
-    this.shadowRoot.querySelector('span').className = className;
+    this.display = 'inline-block';
   }
 }
 

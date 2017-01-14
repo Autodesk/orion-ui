@@ -89,6 +89,10 @@ class Button extends Element {
     return this.state.color;
   }
 
+  connectedCallback() {
+    this.setAttribute('tabIndex', 0);
+  }
+
   set disabled(val) {
     if (val) {
       this.state = ButtonState.enterDisabled(this.state);
@@ -123,7 +127,7 @@ class Button extends Element {
   }
 
   set skin(val) {
-    switch(val) {
+    switch (val) {
       case 'black':
         this._background = 'black';
         this._color = 'white';

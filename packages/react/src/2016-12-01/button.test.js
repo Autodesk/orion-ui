@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('jsdom-global/register'); // eslint-disable-line import/no-extraneous-dependencies
+require('jsdom-global/register');
 
 const React = require('react');
 const { mount } = require('enzyme');

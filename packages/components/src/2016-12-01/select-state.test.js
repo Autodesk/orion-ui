@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const chai = require('chai'); // eslint-disable-line import/no-extraneous-dependencies
+const chai = require('chai');
 
 const expect = chai.expect;
 

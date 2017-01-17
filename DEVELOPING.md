@@ -39,6 +39,7 @@ their respective `lib` directories
 | ---------------- | -------------------------  |
 | `lerna run test` | runs tests in each package |
 
+
 ### Manual testing
 
 The below assume you ran `npm start` in a terminal.
@@ -51,6 +52,18 @@ For each example there are 3 modes:
 
 - `/examples/abc.html` points to prod. This file would not reflect your local changes.
 
+## Manual visual testing with gemini
+We are using Gemini as the tool for visual regression testing. Gemini will
+use [Sauce Labs](https://saucelabs.com/) to run against the visual states for components in storybook
+
+1. Run `npm install` to ensure `gemini` and `gemini-sauce` are installed
+2. Set the following environment variables `SAUCE_ACCESS_KEY` and `SAUCE_USERNAME`.
+   The values are found in the [Sauce Labs DashBoard](https://saucelabs.com/).
+3. In separate tab run `cd packages/storybook` then `npm start`. This starts storybook.
+   Storybook runs on `localhost:9001`
+4. In separate tab from the root project directory run - `node_modules/.bin/gemini test gemini/* --reporter flat --reporter html`.
+   This will test against the snapshots and create a report with image diffs if the tests fail.
+5. If necessary, in same tab as gemini test run `node_modules/.bin/gemini update gemini/*` to generate new snapshots to test against.
 
 ## Repository Layout
 <pre>

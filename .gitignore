@@ -5,5 +5,5 @@ build
 lib
 /bower_components
 /coverage
-/gemini/gemini-report/*
+/gemini-report/*
 .idea/*

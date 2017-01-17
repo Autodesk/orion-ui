@@ -3,9 +3,6 @@ machine:
     version: 6.9.2
   environment:
     NODE_ENV: ci # default is test which suppresses errors in lerna
-  post:
-    - chromedriver --port=4444 --url-base=wd/hub:
-        background: true
 dependencies:
   post:
     - bower install
@@ -22,8 +19,10 @@ dependencies:
 test:
   pre:
     - npm run compile
-    - cd packages/storybook && NODE_ENV=development npm start:
+    - cd packages/storybook && NODE_ENV=test npm start:
         background: true
+    # This sleep is to ensure storybook is running before gemini starts
+    - sleep 10
   override:
     - npm run test-ci
     - gemini test gemini/*

@@ -70,7 +70,8 @@ describe('orion-compile', () => {
     expect(test('-e', path.join(path3, 'lib', 'index.js'))).to.equal(false);
   });
 
-  it('builds specific packages when passed the --packages flag', () => {
+  it('builds specific packages when passed the --packages flag', function buildsSpecificPackage() {
+    this.timeout(5000);
     const path1 = createPackage('package1', true);
     const path2 = createPackage('package2', true);
 

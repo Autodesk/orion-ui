@@ -19,7 +19,7 @@ const chai = require('chai');
 
 const expect = chai.expect;
 
-describe.only('Position', () => {
+describe('Position', () => {
   describe('attributeChangedCallback', () => {
     context('with a valid value', () => {
       [

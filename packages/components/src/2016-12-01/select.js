@@ -72,7 +72,7 @@ class Select extends Element {
     }
   }
 
-  _handleBlur(event) {
+  _handleBlur() {
     const nextState = SelectState.deactivated(this.state);
     this.dispatchEvent(new CustomEvent('change', {
       detail: { type: 'deactivated', state: nextState },

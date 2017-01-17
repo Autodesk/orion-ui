@@ -31,7 +31,7 @@ limitations under the License.
   </test-fixture>
 
   <script>
-    describe('<orion-button>', () => {
+    describe.only('<orion-button>', () => {
       var button, inline;
 
       beforeEach(() => {
@@ -50,6 +50,7 @@ limitations under the License.
 
       it('updates state when background is set', () => {
         expect(button.state.background).to.equal(button.defaults.background);
+        expect(button.state.background).not.to.eq('black');
         button.background = 'black';
         expect(button.state.background).to.eq('black');
       });
@@ -58,6 +59,10 @@ limitations under the License.
         expect(button.state.color).to.be.equal(button.defaults.color);
         button.color = 'black';
         expect(button.state.color).to.eq('black');
+
+        expect(button.state.color).not.to.eq('white');
+        button.color = 'white';
+        expect(button.state.color).to.eq('white');
       });
 
       it('resets to the default when background is set to undefined', () => {

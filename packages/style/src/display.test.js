@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 const Display = require('./display');
-const chai = require('chai'); 
+const chai = require('chai');
 
 const expect = chai.expect;
 

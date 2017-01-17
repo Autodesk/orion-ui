@@ -27,21 +27,15 @@ class Select extends React.Component {
   constructor(props) {
     super(props);
     this.updateState = this.updateState.bind(this);
-    this.registerListeners = this.registerListeners.bind(this);
   }
 
   componentDidMount() {
     applyProps(this._el, this.props);
+    this._el.addEventListener('change', this.updateState);
   }
 
   componentWillReceiveProps(props) {
     applyProps(this._el, props);
-  }
-
-  registerListeners(el) {
-    this._el = el;
-
-    this._el.addEventListener('change', this.updateState);
   }
 
   updateState(event) {
@@ -49,7 +43,7 @@ class Select extends React.Component {
   }
 
   render() {
-    return <orion-select ref={this.registerListeners} />;
+    return <orion-select ref={(el) => { this._el = el; }} />;
   }
 }
 

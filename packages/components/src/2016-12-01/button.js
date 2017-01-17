@@ -35,8 +35,7 @@ class Button extends Element {
     applyProps(this, {
       display: 'inline-block',
       'border-radius': 2,
-      background: 'white',
-      color: 'black',
+      skin: 'white',
       'padding-horizontal': 3,
       'padding-vertical': 2,
       pointer: true,

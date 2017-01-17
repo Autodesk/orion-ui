@@ -29,6 +29,13 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
 
     this.addEventListener('keydown', this._handleKeydown);
+    this.shadowEl.addEventListener('click', () => {
+      const nextState = SelectState.activated(this.state);
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: { type: 'activated', state: nextState },
+      }));
+    });
+    this.addEventListener('blur', this._handleBlur);
   }
 
   _handleKeydown(event) {
@@ -63,6 +70,13 @@ class Select extends Element {
         break;
       default:
     }
+  }
+
+  _handleBlur(event) {
+    const nextState = SelectState.deactivated(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { type: 'deactivated', state: nextState },
+    }));
   }
 
   initMenu() {

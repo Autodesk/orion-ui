@@ -53,6 +53,7 @@ class Button extends HTMLElement {
     });
 
     this.addEventListener('mouseleave', () => {
+      if (this.state.disabled) { return; }
       const nextState = ButtonState.leaveHover(this.state);
       this.dispatchEvent(new CustomEvent('change', {
         detail: {

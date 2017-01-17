@@ -6,7 +6,7 @@
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
-    "web-component-tester": "^5.0.0",
+    "web-component-tester": "4.2.2",
     "webcomponentsjs": "^0.7.23"
   }
 }

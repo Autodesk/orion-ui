@@ -1,3 +1,5 @@
+<!doctype html>
+
 <!--
 
 Copyright 2016 Autodesk,Inc.
@@ -12,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 -->
-<!doctype html>
+
 <html>
 <head>
   <meta charset="utf-8">
@@ -24,36 +26,84 @@ limitations under the License.
 <body>
   <test-fixture id="Button">
     <template>
-      <orion-button background="black">I'm a button</orion-button>
+      <orion-button>I'm a button</orion-button>
     </template>
   </test-fixture>
 
   <script>
-    describe('<orion-button>', function() {
+    describe('<orion-button>', () => {
       var button, inline;
 
-      beforeEach(function() {
+      beforeEach(() => {
         button = fixture('Button');
         inline = button.shadowEl.shadowRoot;
+        button._render();
       });
 
-      it('have the passed background color', function() {
-        expect(inline.querySelector('.bg-white')).to.be.null;
-
-        button.setAttribute('background', 'white');
-        expect(inline.querySelector('.bg-white')).not.to.be.null;
-      });
-
-      it('calls the click handler', function() {
-        clickHandler = sinon.spy();
+      it('calls the click handler', () => {
+        const clickHandler = sinon.spy();
         button.addEventListener('click', clickHandler);
 
         button.dispatchEvent(new Event('click'));
         expect(clickHandler.called).to.be.true;
       });
 
-      it('dims on hover', function() {
-        expect(inline.querySelector('.dim')).not.to.be.null;
+      it('updates state when background is set', () => {
+        expect(button.state.background).to.be.undefined;
+        button.background = 'black';
+        expect(button.state.background).to.eq('black');
+      });
+
+      it('updates state when color is set', () => {
+        expect(button.state.color).to.be.undefined;
+        button.color = 'black';
+        expect(button.state.color).to.eq('black');
+      });
+
+      it('updates state when hover is set', () => {
+        expect(button.state.hover).to.be.false;
+        button.hover = true;
+        expect(button.state.hover).to.be.true;
+        button.hover = false;
+        expect(button.state.hover).to.be.false;
+      });
+
+      it('updates state when disabled is set', () => {
+        expect(button.state.disabled).to.be.false;
+        button.disabled = true;
+        expect(button.state.disabled).to.be.true;
+        button.disabled = false;
+        expect(button.state.disabled).to.be.false;
+      });
+
+      context('when disabled', () => {
+        beforeEach(() => {
+          button.disabled = true
+        });
+
+        it('does not call the click handler', () => {
+          const clickHandler = sinon.spy();
+          button.addEventListener('click', clickHandler);
+
+          button.dispatchEvent(new Event('click'));
+          expect(clickHandler.called).to.be.false;
+        });
+
+        it('does not trigger a `change` event on mouseenter', () => {
+          const changeListener = sinon.spy();
+          button.addEventListener('change', changeListener);
+
+          button.dispatchEvent(new MouseEvent('mouseenter'));
+          expect(changeListener.called).to.be.false;
+        });
+
+        it('does not trigger a `change` event on mouseleave', () => {
+          const changeListener = sinon.spy();
+          button.addEventListener('change', changeListener);
+
+          button.dispatchEvent(new MouseEvent('mouseleave'));
+          expect(changeListener.called).to.be.false;
+        });
       });
     });
 

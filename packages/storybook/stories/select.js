@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf, action } from '@kadira/storybook';
 import { withKnobs, text, select, number, boolean } from '@kadira/storybook-addon-knobs';
 import React from 'react';
+import { Select } from '../../react/lib/2016-12-01';
 import SourceViewer from '../components/source_viewer';
 
 storiesOf('Select', module)
@@ -25,6 +26,10 @@ storiesOf('Select', module)
     const props = {
       open: boolean('Open', false),
     };
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' },
+    ];
 
     const sources = [
       {
@@ -79,6 +84,7 @@ angular.module('app', [])
 
     return (
       <div>
+        <Select options={options} open={props.open} />
         <SourceViewer sources={sources} />
       </div>
     );
@@ -616,6 +622,20 @@ angular.module('app', [])
     );
   })
   .add('interactive', () => {
+    const options = [
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' },
+    ];
+    let selectState = {
+      open: false,
+    };
+    function onChange(event) {
+      if (event.type === 'selectedIndexChange') {
+        action('selected an option');
+      }
+
+      selectState = event.state;
+    }
     const sources = [
       {
         label: 'React',
@@ -697,6 +717,7 @@ angular.module('app', [Select.moduleName])
 
     return (
       <div>
+        <Select options={options} open={selectState.open} onChange={onChange} />
         <SourceViewer sources={sources} />
       </div>
     );

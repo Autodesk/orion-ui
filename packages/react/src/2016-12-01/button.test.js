@@ -20,7 +20,6 @@ require('jsdom-global/register');
 const React = require('react');
 const { mount } = require('enzyme');
 const chai = require('chai');
-const sinon = require('sinon');
 const chaiEnzyme = require('chai-enzyme');
 
 const expect = chai.expect;
@@ -41,22 +40,5 @@ describe('<OrionButton />', () => {
 
     expect(element.background).to.equal(props.background);
     expect(element.color).to.equal(props.color);
-  });
-
-  it('simulates click events', () => {
-    const onClick = sinon.spy();
-    const wrapper = mount(<OrionButton onClick={onClick} />);
-    wrapper.find('orion-button').get(0).dispatchEvent(new Event('click'));
-    expect(onClick).to.have.property('callCount', 1);
-  });
-
-  context('when disabled', () => {
-    it('does not simulate click events', () => {
-      const onClick = sinon.spy();
-      const wrapper = mount(<OrionButton onClick={onClick} disabled />);
-      wrapper.find('orion-button').simulate('click');
-
-      expect(onClick).to.have.property('callCount', 0);
-    });
   });
 });

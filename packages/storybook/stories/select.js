@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 import { withKnobs, text, select, number, boolean } from '@kadira/storybook-addon-knobs';
 import React from 'react';
 import { Select } from '../../react/lib/2016-12-01';
@@ -630,10 +630,6 @@ angular.module('app', [])
       open: false,
     };
     function onChange(event) {
-      if (event.type === 'selectedIndexChange') {
-        action('selected an option');
-      }
-
       selectState = event.state;
     }
     const sources = [

@@ -39,7 +39,7 @@ class Select extends React.Component {
   }
 
   updateState(event) {
-    this.componentWillReceiveProps(event.detail.state);
+    this.componentWillReceiveProps(Object.assign({}, event.detail.state, this.props));
   }
 
   render() {

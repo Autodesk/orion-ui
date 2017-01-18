@@ -46,7 +46,7 @@ class App extends React.Component {
   }
 
   setSize(event) {
-    this.setState({ size: this.buttonSizes[event.detail.selectedIndex].value });
+    // Set button size
   }
 
   render() {

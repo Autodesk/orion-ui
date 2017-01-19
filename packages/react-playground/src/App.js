@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { Button, Select } from '@orion-ui/react/lib/2016-12-01';
+import '../vendor/custom-elements-polyfill';
+import { Button } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -59,7 +60,6 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
           <input />
-          <Select onChange={this.setSize} options={this.buttonSizes}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <Button skin="black" size={this.state.size} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </p>

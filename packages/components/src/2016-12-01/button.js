@@ -156,16 +156,16 @@ class Button extends Element {
 
     switch (this.state.size) {
       case 'small':
-        this.shadowEl.paddingHorizontal = 2;
-        this.shadowEl.paddingVertical = 1;
+        this.state['padding-horizontal'] = 2;
+        this.state['padding-vertical'] = 1;
         break;
       case 'large':
-        this.shadowEl.paddingHorizontal = 4;
-        this.shadowEl.paddingVertical = 3;
+        this.state['padding-horizontal'] = 4;
+        this.state['padding-vertical'] = 3;
         break;
       default:
-        this.shadowEl.paddingHorizontal = 3;
-        this.shadowEl.paddingVertical = 2;
+        this.state['padding-horizontal'] = 3;
+        this.state['padding-vertical'] = 2;
         break;
     }
 

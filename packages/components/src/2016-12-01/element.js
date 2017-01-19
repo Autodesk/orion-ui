@@ -15,6 +15,7 @@ limitations under the License.
 
 */
 require('../../vendor/es5-custom-element-shim.js');
+require('../../vendor/object-entries-shim.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props.js');
 const { BorderRadius, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
@@ -22,22 +23,15 @@ const { BorderRadius, Container, Display, Hovers, Position, Skins, Spacing } = r
 const nativeStyles = ['top', 'left', 'width'];
 const styles = [BorderRadius, Container, Display, Hovers, Position, Skins, Spacing];
 
+styles.forEach((style) => {
+  const element = document.createElement('style');
+  element.textContent = style.css;
+  document.body.appendChild(element);
+});
 
 class Element extends HTMLElement {
   constructor() {
     super();
-
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-
-    shadowRoot.innerHTML = this.shadowSpec.innerHTML;
-    this.shadowEl = shadowRoot.children[0];
-    applyProps(this.shadowEl, this.shadowSpec.props);
-
-    styles.forEach((style) => {
-      const element = document.createElement('style');
-      element.textContent = style.css;
-      shadowRoot.appendChild(element);
-    });
 
     this.state = {};
 
@@ -92,13 +86,7 @@ class Element extends HTMLElement {
     });
 
     // Update the class name
-    this.shadowEl.className = className;
-  }
-
-  _clearShadowChildren() {
-    while (this.shadowEl.hasChildNodes()) {
-      this.shadowEl.removeChild(this.shadowEl.lastChild);
-    }
+    this.className = className;
   }
 }
 
@@ -106,7 +94,7 @@ Element.observedAttributes = styles
                               .map(style => style.attributes)
                               .reduce((acc, memo) => acc.concat(memo));
 
-Element.observedAttributes.forEach((attr) => {
+Element.observedAttributes.concat(nativeStyles).forEach((attr) => {
   Object.defineProperty(Element.prototype, attr, {
     get() {
       return this.state[attr];
@@ -119,25 +107,6 @@ Element.observedAttributes.forEach((attr) => {
     },
   });
 });
-
-nativeStyles.forEach((attr) => {
-  Object.defineProperty(Element.prototype, attr, {
-    get() {
-      return this.state[attr];
-    },
-    set(newValue) {
-      if (this.state[attr] === newValue) { return; }
-
-      this.state[attr] = newValue;
-      this._queueRender();
-    },
-  });
-});
-
-Element.prototype.shadowSpec = {
-  innerHTML: '<span><slot /></span>',
-  props: {},
-};
 
 Registry.define('orion-element', Element);
 

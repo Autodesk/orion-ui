@@ -22,7 +22,7 @@ const PropTypes = React.PropTypes;
 
 const Example = function example(props) {
   return (
-    <div style={{ marginTop: '30px', marginBottom: '30px' }}>{props.children}</div>
+    <div className="example" style={{ paddingTop: '30px', paddingBottom: '30px' }}>{props.children}</div>
   );
 };
 

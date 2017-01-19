@@ -17,5 +17,12 @@ dependencies:
     - "packages/style/node_modules"
     - "bower_components"
 test:
+  pre:
+    - npm run compile
+    - cd packages/storybook && NODE_ENV=test npm start:
+        background: true
+    # This sleep is to ensure storybook is running before gemini starts
+    - sleep 10
   override:
     - npm run test-ci
+    - gemini test gemini/*

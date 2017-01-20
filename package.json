@@ -5,8 +5,8 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
-    "test": "npm run compile && lerna run lint && npm run specs && npm run browserify && wct && npm run ensure-copyright",
-    "test-ci": "npm run compile && lerna run lint && npm run specs && npm run browserify && wct --plugin sauce --skip-plugin local && npm run ensure-copyright && npm run report-coverage",
+    "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright",
+    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright",
     "build": "lerna run build",
     "clean": "node ./packages/scripts/orion.js clean",
     "compile": "node ./packages/scripts/orion.js compile",
@@ -14,11 +14,8 @@
     "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
     "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds",
     "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./",
-    "specs": "NODE_ENV=test mocha --compilers js:babel-core/register './packages/!(react-playground)/{,!(node_modules|lib|build)/**/}*.test.js'",
-    "browserify": "mkdir -p build && browserify packages/components/lib/index.js -o build/bundle.js",
-    "test-components": "npm run compile && npm run browserify && wct",
-    "test-components-sauce": "npm run compile && npm run browserify && wct --plugin sauce --skip-plugin local",
-    "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage"
+    "specs": "node ./packages/scripts/orion.js specs",
+    "specs-ci": "node ./packages/scripts/orion.js specs --sauce --report"
   },
   "repository": {
     "type": "git",
@@ -33,6 +30,7 @@
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-react-app": "^2.0.1",
+    "babelify": "^7.3.0",
     "bower": "^1.8.0",
     "browserify": "^13.3.0",
     "chai": "^3.5.0",
@@ -47,6 +45,7 @@
     "jsdom-global": "2.1.0",
     "lerna": "2.0.0-beta.31",
     "nock": "^9.0.2",
+    "nyc": "^10.1.2",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
     "react-dom": "^15.4.1",

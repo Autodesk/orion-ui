@@ -14,20 +14,6 @@
           "version": "54.0"
         }
       ]
-    },
-    "istanbul": {
-      "dir": "./coverage",
-      "reporters": ["text-summary", "lcov"],
-      "include": [
-        "**/*.js",
-        "**/*.html"
-      ],
-      "exclude": [
-        "/bower_components/**/*.js",
-        "/bower_components/**/*.html",
-        "/test/**/*.js",
-        "/test/**/*.html"
-      ]
     }
   }
 }

@@ -21,6 +21,7 @@ const root = path.join(__dirname, '..', '..', '..');
 const build = path.join(root, constants.buildDirName);
 const packages = path.join(root, constants.packageDirName);
 const scripts = path.join(packages, constants.scriptsPackageDirName);
+const coverage = path.join(root, constants.coverageDirName);
 
 module.exports = {
   /**
@@ -42,4 +43,9 @@ module.exports = {
    * The scripts package
    */
   scripts,
+
+  /**
+   * Top level code coverage directory
+   */
+  coverage,
 };

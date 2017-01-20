@@ -31,13 +31,11 @@ limitations under the License.
   </test-fixture>
 
   <script>
-    describe.only('<orion-button>', () => {
-      var button, inline;
+    describe('<orion-button>', () => {
+      var button;
 
       beforeEach(() => {
         button = fixture('Button');
-        inline = button.shadowEl.shadowRoot;
-        button._render();
       });
 
       it('calls the click handler', () => {

@@ -16,18 +16,12 @@ limitations under the License.
 */
 require('../../vendor/es5-custom-element-shim.js');
 require('../../vendor/object-entries-shim.js');
+require('../utils/inject-styles.js');
 const Registry = require('../utils/private-registry.js');
-const applyProps = require('../utils/apply-props.js');
 const { BorderRadius, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
 const nativeStyles = ['top', 'left', 'width'];
 const styles = [BorderRadius, Container, Display, Hovers, Position, Skins, Spacing];
-
-styles.forEach((style) => {
-  const element = document.createElement('style');
-  element.textContent = style.css;
-  document.body.appendChild(element);
-});
 
 class Element extends HTMLElement {
   constructor() {

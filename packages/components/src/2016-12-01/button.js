@@ -74,7 +74,7 @@ class Button extends HTMLElement {
   }
 
   set background(val) {
-    this.state.background = val;
+    this.state.background = val || this.defaults.background;
     this._queueRender();
   }
 
@@ -83,7 +83,7 @@ class Button extends HTMLElement {
   }
 
   set color(val) {
-    this.state.color = val;
+    this.state.color = val || this.defaults.color;
     this._queueRender();
   }
 
@@ -148,8 +148,8 @@ class Button extends HTMLElement {
       this.shadowEl.background = 'blue';
       this.shadowEl.color = 'white';
     } else {
-      this.shadowEl.background = this.background || this.defaults.background;
-      this.shadowEl.color = this.color || this.defaults.color;
+      this.shadowEl.background = this.background;
+      this.shadowEl.color = this.color;
     }
 
     switch (this.state.size) {

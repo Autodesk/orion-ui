@@ -17,7 +17,7 @@ limitations under the License.
 
 import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
-import { withKnobs, text, select } from '@kadira/storybook-addon-knobs';
+import { withKnobs, text, select, boolean } from '@kadira/storybook-addon-knobs';
 import { Button } from '../../react/lib/2016-12-01';
 import SourceViewer from '../components/source_viewer';
 
@@ -127,6 +127,7 @@ storiesOf('Button', module)
   const props = {
     background: select('Background Color', colorOptions, ''),
     color: select('Color', colorOptions, ''),
+    hover: boolean('Hover', true),
   };
 
   const filteredProps = filterEmptyProps(props);
@@ -138,6 +139,7 @@ storiesOf('Button', module)
         <Button
           background="${props.background}"
           color="${props.color}"
+          hover="${props.hover}"
           onClick={action('clicked')}
         >
           {"${buttonText}"}

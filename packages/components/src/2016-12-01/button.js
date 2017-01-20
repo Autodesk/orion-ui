@@ -28,15 +28,18 @@ class Button extends HTMLElement {
     shadowRoot.innerHTML = `
       <orion-inline
         border-radius="2"
-        background="white"
-        color="black"
         padding-horizontal="3"
         padding-vertical="2"
         pointer><slot /></orion-inline>
     `;
     this.shadowEl = shadowRoot.children[0];
 
-    this.state = ButtonState.getInitialState();
+    this.defaults = {
+      background: 'black',
+      color: 'white',
+    };
+
+    this.state = ButtonState.getInitialState(this.defaults);
 
     // render initial state
     this._queueRender();
@@ -71,7 +74,7 @@ class Button extends HTMLElement {
   }
 
   set background(val) {
-    this.state.background = val;
+    this.state.background = val || this.defaults.background;
     this._queueRender();
   }
 
@@ -80,7 +83,7 @@ class Button extends HTMLElement {
   }
 
   set color(val) {
-    this.state.color = val;
+    this.state.color = val || this.defaults.color;
     this._queueRender();
   }
 

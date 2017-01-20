@@ -49,15 +49,29 @@ limitations under the License.
       });
 
       it('updates state when background is set', () => {
-        expect(button.state.background).to.be.undefined;
+        expect(button.state.background).to.equal(button.defaults.background);
         button.background = 'black';
         expect(button.state.background).to.eq('black');
       });
 
       it('updates state when color is set', () => {
-        expect(button.state.color).to.be.undefined;
+        expect(button.state.color).to.be.equal(button.defaults.color);
         button.color = 'black';
         expect(button.state.color).to.eq('black');
+      });
+
+      it('resets to the default when background is set to undefined', () => {
+        button.background = 'black';
+        button.background = undefined;
+
+        expect(button.state.background).to.equal(button.defaults.background);
+      });
+
+      it('resets to the default when color is set to undefined', () => {
+        button.color = 'black';
+        button.background = undefined;
+
+        expect(button.state.background).to.equal(button.defaults.background);
       });
 
       it('updates state when hover is set', () => {

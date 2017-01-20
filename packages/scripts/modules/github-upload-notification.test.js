@@ -119,8 +119,8 @@ describe('GithubUploadNotification', () => {
         expect(actualStatus.repo).to.equal('orion');
       });
 
-      it('sets the user to orion-ui', () => {
-        expect(actualStatus.url).to.equal('orion-ui');
+      it('sets the owner to orion-ui', () => {
+        expect(actualStatus.owner).to.equal('orion-ui');
       });
 
       it('sets the description to default: empty string', () => {
@@ -197,7 +197,7 @@ describe('GithubUploadNotification', () => {
       github.finishDeploy(exampleUrl);
 
       expect(github.createStatus.calledWith({
-        status: 'success',
+        state: 'success',
         description: 'deployed',
         targetUrl: exampleUrl,
       })).to.equal(true);

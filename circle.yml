@@ -26,3 +26,16 @@ test:
   override:
     - npm run test-ci
     - gemini test gemini/*
+deployment:
+  production:
+    branch: master
+    commands:
+      - npm run build
+      - npm run copy-package-builds
+      - npm run deploy-master
+  snapshot:
+    branch: /*/
+    commands:
+      - npm run build
+      - npm run copy-package-builds
+      - npm run deploy-snapshot

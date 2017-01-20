@@ -24,20 +24,37 @@ import SourceViewer from '../components/source_viewer';
 const Example = require('../components/example');
 
 const colorOptions = {
+  '': '',
   black: 'Black',
   white: 'White',
   blue: 'Blue',
 };
+
+function filterEmptyProps(props) {
+  const newProps = {};
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (props[key] !== '') {
+      newProps[key] = value;
+    } else {
+      newProps[key] = undefined;
+    }
+  });
+
+  return newProps;
+}
 
 storiesOf('Button', module)
   .addDecorator(withKnobs)
   .add('with text', () => {
     const buttonText = text('Text', 'Hello, button!');
     const props = {
-      background: select('Background Color', colorOptions, 'black'),
-      color: select('Color', colorOptions, 'white'),
+      background: select('Background Color', colorOptions, ''),
+      color: select('Color', colorOptions, ''),
       onClick: action('clicked'),
     };
+
+    const filteredProps = filterEmptyProps(props);
 
     const sources = [
       {
@@ -56,8 +73,8 @@ storiesOf('Button', module)
 
     return (
       <div>
-        <Example {...props}>
-          <Button {...props}>
+        <Example {...filteredProps}>
+          <Button {...filteredProps}>
             {buttonText}
           </Button>
         </Example>
@@ -70,10 +87,12 @@ storiesOf('Button', module)
 .add('disabled', () => {
   const buttonText = text('Text', 'Disabled button!');
   const props = {
-    background: select('Background Color', colorOptions, 'black'),
-    color: select('Color', colorOptions, 'white'),
+    background: select('Background Color', colorOptions, ''),
+    color: select('Color', colorOptions, ''),
     disabled: true,
   };
+
+  const filteredProps = filterEmptyProps(props);
 
   const sources = [
     {
@@ -93,8 +112,8 @@ storiesOf('Button', module)
 
   return (
     <div>
-      <Example {...props}>
-        <Button {...props}>
+      <Example {...filteredProps}>
+        <Button {...filteredProps}>
           {buttonText}
         </Button>
       </Example>
@@ -106,9 +125,11 @@ storiesOf('Button', module)
 .add('hover state', () => {
   const buttonText = text('Text', 'Hover state');
   const props = {
-    background: select('Background Color', colorOptions, 'blue'),
-    color: select('Color', colorOptions, 'white'),
+    background: select('Background Color', colorOptions, ''),
+    color: select('Color', colorOptions, ''),
   };
+
+  const filteredProps = filterEmptyProps(props);
 
   const sources = [
     {
@@ -127,8 +148,8 @@ storiesOf('Button', module)
 
   return (
     <div>
-      <Example {...props}>
-        <Button {...props}>
+      <Example {...filteredProps}>
+        <Button {...filteredProps}>
           {buttonText}
         </Button>
       </Example>
@@ -140,11 +161,12 @@ storiesOf('Button', module)
 .add('small button', () => {
   const buttonText = text('Text', 'Hover state');
   const props = {
-    background: select('Background Color', colorOptions, 'black'),
-    color: select('Color', colorOptions, 'white'),
+    background: select('Background Color', colorOptions, ''),
+    color: select('Color', colorOptions, ''),
     size: 'small',
-
   };
+
+  const filteredProps = filterEmptyProps(props);
 
   const sources = [
     {
@@ -164,8 +186,8 @@ storiesOf('Button', module)
 
   return (
     <div>
-      <Example {...props}>
-        <Button {...props}>
+      <Example {...filteredProps}>
+        <Button {...filteredProps}>
           {buttonText}
         </Button>
       </Example>
@@ -177,11 +199,12 @@ storiesOf('Button', module)
 .add('large button', () => {
   const buttonText = text('Text', 'Hover state');
   const props = {
-    background: select('Background Color', colorOptions, 'black'),
-    color: select('Color', colorOptions, 'white'),
+    background: select('Background Color', colorOptions, ''),
+    color: select('Color', colorOptions, ''),
     size: 'large',
-
   };
+
+  const filteredProps = filterEmptyProps(props);
 
   const sources = [
     {
@@ -201,8 +224,8 @@ storiesOf('Button', module)
 
   return (
     <div>
-      <Example {...props}>
-        <Button {...props}>
+      <Example {...filteredProps}>
+        <Button {...filteredProps}>
           {buttonText}
         </Button>
       </Example>

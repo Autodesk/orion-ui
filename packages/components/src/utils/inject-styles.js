@@ -17,13 +17,15 @@ limitations under the License.
 const { BorderRadius, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
 (function injectStyles() {
-  if (window.document.body === undefined) { return; }
-
+  if (!document.body) { return; }
   const styles = [BorderRadius, Container, Display, Hovers, Position, Skins, Spacing];
+  let textContent = '';
+
   styles.forEach((style) => {
-    const element = window.document.createElement('style');
-    element.textContent = style.css;
-    if (window.document.body === undefined) { return; }
-    window.document.body.appendChild(element);
+    textContent += style.css;
   });
+
+  const element = window.document.createElement('style');
+  element.textContent = textContent;
+  window.document.body.appendChild(element);
 }());

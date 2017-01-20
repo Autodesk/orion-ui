@@ -178,7 +178,7 @@ storiesOf('Button', module)
           background="${props.background}"
           color="${props.color}"
           onClick={action('clicked')}
-          size={${props.size}}
+          size="${props.size}"
         >
           {"${buttonText}"}
         </Button>
@@ -216,7 +216,7 @@ storiesOf('Button', module)
           background="${props.background}"
           color="${props.color}"
           onClick={action('clicked')}
-          size={${props.size}}
+          size="${props.size}"
         >
           {"${buttonText}"}
         </Button>

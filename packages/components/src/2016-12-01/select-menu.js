@@ -27,9 +27,14 @@ class SelectMenu extends Element {
   constructor() {
     super();
 
-    this.shadowEl.addEventListener('click', () => {
+    this.addEventListener('click', () => {
       this.dispatchEvent(new CustomEvent('closed'));
     });
+  }
+
+  connectedCallback() {
+    // Add the popover
+    // Set its content
 
     this.popover = this.shadowRoot.getElementById('popover');
     this.popover.addEventListener('clickedAway', () => {

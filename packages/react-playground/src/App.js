@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import '../vendor/custom-elements-polyfill';
-import { Button } from '@orion-ui/react/lib/2016-12-01';
+import { Button, Select } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -27,7 +27,7 @@ class App extends React.Component {
       disabled: false,
     };
 
-    ['handleClick', 'toggleDisabled', 'setSize'].forEach((fn) => {
+    ['handleClick', 'toggleDisabled'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
 
@@ -46,10 +46,6 @@ class App extends React.Component {
     this.setState({ disabled: !this.state.disabled });
   }
 
-  setSize(event) {
-    // Set button size
-  }
-
   render() {
     return (
       <div className="App">
@@ -60,6 +56,7 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
           <input />
+          <Select options={this.buttonSizes} />
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <Button skin="black" size={this.state.size} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </p>

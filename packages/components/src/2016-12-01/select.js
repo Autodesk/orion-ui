@@ -29,13 +29,20 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
 
     this.addEventListener('keydown', this._handleKeydown);
-    this.shadowEl.addEventListener('click', () => {
+    this.addEventListener('click', () => {
       const nextState = SelectState.activated(this.state);
       this.dispatchEvent(new CustomEvent('change', {
         detail: { type: 'activated', state: nextState },
       }));
     });
     this.addEventListener('blur', this._handleBlur);
+  }
+
+  connectedCallback() {
+    const button = document.createElement('orion-button');
+    button.skin = 'black';
+    button.textContent = 'Select';
+    this.appendChild(button);
   }
 
   _handleKeydown(event) {
@@ -117,13 +124,6 @@ class Select extends Element {
     super._render();
   }
 }
-
-Select.prototype.shadowSpec = {
-  innerHTML: `
-    <orion-button background="black" color="white">Select</orion-button>
-  `,
-  props: {},
-};
 
 Registry.define('orion-select', Select);
 

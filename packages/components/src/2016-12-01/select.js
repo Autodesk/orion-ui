@@ -21,28 +21,68 @@ const Element = require('./element');
 const SelectState = require('./select-state.js');
 
 const Registry = require('../utils/private-registry.js');
+const applyProps = require('../utils/apply-props');
 
 class Select extends Element {
   constructor() {
     super();
 
     this.state = SelectState.getInitialState();
+    this.display = 'inline-block';
 
-    this.addEventListener('keydown', this._handleKeydown);
-    this.addEventListener('click', () => {
-      const nextState = SelectState.activated(this.state);
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: { type: 'activated', state: nextState },
-      }));
+    ['_handleKeydown', '_handleBlur', '_activate'].forEach((handler) => {
+      this[handler] = this[handler].bind(this);
     });
-    this.addEventListener('blur', this._handleBlur);
+  }
+
+  set options(newOptions) {
+    this.state.options = newOptions;
+    this._queueRender();
+  }
+
+  set open(newValue) {
+    this.state.open = newValue;
+    this._queueRender();
   }
 
   connectedCallback() {
-    const button = document.createElement('orion-button');
-    button.skin = 'black';
-    button.textContent = 'Select';
-    this.appendChild(button);
+    this._ensureButton();
+    this._addListeners();
+  }
+
+  disconnectedCallback() {
+    this._removeListeners();
+  }
+
+  _ensureButton() {
+    if (this.button !== undefined) { return; }
+
+    this.button = document.createElement('orion-button');
+    applyProps(this.button, {
+      skin: 'black',
+      textContent: 'Select',
+    });
+
+    this.appendChild(this.button);
+  }
+
+  _addListeners() {
+    this.addEventListener('keydown', this._handleKeydown);
+    this.addEventListener('click', this._activate);
+    this.button.addEventListener('blur', this._handleBlur);
+  }
+
+  _removeListeners() {
+    this.removeEventListener('keydown', this._handleKeydown);
+    this.removeEventListener('click', this._activate);
+    this.button.removeEventListener('blur', this._handleBlur);
+  }
+
+  _activate() {
+    const nextState = SelectState.activated(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { type: 'activated', state: nextState },
+    }));
   }
 
   _handleKeydown(event) {
@@ -86,8 +126,12 @@ class Select extends Element {
     }));
   }
 
-  initMenu() {
+  _ensureMenu() {
+    if (this.menu !== undefined) { return; }
+
     this.menu = document.createElement('orion-select-menu');
+    this.appendChild(this.menu);
+
     this.menu.addEventListener('closed', () => {
       const nextState = SelectState.deactivated(this.state);
       this.dispatchEvent(new CustomEvent('change', {
@@ -99,28 +143,17 @@ class Select extends Element {
     });
   }
 
-  set options(newOptions) {
-    this.state.options = newOptions;
-    this._queueRender();
-  }
-
-  set open(newValue) {
-    this.state.open = newValue;
-    this._queueRender();
-  }
-
   _render() {
-    if (this.state.open) {
-      if (typeof this.menu === 'undefined') { this.initMenu(); }
+    this._ensureMenu();
 
-      this.menu.options = this.state.options;
-      this.menu.top = `${this.offsetTop + this.offsetHeight}px`;
-      this.menu.left = `${this.offsetLeft}px`;
-      this.menu.width = `${this.offsetWidth}px`;
-      document.body.appendChild(this.menu);
-    } else if (typeof this.menu !== 'undefined') {
-      this.menu.remove();
-    }
+    applyProps(this.menu, {
+      open: this.state.open,
+      options: this.state.options,
+      top: `${this.offsetTop + this.offsetHeight}px`,
+      left: `${this.offsetLeft}px`,
+      width: `${this.offsetWidth}px`,
+    });
+
     super._render();
   }
 }

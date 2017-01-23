@@ -18,20 +18,13 @@ require('../../vendor/es5-custom-element-shim.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
 const Element = require('./element.js');
+const ButtonState = require('./button-state.js');
 
 class SelectOption extends Element {
   constructor() {
     super();
 
-    this.display = 'block';
-
-    this.shadowEl.addEventListener('change', (event) => {
-      applyProps(this.shadowEl, event.detail.state);
-    });
-
-    this.addEventListener('change', (event) => {
-      applyProps(this, event.detail.state);
-    });
+    this._passButtonState = this._passButtonState.bind(this);
   }
 
   set label(newValue) {
@@ -39,16 +32,41 @@ class SelectOption extends Element {
     this._queueRender();
   }
 
+  connectedCallback() {
+    this._ensureButton();
+    this.button.addEventListener('change', this._passButtonState);
+  }
+
+  disconnectedCallback() {
+    applyProps(this.button, ButtonState.getInitialState());
+    this.button.removeEventListener('change', this._passButtonState);
+  }
+
+  _passButtonState(event) {
+    applyProps(this.button, event.detail.state);
+  }
+
+  _ensureButton() {
+    if (this.button !== undefined) { return; }
+
+    this.button = document.createElement('orion-button');
+    applyProps(this.button, {
+      display: 'block',
+      'border-radius': '0',
+      size: 'small',
+    });
+
+    this.appendChild(this.button);
+  }
+
   _render() {
-    this.shadowEl.textContent = this.state.label;
+    if (this.button !== undefined) {
+      this.button.textContent = this.state.label;
+    }
+
     super._render();
   }
 }
-
-SelectOption.prototype.shadowSpec = {
-  innerHTML: '<orion-button border-radius="0" display="block" size="small"></orion-button>',
-  props: {},
-};
 
 Registry.define('orion-select-option', SelectOption);
 

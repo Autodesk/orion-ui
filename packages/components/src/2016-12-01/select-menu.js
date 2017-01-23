@@ -30,22 +30,8 @@ class SelectMenu extends Element {
     this.addEventListener('click', () => {
       this.dispatchEvent(new CustomEvent('closed'));
     });
-  }
 
-  connectedCallback() {
-    // Add the popover
-    // Set its content
-
-    this.popover = this.shadowRoot.getElementById('popover');
-    this.popover.addEventListener('clickedAway', () => {
-      this.dispatchEvent(new CustomEvent('closed'));
-    });
-
-    this.list = this.shadowRoot.getElementById('list');
-    applyProps(this.list, {
-      itemTagname: 'orion-select-option',
-      container: 'column',
-    });
+    this._close = this._close.bind(this);
   }
 
   set options(newOptions) {
@@ -68,23 +54,69 @@ class SelectMenu extends Element {
     this._queueRender();
   }
 
+  set open(val) {
+    this.state.open = val;
+    this._queueRender();
+  }
+
+  connectedCallback() {
+    this._addPopoverHandlers();
+  }
+
+  disconnectedCallback() {
+    this._removePopoverHandlers();
+  }
+
+  _addPopoverHandlers() {
+    this._ensurePopover();
+
+    this.popover.addEventListener('clickedAway', this._close);
+  }
+
+  _ensurePopover() {
+    this._ensureList();
+    if (this.popover !== undefined) { return; }
+
+    this.popover = document.createElement('orion-popover');
+
+    this.appendChild(this.popover);
+  }
+
+  _ensureList() {
+    if (this.list !== undefined) { return; }
+
+    this.list = document.createElement('orion-list');
+
+    applyProps(this.list, {
+      itemTagname: 'orion-select-option',
+      container: 'column',
+    });
+  }
+
+  _removePopoverHandlers() {
+    this.popover.removeEventListener('clickedAway', this._close);
+  }
+
+  _close() {
+    this.dispatchEvent(new CustomEvent('closed'));
+  }
+
   _render() {
-    this.list.items = this.state.options;
-    this.popover.top = this.state.top;
-    this.popover.left = this.state.left;
-    this.popover.width = this.state.width;
+    applyProps(this.popover, {
+      top: this.state.top,
+      left: this.state.left,
+      width: this.state.width,
+      content: this.list,
+      open: this.state.open,
+    });
+
+    applyProps(this.list, {
+      items: this.state.options,
+    });
+
     super._render();
   }
 }
-
-SelectMenu.prototype.shadowSpec = {
-  innerHTML: `
-    <orion-popover id="popover">
-      <orion-list id="list"></orion-list>
-    </orion-popover>
-  `,
-  props: {},
-};
 
 Registry.define('orion-select-menu', SelectMenu);
 

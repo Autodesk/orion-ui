@@ -19,6 +19,7 @@ import { withKnobs, text, select, number, boolean } from '@kadira/storybook-addo
 import React from 'react';
 import { Select } from '../../react/lib/2016-12-01';
 import SourceViewer from '../components/source_viewer';
+import Example from '../components/example';
 
 storiesOf('Select', module)
   .addDecorator(withKnobs)
@@ -27,8 +28,8 @@ storiesOf('Select', module)
       open: boolean('Open', false),
     };
     const options = [
-      { value: 'one', label: 'One' },
-      { value: 'two', label: 'Two' },
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
     ];
 
     const sources = [
@@ -623,15 +624,9 @@ angular.module('app', [])
   })
   .add('interactive', () => {
     const options = [
-      { value: 'one', label: 'One' },
-      { value: 'two', label: 'Two' },
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
     ];
-    let selectState = {
-      open: false,
-    };
-    function onChange(event) {
-      selectState = event.state;
-    }
     const sources = [
       {
         label: 'React',
@@ -713,7 +708,9 @@ angular.module('app', [Select.moduleName])
 
     return (
       <div>
-        <Select options={options} open={selectState.open} onChange={onChange} />
+        <Example>
+          <Select options={options} />
+        </Example>
         <SourceViewer sources={sources} />
       </div>
     );

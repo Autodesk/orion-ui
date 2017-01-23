@@ -17,6 +17,7 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 const Element = require('./element');
 const Registry = require('../utils/private-registry.js');
+const clearChildren = require('../utils/clear-children.js');
 const PopoverState = require('./popover-state.js');
 
 class Popover extends Element {
@@ -25,12 +26,7 @@ class Popover extends Element {
 
     this.state = PopoverState.getInitialState();
 
-    this.clickTrap = this.shadowRoot.getElementById('click-trap');
-    this.content = this.shadowRoot.getElementById('content');
-
-    this.clickTrap.addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('clickedAway'));
-    });
+    this._close = this._close.bind(this);
   }
 
   set top(val) {
@@ -48,21 +44,83 @@ class Popover extends Element {
     this._queueRender();
   }
 
+  set content(val) {
+    this.state.content = val;
+    this._queueRender();
+  }
+
+  set open(val) {
+    this.state.open = val;
+    this._queueRender();
+  }
+
+  disconnectedCallback() {
+    if (this.clickTrap !== undefined) {
+      this.clickTrap.removeEventListener('click', this._close);
+    }
+    this._removeChildren();
+  }
+
+  _addClickTrapListeners() {
+    this._ensureClickTrap();
+
+    this.clickTrap.addEventListener('click', this._close);
+  }
+
+  _ensureClickTrap() {
+    if (this.clickTrap !== undefined) { return; }
+
+    this.clickTrap = document.createElement('orion-element');
+    this.clickTrap.position = 'cover';
+  }
+
+  _ensureFrame() {
+    if (this.frame !== undefined) { return; }
+
+    this.frame = document.createElement('orion-element');
+    this.frame.position = 'absolute';
+  }
+
+  _close() {
+    this.dispatchEvent(new CustomEvent('clickedAway'));
+  }
+
+  _removeChildren() {
+    if (this.frame !== undefined) {
+      this.frame.remove();
+    }
+
+    if (this.clickTrap !== undefined) {
+      this.clickTrap.remove();
+    }
+  }
+
   _render() {
-    this.content.shadowEl.style.top = this.state.top;
-    this.content.shadowEl.style.left = this.state.left;
-    this.content.shadowEl.style.width = this.state.width;
+    if (this.state.open) {
+      this._addClickTrapListeners();
+      this._ensureFrame();
+
+      this.frame.style.top = this.state.top;
+      this.frame.style.left = this.state.left;
+      this.frame.style.width = this.state.width;
+
+      this._setContent();
+
+      document.body.appendChild(this.clickTrap);
+      document.body.appendChild(this.frame);
+    } else {
+      this._removeChildren();
+    }
+
     super._render();
   }
-}
 
-Popover.prototype.shadowSpec = {
-  innerHTML: `
-    <orion-element id="click-trap" position="cover"></orion-element>
-    <orion-element id="content" position="absolute"><slot /></orion-element>
-  `,
-  props: {},
-};
+  _setContent() {
+    clearChildren(this.frame);
+
+    this.frame.appendChild(this.state.content);
+  }
+}
 
 Registry.define('orion-popover', Popover);
 

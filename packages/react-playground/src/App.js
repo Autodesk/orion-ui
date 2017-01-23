@@ -32,9 +32,9 @@ class App extends React.Component {
     });
 
     this.buttonSizes = [
-      { label: 'Small', value: 'small' },
-      { label: 'Medium', value: 'medium' },
-      { label: 'Large', value: 'large' },
+      { label: 'Small', value: 'small', key: 1 },
+      { label: 'Medium', value: 'medium', key: 2 },
+      { label: 'Large', value: 'large', key: 3 },
     ];
   }
 

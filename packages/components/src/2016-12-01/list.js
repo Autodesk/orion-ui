@@ -37,14 +37,19 @@ class List extends Element {
   }
 
   _render() {
-    this._clearShadowChildren();
+    // TODO: raise warning if no key
+    // TODO: raise warning if duplicate key
 
-    const tagname = this.state.itemTagname;
     this.state.items.forEach((item) => {
-      const itemEl = document.createElement(tagname);
+      let itemEl = this.querySelector(`[data-key="${item.key}"]`);
+      if (itemEl === null) {
+        itemEl = document.createElement(this.state.itemTagname);
+        itemEl.setAttribute('data-key', item.key);
+        this.appendChild(itemEl);
+      }
       applyProps(itemEl, item);
-      this.shadowEl.appendChild(itemEl);
     });
+
     super._render();
   }
 }

@@ -1,5 +1,5 @@
 import { deepEqual } from 'assert';
-import { TokenizerState, getNextToken, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, expressionAttr, expression, spaces, word, EOF, EOF_CHARACTER } from './tokenizer';
+import { TokenizerState, getNextToken, getNextLocation, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, expressionAttr, expression, spaces, word, EOF, EOF_CHARACTER } from './tokenizer';
 
 const integration = `
   <!--awesome comments-->
@@ -17,51 +17,108 @@ const integration = `
   </orion>
 `;
 
-
 const actualIntegration = getTokens(integration);
 
 const expectedIntegration = [
-  character('\n'),
-  ...spaces(2),
-  comment('awesome comments'),
-  character('\n'),
-  ...spaces(2),
-  startTag('orion', [
-    jsonAttr('something'),
-    jsonAttr('number', '10'),
-    jsonAttr('string', `"<hello world='thing' />"`),
-    jsonAttr('array', `["item1", ["item2", "item3"], "item4"]`),
-    jsonAttr('object', `{"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}`),
-    expressionAttr('expression', 'hello()')
-  ]),
-  character('\n'),
-  ...spaces(4),
-  comment('take each item and convert it to a text item'),
-  character('\n'),
-  ...spaces(4),
-  startTag('map', [
-    jsonAttr('collection', '["item1", "item2"]')
-  ], false, ['item', 'index']),
-  character('\n'),
-  ...spaces(6),
-  startTag('text', [
-    jsonAttr('size', '1')
-  ]),
-  expression('item'),
-  character(' '),
-  expression('index + 1'),
-  endTag('text'),
-  character('\n'),
-  ...spaces(4),
-  endTag('map'),
-  character('\n'),
-  ...spaces(2),
-  endTag('orion'),
-  character('\n'),
-  EOF()
+  character('\n', 1, 1),
+  ...spaces(2, 2, 1),
+  comment('awesome comments', 2, 3, 2, 25),
+  character('\n', 2, 26),
+  ...spaces(2, 3, 1),
+  startTag('orion', {
+    attributes: [
+      jsonAttr('something'),
+      jsonAttr('number', '10'),
+      jsonAttr('string', `"<hello world='thing' />"`),
+      jsonAttr('array', `["item1", ["item2", "item3"], "item4"]`),
+      jsonAttr('object', `{"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}`),
+      expressionAttr('expression', 'hello()')
+    ],
+    location: {
+      start: { line: 3, column: 3 },
+      end: { line: 9, column: 25 }
+    }
+  }),
+  character('\n', 9, 26),
+  ...spaces(4, 10, 1),
+  comment('take each item and convert it to a text item', 10, 5, 10, 55),
+  character('\n', 10, 56),
+  ...spaces(4, 11, 1),
+  startTag('map', {
+    attributes: [
+      jsonAttr('collection', '["item1", "item2"]')
+    ],
+    blockParameters: ['item', 'index'],
+    location: {
+      start: { line: 11, column: 5 },
+      end: { line: 11, column: 54 }
+    }
+  }),
+  character('\n', 11, 55),
+  ...spaces(6, 12, 1),
+  startTag('text', {
+    attributes: [
+      jsonAttr('size', '1')
+    ],
+    location: {
+      start: { line: 12, column: 7 },
+      end: { line: 12, column: 19 }
+    }
+  }),
+  expression('item', 12, 20, 12, 25),
+  character(' ', 12, 26),
+  expression('index + 1', 12, 27, 12, 37),
+  endTag('text', {
+    start: { line: 12, column: 38 },
+    end: { line: 12, column: 44 }
+  }),
+  character('\n', 12, 45),
+  ...spaces(4, 13, 1),
+  endTag('map', {
+    start: { line: 13, column: 5 },
+    end: { line: 13, column: 10 }
+  }),
+  character('\n', 13, 11),
+  ...spaces(2, 14, 1),
+  endTag('orion', {
+    start: { line: 14, column: 3 },
+    end: { line: 14, column: 10 }
+  }),
+  character('\n', 14, 11),
+  EOF(15, 1)
 ];
 
 deepEqual(actualIntegration, expectedIntegration);
+
+/**
+ * locations
+ */
+
+// \n increments line and resets column
+{
+  const prev = initWorld();
+  prev.currentLine = 1;
+  prev.currentColumn = 2;
+
+  const next = initWorld();
+  next.currentLine = 2;
+  next.currentColumn = 1;
+
+  deepEqual(getNextLocation(prev, '\n'), next);
+}
+
+// everything else increments column
+['a', 'b', ' ', '\t'].forEach(char => {
+  const prev = initWorld();
+  prev.currentLine = 1;
+  prev.currentColumn = 2;
+
+  const next = initWorld();
+  next.currentLine = 1;
+  next.currentColumn = 3;
+
+  deepEqual(getNextLocation(prev, char), next);
+});
 
 /**
  * data state
@@ -82,10 +139,14 @@ deepEqual(actualIntegration, expectedIntegration);
 {
   const prev = initWorld();
   prev.state = 'data';
+  prev.currentLine = 1;
+  prev.currentColumn = 2;
 
   const next = initWorld();
   next.state = 'expression';
-  next.currentToken = expression('');
+  next.currentLine = 1;
+  next.currentColumn = 2;
+  next.currentToken = expression('', prev.currentLine, prev.currentColumn);
 
   deepEqual(getNextToken(prev, '{'), next);
 }
@@ -94,7 +155,7 @@ deepEqual(actualIntegration, expectedIntegration);
 {
   const prev = initWorld();
   const next = initWorld();
-  next.tokens = [EOF()];
+  next.tokens = [EOF(1, 1)];
   deepEqual(getNextToken(prev, EOF_CHARACTER), next);
 }
 
@@ -102,8 +163,14 @@ deepEqual(actualIntegration, expectedIntegration);
 {
   ['\n', 'f', '1', ' '].forEach(char => {
     const prev = initWorld();
+    prev.currentLine = 1;
+    prev.currentColumn = 2;
+
     const next = initWorld();
-    next.tokens = [character(char)];
+    next.currentLine = 1;
+    next.currentColumn = 2;
+
+    next.tokens = [character(char, prev.currentLine, prev.currentColumn)];
     deepEqual(getNextToken(prev, char), next);
   });
 }
@@ -161,15 +228,21 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'expression';
-  prev.currentToken = expression('abc123');
+  prev.currentToken = expression('abc123', 1, 2);
+  prev.currentLine = 1;
+  prev.currentColumn = 7;
   prev.tokens = [character(' ')];
 
   const next = initWorld();
   next.state = 'data';
   next.currentToken = null;
-  next.tokens = [character(' '), expression('abc123')];
+  next.currentLine = 1;
+  next.currentColumn = 7;
+  next.tokens = [character(' '), expression('abc123', 1, 2, 1, 7)];
 
-  deepEqual(getNextToken(prev, '}'), next);
+  const result = getNextToken(prev, '}');
+
+  deepEqual(result, next);
 }
 
 // anything else append value to current expression token
@@ -217,24 +290,40 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'tag-open';
+  prev.currentLine = 1;
+  prev.currentColumn = 2;
 
   const next = initWorld();
   next.state = 'tag-name';
-  next.currentToken = startTag('a')
+  next.currentLine = 1;
+  next.currentColumn = 2;
 
-  deepEqual(getNextToken(prev, 'A'), next);
+  next.currentToken = startTag('a', {
+    location: {
+      start: { line: 1, column: 1 },
+      end: { line: 1, column: 1 }
+    }
+  })
+
+  const actual = getNextToken(prev, 'A');
+
+  deepEqual(actual, next);
 }
 
 // Lowercase ASCII creates new start tag as well
 {
   const prev = initWorld();
+  prev.currentColumn = 2;
   prev.state = 'tag-open';
 
   const next = initWorld();
   next.state = 'tag-name';
-  next.currentToken = startTag('a')
+  next.currentColumn = 2;
+  next.currentToken = startTag('a');
 
-  deepEqual(getNextToken(prev, 'a'), next);
+  const actual = getNextToken(prev, 'a');
+
+  deepEqual(actual, next);
 }
 
 // non ascii characters are parse errors
@@ -257,18 +346,29 @@ states.forEach(state => {
 // and switch to comment-start state
 {
   const prev = initWorld();
+  prev.currentLine = 2;
+  prev.currentColumn = 10;
   prev.state = 'markup-declaration-open';
 
   const next1 = initWorld();
+  next1.currentLine = 2;
+  next1.currentColumn = 10;
   next1.buffer = '-';
   next1.state = 'markup-declaration-open';
 
   deepEqual(getNextToken(prev, '-'), next1);
 
   const next2 = initWorld();
+  next2.currentLine = 2;
+  next2.currentColumn = 10;
   next2.buffer = '';
   next2.state = 'comment-start';
-  next2.currentToken = comment('');
+
+  const startLine = 2;
+  // start column is offset backwards by 3;
+  const startColumn = 7;
+
+  next2.currentToken = comment('', startLine, startColumn);
 
   deepEqual(getNextToken(next1, '-'), next2);
 }
@@ -435,12 +535,16 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'comment-end';
-  prev.currentToken = comment('hello');
+  prev.currentLine = 2;
+  prev.currentColumn = 10;
+  prev.currentToken = comment('hello', 1, 0);
 
   const next = initWorld();
   next.state = 'data';
+  next.currentLine = 2;
+  next.currentColumn = 10;
   next.currentToken = null;
-  next.tokens = [comment('hello')];
+  next.tokens = [comment('hello', 1, 0, 2, 10)];
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -479,13 +583,22 @@ states.forEach(state => {
 // create new end tag token, set its tag name to lowercase version, switch to tag name state
 {
   const prev = initWorld();
+  prev.currentLine = 10;
+  prev.currentColumn = 15;
   prev.state = 'end-tag-open';
 
   const next = initWorld();
+  next.currentLine = 10;
+  next.currentColumn = 15;
   next.state = 'tag-name';
-  next.currentToken = endTag('a')
+  next.currentToken = endTag('a', {
+    start: { line: 10, column: 13 },
+    end: { line: 1, column: 1 }
+  })
 
-  deepEqual(getNextToken(prev, 'A'), next);
+  const actual = getNextToken(prev, 'A');
+
+  deepEqual(actual, next);
 }
 
 // Lowercase ASCII
@@ -493,12 +606,16 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'end-tag-open';
+  prev.currentColumn = 3;
 
   const next = initWorld();
   next.state = 'tag-name';
+  next.currentColumn = 3;
   next.currentToken = endTag('a')
 
-  deepEqual(getNextToken(prev, 'a'), next);
+  const actual = getNextToken(prev, 'a');
+
+  deepEqual(actual, next);
 }
 
 // Anything else, parse error
@@ -545,13 +662,27 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'tag-name';
-  prev.currentToken = startTag('foo');
+  prev.currentLine = 10;
+  prev.currentColumn = 15;
+  prev.currentToken = startTag('foo', {
+    location: {
+      start: { line: 10, column: 10 },
+      end: { line: 1, column: 1 }
+    }
+  });
   prev.tokens = [character('a')]
 
   const next = initWorld();
   next.state = 'data';
+  next.currentLine = 10;
+  next.currentColumn = 15;
   next.currentToken = null;
-  next.tokens = [character('a'), startTag('foo')];
+  next.tokens = [character('a'), startTag('foo', {
+    location: {
+      start: { line: 10, column: 10 },
+      end: { line: 10, column: 15 }
+    }
+  })];
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -596,7 +727,7 @@ states.forEach(state => {
   const next = initWorld();
   next.state = 'data';
   next.currentToken = null;
-  next.tokens = [character('a'), startTag('a', [], true)];
+  next.tokens = [character('a'), startTag('a', { selfClosing: true })];
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -666,9 +797,11 @@ states.forEach(state => {
   const next = initWorld();
   next.state = 'attribute-name';
   next.currentAttribute = jsonAttr('b', '');
-  next.currentToken = startTag('a', [
-    jsonAttr('b', '')
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('b', '')
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'B'), next);
 }
@@ -706,9 +839,11 @@ states.forEach(state => {
   const next = initWorld();
   next.state = 'attribute-name';
   next.currentAttribute = jsonAttr('b', '');
-  next.currentToken = startTag('a', [
-    jsonAttr('b', '')
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('b', '')
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'b'), next);
 }
@@ -765,7 +900,7 @@ states.forEach(state => {
   prev.currentToken = startTag('a');
 
   const next = initWorld();
-  next.currentToken = startTag('a', [], false, [char]);
+  next.currentToken = startTag('a', { blockParameters: [char] });
   next.state = 'block-parameter';
 
   deepEqual(getNextToken(prev, char), next);
@@ -793,11 +928,11 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'block-parameter';
-  prev.currentToken = startTag('a', [], false, ['a']);
+  prev.currentToken = startTag('a', { blockParameters: ['a'] });
 
   const next = initWorld();
   next.state = 'block-parameter';
-  next.currentToken = startTag('a', [], false, ['ab']);
+  next.currentToken = startTag('a', { blockParameters: ['ab'] });
 
   deepEqual(getNextToken(prev, 'b'), next);
 }
@@ -818,12 +953,12 @@ states.forEach(state => {
 {
   const prev = initWorld();
   prev.state = 'block-parameter';
-  prev.currentToken = startTag('a', [], false, ['a']);
+  prev.currentToken = startTag('a', { blockParameters: ['a'] });
 
   const next = initWorld();
   next.state = 'data';
   next.currentToken = null;
-  next.tokens = [startTag('a', [], false, ['a'])];
+  next.tokens = [startTag('a', { blockParameters: ['a'] })];
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -883,18 +1018,22 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'attribute-name';
   prev.currentAttribute = jsonAttr('b', '');
-  prev.currentToken = startTag('a', [
-    jsonAttr('b', '')
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('b', '')
+    ]
+  });
   prev.tokens = [character('a')];
 
   const next = initWorld();
   next.state = 'data';
   next.currentAttribute = null;
   next.currentToken = null;
-  next.tokens = [character('a'), startTag('a', [
-    jsonAttr('b', '')
-  ])];
+  next.tokens = [character('a'), startTag('a', {
+    attributes: [
+      jsonAttr('b', '')
+    ]
+  })];
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -904,16 +1043,20 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'attribute-name';
   prev.currentAttribute = jsonAttr('b', '');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-name';
   next.currentAttribute = jsonAttr('ba', '');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'A'), next);
 }
@@ -936,16 +1079,20 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'attribute-name';
   prev.currentAttribute = jsonAttr('b', '');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-name';
   next.currentAttribute = jsonAttr('bq', '');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'q'), next);
 }
@@ -992,18 +1139,22 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'after-attribute-name';
   prev.currentAttribute = jsonAttr('b', '');
-  prev.currentToken = startTag('a', [
-    jsonAttr('b', '')
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('b', '')
+    ]
+  });
   prev.tokens = [character('a')];
 
   const next = initWorld();
   next.state = 'data';
   next.currentAttribute = null;
   next.currentToken = null;
-  next.tokens = [character('a'), startTag('a', [
-    jsonAttr('b', '')
-  ])];
+  next.tokens = [character('a'), startTag('a', {
+    attributes: [
+      jsonAttr('b', '')
+    ]
+  })];
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -1017,17 +1168,21 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'after-attribute-name';
   prev.currentAttribute = null;
-  prev.currentToken = startTag('a', [
-    jsonAttr('prev', 'foo')
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('prev', 'foo')
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-name';
   next.currentAttribute = jsonAttr('a', '');
-  next.currentToken = startTag('a', [
-    jsonAttr('prev', 'foo'),
-    jsonAttr('a', '')
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('prev', 'foo'),
+      jsonAttr('a', '')
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'A'), next);
 }
@@ -1050,17 +1205,21 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'after-attribute-name';
   prev.currentAttribute = null;
-  prev.currentToken = startTag('a', [
-    jsonAttr('prev', 'foo')
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('prev', 'foo')
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-name';
   next.currentAttribute = jsonAttr('z', '');
-  next.currentToken = startTag('a', [
-    jsonAttr('prev', 'foo'),
-    jsonAttr('z', '')
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      jsonAttr('prev', 'foo'),
+      jsonAttr('z', '')
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'z'), next);
 }
@@ -1085,16 +1244,20 @@ states.forEach(state => {
   const prev = initWorld();
   prev.state = 'before-attribute-value';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-string';
   next.currentAttribute = jsonAttr('name', '"');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '"'), next);
 }
@@ -1106,16 +1269,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'before-attribute-value';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-number';
   next.currentAttribute = jsonAttr('name', char);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, char), next);
 }
@@ -1125,16 +1292,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'before-attribute-value';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-array';
   next.currentAttribute = jsonAttr('name', '[');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '['), next);
 }
@@ -1144,16 +1315,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'before-attribute-value';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-object-or-expression';
   next.currentAttribute = jsonAttr('name');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '{'), next);
 }
@@ -1180,16 +1355,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-string';
   prev.currentAttribute = jsonAttr('name', `"something`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'after-attribute-value';
   next.currentAttribute = jsonAttr('name', `"something"`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, `"`), next);
 }
@@ -1199,16 +1378,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-string';
   prev.currentAttribute = jsonAttr('name', `"somethin`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-string';
   next.currentAttribute = jsonAttr('name', `"something`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, `g`), next);
 }
@@ -1222,16 +1405,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-number';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'before-attribute-name';
   next.currentAttribute = jsonAttr('name');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, char), next);
 });
@@ -1241,16 +1428,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-number';
   prev.currentAttribute = jsonAttr('name', '1');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'self-closing-start-tag';
   next.currentAttribute = jsonAttr('name', '1');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '/'), next);
 }
@@ -1260,16 +1451,21 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-number';
   prev.currentAttribute = jsonAttr('name', '10');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
   prev.tokens = [character('c')];
 
   const next = initWorld();
   next.state = 'data';
   next.currentAttribute = null;
   next.currentToken = null;
-  next.tokens = [character('c'), startTag('a', [jsonAttr('name', '10')])]
+  next.tokens = [character('c'), startTag('a', {
+    attributes: [
+      jsonAttr('name', '10')]
+  })]
 
   deepEqual(getNextToken(prev, '>'), next);
 }
@@ -1281,16 +1477,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-number';
   prev.currentAttribute = jsonAttr('name', '1');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-number';
   next.currentAttribute = jsonAttr('name', `1${char}`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, char), next);
 }
@@ -1321,16 +1521,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-array';
   prev.currentAttribute = jsonAttr('name', `["one", "two"`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'after-attribute-value';
   next.currentAttribute = jsonAttr('name', `["one", "two"]`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, ']'), next);
 }
@@ -1340,16 +1544,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-array';
   prev.currentAttribute = jsonAttr('name', `["one", "two`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-array';
   next.currentAttribute = jsonAttr('name', `["one", "two]`)
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, ']'), next);
 }
@@ -1360,16 +1568,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-array';
   prev.currentAttribute = jsonAttr('name', `[`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-array';
   next.currentAttribute = jsonAttr('name', `["`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '"'), next);
 }
@@ -1383,16 +1595,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-object-or-expression';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-object-or-expression';
   next.currentAttribute = jsonAttr('name');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, char), next);
 });
@@ -1405,16 +1621,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-object-or-expression';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-object';
   next.currentAttribute = jsonAttr('name', `{"`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '"'), next);
 }
@@ -1426,16 +1646,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-object-or-expression';
   prev.currentAttribute = jsonAttr('name');
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-expression';
   next.currentAttribute = expressionAttr('name', 'l');
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'l'), next);
 }
@@ -1453,16 +1677,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-object';
   prev.currentAttribute = jsonAttr('name', `{"key": "value"`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'after-attribute-value';
   next.currentAttribute = jsonAttr('name', `{"key": "value"}`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '}'), next);
 }
@@ -1472,16 +1700,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-object';
   prev.currentAttribute = jsonAttr('name', `{"`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-object';
   next.currentAttribute = jsonAttr('name', `{"}`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '}'), next);
 }
@@ -1493,16 +1725,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-object';
   prev.currentAttribute = jsonAttr('name', `{`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-object';
   next.currentAttribute = jsonAttr('name', `{ `);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, ' '), next);
 }
@@ -1516,16 +1752,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-expression';
   prev.currentAttribute = jsonAttr('name', `a`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'after-attribute-value';
   next.currentAttribute = jsonAttr('name', `a`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '}'), next);
 }
@@ -1535,16 +1775,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'attribute-value-expression';
   prev.currentAttribute = jsonAttr('name', `a`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'attribute-value-expression';
   next.currentAttribute = jsonAttr('name', `ab`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, 'b'), next);
 }
@@ -1558,16 +1802,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'after-attribute-value';
   prev.currentAttribute = jsonAttr('name', `a`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'before-attribute-name';
   next.currentAttribute = jsonAttr('name', `a`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, char), next);
 });
@@ -1577,16 +1825,20 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'after-attribute-value';
   prev.currentAttribute = jsonAttr('name', `a`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
 
   const next = initWorld();
   next.state = 'self-closing-start-tag';
   next.currentAttribute = jsonAttr('name', `a`);
-  next.currentToken = startTag('a', [
-    next.currentAttribute
-  ]);
+  next.currentToken = startTag('a', {
+    attributes: [
+      next.currentAttribute
+    ]
+  });
 
   deepEqual(getNextToken(prev, '/'), next);
 }
@@ -1596,16 +1848,22 @@ for (let i = 0; i < 10; i++) {
   const prev = initWorld();
   prev.state = 'after-attribute-value';
   prev.currentAttribute = jsonAttr('name', `a`);
-  prev.currentToken = startTag('a', [
-    prev.currentAttribute
-  ]);
+  prev.currentToken = startTag('a', {
+    attributes: [
+      prev.currentAttribute
+    ]
+  });
   prev.tokens = [character('c')];
 
   const next = initWorld();
   next.state = 'data';
   next.currentAttribute = null;
   next.currentToken = null;
-  next.tokens = [character('c'), startTag('a', [jsonAttr('name', 'a')])]
+  next.tokens = [character('c'), startTag('a', {
+    attributes: [
+      jsonAttr('name', 'a')
+    ]
+  })]
 
   deepEqual(getNextToken(prev, '>'), next);
 }

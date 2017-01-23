@@ -29,4 +29,9 @@ module.exports = {
    * Scripts for development and deployment of the project
    */
   scriptsPackageDirName: 'scripts',
+
+  /**
+   * Where we store coverage reports
+   */
+  coverageDirName: 'coverage',
 };

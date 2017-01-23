@@ -7,3 +7,4 @@ lib
 /coverage
 /gemini-report/*
 .idea/*
+/.nyc_output

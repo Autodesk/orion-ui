@@ -1,0 +1,16 @@
+{
+  "reporter": [
+    "lcov",
+    "text",
+    "html"
+  ],
+  "include": [
+    "packages/angular/**/*.js",
+    "packages/react/**/*.js",
+    "packages/scripts/**/*.js",
+    "packages/style/**/*.js"
+  ],
+  "exclude": [
+    "packages/**/vendor/**/*.js"
+  ]
+}

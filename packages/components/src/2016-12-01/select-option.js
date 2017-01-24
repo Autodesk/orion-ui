@@ -54,6 +54,8 @@ class SelectOption extends Element {
       display: 'block',
       'border-radius': '0',
       size: 'small',
+      background: 'white',
+      color: 'black',
     });
 
     this.appendChild(this.button);

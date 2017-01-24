@@ -91,6 +91,7 @@ class SelectMenu extends Element {
     applyProps(this.list, {
       itemTagname: 'orion-select-option',
       container: 'column',
+      'box-shadow': 1,
     });
   }
 

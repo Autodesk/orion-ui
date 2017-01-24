@@ -84,7 +84,7 @@ angular.module('app', [])
 
   return (
     <div>
-      <Example>
+      <Example minHeight={100}>
         <Select options={options} open={props.open} />
       </Example>
       <SourceViewer sources={sources} />

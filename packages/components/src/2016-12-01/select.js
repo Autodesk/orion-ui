@@ -61,7 +61,6 @@ class Select extends Element {
 
     this.button = document.createElement('orion-button');
     applyProps(this.button, {
-      skin: 'black',
       textContent: 'Select',
     });
 

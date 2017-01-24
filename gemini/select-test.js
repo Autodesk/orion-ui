@@ -14,18 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
-(function injectStyles() {
-  if (!document.body) { return; }
-  const styles = [BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing];
-  let textContent = '';
+gemini.suite('collapsed-select', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Select&selectedStory=collapsed')
+    .setCaptureElements(".example")
+    .capture('collapsed-select')
+});
 
-  styles.forEach((style) => {
-    textContent += style.css;
-  });
-
-  const element = window.document.createElement('style');
-  element.textContent = textContent;
-  window.document.body.appendChild(element);
-}());
+gemini.suite('expanded-select', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Select&selectedStory=expanded')
+    .setCaptureElements(".example")
+    .capture('expanded-select')
+});

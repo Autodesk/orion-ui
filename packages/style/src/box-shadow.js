@@ -14,18 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
+const css = `
+  .bsh-1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+`;
 
-(function injectStyles() {
-  if (!document.body) { return; }
-  const styles = [BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing];
-  let textContent = '';
+const attributes = ['box-shadow'];
 
-  styles.forEach((style) => {
-    textContent += style.css;
-  });
+function attributeChangedCallback(attrName, value) {
+  if (parseInt(value, 10) === 1) { return 'bsh-1'; }
+  return '';
+}
 
-  const element = window.document.createElement('style');
-  element.textContent = textContent;
-  window.document.body.appendChild(element);
-}());
+module.exports = {
+  css,
+  attributes,
+  attributeChangedCallback,
+};

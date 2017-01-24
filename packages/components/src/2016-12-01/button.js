@@ -30,20 +30,28 @@ class Button extends Element {
       color: 'white',
     };
 
-    this.state = ButtonState.getInitialState(this.defaults);
+    this.state = ButtonState.getInitialState();
 
     applyProps(this, {
       display: 'inline-block',
       'border-radius': 2,
-      skin: 'white',
       'padding-horizontal': 3,
       'padding-vertical': 2,
       pointer: true,
+      ...this.defaults,
     });
+  }
 
+  connectedCallback() {
+    this._addListeners();
+    this.setAttribute('tabIndex', 0);
+  }
+
+  _addListeners() {
     this.addEventListener('mouseenter', () => {
       if (this.state.disabled) { return; }
-      const nextState = ButtonState.enterHover(this.state);
+      let nextState = ButtonState.enterHover(this.state);
+      nextState = { hover: nextState.hover, disabled: nextState.disabled };
       this.dispatchEvent(new CustomEvent('change', {
         detail: {
           type: 'mouseenter',
@@ -54,7 +62,8 @@ class Button extends Element {
 
     this.addEventListener('mouseleave', () => {
       if (this.state.disabled) { return; }
-      const nextState = ButtonState.leaveHover(this.state);
+      let nextState = ButtonState.leaveHover(this.state);
+      nextState = { hover: nextState.hover, disabled: nextState.disabled };
       this.dispatchEvent(new CustomEvent('change', {
         detail: {
           type: 'mouseleave',
@@ -70,26 +79,24 @@ class Button extends Element {
     });
   }
 
-  set background(val) {
-    this.state.background = val || this.defaults.background;
+  set background(val = this.defaults.background) {
+    this.state.background = val;
+    this._background = val;
     this._queueRender();
   }
 
   get background() {
-    return this.state.background;
+    return this._background;
   }
 
-  set color(val) {
-    this.state.color = val || this.defaults.color;
+  set color(val = this.defaults.color) {
+    this.state.color = val;
+    this._color = val;
     this._queueRender();
   }
 
   get color() {
-    return this.state.color;
-  }
-
-  connectedCallback() {
-    this.setAttribute('tabIndex', 0);
+    return this._color;
   }
 
   set disabled(val) {
@@ -125,33 +132,20 @@ class Button extends Element {
     this._queueRender();
   }
 
-  set skin(val) {
-    switch (val) {
-      case 'black':
-        this._background = 'black';
-        this._color = 'white';
-        break;
-      default:
-        this._background = 'white';
-        this._color = 'black';
-        break;
-    }
-  }
-
   get hover() {
     return this.state.hover;
   }
 
   _render() {
     if (this.state.disabled) {
-      this.background = 'grey';
-      this.color = 'white';
+      this.state.background = 'grey';
+      this.state.color = 'white';
     } else if (this.state.hover) {
-      this.background = 'blue';
-      this.color = 'white';
+      this.state.background = 'blue';
+      this.state.color = 'white';
     } else {
-      this.background = this._background;
-      this.color = this._color;
+      this.state.background = this._background;
+      this.state.color = this._color;
     }
 
     switch (this.state.size) {

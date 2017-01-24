@@ -5,17 +5,18 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
-    "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright",
-    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright",
     "build": "lerna run build",
     "clean": "node ./packages/scripts/orion.js clean",
     "compile": "node ./packages/scripts/orion.js compile",
-    "deploy-snapshot": "node ./packages/scripts/orion.js deploy --build-id $CIRCLE_BUILD_NUM",
-    "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
     "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds",
+    "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
+    "deploy-snapshot": "node ./packages/scripts/orion.js deploy --build-id $CIRCLE_BUILD_NUM",
     "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./",
+    "prepublish": "bower install",
     "specs": "node ./packages/scripts/orion.js specs",
-    "specs-ci": "node ./packages/scripts/orion.js specs --sauce --report"
+    "specs-ci": "node ./packages/scripts/orion.js specs --sauce --report",
+    "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright",
+    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright"
   },
   "repository": {
     "type": "git",

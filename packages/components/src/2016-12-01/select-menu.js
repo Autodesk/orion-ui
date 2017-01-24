@@ -27,6 +27,7 @@ class SelectMenu extends Element {
   constructor() {
     super();
 
+    this.MENU_WIDTH = '100px';
     this.addEventListener('click', () => {
       this.dispatchEvent(new CustomEvent('closed'));
     });
@@ -105,7 +106,7 @@ class SelectMenu extends Element {
     applyProps(this.popover, {
       top: this.state.top,
       left: this.state.left,
-      width: this.state.width,
+      width: this.MENU_WIDTH,
       content: this.list,
       open: this.state.open,
     });

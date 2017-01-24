@@ -27,6 +27,8 @@ class Select extends Element {
   constructor() {
     super();
 
+    this.BUTTON_HEIGHT = 35;
+
     this.state = SelectState.getInitialState();
     this.display = 'inline-block';
 
@@ -149,9 +151,8 @@ class Select extends Element {
     applyProps(this.menu, {
       open: this.state.open,
       options: this.state.options,
-      top: `${this.offsetTop + this.offsetHeight}px`,
+      top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
-      width: `${this.offsetWidth}px`,
     });
 
     super._render();

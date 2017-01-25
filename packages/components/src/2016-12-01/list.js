@@ -24,8 +24,6 @@ class List extends Element {
     super();
 
     this.display = 'block';
-
-    this.state = { items: [] };
   }
 
   set items(newOptions) {
@@ -34,7 +32,7 @@ class List extends Element {
   }
 
   get items() {
-    return this.state.items;
+    return this.state.items || [];
   }
 
   set itemTagname(newValue) {
@@ -50,7 +48,7 @@ class List extends Element {
     // TODO: raise warning if no key
     // TODO: raise warning if duplicate key
 
-    this.state.items.forEach((item) => {
+    this.items.forEach((item) => {
       let itemEl = this.querySelector(`[data-key="${item.key}"]`);
       if (itemEl === null) {
         itemEl = document.createElement(this.state.itemTagname);

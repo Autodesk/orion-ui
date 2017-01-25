@@ -26,10 +26,7 @@ const styles = [BorderRadius, BoxShadow, Container, Display, Hovers, Position, S
 class Element extends HTMLElement {
   constructor() {
     super();
-
     this.state = {};
-
-    this._queueRender();
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {

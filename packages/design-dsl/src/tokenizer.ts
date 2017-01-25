@@ -103,6 +103,15 @@ export interface World {
   tokens: Token[];
 }
 
+/**
+ * Convert OML source to an array of tokens
+ *
+ * - Split a source string into individual characters
+ * - Start from an initial world state (initWorld()) and
+ *   reduce over each character over the following transformations:
+ *   - getNextToken(world, char)
+ *   - getNextLocation(world, char)
+ */
 export function getTokens(source: string): Token[] {
   const world = source
     .split('')

@@ -23,6 +23,8 @@ class List extends Element {
   constructor() {
     super();
 
+    this.display = 'block';
+
     this.state = { items: [] };
   }
 

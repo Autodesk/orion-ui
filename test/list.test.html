@@ -38,19 +38,49 @@ limitations under the License.
         list = fixture('list');
         list.itemTagname = 'span';
         list.items = [
-          { textContent: 'Foo' },
-          { textContent: 'Bar' },
-          { textContent: 'Baz' },
+          { textContent: 'Foo', key: 0 },
+          { textContent: 'Bar', key: 1 },
+          { textContent: 'Baz', key: 2 },
         ]
+        list._render();
       });
 
       it('renders each item', () => {
-        expect(list.items.length).to.eq(3);
-        expect(list.itemTagname).to.eq('span');
         expect(list.innerText).to.have.string('Foo');
         expect(list.innerText).to.have.string('Bar');
         expect(list.innerText).to.have.string('Baz');
-        expect(list.innerText).to.have.string('Box');
+      });
+
+      context('adding an item', () => {
+        beforeEach(() => {
+          list.items = list.items.concat([{ textContent: 'Bax', key: 4 }]);
+          list._render();
+        });
+
+        it('adds the item to the dom', () => {
+          expect(list.innerText).to.have.string('Bax');
+        });
+      });
+
+      context('changing an item', () => {
+        beforeEach(() => {
+          list.items = list.items.map((item) => {
+            item.textContent = item.textContent + 'bi';
+            return item;
+          });
+          list._render();
+        });
+
+        it('updates item in the dom', () => {
+          expect(list.children.length).to.eq(3);
+          expect(list.innerText).to.have.string('Foobi');
+          expect(list.innerText).to.have.string('Barbi');
+          expect(list.innerText).to.have.string('Bazbi');
+        });
+      });
+
+      context('removing an item', () => {
+        it('removes the item from the dom');
       });
     });
 

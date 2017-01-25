@@ -220,6 +220,19 @@ states.forEach(state => {
   }
 });
 
+const errorMessage = `
+  <element1></element1
+  <element2></element2>
+`;
+
+try {
+  const tokens = getTokens(errorMessage);
+} catch (e) {
+  deepEqual(e.location.line, 2);
+  deepEqual(e.location.column, 23);
+  deepEqual(e.message, "Expected '>'");
+}
+
 /**
  * expression state
  */
@@ -644,6 +657,20 @@ states.forEach(state => {
   next.state = 'before-attribute-name';
 
   deepEqual(getNextToken(prev, char), next);
+});
+
+// End tag errors when trying to transition into before-attribute-name
+['\t', '\n', ' '].forEach(char => {
+  const prev = initWorld();
+  prev.state = 'tag-name';
+  prev.currentToken = endTag('a');
+
+  try {
+    getNextToken(prev, char);
+    throw new Error('did not cause exception');
+  } catch (e) {
+    deepEqual(e.message, `Expected '>'`);
+  }
 });
 
 // / switch to self-closing-start-tag state

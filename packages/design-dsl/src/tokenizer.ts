@@ -364,57 +364,57 @@ function getActions(char: string, world: World): Action[] {
     case 'data':
       return handleData(char);
     case 'expression':
-      return handleExpression(char);
+      return handleExpression(char, world);
     case 'tag-open':
-      return handleTagOpen(char);
+      return handleTagOpen(char, world);
     case 'tag-name':
-      return handleTagName(char);
+      return handleTagName(char, world);
     case 'end-tag-open':
-      return handleEndTagOpen(char);
+      return handleEndTagOpen(char, world);
     case 'self-closing-start-tag':
-      return handleSelfClosingStartTag(char);
+      return handleSelfClosingStartTag(char, world);
     case 'before-attribute-name':
-      return handleBeforeAttributeName(char);
+      return handleBeforeAttributeName(char, world);
     case 'attribute-name':
-      return handleAttributeName(char);
+      return handleAttributeName(char, world);
     case 'after-attribute-name':
-      return handleAfterAttributeName(char);
+      return handleAfterAttributeName(char, world);
     case 'before-attribute-value':
-      return handleBeforeAttributeValue(char);
+      return handleBeforeAttributeValue(char, world);
     case 'attribute-value-string':
-      return handleAttributeValueString(char);
+      return handleAttributeValueString(char, world);
     case 'attribute-value-number':
-      return handleAttributeValueNumber(char);
+      return handleAttributeValueNumber(char, world);
     case 'attribute-value-array':
       return handleAttributeValueArray(char, world);
     case 'attribute-value-object-or-expression':
-      return handleAttributeValueObjectOrExpression(char);
+      return handleAttributeValueObjectOrExpression(char, world);
     case 'attribute-value-object':
       return handleAttributeValueObject(char, world);
     case 'attribute-value-expression':
-      return handleAttributeValueExpression(char);
+      return handleAttributeValueExpression(char, world);
     case 'after-attribute-value':
-      return handleAfterAttributeValue(char);
+      return handleAfterAttributeValue(char, world);
     case 'markup-declaration-open':
       return handleMarkupDeclarationOpen(char, world);
     case 'comment-start':
-      return handleCommentStart(char);
+      return handleCommentStart(char, world);
     case 'comment':
-      return handleComment(char);
+      return handleComment(char, world);
     case 'comment-start-dash':
-      return handleCommentStartDash(char);
+      return handleCommentStartDash(char, world);
     case 'comment-end-dash':
-      return handleCommentEndDash(char);
+      return handleCommentEndDash(char, world);
     case 'comment-end':
-      return handleCommentEnd(char);
+      return handleCommentEnd(char, world);
     case 'before-block':
-      return handleBeforeBlock(char);
+      return handleBeforeBlock(char, world);
     case 'before-block-parameter':
-      return handleBeforeBlockParameter(char);
+      return handleBeforeBlockParameter(char, world);
     case 'block-parameter':
-      return handleBlockParameter(char);
+      return handleBlockParameter(char, world);
     default:
-      throw new SyntaxError('unknown state');
+      throw new SyntaxError('unknown state', world);
   }
 }
 
@@ -476,11 +476,11 @@ function mutateWorld(world: World, action: Action): World {
     }
     case 'create-attribute':
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'start-tag') {
-        throw new SyntaxError('only start tags can have attributes');
+        throw new SyntaxError('only start tags can have attributes', world);
       }
 
       const newAttribute: Attribute = jsonAttr(action.payload);
@@ -492,11 +492,11 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'create-block-parameter':
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'start-tag') {
-        throw new SyntaxError('current token is not start tag');
+        throw new SyntaxError('current token is not start tag', world);
       }
 
       return {
@@ -514,11 +514,11 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'append-tag-name':
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (!isTagToken(world.currentToken)) {
-        throw new SyntaxError('only start-tag and end-tag have tagName');
+        throw new SyntaxError('only start-tag and end-tag have tagName', world);
       }
 
       return {
@@ -530,11 +530,11 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'append-expression':
       if (!world.currentToken) {
-        throw SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'expression') {
-        throw new SyntaxError('current token is not an expression');
+        throw new SyntaxError('current token is not an expression', world);
       }
 
       return {
@@ -551,7 +551,7 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'append-comment':
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'comment') {
@@ -572,7 +572,7 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'emit-current-token':
       if (!world.currentToken) {
-        throw new SyntaxError('no tag token to emit');
+        throw new SyntaxError('no tag token to emit', world);
       }
 
       // Add end location to new token
@@ -640,15 +640,15 @@ function mutateWorld(world: World, action: Action): World {
       }
     case 'append-attribute-name': {
       if (!world.currentAttribute) {
-        throw new SyntaxError('no current attribute');
+        throw new SyntaxError('no current attribute', world);
       }
 
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'start-tag') {
-        throw new SyntaxError('only start tags can have attributes');
+        throw new SyntaxError('only start tags can have attributes', world);
       }
 
       const prev = world.currentAttribute;
@@ -666,15 +666,15 @@ function mutateWorld(world: World, action: Action): World {
     }
     case 'append-attribute-value': {
       if (!world.currentAttribute) {
-        throw new SyntaxError('no current attribute');
+        throw new SyntaxError('no current attribute', world);
       }
 
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'start-tag') {
-        throw new SyntaxError('only start tags can have attributes');
+        throw new SyntaxError('only start tags can have attributes', world);
       }
 
       const prev = world.currentAttribute;
@@ -692,11 +692,11 @@ function mutateWorld(world: World, action: Action): World {
     }
     case 'append-block-parameter':
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'start-tag') {
-        throw new SyntaxError('current token is not start tag');
+        throw new SyntaxError('current token is not start tag', world);
       }
 
       const prev = world.currentToken.blockParameters[world.currentToken.blockParameters.length - 1];
@@ -708,15 +708,15 @@ function mutateWorld(world: World, action: Action): World {
       };
     case 'change-attr-to-expression': {
       if (!world.currentAttribute) {
-        throw new SyntaxError('no current attribute');
+        throw new SyntaxError('no current attribute', world);
       }
 
       if (!world.currentToken) {
-        throw new SyntaxError('no current token');
+        throw new SyntaxError('no current token', world);
       }
 
       if (world.currentToken.type !== 'start-tag') {
-        throw new SyntaxError('only start tags can have attributes');
+        throw new SyntaxError('only start tags can have attributes', world);
       }
 
       const prev = world.currentAttribute;
@@ -733,7 +733,7 @@ function mutateWorld(world: World, action: Action): World {
       }
     }
     default:
-      throw new SyntaxError('unknown action');
+      throw new SyntaxError('unknown action', world);
   }
 }
 
@@ -743,6 +743,10 @@ function isTagToken(token: Token): token is TagToken {
 
 function isStartTag(token: Token): token is StartTag {
   return token.type === 'start-tag';
+}
+
+function isEndTag(token: Token): token is EndTag {
+  return token.type === 'end-tag';
 }
 
 export function character(data: string, line: number = 1, column: number = 1): Character {
@@ -874,8 +878,8 @@ function handleData(char: string): Action[] {
   }
 }
 
-function handleExpression(char: string): Action[] {
-  handleEOF(char);
+function handleExpression(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '}') {
     return [
@@ -889,14 +893,14 @@ function handleExpression(char: string): Action[] {
   }
 }
 
-function handleEOF(char: string): void {
+function handleEOF(char: string, world: World): void {
   if (char === EOF_CHARACTER) {
-    throw unexpectedEndOfFile();
+    throw unexpectedEndOfFile(world);
   }
 }
 
-function handleTagOpen(char: string): Action[] {
-  handleEOF(char);
+function handleTagOpen(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '/') {
     return [
@@ -912,14 +916,19 @@ function handleTagOpen(char: string): Action[] {
       createTransition('tag-name')
     ];
   } else {
-    throw new SyntaxError('unknown character');
+    throw new SyntaxError('unknown character', world);
   }
 }
 
-function handleTagName(char: string): Action[] {
-  handleEOF(char);
+function handleTagName(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
+    // Guard whitespace in tagname for end tags
+    if (world.currentToken && isEndTag(world.currentToken)) {
+      throw new SyntaxError(`Expected '>'`, world);
+    }
+
     return [
       createTransition('before-attribute-name')
     ]
@@ -940,8 +949,8 @@ function handleTagName(char: string): Action[] {
   }
 }
 
-function handleEndTagOpen(char: string): Action[] {
-  handleEOF(char);
+function handleEndTagOpen(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(ASCII)) {
     return [
@@ -949,12 +958,12 @@ function handleEndTagOpen(char: string): Action[] {
       createTransition('tag-name')
     ]
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function handleSelfClosingStartTag(char: string): Action[] {
-  handleEOF(char);
+function handleSelfClosingStartTag(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '>') {
     return [
@@ -963,12 +972,12 @@ function handleSelfClosingStartTag(char: string): Action[] {
       { type: 'emit-current-token' }
     ]
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function handleBeforeAttributeName(char: string): Action[] {
-  handleEOF(char);
+function handleBeforeAttributeName(char: string, world: World): Action[] {
+  handleEOF(char, world );
 
   if (char.match(WHITESPACE)) {
     return [];
@@ -986,7 +995,7 @@ function handleBeforeAttributeName(char: string): Action[] {
       createTransition('before-block')
     ];
   } else if ([`"`, `'`, '<'].indexOf(char) !== -1) {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   } else {
     return [
       { type: 'create-attribute', payload: char.toLowerCase() },
@@ -995,8 +1004,8 @@ function handleBeforeAttributeName(char: string): Action[] {
   }
 }
 
-function handleAttributeName(char: string): Action[] {
-  handleEOF(char);
+function handleAttributeName(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [
@@ -1016,7 +1025,7 @@ function handleAttributeName(char: string): Action[] {
       createTransition('data')
     ];
   } else if ([`'`, `"`, `<`].indexOf(char) !== -1) {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   } else {
     return [
       { type: 'append-attribute-name', payload: char.toLowerCase() }
@@ -1024,8 +1033,8 @@ function handleAttributeName(char: string): Action[] {
   }
 }
 
-function handleAfterAttributeName(char: string): Action[] {
-  handleEOF(char);
+function handleAfterAttributeName(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return []; // ignore whitespace
@@ -1043,7 +1052,7 @@ function handleAfterAttributeName(char: string): Action[] {
       createTransition('data')
     ];
   } else if ([`'`, `"`, `<`].indexOf(char) !== -1) {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   } else {
     return [
       { type: 'create-attribute', payload: char.toLowerCase() },
@@ -1052,8 +1061,8 @@ function handleAfterAttributeName(char: string): Action[] {
   }
 }
 
-function handleBeforeAttributeValue(char: string): Action[] {
-  handleEOF(char);
+function handleBeforeAttributeValue(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [];
@@ -1077,12 +1086,12 @@ function handleBeforeAttributeValue(char: string): Action[] {
       createTransition('attribute-value-object-or-expression')
     ];
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function handleAttributeValueString(char: string): Action[] {
-  handleEOF(char);
+function handleAttributeValueString(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === `"`) {
     return [
@@ -1096,8 +1105,8 @@ function handleAttributeValueString(char: string): Action[] {
   }
 }
 
-function handleAttributeValueNumber(char: string): Action[] {
-  handleEOF(char);
+function handleAttributeValueNumber(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [
@@ -1117,13 +1126,13 @@ function handleAttributeValueNumber(char: string): Action[] {
       { type: 'append-attribute-value', payload: char }
     ];
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
 
 function handleAttributeValueArray(char: string, world: World): Action[] {
-  handleEOF(char);
+  handleEOF(char, world);
 
   if (char === ']') {
     if (world.currentAttribute) {
@@ -1151,8 +1160,8 @@ function handleAttributeValueArray(char: string, world: World): Action[] {
   }
 }
 
-function handleAttributeValueObjectOrExpression(char: string): Action[] {
-  handleEOF(char);
+function handleAttributeValueObjectOrExpression(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [];
@@ -1172,7 +1181,7 @@ function handleAttributeValueObjectOrExpression(char: string): Action[] {
 }
 
 function handleAttributeValueObject(char: string, world: World): Action[] {
-  handleEOF(char);
+  handleEOF(char, world);
 
   if (char === '}') {
     if (world.currentAttribute) {
@@ -1200,8 +1209,8 @@ function handleAttributeValueObject(char: string, world: World): Action[] {
   }
 }
 
-function handleAttributeValueExpression(char: string): Action[] {
-  handleEOF(char);
+function handleAttributeValueExpression(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '}') {
     return [
@@ -1214,8 +1223,8 @@ function handleAttributeValueExpression(char: string): Action[] {
   }
 }
 
-function handleAfterAttributeValue(char: string): Action[] {
-  handleEOF(char);
+function handleAfterAttributeValue(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [
@@ -1231,12 +1240,12 @@ function handleAfterAttributeValue(char: string): Action[] {
       createTransition('data')
     ];
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
 function handleMarkupDeclarationOpen(char: string, world: World): Action[] {
-  handleEOF(char);
+  handleEOF(char, world);
 
   if (char === '-') {
     if (world.buffer === '-') {
@@ -1251,19 +1260,19 @@ function handleMarkupDeclarationOpen(char: string, world: World): Action[] {
       ]
     }
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function handleCommentStart(char: string): Action[] {
-  handleEOF(char);
+function handleCommentStart(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '-') {
     return [
       createTransition('comment-start-dash')
     ]
   } else if (char === '>') {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   } else {
     return [
       createTransition('comment'),
@@ -1272,8 +1281,8 @@ function handleCommentStart(char: string): Action[] {
   }
 }
 
-function handleComment(char: string): Action[] {
-  handleEOF(char);
+function handleComment(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '-') {
     return [
@@ -1286,15 +1295,15 @@ function handleComment(char: string): Action[] {
   }
 }
 
-function handleCommentStartDash(char: string): Action[] {
-  handleEOF(char);
+function handleCommentStartDash(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '-') {
     return [
       createTransition('comment-end')
     ]
   } else if (char === '>') {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   } else {
     return [
       { type: 'append-comment', payload: '-' },
@@ -1304,8 +1313,8 @@ function handleCommentStartDash(char: string): Action[] {
   }
 }
 
-function handleCommentEndDash(char: string): Action[] {
-  handleEOF(char);
+function handleCommentEndDash(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '-') {
     return [
@@ -1320,8 +1329,8 @@ function handleCommentEndDash(char: string): Action[] {
   }
 }
 
-function handleCommentEnd(char: string): Action[] {
-  handleEOF(char);
+function handleCommentEnd(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '>') {
     return [
@@ -1342,20 +1351,20 @@ function handleCommentEnd(char: string): Action[] {
   }
 }
 
-function handleBeforeBlock(char: string): Action[] {
-  handleEOF(char);
+function handleBeforeBlock(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char === '>') {
     return [
       createTransition('before-block-parameter')
     ];
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function handleBeforeBlockParameter(char: string): Action[] {
-  handleEOF(char);
+function handleBeforeBlockParameter(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [];
@@ -1365,12 +1374,12 @@ function handleBeforeBlockParameter(char: string): Action[] {
       createTransition('block-parameter')
     ];
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function handleBlockParameter(char: string): Action[] {
-  handleEOF(char);
+function handleBlockParameter(char: string, world: World): Action[] {
+  handleEOF(char, world);
 
   if (char.match(ASCII)) {
     return [
@@ -1386,14 +1395,24 @@ function handleBlockParameter(char: string): Action[] {
       { type: 'emit-current-token' }
     ]
   } else {
-    throw unknownCharacter();
+    throw unknownCharacter(world);
   }
 }
 
-function unknownCharacter(): SyntaxError {
-  return new SyntaxError('unknown character');
+function unknownCharacter(world: World): SyntaxError {
+  return new SyntaxError('unknown character', world);
 }
 
-function unexpectedEndOfFile(): SyntaxError {
-  return new SyntaxError('unexpected end of file');
+function unexpectedEndOfFile(world: World): SyntaxError {
+  return new SyntaxError('unexpected end of file', world);
+}
+
+export class SyntaxError {
+  public message: string;
+  public location: { line: number, column: number };
+
+  constructor(message: string, world: World) {
+    this.message = message;
+    this.location = { line: world.currentLine, column: world.currentColumn };
+  }
 }

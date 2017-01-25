@@ -81,18 +81,33 @@ export function expressionAttr(name: string, value: string = ''): Attribute {
   }
 }
 
+export interface Location {
+  start: {
+    line: number;
+    column: number;
+  };
+
+  end: {
+    line: number;
+    column: number;
+  }
+}
+
 export interface World {
   buffer: string;
   state: TokenizerState;
   currentToken: Token | null;
   currentAttribute: Attribute | null;
+  currentLine: number;
+  currentColumn: number;
   tokens: Token[];
 }
 
 export function getTokens(source: string): Token[] {
-  const world = source.split('').reduce((world: World, char: string) => {
-    return getNextToken(world, char);
-  }, initWorld())
+  const world = source
+    .split('')
+    .reduce((world: World, char: string) =>
+      getNextLocation(getNextToken(world, char), char), initWorld())
 
   return getNextToken(world, EOF_CHARACTER).tokens;
 }
@@ -103,6 +118,8 @@ export function initWorld(): World {
     state: 'data',
     currentToken: null,
     currentAttribute: null,
+    currentLine: 1,
+    currentColumn: 1,
     tokens: []
   }
 }
@@ -114,16 +131,23 @@ export interface StartTag {
   hasBlock: boolean;
   attributes: Attribute[];
   blockParameters: string[];
+  location: Location;
 }
 
 export interface EndTag {
   type: 'end-tag';
   tagName: string;
+  location: Location;
 }
 
 export interface Expression {
   type: 'expression';
   value: string;
+  location: Location;
+}
+
+function isExpression(token: Token): token is Expression {
+  return token.type === 'expression';
 }
 
 /**
@@ -132,6 +156,7 @@ export interface Expression {
 export interface Comment {
   type: 'comment';
   data: string;
+  location: Location;
 }
 
 export type CommentState =
@@ -161,11 +186,13 @@ export type CommentAction =
 
 export interface Character {
   type: 'character';
+  location: Location;
   data: string;
 }
 
 export interface EOF {
   type: 'eof';
+  location: Location;
 }
 
 export type TagToken = StartTag | EndTag;
@@ -317,6 +344,21 @@ export function getNextToken(world: World, char: string): World {
   return getActions(char, world).reduce(mutateWorld, world);
 }
 
+export function getNextLocation(world: World, char: string): World {
+  if (char === '\n') {
+    return {
+      ...world,
+      currentLine: world.currentLine + 1,
+      currentColumn: 1
+    }
+  } else {
+    return {
+      ...world,
+      currentColumn: world.currentColumn + 1
+    }
+  }
+}
+
 function getActions(char: string, world: World): Action[] {
   switch (world.state) {
     case 'data':
@@ -383,7 +425,7 @@ function mutateWorld(world: World, action: Action): World {
         ...world,
         tokens: [
           ...world.tokens,
-          character(action.payload)
+          character(action.payload, world.currentLine, world.currentColumn)
         ]
       }
     case 'emit-eof':
@@ -391,7 +433,7 @@ function mutateWorld(world: World, action: Action): World {
         ...world,
         tokens: [
           ...world.tokens,
-          EOF()
+          EOF(world.currentLine, world.currentColumn)
         ]
       }
     case 'transition':
@@ -399,21 +441,39 @@ function mutateWorld(world: World, action: Action): World {
         ...world,
         state: action.payload
       }
-    case 'create-start-tag':
+    case 'create-start-tag': {
+      // Prefix is <
+      const START_TAG_PREFIX_LENGTH = 1;
+      const startColumn = world.currentColumn - START_TAG_PREFIX_LENGTH;
+
       return {
         ...world,
-        currentToken: startTag(action.payload)
+        currentToken: startTag(action.payload, {
+          location: {
+            start: { line: world.currentLine, column: startColumn },
+            end: { line: 1, column: 1 }
+          }
+        })
       }
+    }
     case 'create-expression':
       return {
         ...world,
-        currentToken: expression('')
+        currentToken: expression('', world.currentLine, world.currentColumn)
       };
-    case 'create-end-tag':
+    case 'create-end-tag': {
+      // Prefix is </
+      const END_TAG_PREFIX_LENGTH = 2;
+      const startColumn = world.currentColumn - END_TAG_PREFIX_LENGTH;
+
       return {
         ...world,
-        currentToken: endTag(action.payload)
+        currentToken: endTag(action.payload, {
+          start: { line: world.currentLine, column: startColumn },
+          end: { line: 1, column: 1 }
+        })
       }
+    }
     case 'create-attribute':
       if (!world.currentToken) {
         throw new SyntaxError('no current token');
@@ -444,9 +504,13 @@ function mutateWorld(world: World, action: Action): World {
         currentToken: createBlockParameter(world.currentToken, action.payload)
       };
     case 'create-comment':
+      // Prefix is <!-- (minus the current dash)
+      const COMMENT_PREFIX_LENGTH = 3;
+      const startColumn = world.currentColumn - COMMENT_PREFIX_LENGTH;
+
       return {
         ...world,
-        currentToken: comment(),
+        currentToken: comment('', world.currentLine, startColumn),
       }
     case 'append-tag-name':
       if (!world.currentToken) {
@@ -475,7 +539,10 @@ function mutateWorld(world: World, action: Action): World {
 
       return {
         ...world,
-        currentToken: expression(`${world.currentToken.value}${action.payload}`)
+        currentToken: {
+          ...world.currentToken,
+          value: `${world.currentToken.value}${action.payload}`
+        }
       };
     case 'append-buffer':
       return {
@@ -493,7 +560,10 @@ function mutateWorld(world: World, action: Action): World {
 
       return {
         ...world,
-        currentToken: comment(`${world.currentToken.data}${action.payload}`)
+        currentToken: {
+          ...world.currentToken,
+          data: `${world.currentToken.data}${action.payload}`
+        }
       };
     case 'clear-buffer':
       return {
@@ -505,13 +575,25 @@ function mutateWorld(world: World, action: Action): World {
         throw new SyntaxError('no tag token to emit');
       }
 
+      // Add end location to new token
+      const newToken = {
+        ...world.currentToken,
+        location: {
+          ...world.currentToken.location,
+          end: {
+            line: world.currentLine,
+            column: world.currentColumn
+          }
+        }
+      };
+
       return {
         ...world,
         currentToken: null,
         currentAttribute: null,
         tokens: [
           ...world.tokens,
-          world.currentToken
+          newToken
         ]
       }
     case 'emit-comment':
@@ -528,7 +610,16 @@ function mutateWorld(world: World, action: Action): World {
         currentToken: null,
         tokens: [
           ...world.tokens,
-          world.currentToken
+          {
+            ...world.currentToken,
+            location: {
+              ...world.currentToken.location,
+              end: {
+                line: world.currentLine,
+                column: world.currentColumn
+              }
+            }
+          }
         ]
       }
     case 'set-self-closing':
@@ -650,18 +741,28 @@ function isTagToken(token: Token): token is TagToken {
   return (token.type === 'start-tag' || token.type === 'end-tag');
 }
 
-export function character(data: string): Character {
+function isStartTag(token: Token): token is StartTag {
+  return token.type === 'start-tag';
+}
+
+export function character(data: string, line: number = 1, column: number = 1): Character {
+  const lc = { line, column };
+
   return {
     type: 'character',
-    data
+    data,
+    location: {
+      start: lc,
+      end: lc
+    }
   };
 }
 
-export function spaces(count: number): Character[] {
+export function spaces(count: number, startLine: number = 1, startColumn: number = 1): Character[] {
   const chars = [];
 
   for (let i = 0; i < count; i++) {
-    chars.push(character(' '));
+    chars.push(character(' ', startLine, startColumn + i));
   }
 
   return chars;
@@ -671,11 +772,42 @@ export function word(word: string): Character[] {
   return word.split('').map(char => character(char))
 }
 
-export function EOF(): EOF {
-  return { type: 'eof' };
+export function EOF(line: number = 1, column: number = 1): EOF {
+  return {
+    type: 'eof', location: {
+      start: { line, column },
+      end: { line, column }
+    }
+  };
 }
 
-export function startTag(tagName: string, attributes: Attribute[] = [], selfClosing: boolean = false, blockParameters: string[] = []): StartTag {
+export interface StartTagOptions {
+  attributes: Attribute[];
+  selfClosing: boolean;
+  blockParameters: string[];
+  location: Location;
+}
+
+export function startTag(tagName: string, options: Partial<StartTagOptions> = {}): StartTag {
+  // Set up the defaults
+  const {
+    attributes,
+    selfClosing,
+    blockParameters,
+    location
+  }: StartTagOptions = {
+      attributes: [],
+      selfClosing: false,
+      blockParameters: [],
+      location: {
+        start: { line: 1, column: 1 },
+        end: { line: 1, column: 1 },
+      },
+
+      // User can overwrite
+      ...options
+    }
+
   const hasBlock = (blockParameters.length) ? true : false;
 
   return {
@@ -684,28 +816,45 @@ export function startTag(tagName: string, attributes: Attribute[] = [], selfClos
     selfClosing,
     hasBlock,
     attributes,
-    blockParameters
+    blockParameters,
+    location
   };
 }
 
-export function expression(value: string): Expression {
+export function expression(value: string,
+  startLine: number = 1, startColumn: number = 1,
+  endLine: number = 1, endColumn: number = 1): Expression {
   return {
     type: 'expression',
-    value
+    value,
+    location: {
+      start: { line: startLine, column: startColumn },
+      end: { line: endLine, column: endColumn }
+    }
   };
 }
 
-export function endTag(tagName: string): EndTag {
+export function endTag(tagName: string, location: Location = {
+  start: { line: 1, column: 1 },
+  end: { line: 1, column: 1 }
+}): EndTag {
   return {
     type: 'end-tag',
-    tagName
+    tagName,
+    location
   };
 }
 
-export function comment(data: string = ''): Comment {
+export function comment(data: string = '',
+  startLine: number = 1, startColumn: number = 1,
+  endLine: number = 1, endColumn: number = 1): Comment {
   return {
     type: 'comment',
-    data
+    data,
+    location: {
+      start: { line: startLine, column: startColumn },
+      end: { line: endLine, column: endColumn }
+    }
   }
 }
 

@@ -31,9 +31,17 @@ class List extends Element {
     this._queueRender();
   }
 
+  get items() {
+    return this.state.items;
+  }
+
   set itemTagname(newValue) {
     this.state.itemTagname = newValue;
     this._queueRender();
+  }
+
+  get itemTagname() {
+    return this.state.itemTagname;
   }
 
   _render() {

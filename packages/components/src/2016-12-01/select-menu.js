@@ -104,6 +104,8 @@ class SelectMenu extends Element {
   }
 
   _render() {
+    this._ensurePopover();
+
     applyProps(this.popover, {
       top: this.state.top,
       left: this.state.left,

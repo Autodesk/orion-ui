@@ -40,6 +40,31 @@ class App extends React.Component {
 ReactDOM.render(React.createElement(App), document.body);
                 `,
       },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = null;
+    app.focus = false;
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
+  </body>
+</html>
+        `,
+      },
     ];
 
     return (
@@ -71,6 +96,32 @@ class App extends React.Component {
 ReactDOM.render(React.createElement(App), document.body);
                 `,
       },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.focus = false;
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
+  </body>
+</html>
+        `,
+      },
     ];
 
     return (
@@ -101,6 +152,33 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.focus = false;
+    app.clearable = true;
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" clearable="{{app.clearable}} />
+  </body>
+</html>
+        `,
       },
     ];
 
@@ -134,6 +212,32 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = null;
+    app.placeholder = "${props.placeholder}";
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" placeholder="{{app.placeholder}}" />
+  </body>
+</html>
+        `,
       },
     ];
 
@@ -170,6 +274,32 @@ class App extends React.Component {
 ReactDOM.render(React.createElement(App), document.body);
                 `,
       },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.focus = ${props.focus};
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
+  </body>
+</html>
+        `,
+      },
     ];
 
     return (
@@ -205,6 +335,33 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.focusMonthIndex = ${props.focusMonthIndex};
+    app.focusDayIndex = ${props.focusDayIndex};
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" focusMonthIndex="{{app.focusMonthIndex}}" focusDayIndex="{{app.focusDayIndex}}" />
+  </body>
+</html>
+        `,
       },
     ];
 
@@ -243,6 +400,36 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    moment.locale('${props.locale}');
+
+    var app = this;
+    app.date = moment();
+
+    app.displayFormat = ${props.displayFormat};
+    app.monthFormat = ${props.monthFormat};
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
+  </body>
+</html>
+        `,
       },
     ];
 
@@ -283,6 +470,32 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.i18n = ${JSON.stringify(props.i18n, null, 10)};
+    app.date = moment();
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" i18n="{{app.i18n}}" />
+  </body>
+</html>
+        `,
       },
     ];
 
@@ -335,6 +548,48 @@ class App extends React.Component {
 ReactDOM.render(React.createElement(App), document.body);
                 `,
       },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.focus = true;
+
+    app.isEnabled(date) {
+      const now = moment();
+      const twoWeeksFromNow = moment().add(2, 'weeks');
+
+      if (date.isBefore(now)) {
+        return false;
+      }
+
+      if (date.isAfter(twoWeeksFromNow)) {
+        return false;
+      }
+
+      return true;
+    }
+
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" isEnabled="{{app.isEnabled}}" />
+  </body>
+</html>
+        `,
+      },
     ];
 
     return (
@@ -369,6 +624,32 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.disabled = ${props.disabled};
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker date="{{app.date}}" disabled="{{app.disabled}}" />
+  </body>
+</html>
+        `,
       },
     ];
 
@@ -420,6 +701,43 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);
                 `,
+      },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+// app controller
+
+import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.date = moment();
+    app.datePickerState = {};
+
+    app.onChange = (event) => {
+        if (event.type === 'focusedDayChange') {
+          // do something special
+        }
+
+      app.datePickerState = event.state;
+    }
+  });
+
+// app.html
+
+<!doctype html>
+<html lang="en" ng-app="app">
+  <body ng-controller="AppController as app">
+    <orion-date-picker
+      date="{{app.date}}"
+      datePickerState="{{app.datePickerState}}"
+      ng-change="app.onChange(datePickerState)" />
+  </body>
+</html>
+        `,
       },
     ];
 

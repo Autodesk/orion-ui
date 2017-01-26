@@ -7,9 +7,27 @@ system:
       username:
       accessKey:
 browsers:
-  chrome:
+  # chrome:
+  #   desiredCapabilities:
+  #     browserName: 'chrome'
+  #     version: '54.0'
+  #     platform: 'macOs 10.12'
+  #     name: 'gemini visual regression tests chrome'
+  firefox:
     desiredCapabilities:
-      browserName: chrome
-      version: 54.0
-      platform: MacOs 10.12
-      name: gemini visual regression tests
+      browserName: 'firefox'
+      version: '50.0'
+      platform: 'macOs 10.12'
+      name: gemini visual regression tests firefox
+  # safari:
+  #   desiredCapabilities:
+  #     browserName: 'safari'
+  #     version: '10'
+  #     platform: 'macOs 10.12'
+  #     name: 'gemini visual regression tests safari'
+  # edge:
+  #   desiredCapabilities:
+  #     browserName: 'MicrosoftEdge'
+  #     version: '14.14393'
+  #     platform: 'Windows 10'
+  #     name: 'gemini visual regression tests edge'

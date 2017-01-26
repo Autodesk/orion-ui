@@ -30,3 +30,5 @@ require('http').createServer(function (request, response) {
         });
     }).resume();
 }).listen(PORT);
+
+console.log(`Angular Playground now available at http://localhost:${PORT}`);

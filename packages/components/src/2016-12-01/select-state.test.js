@@ -41,6 +41,11 @@ describe('SelectState', () => {
       const result = SelectState.activated({});
       expect(result.open).to.be.true;
     });
+
+    it('focuses on the first option', () => {
+      const result = SelectState.activated({});
+      expect(result.focussedIndex).to.eq(0);
+    });
   });
 
   describe('optionChosen', () => {

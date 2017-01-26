@@ -313,8 +313,7 @@ angular.module('app', [DatePicker.module])
   })
   .add('focus month & day', () => {
     const props = {
-      focusMonthIndex: number('Focus Month Index', 1), // Feb
-      focusDayIndex: number('Focus Day Index', 20), // 19th
+      focusDate: text('Focus Date', '2016-01-01'),
     };
 
     const sources = [
@@ -329,7 +328,8 @@ import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
 class App extends React.Component {
     render() {
         const date = moment();
-        return <DatePicker date={date} focus={true} focusMonthIndex={${props.focusMonthIndex}} focusDayIndex={${props.focusDayIndex}} />;
+        const focusDate = moment("${props.focusDate}")
+        return <DatePicker date={date} focus={true} focusDate={focusDate} />;
     }
 }
 
@@ -349,8 +349,7 @@ angular.module('app', [DatePicker.module])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();
-    app.focusMonthIndex = ${props.focusMonthIndex};
-    app.focusDayIndex = ${props.focusDayIndex};
+    app.focusDate = moment("${props.focusDate}")
   });
 
 // app.html
@@ -358,7 +357,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focusMonthIndex="{{app.focusMonthIndex}}" focusDayIndex="{{app.focusDayIndex}}" />
+    <orion-date-picker date="{{app.date}}" focusDate="{{app.focusDate}}" />
   </body>
 </html>
         `,

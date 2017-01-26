@@ -15,38 +15,43 @@ limitations under the License.
 
 */
 require('../../vendor/es5-custom-element-shim.js');
-require('./inline');
+const Element = require('./element');
 const ButtonState = require('./button-state.js');
 
 const Registry = require('../utils/private-registry.js');
+const applyProps = require('../utils/apply-props.js');
 
-class Button extends HTMLElement {
+class Button extends Element {
   constructor() {
     super();
-
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.innerHTML = `
-      <orion-inline
-        border-radius="2"
-        padding-horizontal="3"
-        padding-vertical="2"
-        pointer><slot /></orion-inline>
-    `;
-    this.shadowEl = shadowRoot.children[0];
 
     this.defaults = {
       background: 'black',
       color: 'white',
     };
 
-    this.state = ButtonState.getInitialState(this.defaults);
+    this.state = ButtonState.getInitialState();
 
-    // render initial state
-    this._queueRender();
+    applyProps(this, {
+      display: 'inline-block',
+      'border-radius': 2,
+      'padding-horizontal': 3,
+      'padding-vertical': 2,
+      pointer: true,
+      ...this.defaults,
+    });
+  }
 
+  connectedCallback() {
+    this._addListeners();
+    this.setAttribute('tabIndex', 0);
+  }
+
+  _addListeners() {
     this.addEventListener('mouseenter', () => {
       if (this.state.disabled) { return; }
-      const nextState = ButtonState.enterHover(this.state);
+      let nextState = ButtonState.enterHover(this.state);
+      nextState = { hover: nextState.hover, disabled: nextState.disabled };
       this.dispatchEvent(new CustomEvent('change', {
         detail: {
           type: 'mouseenter',
@@ -57,7 +62,8 @@ class Button extends HTMLElement {
 
     this.addEventListener('mouseleave', () => {
       if (this.state.disabled) { return; }
-      const nextState = ButtonState.leaveHover(this.state);
+      let nextState = ButtonState.leaveHover(this.state);
+      nextState = { hover: nextState.hover, disabled: nextState.disabled };
       this.dispatchEvent(new CustomEvent('change', {
         detail: {
           type: 'mouseleave',
@@ -73,22 +79,24 @@ class Button extends HTMLElement {
     });
   }
 
-  set background(val) {
-    this.state.background = val || this.defaults.background;
+  set background(val = this.defaults.background) {
+    this.state.background = val;
+    this._background = val;
     this._queueRender();
   }
 
   get background() {
-    return this.state.background;
+    return this._background;
   }
 
-  set color(val) {
-    this.state.color = val || this.defaults.color;
+  set color(val = this.defaults.color) {
+    this.state.color = val;
+    this._color = val;
     this._queueRender();
   }
 
   get color() {
-    return this.state.color;
+    return this._color;
   }
 
   set disabled(val) {
@@ -128,44 +136,34 @@ class Button extends HTMLElement {
     return this.state.hover;
   }
 
-  _queueRender() {
-    if (this._renderQueued) {
-      return;
-    }
-
-    this._renderQueued = true;
-    requestAnimationFrame(() => {
-      this._renderQueued = false;
-      this._render();
-    });
-  }
-
   _render() {
     if (this.state.disabled) {
-      this.shadowEl.background = 'grey';
-      this.shadowEl.color = 'white';
+      this.state.background = 'grey';
+      this.state.color = 'white';
     } else if (this.state.hover) {
-      this.shadowEl.background = 'blue';
-      this.shadowEl.color = 'white';
+      this.state.background = 'blue';
+      this.state.color = 'white';
     } else {
-      this.shadowEl.background = this.background;
-      this.shadowEl.color = this.color;
+      this.state.background = this._background;
+      this.state.color = this._color;
     }
 
     switch (this.state.size) {
       case 'small':
-        this.shadowEl.paddingHorizontal = 2;
-        this.shadowEl.paddingVertical = 1;
+        this.state['padding-horizontal'] = 2;
+        this.state['padding-vertical'] = 1;
         break;
       case 'large':
-        this.shadowEl.paddingHorizontal = 4;
-        this.shadowEl.paddingVertical = 3;
+        this.state['padding-horizontal'] = 4;
+        this.state['padding-vertical'] = 3;
         break;
       default:
-        this.shadowEl.paddingHorizontal = 3;
-        this.shadowEl.paddingVertical = 2;
+        this.state['padding-horizontal'] = 3;
+        this.state['padding-vertical'] = 2;
         break;
     }
+
+    super._render();
   }
 }
 

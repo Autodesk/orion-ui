@@ -15,6 +15,7 @@ limitations under the License.
 
 */
 const css = `
+  .br0 { border-radius: 0;}
   .br2 { border-radius: 0.25rem;}
   .br-pill { border-radius: 9999px; }
 `;
@@ -25,6 +26,7 @@ const attributes = [
 
 
 const scale = {
+  0: 'br0',
   2: 'br2',
   pill: 'br-pill',
 };

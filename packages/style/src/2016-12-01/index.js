@@ -15,8 +15,12 @@ limitations under the License.
 
 */
 const BorderRadius = require('../border-radius.js');
+const BoxShadow = require('../box-shadow.js');
+const Container = require('../container.js');
+const Display = require('../display.js');
 const Hovers = require('../hovers.js');
+const Position = require('../position.js');
 const Skins = require('../skins.js');
 const Spacing = require('../spacing.js');
 
-module.exports = { BorderRadius, Hovers, Skins, Spacing };
+module.exports = { BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing };

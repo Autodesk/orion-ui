@@ -21,13 +21,15 @@ const PropTypes = React.PropTypes;
 
 
 const Example = function example(props) {
+  const minHeight = props.minHeight || 0;
   return (
-    <div className="example" style={{ paddingTop: '30px', paddingBottom: '30px' }}>{props.children}</div>
+    <div className="example" style={{ paddingTop: '30px', paddingBottom: '30px', minHeight: `${minHeight}px` }}>{props.children}</div>
   );
 };
 
 Example.propTypes = {
   children: PropTypes.node,
+  minHeight: PropTypes.number,
 };
 
 module.exports = Example;

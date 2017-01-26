@@ -13,6 +13,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@orion-ui/eslint-config-orion": "^1.0.0",
+    "chai": "^3.5.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",

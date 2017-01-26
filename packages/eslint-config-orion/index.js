@@ -22,11 +22,11 @@ module.exports = {
     "mocha": true
   },
   "rules": {
-    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "arrow-body-style": "off",
-    "react/jsx-filename-extension": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js"]}],
     "no-console": "off",
     "no-param-reassign": "off",
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js"]}]
+    "no-underscore-dangle": ["error", { "allowAfterThis": true, "allowAfterSuper": true }],
+    "react/jsx-filename-extension": "off",
   }
 }

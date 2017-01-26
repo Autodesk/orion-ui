@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import {Button} from '@orion-ui/react/lib/2016-12-01';
+import '../vendor/custom-elements-polyfill';
+import { Button, Select } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -24,9 +25,17 @@ class App extends React.Component {
     super(props);
     this.state = {
       disabled: false,
-    }
-    this.handleClick = this.handleClick.bind(this);
-    this.toggleDisabled = this.toggleDisabled.bind(this);
+    };
+
+    ['handleClick', 'toggleDisabled'].forEach((fn) => {
+      this[fn] = this[fn].bind(this);
+    });
+
+    this.buttonSizes = [
+      { label: 'Small', value: 'small', key: 1 },
+      { label: 'Medium', value: 'medium', key: 2 },
+      { label: 'Large', value: 'large', key: 3 },
+    ];
   }
 
   handleClick() {
@@ -46,10 +55,10 @@ class App extends React.Component {
         </div>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
+          <input />
+          <Select options={this.buttonSizes} />
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
-          <Button background="black" color="white" size="small" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
-          <Button background="black" color="white" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
-          <Button background="black" color="white" size="large" disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+          <Button skin="black" size={this.state.size} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </p>
       </div>
     );

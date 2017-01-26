@@ -5,6 +5,6 @@ build
 lib
 /bower_components
 /coverage
-/gemini-report/*
+/gemini-report
 .idea/*
 /.nyc_output

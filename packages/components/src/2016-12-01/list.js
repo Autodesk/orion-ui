@@ -17,7 +17,12 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 const Element = require('./element');
 const applyProps = require('../utils/apply-props');
+const clearChildren = require('../utils/clear-children.js');
 const Registry = require('../utils/private-registry.js');
+
+function hashFromItems(items) {
+  return items.reduce((memo, item) => { return memo + item.key; }, '');
+}
 
 class List extends Element {
   constructor() {
@@ -48,6 +53,10 @@ class List extends Element {
     // TODO: raise warning if no key
     // TODO: raise warning if duplicate key
 
+    if (this.lastItemsHash !== hashFromItems(this.items)) {
+      clearChildren(this);
+    }
+
     this.items.forEach((item) => {
       let itemEl = this.querySelector(`[data-key="${item.key}"]`);
       if (itemEl === null) {
@@ -58,6 +67,7 @@ class List extends Element {
       applyProps(itemEl, item);
     });
 
+    this.lastItemsHash = hashFromItems(this.items);
     super._render();
   }
 }

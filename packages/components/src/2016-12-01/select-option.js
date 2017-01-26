@@ -34,6 +34,7 @@ class SelectOption extends Element {
 
   connectedCallback() {
     this._ensureButton();
+    this._queueRender();
     this.button.addEventListener('change', this._passButtonState);
   }
 

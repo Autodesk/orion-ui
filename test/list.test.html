@@ -33,15 +33,16 @@ limitations under the License.
   <script>
     describe('<orion-list>', () => {
       var list;
+      var options = [
+        { textContent: 'Foo', key: 1 },
+        { textContent: 'Bar', key: 2 },
+        { textContent: 'Baz', key: 3 },
+      ];
 
       beforeEach(() => {
         list = fixture('list');
         list.itemTagname = 'span';
-        list.items = [
-          { textContent: 'Foo', key: 0 },
-          { textContent: 'Bar', key: 1 },
-          { textContent: 'Baz', key: 2 },
-        ]
+        list.items = options;
         list._render();
       });
 
@@ -53,7 +54,7 @@ limitations under the License.
 
       context('adding an item', () => {
         beforeEach(() => {
-          list.items = list.items.concat([{ textContent: 'Bax', key: 4 }]);
+          list.items = options.concat([{ textContent: 'Bax' }]);
           list._render();
         });
 
@@ -64,7 +65,7 @@ limitations under the License.
 
       context('changing an item', () => {
         beforeEach(() => {
-          list.items = list.items.map((item) => {
+          list.items = options.map((item) => {
             item.textContent = item.textContent + 'bi';
             return item;
           });
@@ -79,8 +80,35 @@ limitations under the License.
         });
       });
 
+      context('reordering items', () => {
+        beforeEach(() => {
+          list.items = [
+            { textContent: 'Baz', key: 3 },
+            { textContent: 'Foo', key: 1 },
+            { textContent: 'Bar', key: 2 },
+          ]
+          list._render();
+        });
+
+        it('renders items in new order', () => {
+          expect(list.children.length).to.eq(3);
+          expect(list.childNodes[0].innerText).to.eq('Baz');
+          expect(list.childNodes[1].innerText).to.eq('Foo');
+          expect(list.childNodes[2].innerText).to.eq('Bar');
+        });
+      });
+
       context('removing an item', () => {
-        it('removes the item from the dom');
+        beforeEach(() => {
+          list.items = options.slice(1, 3);
+          list._render();
+        });
+
+        it('removes the item from the dom', () => {
+          expect(list.children.length).to.eq(2);
+          expect(list.innerText).to.have.string('Bar');
+          expect(list.innerText).to.have.string('Baz');
+        });
       });
     });
 

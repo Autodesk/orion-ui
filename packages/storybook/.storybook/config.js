@@ -1,3 +1,4 @@
+import '../vendor/custom-elements-polyfill';
 import { configure } from '@kadira/storybook';
 
 function loadStories() {

@@ -15,17 +15,16 @@ limitations under the License.
 
 */
 
-import { ButtonDirective } from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
 angular
-  .module('app', [])
-  .directive('orionButton', ['$log', ButtonDirective])
+  .module('app', ['orion'])
   .controller('Controller', ['$scope', function($scope) {
     var that = this;
 
     $scope.buttons = [
       { label: 'Large white on black', color: 'white', background: 'black', size: 'large' },
-      { label: 'Black on grey', color: 'black', background: 'grey', size: 'small' },
+      { label: 'Black on grey', color: 'black', background: 'grey' },
       { label: 'White on blue', color: 'white', background: 'blue', size: 'small' },
     ];
 

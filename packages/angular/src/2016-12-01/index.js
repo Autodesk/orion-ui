@@ -16,4 +16,9 @@ limitations under the License.
 */
 const ButtonDirective = require('./button-directive');
 
-module.exports = { ButtonDirective };
+// eslint-disable-next-line no-undef
+const orion = angular
+  .module('orion', [])
+  .directive('orionButton', ['$log', ButtonDirective]);
+
+module.exports = orion;

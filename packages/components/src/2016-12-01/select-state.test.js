@@ -22,6 +22,12 @@ const expect = chai.expect;
 const SelectState = require('./select-state.js');
 
 describe('SelectState', () => {
+  const options = [
+    { label: 'Red', value: '#F00' },
+    { label: 'Green', value: '#0F0' },
+    { label: 'Blue', value: '#00F' },
+  ];
+
   describe('getInitialState', () => {
     it('is not open', () => {
       const initialState = SelectState.getInitialState();
@@ -44,7 +50,7 @@ describe('SelectState', () => {
 
     it('focuses on the first option', () => {
       const result = SelectState.activated({});
-      expect(result.focussedIndex).to.eq(0);
+      expect(result.focusedIndex).to.eq(0);
     });
   });
 
@@ -54,18 +60,13 @@ describe('SelectState', () => {
     before(() => {
       state = {
         open: true,
-        value: undefined,
-        options: [
-          { label: 'Red', value: '#F00' },
-          { label: 'Green', value: '#0F0' },
-          { label: 'Blue', value: '#00F' },
-        ],
+        options,
       };
       nextState = SelectState.optionChosen(state, 1);
     });
 
     it('sets value to the chosen option', () => {
-      expect(nextState.value).to.eq('#0F0');
+      expect(nextState.chosenIndex).to.eq(1);
     });
 
     it('closes the menu', () => {
@@ -86,36 +87,116 @@ describe('SelectState', () => {
   describe('deactivated', () => {
     let nextState;
     before(() => {
-      nextState = SelectState.deactivated({ open: true });
+      nextState = SelectState.deactivated({ open: true, focusedIndex: 1 });
     });
 
     it('sets open to false', () => {
       expect(nextState.open).to.be.false;
     });
+
+    it('sets focusedIndex to undefined', () => {
+      expect(nextState.focusedIndex).to.be.undefined;
+    });
   });
 
   describe('focusPrevious', () => {
+    let nextState;
+    context('when open', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 1,
+          options,
+        };
+        nextState = SelectState.focusPrevious(state);
+      });
+
+      it('focuses the next item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
+
+    context('when first option has focus', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 0,
+          options,
+        };
+        nextState = SelectState.focusPrevious(state);
+      });
+
+      it('focuses the last item', () => {
+        expect(nextState.focusedIndex).to.eq(2);
+      });
+    });
+
     context('when closed', () => {
-      let nextState;
       before(() => {
-        nextState = SelectState.focusPrevious({ open: false });
+        nextState = SelectState.focusPrevious({
+          open: false,
+          focusedIndex: undefined,
+          options,
+        });
       });
 
       it('opens', () => {
         expect(nextState.open).to.be.true;
+      });
+
+      it('focuses the first item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
       });
     });
   });
 
   describe('focusNext', () => {
+    let nextState;
+    context('when open', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 1,
+          options,
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('focuses the next item', () => {
+        expect(nextState.focusedIndex).to.eq(2);
+      });
+    });
+
+    context('when last option has focus', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 2,
+          options,
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('focuses the first item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
+
     context('when closed', () => {
-      let nextState;
       before(() => {
-        nextState = SelectState.focusPrevious({ open: false });
+        nextState = SelectState.focusNext({
+          open: false,
+          focusedIndex: undefined,
+          options,
+        });
       });
 
       it('opens', () => {
         expect(nextState.open).to.be.true;
+      });
+
+      it('focuses the first item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
       });
     });
   });

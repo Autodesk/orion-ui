@@ -25,16 +25,21 @@ limitations under the License.
 function syncEvent(el, eventName, newEventHandler) {
   const eventNameLc = eventName[0].toLowerCase() + eventName.substring(1);
   const eventStore = el.$$events || (el.$$events = {});
-  const oldEventHandler = eventStore[eventNameLc];
+  const existingEventHandler = eventStore[eventNameLc];
+
+  if (existingEventHandler === newEventHandler) {
+    return;
+  }
 
   // Remove old listener so they don't double up.
-  if (oldEventHandler) {
-    el.removeEventListener(eventNameLc, oldEventHandler);
+  if (existingEventHandler) {
+    el.removeEventListener(eventNameLc, existingEventHandler);
   }
 
   // Bind new listener.
   if (newEventHandler) {
-    el.addEventListener(eventNameLc, eventStore[eventNameLc] = function handler(e) {
+    eventStore[eventNameLc] = newEventHandler;
+    el.addEventListener(eventNameLc, function handler(e) {
       newEventHandler.call(this, e);
     });
   }

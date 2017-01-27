@@ -32,7 +32,7 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
     this.display = 'inline-block';
 
-    ['_handleKeydown', '_handleBlur', '_activate'].forEach((handler) => {
+    ['_setSelectedOption', '_handleKeydown', '_handleBlur', '_activate'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -44,6 +44,11 @@ class Select extends Element {
 
   set open(newValue) {
     this.state.open = newValue;
+    this._queueRender();
+  }
+
+  set focusedIndex(newValue) {
+    this.state.focusedIndex = newValue;
     this._queueRender();
   }
 
@@ -68,14 +73,19 @@ class Select extends Element {
   }
 
   _addListeners() {
+    this._ensureMenu();
+    this._ensureButton();
+
     this.addEventListener('keydown', this._handleKeydown);
     this.addEventListener('click', this._activate);
+    this.menu.addEventListener('optionSelected', this._setSelectedOption);
     this.button.addEventListener('blur', this._handleBlur);
   }
 
   _removeListeners() {
     this.removeEventListener('keydown', this._handleKeydown);
     this.removeEventListener('click', this._activate);
+    this.menu.removeEventListener('optionSelected', this._setSelectedOption);
     this.button.removeEventListener('blur', this._handleBlur);
   }
 
@@ -127,6 +137,13 @@ class Select extends Element {
     }));
   }
 
+  _setSelectedOption(event) {
+    const nextState = SelectState.optionChosen(this.state, event.detail.selectedIndex);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { type: 'optionChosen', state: nextState },
+    }));
+  }
+
   _ensureMenu() {
     if (this.menu !== undefined) { return; }
 
@@ -152,6 +169,7 @@ class Select extends Element {
       options: this.state.options,
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
+      focusedIndex: this.state.focusedIndex,
     });
 
     super._render();

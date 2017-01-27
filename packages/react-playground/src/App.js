@@ -47,7 +47,11 @@ class App extends React.Component {
   }
 
   setSize(event) {
-    const selectedSize = this.buttonSizes[event.detail.state.selectedIndex];
+    let selectedSize;
+    const selectedOption = this.buttonSizes[event.detail.state.chosenIndex];
+    if (selectedOption !== undefined) {
+      selectedSize = selectedOption.value;
+    }
     this.setState({ size: selectedSize });
   }
 
@@ -58,13 +62,14 @@ class App extends React.Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+        <div style={{ margin: '40px' }}>
           <input />
           <Select options={this.buttonSizes} onChange={this.setSize}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
-          <Button skin="black" size={this.state.size} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
-        </p>
+        </div>
+        <div>
+          <Button size={this.state.size} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+        </div>
       </div>
     );
   }

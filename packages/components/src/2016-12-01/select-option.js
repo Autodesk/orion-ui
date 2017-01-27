@@ -32,10 +32,21 @@ class SelectOption extends Element {
     this._queueRender();
   }
 
+  set index(newValue) {
+    this.state.index = newValue;
+    this._queueRender();
+  }
+
+  set hasFocus(newValue) {
+    this.state.hasFocus = newValue;
+    this._queueRender();
+  }
+
   connectedCallback() {
     this._ensureButton();
     this._queueRender();
     this.button.addEventListener('change', this._passButtonState);
+    this.addEventListener('click', this._emitSelectedEvent);
   }
 
   disconnectedCallback() {
@@ -55,15 +66,31 @@ class SelectOption extends Element {
       display: 'block',
       'border-radius': '0',
       size: 'small',
-      background: 'white',
-      color: 'black',
     });
 
     this.appendChild(this.button);
   }
 
+  _emitSelectedEvent(event) {
+    this.dispatchEvent(new CustomEvent('optionSelected', {
+      detail: { selectedIndex: this.state.index },
+      bubbles: true,
+    }));
+  }
+
   _render() {
     if (this.button !== undefined) {
+      let styles;
+      if (this.state.hasFocus) {
+        styles = { background: 'blue', color: 'white' };
+      } else {
+        styles = { background: 'white', color: 'black' };
+      }
+
+      applyProps(this.button, {
+        textContent: this.state.label,
+        ...styles,
+      });
       this.button.textContent = this.state.label;
     }
 

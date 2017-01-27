@@ -52,8 +52,8 @@ class Select extends Element {
     this._queueRender();
   }
 
-  set chosenIndex(newValue) {
-    this.state.chosenIndex = newValue;
+  set selectedIndex(newValue) {
+    this.state.selectedIndex = newValue;
     this._queueRender();
   }
 
@@ -132,10 +132,10 @@ class Select extends Element {
         break;
       case 'Tab':
       case 'Enter':
-        nextState = SelectState.optionChosen(this.state, this.state.focusedIndex);
+        nextState = SelectState.optionSelected(this.state, this.state.focusedIndex);
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
-            type: 'optionChosen',
+            type: 'optionSelected',
             state: nextState,
           },
         }));
@@ -145,9 +145,9 @@ class Select extends Element {
   }
 
   _setSelectedOption(event) {
-    const nextState = SelectState.optionChosen(this.state, event.detail.selectedIndex);
+    const nextState = SelectState.optionSelected(this.state, event.detail.selectedIndex);
     this.dispatchEvent(new CustomEvent('change', {
-      detail: { type: 'optionChosen', state: nextState },
+      detail: { type: 'optionSelected', state: nextState },
     }));
   }
 
@@ -187,9 +187,9 @@ class Select extends Element {
     });
 
     let label = 'Select';
-    const chosenOption = this.state.options[this.state.chosenIndex];
-    if (chosenOption !== undefined) {
-      label = chosenOption.label;
+    const selectedOption = this.state.options[this.state.selectedIndex];
+    if (selectedOption !== undefined) {
+      label = selectedOption.label;
     }
     applyProps(this.button, {
       textContent: label,

@@ -25,10 +25,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       disabled: false,
-      chosenIndex: 1,
+      selectedIndex: 1,
     };
 
-    ['setChosenIndex', 'handleClick', 'toggleDisabled'].forEach((fn) => {
+    ['setSelectedIndex', 'handleClick', 'toggleDisabled'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
 
@@ -47,15 +47,15 @@ class App extends React.Component {
     this.setState({ disabled: !this.state.disabled });
   }
 
-  setChosenIndex(event) {
-    this.setState({ chosenIndex: event.detail.state.chosenIndex });
+  setSelectedIndex(event) {
+    this.setState({ selectedIndex: event.detail.state.selectedIndex });
   }
 
   render() {
-    let chosenSize;
-    const selectedOption = this.buttonSizes[this.state.chosenIndex];
+    let selectedSize;
+    const selectedOption = this.buttonSizes[this.state.selectedIndex];
     if (selectedOption !== undefined) {
-      chosenSize = selectedOption.value;
+      selectedSize = selectedOption.value;
     }
 
     return (
@@ -66,11 +66,11 @@ class App extends React.Component {
         </div>
         <div style={{ margin: '40px' }}>
           <input />
-          <Select options={this.buttonSizes} chosenIndex={this.state.chosenIndex} onChange={this.setChosenIndex}/>
+          <Select options={this.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
         </div>
         <div>
-          <Button size={chosenSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+          <Button size={selectedSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </div>
       </div>
     );

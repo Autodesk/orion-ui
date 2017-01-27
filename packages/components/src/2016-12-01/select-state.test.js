@@ -70,7 +70,7 @@ describe('SelectState', () => {
     });
   });
 
-  describe('optionChosen', () => {
+  describe('optionSelected', () => {
     let state;
     let nextState;
     before(() => {
@@ -78,11 +78,11 @@ describe('SelectState', () => {
         open: true,
         options,
       };
-      nextState = SelectState.optionChosen(state, 1);
+      nextState = SelectState.optionSelected(state, 1);
     });
 
-    it('sets value to the chosen option', () => {
-      expect(nextState.chosenIndex).to.eq(1);
+    it('sets value to the selected option', () => {
+      expect(nextState.selectedIndex).to.eq(1);
     });
 
     it('closes the menu', () => {
@@ -91,7 +91,7 @@ describe('SelectState', () => {
 
     context('with an non-existant option index', () => {
       before(() => {
-        nextState = SelectState.optionChosen(state, 5);
+        nextState = SelectState.optionSelected(state, 5);
       });
 
       it('set value to undefined', () => {

@@ -37,10 +37,10 @@ const SelectState = {
     };
   },
 
-  optionChosen(state, chosenIndex) {
+  optionSelected(state, selectedIndex) {
     return {
       ...state,
-      chosenIndex,
+      selectedIndex,
       open: false,
     };
   },

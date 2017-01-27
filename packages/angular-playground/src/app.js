@@ -24,13 +24,24 @@ angular
     var that = this;
 
     $scope.buttons = [
-      { label: 'Disabled', color: 'black', background: 'grey', size: 'small', disabled: true },
       { label: 'Large white on black', color: 'white', background: 'black', size: 'large' },
-      { label: 'Blue on grey', color: 'blue', background: 'grey', size: 'small' }
+      { label: 'Black on grey', color: 'black', background: 'grey', size: 'small' },
+      { label: 'White on blue', color: 'white', background: 'blue', size: 'small' },
     ];
 
     that.handleClick = (button) => {
       alert('button clicked!');
     }
+
+    this.toggleDisability = () => {
+      $scope.buttons.forEach((button) => {
+        button.disabled = !button.disabled;
+      });
+    }
+
+    this.embiggen = () => {
+      $scope.buttons.forEach((button) => {
+        button.size = 'large';
+      });      
+    }
   }]);
-  

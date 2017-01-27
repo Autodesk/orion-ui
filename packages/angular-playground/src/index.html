@@ -24,14 +24,21 @@ limitations under the License.
     <title>Angular Playground</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.10/angular.js"></script>
     <script src="app.js"></script>
+    <style>
+      orion-button {
+        margin:1em 0;
+      }
+    </style>
   </head>
   <body ng-app="app">
     <h1>Angular Playground</h1>
+    <hr />
     <div ng-controller="Controller as ctrl">
-      <div ng-repeat="button in buttons">
-        <p>
-          <orion-button state="button" ng-click="ctrl.handleClick(button)" ng-disabled="button.disabled">{{button.label}}</orion-button>
-        </p>
+      <h2>Buttons</h2>
+      <a href="#" ng-click="ctrl.toggleDisability()">Toggle Button Disability</a> |
+      <a href="#" ng-click="ctrl.embiggen()">Make all buttons big</a>
+      <div ng-repeat="b in buttons">
+        <orion-button background="b.background" color="b.color" size="b.size" ng-click="ctrl.handleClick(b)" ng-disabled="b.disabled">{{b.label}}</orion-button>
       </div>
     </div>
   </body>

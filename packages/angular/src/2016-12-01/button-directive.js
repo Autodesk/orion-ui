@@ -33,19 +33,24 @@ const ButtonDirective = ($log) => {
     restrict: 'E',
 
     scope: {
-      state: '<',
+      background: '<',
+      color: '<',
+      size: '<',
     },
 
     link: (scope, element) => {
       const el = element[0];
-      scope.$watchCollection('state', (value) => {
-        configurable.forEach((prop) => {
+      scope.$watchGroup(configurable, (newValues) => {
+        configurable.forEach((prop, idx) => {
           try {
+            const newVal = newValues[idx];
+
             if (validations[prop]) {
               const validator = validations[prop];
-              validator.valid(value[prop]);
+              validator.valid(newVal);
             }
-            el[prop] = value[prop];
+
+            el[prop] = newVal;
           } catch (e) {
             $log.error(e);
           }

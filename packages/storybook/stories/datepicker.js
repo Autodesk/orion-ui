@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import { storiesOf } from '@kadira/storybook';
-import { withKnobs, text, boolean, object, number } from '@kadira/storybook-addon-knobs';
+import { withKnobs, text, boolean, object } from '@kadira/storybook-addon-knobs';
 import React from 'react';
 import SourceViewer from '../components/source_viewer';
 import Example from '../components/example';

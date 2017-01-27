@@ -32,7 +32,7 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
     this.display = 'inline-block';
 
-    ['_setSelectedOption', '_handleKeydown', '_handleBlur', '_activate'].forEach((handler) => {
+    ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -52,8 +52,12 @@ class Select extends Element {
     this._queueRender();
   }
 
+  set chosenIndex(newValue) {
+    this.state.chosenIndex = newValue;
+    this._queueRender();
+  }
+
   connectedCallback() {
-    this._ensureButton();
     this._addListeners();
   }
 
@@ -79,14 +83,14 @@ class Select extends Element {
     this.addEventListener('keydown', this._handleKeydown);
     this.addEventListener('click', this._activate);
     this.menu.addEventListener('optionSelected', this._setSelectedOption);
-    this.button.addEventListener('blur', this._handleBlur);
+    this.menu.addEventListener('optionFocused', this._setFocusedOption);
   }
 
   _removeListeners() {
     this.removeEventListener('keydown', this._handleKeydown);
     this.removeEventListener('click', this._activate);
     this.menu.removeEventListener('optionSelected', this._setSelectedOption);
-    this.button.removeEventListener('blur', this._handleBlur);
+    this.menu.removeEventListener('optionFocused', this._setFocusedOption);
   }
 
   _activate() {
@@ -126,21 +130,31 @@ class Select extends Element {
           },
         }));
         break;
+      case 'Tab':
+      case 'Enter':
+        nextState = SelectState.optionChosen(this.state, this.state.focusedIndex);
+        this.dispatchEvent(new CustomEvent('change', {
+          detail: {
+            type: 'optionChosen',
+            state: nextState,
+          },
+        }));
+        break;
       default:
     }
-  }
-
-  _handleBlur() {
-    const nextState = SelectState.deactivated(this.state);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: { type: 'deactivated', state: nextState },
-    }));
   }
 
   _setSelectedOption(event) {
     const nextState = SelectState.optionChosen(this.state, event.detail.selectedIndex);
     this.dispatchEvent(new CustomEvent('change', {
       detail: { type: 'optionChosen', state: nextState },
+    }));
+  }
+
+  _setFocusedOption(event) {
+    const nextState = SelectState.optionFocused(this.state, event.detail.focusedIndex);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: { type: 'optionFocused', state: nextState },
     }));
   }
 
@@ -170,6 +184,15 @@ class Select extends Element {
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
       focusedIndex: this.state.focusedIndex,
+    });
+
+    let label = 'Select';
+    const chosenOption = this.state.options[this.state.chosenIndex];
+    if (chosenOption !== undefined) {
+      label = chosenOption.label;
+    }
+    applyProps(this.button, {
+      textContent: label,
     });
 
     super._render();

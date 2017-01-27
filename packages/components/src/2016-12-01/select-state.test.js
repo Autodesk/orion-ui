@@ -54,6 +54,22 @@ describe('SelectState', () => {
     });
   });
 
+  describe('optionFocused', () => {
+    let state;
+    let nextState;
+    before(() => {
+      state = {
+        open: true,
+        options,
+      };
+      nextState = SelectState.optionFocused(state, 1);
+    });
+
+    it('sets the focusedOption value', () => {
+      expect(nextState.focusedIndex).to.eq(1);
+    });
+  });
+
   describe('optionChosen', () => {
     let state;
     let nextState;

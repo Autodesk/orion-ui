@@ -21,12 +21,6 @@ const Element = require('./element.js');
 const ButtonState = require('./button-state.js');
 
 class SelectOption extends Element {
-  constructor() {
-    super();
-
-    this._passButtonState = this._passButtonState.bind(this);
-  }
-
   set label(newValue) {
     this.state.label = newValue;
     this._queueRender();
@@ -45,17 +39,14 @@ class SelectOption extends Element {
   connectedCallback() {
     this._ensureButton();
     this._queueRender();
-    this.button.addEventListener('change', this._passButtonState);
     this.addEventListener('click', this._emitSelectedEvent);
+    this.addEventListener('mouseover', this._emitFocusedEvent);
   }
 
   disconnectedCallback() {
     applyProps(this.button, ButtonState.getInitialState());
-    this.button.removeEventListener('change', this._passButtonState);
-  }
-
-  _passButtonState(event) {
-    applyProps(this.button, event.detail.state);
+    this.removeEventListener('click', this._emitSelectedEvent);
+    this.removeEventListener('mouseover', this._emitFocusedEvent);
   }
 
   _ensureButton() {
@@ -71,9 +62,16 @@ class SelectOption extends Element {
     this.appendChild(this.button);
   }
 
-  _emitSelectedEvent(event) {
+  _emitSelectedEvent() {
     this.dispatchEvent(new CustomEvent('optionSelected', {
       detail: { selectedIndex: this.state.index },
+      bubbles: true,
+    }));
+  }
+
+  _emitFocusedEvent() {
+    this.dispatchEvent(new CustomEvent('optionFocused', {
+      detail: { focusedIndex: this.state.index },
       bubbles: true,
     }));
   }

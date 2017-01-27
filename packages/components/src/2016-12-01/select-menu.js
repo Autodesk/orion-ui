@@ -97,6 +97,7 @@ class SelectMenu extends Element {
     this._ensurePopover();
     this.popover.addEventListener('clickedAway', this._close);
     this.list.addEventListener('optionSelected', this._cloneEvent);
+    this.list.addEventListener('optionFocused', this._cloneEvent);
   }
 
   _cloneEvent(event) {
@@ -106,6 +107,7 @@ class SelectMenu extends Element {
   _removeHandlers() {
     this.popover.removeEventListener('clickedAway', this._close);
     this.list.removeEventListener('optionSelected', this._cloneEvent);
+    this.list.removeEventListener('optionFocused', this._cloneEvent);
   }
 
   _close() {

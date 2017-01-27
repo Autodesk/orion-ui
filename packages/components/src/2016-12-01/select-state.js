@@ -30,6 +30,13 @@ const SelectState = {
     };
   },
 
+  optionFocused(state, focusedIndex) {
+    return {
+      ...state,
+      focusedIndex,
+    };
+  },
+
   optionChosen(state, chosenIndex) {
     return {
       ...state,

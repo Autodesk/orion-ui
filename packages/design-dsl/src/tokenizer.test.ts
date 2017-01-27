@@ -1,59 +1,6 @@
 import { deepEqual } from 'assert';
 import { TokenizerState, getNextToken, getNextLocation, initWorld, Token, World, character, startTag, endTag, comment, getTokens, jsonAttr, expressionAttr, expression, spaces, word, EOF, EOF_CHARACTER } from './tokenizer';
 
-import * as ts from 'typescript';
-
-// Given this source
-const omlSrc = `
-<orion => Alert>
-  <component => label>
-    <Alert label={label} />
-  </component>
-</orion>
-`
-
-// If we transform our tokens to a the following source
-const source = `
-  import * as o from 'orion-primitives';
-  import Alert from './Alert.oml';
-
-  o.component({}, (label) => [
-    Alert({ label: label })
-  ]);
-`;
-
-// We can feed it to the TypeScript compiler to get type checking
-// https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
-
-/**
- * High level tasks to get type checking
- *
- * - implement tree construction after tokenizer
- * - implement typescript-generate which takes the tree and generates the format above
- * - implement a custom TypeScript compiler host which overrides
- *   - module resolution, we want to avoid having the module resolver talk to the filesystem
- * - write interfaces for the standard orion-primitives
- *   - structural elements will probably have static interfaces
- *   - drawable element interfaces will be generated based on the supported values
- *     in the design system - generateInterface(designSystem)
- * - implement generateInterface(oml) which generates a TypeScript interface from an
- *   OML component definition (using primitives to infer types)
- * - Create a TypeScript program using ts.createProgram which understands the scope
- *   of the source file, it's dependencies, and the primitives
- * - Use the type checker to validate the OML component
- */
-
-const sourceFile = ts.createSourceFile('somefile.ts', source, ts.ScriptTarget.ES2015, /*setParentNodes*/ true);
-
-function visit(node: ts.Node) {
-  console.log(node);
-
-  ts.forEachChild(node, visit);
-}
-
-visit(sourceFile);
-
-
 const integration = `
   <!--awesome comments-->
   <orion

@@ -28,3 +28,17 @@ gemini.suite('expanded-select', (suite) => {
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
+
+gemini.suite('option-focus-select', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Select&selectedStory=option%20focus')
+    .setCaptureElements(".example")
+    .capture('expanded-select')
+});
+
+gemini.suite('selected-index-select', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Select&selectedStory=selectedIndex')
+    .setCaptureElements(".example")
+    .capture('expanded-select')
+});

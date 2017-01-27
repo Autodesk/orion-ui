@@ -16,19 +16,26 @@ limitations under the License.
 
 */
 import React from 'react';
-import { number } from '@kadira/storybook-addon-knobs';
+import { boolean, number } from '@kadira/storybook-addon-knobs';
 
 import SourceViewer from '../../components/source_viewer';
+import Example from '../../components/example';
+import { Select } from '../../../react/lib/2016-12-01';
 
 module.exports = function optionFocus() {
   const props = {
-    focusIndex: number('Focus Index', 0, {
+    focusedIndex: number('Focus Index', 1, {
       range: true,
       min: 0,
       max: 1,
       step: 1,
     }),
+    open: boolean('Open', true),
   };
+  const options = [
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 },
+  ];
 
   const sources = [
     {
@@ -46,7 +53,7 @@ render() {
   ];
 
   return (
-    <Select options={options} open={true} focusIndex={${props.focusIndex}} />
+    <Select options={options} open={true} focusedIndex={${props.focusedIndex}} />
   )
 }
 }
@@ -68,7 +75,7 @@ angular.module('app', [])
     { value: 'two', label: 'Two' }
   ];
 
-  app.focusIndex = ${props.focusIndex};
+  app.focusedIndex = ${props.focusedIndex};
 }]);
 
 // app.html
@@ -76,7 +83,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" focusIndex="{{app.focusIndex}}" />
+  <orion-select options="{{app.options}}" focusedIndex="{{app.focusedIndex}}" />
 </body>
 </html>
       `,
@@ -85,6 +92,9 @@ angular.module('app', [])
 
   return (
     <div>
+      <Example minHeight={100}>
+        <Select options={options} focusedIndex={props.focusedIndex} open={props.open} />
+      </Example>
       <SourceViewer sources={sources} />
     </div>
   );

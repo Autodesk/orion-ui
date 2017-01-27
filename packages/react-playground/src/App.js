@@ -54,7 +54,6 @@ class App extends React.Component {
   render() {
     let selectedSize;
     const selectedOption = this.buttonSizes[this.state.selectedIndex];
-    console.log('selectedIndex', this.state.selectedIndex)
     if (selectedOption !== undefined) {
       selectedSize = selectedOption.value;
     }

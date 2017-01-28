@@ -28,7 +28,7 @@ angular
       { label: 'White on blue', color: 'white', background: 'blue', size: 'small' },
     ];
 
-    that.handleClick = (button) => {
+    that.handleClick = () => {
       alert('button clicked!');
     }
 

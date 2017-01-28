@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const ButtonDirective = require('./button-directive');
+const ButtonComponent = require('./button');
 
 // eslint-disable-next-line no-undef
 const orion = angular
   .module('orion', [])
-  .directive('orionButton', ['$log', ButtonDirective]);
+  .component('orionButton', ButtonComponent);
 
 module.exports = orion;

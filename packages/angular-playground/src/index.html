@@ -38,7 +38,7 @@ limitations under the License.
       <a href="#" ng-click="ctrl.toggleDisability()">Toggle Button Disability</a> |
       <a href="#" ng-click="ctrl.embiggen()">Make all buttons big</a>
       <div ng-repeat="b in buttons">
-        <orion-button background="b.background" color="b.color" size="b.size" ng-click="ctrl.handleClick(b)" ng-disabled="b.disabled">{{b.label}}</orion-button>
+        <orion-button background="b.background" color="b.color" size="b.size" ng-disabled="b.disabled" ng-click="ctrl.handleClick()">{{b.label}}</orion-button>
       </div>
     </div>
   </body>

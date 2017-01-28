@@ -71,6 +71,7 @@ class Popover extends Element {
     if (this.clickTrap !== undefined) { return; }
 
     this.clickTrap = document.createElement('orion-element');
+    this.clickTrap.addAttribute('data-test-id', 'orion-popover__click-trap');
     this.clickTrap.position = 'cover';
   }
 
@@ -78,6 +79,7 @@ class Popover extends Element {
     if (this.frame !== undefined) { return; }
 
     this.frame = document.createElement('orion-element');
+    this.clickTrap.addAttribute('data-test-id', 'orion-popover__content');
     this.frame.position = 'absolute';
   }
 

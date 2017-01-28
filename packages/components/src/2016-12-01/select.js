@@ -30,6 +30,7 @@ class Select extends Element {
     this.BUTTON_HEIGHT = 35;
 
     this.state = SelectState.getInitialState();
+    this.state.options = [];
     this.display = 'inline-block';
 
     ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate'].forEach((handler) => {

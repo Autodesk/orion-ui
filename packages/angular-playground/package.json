@@ -1,0 +1,21 @@
+{
+  "name": "angular-playground",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "NODE_ENV=development mkdir -p lib && browserify src/app.js -o lib/app.js -t [ babelify --presets [ es2015 ] ]",
+    "start": "NODE_ENV=development npm run build && node ./server.js"
+  },
+  "author": "Autodesk Inc.",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@orion-ui/angular": "^1.0.0",
+    "angular": "^1.5.9",
+    "node-static": "^0.7.9"
+  },
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0"
+  }
+}

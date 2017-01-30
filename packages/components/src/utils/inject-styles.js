@@ -17,7 +17,16 @@ limitations under the License.
 const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
 (function injectStyles() {
-  if (!document.body) { return; }
+  if (!document) {
+    console.error('"document" is unavailable. Unable to inject orion styles.');
+    return;
+  }
+
+  if (!document.currentScript) {
+    console.error('"document.currentScript" is unavailable. Unable to inject orion styles.');
+    return;
+  }
+
   const styles = [BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing];
   let textContent = '';
 
@@ -25,7 +34,7 @@ const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Sp
     textContent += style.css;
   });
 
-  const element = window.document.createElement('style');
+  const element = document.createElement('style');
   element.textContent = textContent;
-  window.document.body.appendChild(element);
+  document.currentScript.parentNode.appendChild(element);
 }());

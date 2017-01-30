@@ -11,6 +11,7 @@
     "packages/style/**/*.js"
   ],
   "exclude": [
+    "packages/**/*.test.js",
     "packages/**/vendor/**/*.js"
   ]
 }

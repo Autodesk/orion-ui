@@ -64,6 +64,11 @@ class SelectMenu extends Element {
     this._queueRender();
   }
 
+  set selectedIndex(newValue) {
+    this.state.selectedIndex = newValue;
+    this._queueRender();
+  }
+
   connectedCallback() {
     this._addHandlers();
   }
@@ -128,6 +133,7 @@ class SelectMenu extends Element {
     const options = this.state.options.map((option, i) => {
       option.hasFocus = (i === this.state.focusedIndex);
       option.index = i;
+      option.isSelected = (i === this.state.selectedIndex);
       return option;
     });
 

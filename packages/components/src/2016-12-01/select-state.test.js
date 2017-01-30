@@ -48,9 +48,27 @@ describe('SelectState', () => {
       expect(result.open).to.be.true;
     });
 
-    it('focuses on the first option', () => {
-      const result = SelectState.activated({});
-      expect(result.focusedIndex).to.eq(0);
+    context('without a selectedIndex', () => {
+      it('focuses on the first option', () => {
+        const result = SelectState.activated({});
+        expect(result.focusedIndex).to.eq(0);
+      });
+    });
+
+    context('with a selectedIndex', () => {
+      let state;
+      let nextState;
+      before(() => {
+        state = {
+          selectedIndex: 1,
+          options,
+        };
+        nextState = SelectState.activated(state);
+      });
+
+      it('sets focus to the selectedIndex', () => {
+        expect(nextState.focusedIndex).to.eq(1);
+      });
     });
   });
 
@@ -151,12 +169,11 @@ describe('SelectState', () => {
       before(() => {
         nextState = SelectState.focusPrevious({
           open: false,
-          focusedIndex: undefined,
           options,
         });
       });
 
-      it('opens', () => {
+      it('opens the menu', () => {
         expect(nextState.open).to.be.true;
       });
 
@@ -180,6 +197,21 @@ describe('SelectState', () => {
 
       it('focuses the next item', () => {
         expect(nextState.focusedIndex).to.eq(2);
+      });
+    });
+
+    context('when closed', () => {
+      beforeEach(() => {
+        const state = {
+          open: false,
+          focusedIndex: 1,
+          options,
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('opens the menu', () => {
+        expect(nextState.open).to.be.true;
       });
     });
 

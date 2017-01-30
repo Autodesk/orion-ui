@@ -36,6 +36,11 @@ class SelectOption extends Element {
     this._queueRender();
   }
 
+  set isSelected(newValue) {
+    this.state.isSelected = newValue;
+    this._queueRender();
+  }
+
   connectedCallback() {
     this._ensureButton();
     this._queueRender();
@@ -58,6 +63,17 @@ class SelectOption extends Element {
       'border-radius': '0',
       size: 'small',
     });
+
+    this.checkMarkEl = document.createElement('orion-element');
+    applyProps(this.checkMarkEl, {
+      display: 'inline-block',
+      'text-align': 'center',
+    });
+    this.checkMarkEl.style.width = '18px';
+    this.labelEl = document.createElement('orion-element');
+
+    this.button.appendChild(this.checkMarkEl);
+    this.button.appendChild(this.labelEl);
 
     this.appendChild(this.button);
   }
@@ -85,11 +101,14 @@ class SelectOption extends Element {
         styles = { background: 'white', color: 'black' };
       }
 
-      applyProps(this.button, {
-        textContent: this.state.label,
-        ...styles,
-      });
-      this.button.textContent = this.state.label;
+      if (this.state.isSelected) {
+        this.checkMarkEl.textContent = '✓';
+      } else {
+        this.checkMarkEl.textContent = '';
+      }
+
+      applyProps(this.button, styles);
+      this.labelEl.textContent = this.state.label;
     }
 
     super._render();

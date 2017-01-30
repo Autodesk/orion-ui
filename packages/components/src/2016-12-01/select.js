@@ -185,6 +185,7 @@ class Select extends Element {
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
       focusedIndex: this.state.focusedIndex,
+      selectedIndex: this.state.selectedIndex,
     });
 
     let label = 'Select';

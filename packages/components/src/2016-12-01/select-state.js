@@ -23,9 +23,11 @@ const SelectState = {
   },
 
   activated(state) {
+    let focusedIndex = state.selectedIndex;
+    if (focusedIndex === undefined) { focusedIndex = 0; }
     return {
       ...state,
-      focusedIndex: 0,
+      focusedIndex,
       open: true,
     };
   },
@@ -54,6 +56,8 @@ const SelectState = {
   },
 
   focusPrevious(state) {
+    if (!state.open) { return this.activated(state); }
+
     let focusedIndex = state.focusedIndex;
     if (focusedIndex === undefined) {
       focusedIndex = 0;
@@ -66,12 +70,13 @@ const SelectState = {
 
     return {
       ...state,
-      open: true,
       focusedIndex,
     };
   },
 
   focusNext(state) {
+    if (!state.open) { return this.activated(state); }
+
     let focusedIndex = state.focusedIndex;
     if (focusedIndex === undefined) {
       focusedIndex = 0;
@@ -84,7 +89,6 @@ const SelectState = {
 
     return {
       ...state,
-      open: true,
       focusedIndex,
     };
   },

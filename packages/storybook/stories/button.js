@@ -69,6 +69,46 @@ storiesOf('Button', module)
           </Button>
         `,
       },
+      {
+        label: 'Angular 1.5.x',
+        source: `
+          // ------------------------------
+          // controller.js
+
+          import 'angular';
+          import '@orion-ui/angular/lib/2016-12-01';
+
+          angular
+            .module('app', ['orion']) // include orion module
+            .controller('DemoController', function() {
+              var ctrl = this;
+
+              ctrl.button = {
+                label: '${buttonText}',
+                color: '${props.color}',
+                background: '${props.background}'
+              };
+
+              ctrl.action = function(arg) {
+                alert(arg);
+              }
+            });
+
+          // ------------------------------
+          // index.html
+
+          <!doctype html>
+          <html>
+          <body ng-app="app">
+            <div ng-controller="DemoController as ctrl">
+              <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-click="ctrl.action('clicked')">
+                {{ctrl.button.label}}
+              </orion-button>
+            </div>
+          </body>
+          </html>
+        `,
+      },
     ];
 
     return (
@@ -106,6 +146,47 @@ storiesOf('Button', module)
         >
           {"${buttonText}"}
         </Button>
+      `,
+    },
+    {
+      label: 'Angular 1.5.x',
+      source: `
+        // ------------------------------
+        // controller.js
+
+        import 'angular';
+        import '@orion-ui/angular/lib/2016-12-01';
+
+        angular
+          .module('app', ['orion']) // include orion module
+          .controller('DemoController', function() {
+            var ctrl = this;
+
+            ctrl.button = {
+              label: '${buttonText}',
+              color: '${props.color}',
+              background: '${props.background}',
+              disabled: '${props.disabled}'
+            };
+
+            ctrl.action = function(arg) {
+              alert(arg);
+            }
+          });
+
+        // ------------------------------
+        // index.html
+
+        <!doctype html>
+        <html>
+        <body ng-app="app">
+          <div ng-controller="DemoController as ctrl">
+            <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-disabled="ctrl.button.disabled" ng-click="ctrl.action('clicked')">
+              {{ctrl.button.label}}
+            </orion-button>
+          </div>
+        </body>
+        </html>
       `,
     },
   ];
@@ -146,6 +227,46 @@ storiesOf('Button', module)
         </Button>
       `,
     },
+    {
+      label: 'Angular 1.5.x',
+      source: `
+        // ------------------------------
+        // controller.js
+
+        import 'angular';
+        import '@orion-ui/angular/lib/2016-12-01';
+
+        angular
+          .module('app', ['orion']) // include orion module
+          .controller('DemoController', function() {
+            var ctrl = this;
+
+            ctrl.button = {
+              label: '${buttonText}',
+              color: '${props.color}',
+              background: '${props.background}'
+            };
+
+            ctrl.action = function(arg) {
+              alert(arg);
+            }
+          });
+
+        // ------------------------------
+        // index.html
+
+        <!doctype html>
+        <html>
+        <body ng-app="app">
+          <div ng-controller="DemoController as ctrl">
+            <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-click="ctrl.action('clicked')">
+              {{ctrl.button.label}}
+            </orion-button>
+          </div>
+        </body>
+        </html>
+      `,
+    },
   ];
 
   return (
@@ -184,6 +305,47 @@ storiesOf('Button', module)
         </Button>
       `,
     },
+    {
+      label: 'Angular 1.5.x',
+      source: `
+        // ------------------------------
+        // controller.js
+
+        import 'angular';
+        import '@orion-ui/angular/lib/2016-12-01';
+
+        angular
+          .module('app', ['orion']) // include orion module
+          .controller('DemoController', function() {
+            var ctrl = this;
+
+            ctrl.button = {
+              label: '${buttonText}',
+              color: '${props.color}',
+              background: '${props.background}',
+              size: '${props.size}'
+            };
+
+            ctrl.action = function(arg) {
+              alert(arg);
+            }
+          });
+
+        // ------------------------------
+        // index.html
+
+        <!doctype html>
+        <html>
+        <body ng-app="app">
+          <div ng-controller="DemoController as ctrl">
+            <orion-button background="ctrl.button.background" color="ctrl.button.color" size="ctrl.button.size" ng-click="ctrl.action('clicked')">
+              {{ctrl.button.label}}
+            </orion-button>
+          </div>
+        </body>
+        </html>
+      `,
+    },
   ];
 
   return (
@@ -220,6 +382,47 @@ storiesOf('Button', module)
         >
           {"${buttonText}"}
         </Button>
+      `,
+    },
+    {
+      label: 'Angular 1.5.x',
+      source: `
+        // ------------------------------
+        // controller.js
+
+        import 'angular';
+        import '@orion-ui/angular/lib/2016-12-01';
+
+        angular
+          .module('app', ['orion']) // include orion module
+          .controller('DemoController', function() {
+            var ctrl = this;
+
+            ctrl.button = {
+              label: '${buttonText}',
+              color: '${props.color}',
+              background: '${props.background}',
+              size: '${props.size}'
+            };
+
+            ctrl.action = function(arg) {
+              alert(arg);
+            }
+          });
+
+        // ------------------------------
+        // index.html
+
+        <!doctype html>
+        <html>
+        <body ng-app="app">
+          <div ng-controller="DemoController as ctrl">
+            <orion-button background="ctrl.button.background" color="ctrl.button.color" size="ctrl.button.size" ng-click="ctrl.action('clicked')">
+              {{ctrl.button.label}}
+            </orion-button>
+          </div>
+        </body>
+        </html>
       `,
     },
   ];

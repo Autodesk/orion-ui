@@ -28,6 +28,14 @@ angular
       { label: 'White on blue', color: 'white', background: 'blue', size: 'small' },
     ];
 
+    $scope.sizes = [
+      { label: 'Small', value: 'small', key: 1 },
+      { label: 'Medium', value: 'medium', key: 2 },
+      { label: 'Large', value: 'large', key: 3 },
+    ];
+
+    $scope.buttonSize = 'medium';
+
     that.handleClick = () => {
       alert('button clicked!');
     }
@@ -38,9 +46,16 @@ angular
       });
     }
 
-    this.embiggen = () => {
-      $scope.buttons.forEach((button) => {
-        button.size = 'large';
-      });      
+    this.setSize = (event) => {
+      const selectedOption = $scope.sizes[event.detail.state.selectedIndex];
+      if (selectedOption) {
+        let selectedSize = selectedOption.value;
+
+        $scope.buttons.forEach((button) => {
+          button.size = selectedSize;
+
+        });
+        $scope.$apply();
+      }
     }
   }]);

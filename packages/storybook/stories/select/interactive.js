@@ -79,14 +79,10 @@ angular.module('app', [Select.moduleName])
     { value: 'two', label: 'Two' }
   ];
 
-  app.selectState = Select.State.create();
-
   app.onChange = (event) => {
-    if (event.type === 'selectedIndexChange') {
+    if (event.detail.type === 'optionSelected') {
       // do something
     }
-
-    app.selectState = event.state;
   }
 }]);
 
@@ -97,8 +93,7 @@ angular.module('app', [Select.moduleName])
 <body ng-controller="AppController as app">
   <orion-select
     options="{{app.options}}"
-    selectState="{{app.selectState}}"
-    ng-change="app.onChange(selectState)" />
+    on-change="app.onChange(selectState)" />
 </body>
 </html>
       `,

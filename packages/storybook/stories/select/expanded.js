@@ -75,7 +75,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="{{app.open}}"  />
+  <orion-select options="{{app.options}}" open="{{app.open}}" selectedIndex={1} />
 </body>
 </html>
       `,

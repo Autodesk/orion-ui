@@ -15,10 +15,12 @@ limitations under the License.
 
 */
 const ButtonComponent = require('./button');
+const SelectComponent = require('./select');
 
 // eslint-disable-next-line no-undef
 const orion = angular
   .module('orion', [])
-  .component('orionButton', ButtonComponent);
+  .component('orionButton', ButtonComponent)
+  .component('orionSelect', SelectComponent);
 
 module.exports = orion;

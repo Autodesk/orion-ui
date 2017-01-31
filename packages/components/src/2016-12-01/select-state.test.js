@@ -22,6 +22,12 @@ const expect = chai.expect;
 const SelectState = require('./select-state.js');
 
 describe('SelectState', () => {
+  const options = [
+    { label: 'Red', value: '#F00' },
+    { label: 'Green', value: '#0F0' },
+    { label: 'Blue', value: '#00F' },
+  ];
+
   describe('getInitialState', () => {
     it('is not open', () => {
       const initialState = SelectState.getInitialState();
@@ -41,26 +47,60 @@ describe('SelectState', () => {
       const result = SelectState.activated({});
       expect(result.open).to.be.true;
     });
+
+    context('without a selectedIndex', () => {
+      it('focuses on the first option', () => {
+        const result = SelectState.activated({});
+        expect(result.focusedIndex).to.eq(0);
+      });
+    });
+
+    context('with a selectedIndex', () => {
+      let state;
+      let nextState;
+      before(() => {
+        state = {
+          selectedIndex: 1,
+          options,
+        };
+        nextState = SelectState.activated(state);
+      });
+
+      it('sets focus to the selectedIndex', () => {
+        expect(nextState.focusedIndex).to.eq(1);
+      });
+    });
   });
 
-  describe('optionChosen', () => {
+  describe('optionFocused', () => {
     let state;
     let nextState;
     before(() => {
       state = {
         open: true,
-        value: undefined,
-        options: [
-          { label: 'Red', value: '#F00' },
-          { label: 'Green', value: '#0F0' },
-          { label: 'Blue', value: '#00F' },
-        ],
+        options,
       };
-      nextState = SelectState.optionChosen(state, 1);
+      nextState = SelectState.optionFocused(state, 1);
     });
 
-    it('sets value to the chosen option', () => {
-      expect(nextState.value).to.eq('#0F0');
+    it('sets the focusedOption value', () => {
+      expect(nextState.focusedIndex).to.eq(1);
+    });
+  });
+
+  describe('optionSelected', () => {
+    let state;
+    let nextState;
+    before(() => {
+      state = {
+        open: true,
+        options,
+      };
+      nextState = SelectState.optionSelected(state, 1);
+    });
+
+    it('sets value to the selected option', () => {
+      expect(nextState.selectedIndex).to.eq(1);
     });
 
     it('closes the menu', () => {
@@ -69,7 +109,7 @@ describe('SelectState', () => {
 
     context('with an non-existant option index', () => {
       before(() => {
-        nextState = SelectState.optionChosen(state, 5);
+        nextState = SelectState.optionSelected(state, 5);
       });
 
       it('set value to undefined', () => {
@@ -81,36 +121,130 @@ describe('SelectState', () => {
   describe('deactivated', () => {
     let nextState;
     before(() => {
-      nextState = SelectState.deactivated({ open: true });
+      nextState = SelectState.deactivated({ open: true, focusedIndex: 1 });
     });
 
     it('sets open to false', () => {
       expect(nextState.open).to.be.false;
     });
+
+    it('sets focusedIndex to undefined', () => {
+      expect(nextState.focusedIndex).to.be.undefined;
+    });
   });
 
   describe('focusPrevious', () => {
-    context('when closed', () => {
-      let nextState;
-      before(() => {
-        nextState = SelectState.focusPrevious({ open: false });
+    let nextState;
+    context('when open', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 1,
+          options,
+        };
+        nextState = SelectState.focusPrevious(state);
       });
 
-      it('opens', () => {
+      it('focuses the next item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
+
+    context('when first option has focus', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 0,
+          options,
+        };
+        nextState = SelectState.focusPrevious(state);
+      });
+
+      it('focuses the last item', () => {
+        expect(nextState.focusedIndex).to.eq(2);
+      });
+    });
+
+    context('when closed', () => {
+      before(() => {
+        nextState = SelectState.focusPrevious({
+          open: false,
+          options,
+        });
+      });
+
+      it('opens the menu', () => {
         expect(nextState.open).to.be.true;
+      });
+
+      it('focuses the first item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
       });
     });
   });
 
   describe('focusNext', () => {
+    let nextState;
+    context('when open', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 1,
+          options,
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('focuses the next item', () => {
+        expect(nextState.focusedIndex).to.eq(2);
+      });
+    });
+
     context('when closed', () => {
-      let nextState;
+      beforeEach(() => {
+        const state = {
+          open: false,
+          focusedIndex: 1,
+          options,
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('opens the menu', () => {
+        expect(nextState.open).to.be.true;
+      });
+    });
+
+    context('when last option has focus', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 2,
+          options,
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('focuses the first item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
+
+    context('when closed', () => {
       before(() => {
-        nextState = SelectState.focusPrevious({ open: false });
+        nextState = SelectState.focusNext({
+          open: false,
+          focusedIndex: undefined,
+          options,
+        });
       });
 
       it('opens', () => {
         expect(nextState.open).to.be.true;
+      });
+
+      it('focuses the first item', () => {
+        expect(nextState.focusedIndex).to.eq(0);
       });
     });
   });

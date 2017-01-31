@@ -23,22 +23,26 @@ const SelectState = {
   },
 
   activated(state) {
+    let focusedIndex = state.selectedIndex;
+    if (focusedIndex === undefined) { focusedIndex = 0; }
     return {
       ...state,
+      focusedIndex,
       open: true,
     };
   },
 
-  optionChosen(state, chosenIndex) {
-    let chosenValue;
-    const chosenOption = state.options[chosenIndex];
-    if (typeof chosenOption !== 'undefined') {
-      chosenValue = chosenOption.value;
-    }
-
+  optionFocused(state, focusedIndex) {
     return {
       ...state,
-      value: chosenValue,
+      focusedIndex,
+    };
+  },
+
+  optionSelected(state, selectedIndex) {
+    return {
+      ...state,
+      selectedIndex,
       open: false,
     };
   },
@@ -47,20 +51,45 @@ const SelectState = {
     return {
       ...state,
       open: false,
+      focusedIndex: undefined,
     };
   },
 
   focusPrevious(state) {
+    if (!state.open) { return this.activated(state); }
+
+    let focusedIndex = state.focusedIndex;
+    if (focusedIndex === undefined) {
+      focusedIndex = 0;
+    } else {
+      focusedIndex = state.focusedIndex - 1;
+      if (focusedIndex < 0) {
+        focusedIndex = state.options.length - 1;
+      }
+    }
+
     return {
       ...state,
-      open: true,
+      focusedIndex,
     };
   },
 
   focusNext(state) {
+    if (!state.open) { return this.activated(state); }
+
+    let focusedIndex = state.focusedIndex;
+    if (focusedIndex === undefined) {
+      focusedIndex = 0;
+    } else {
+      focusedIndex = state.focusedIndex + 1;
+      if (focusedIndex > state.options.length - 1) {
+        focusedIndex = 0;
+      }
+    }
+
     return {
       ...state,
-      open: true,
+      focusedIndex,
     };
   },
 };

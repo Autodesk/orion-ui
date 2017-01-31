@@ -58,7 +58,7 @@ class Button extends React.Component {
 }
 
 const colors = Object.keys(Skins.colors);
-const sizes = ['small', 'large'];
+const sizes = ['small', 'medium', 'large'];
 
 Button.propTypes = {
   children: PropTypes.node,

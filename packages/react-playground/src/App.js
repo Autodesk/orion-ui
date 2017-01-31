@@ -25,9 +25,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       disabled: false,
+      selectedIndex: 1,
     };
 
-    ['handleClick', 'toggleDisabled'].forEach((fn) => {
+    ['setSelectedIndex', 'handleClick', 'toggleDisabled'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
 
@@ -46,20 +47,31 @@ class App extends React.Component {
     this.setState({ disabled: !this.state.disabled });
   }
 
+  setSelectedIndex(event) {
+    this.setState({ selectedIndex: event.detail.state.selectedIndex });
+  }
+
   render() {
+    let selectedSize;
+    const selectedOption = this.buttonSizes[this.state.selectedIndex];
+    if (selectedOption !== undefined) {
+      selectedSize = selectedOption.value;
+    }
+
     return (
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+        <div style={{ margin: '40px' }}>
           <input />
-          <Select options={this.buttonSizes} />
+          <Select options={this.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
-          <Button skin="black" size={this.state.size} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
-        </p>
+        </div>
+        <div>
+          <Button size={selectedSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+        </div>
       </div>
     );
   }

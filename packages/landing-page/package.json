@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "react-scripts": "0.8.5",
+    "react-syntax-highlighter": "^4.0.1",
     "tachyons": "^4.6.1"
   },
   "dependencies": {

@@ -42,8 +42,8 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 class App extends React.Component {
 render() {
   const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   return <Select options={options} open={${props.open}} />;
@@ -63,8 +63,8 @@ angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
   app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   app.open = ${props.open};
@@ -75,7 +75,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="{{app.open}}" selectedIndex={1} />
+  <orion-select options="{{app.options}}" open="{{app.open}}" />
 </body>
 </html>
       `,
@@ -85,7 +85,7 @@ angular.module('app', [])
   return (
     <div>
       <Example minHeight={100}>
-        <Select options={options} selectedIndex={1} open={props.open} />
+        <Select options={options} open={props.open} />
       </Example>
       <SourceViewer sources={sources} />
     </div>

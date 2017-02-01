@@ -103,6 +103,8 @@ class Select extends Element {
   }
 
   _handleKeydown(event) {
+    event.preventDefault();
+
     let nextState;
     switch (eventKey(event)) {
       case 'Escape':

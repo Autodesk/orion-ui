@@ -23,6 +23,7 @@ program
   .command('compile', 'compile src to lib for each package')
   .command('deploy', 'deploy build directory')
   .command('copy-package-builds', 'copies build directories from packages to top level build')
+  .command('set-package-to-root', 'copies contents of  :build/:packageName to :build')
   .command('ensure-copyright', 'ensures each file has a copyright notice')
   .command('specs', 'runs specs for each package')
   .parse(process.argv);

@@ -2,6 +2,7 @@
   "name": "marketing",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "devDependencies": {
     "react-scripts": "0.8.5",
     "react-syntax-highlighter": "^4.0.1",

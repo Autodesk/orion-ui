@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+function prevState(state) {
+  return {
+    disabled: state.disabled,
+    hasFocus: state.hasFocus,
+    hover: state.hover,
+  };
+}
+
 const ButtonState = {
   getInitialState(state = {}) {
     return {
@@ -25,17 +33,24 @@ const ButtonState = {
   },
 
   enterHover(state) {
-    return { ...state, hover: true };
+    return { ...prevState(state), hover: true };
   },
   leaveHover(state) {
-    return { ...state, hover: false };
+    return { ...prevState(state), hover: false };
   },
 
   enterDisabled(state) {
-    return { ...state, disabled: true };
+    return { ...prevState(state), disabled: true };
   },
   leaveDisabled(state) {
-    return { ...state, disabled: false };
+    return { ...prevState(state), disabled: false };
+  },
+
+  focus(state) {
+    return { ...prevState(state), hasFocus: true };
+  },
+  blur(state) {
+    return { ...prevState(state), hasFocus: false };
   },
 
   focus(state) {

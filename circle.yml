@@ -34,7 +34,7 @@ deployment:
       - npm run copy-package-builds
       - npm run deploy-master
   snapshot:
-    branch: deploy-shows-status
+    branch: /.*/
     commands:
       - npm run build
       - npm run copy-package-builds

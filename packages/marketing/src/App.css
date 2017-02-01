@@ -14,13 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const ButtonComponent = require('./button');
-const SelectComponent = require('./select');
+ul, ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
-// eslint-disable-next-line no-undef
-const orion = angular
-  .module('orion', [])
-  .component('orionButton', ButtonComponent)
-  .component('orionSelect', SelectComponent);
+.fx-row {
+  display: flex;
+  flex-direction: row;
+}
 
-module.exports = orion;
+@media (min-width: 60em) {
+  .fx-row-l {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.fx-g1 {
+  flex-grow: 1;
+}
+
+.fx-g2 {
+  flex-grow: 2;
+}
+
+.fx-w {
+  flex-wrap: wrap;
+}
+
+.fai-c {
+  align-items: center
+}

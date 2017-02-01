@@ -19,17 +19,23 @@ import React from 'react';
 import { boolean, number } from '@kadira/storybook-addon-knobs';
 
 import SourceViewer from '../../components/source_viewer';
+import Example from '../../components/example';
+import { Select } from '../../../react/lib/2016-12-01';
 
 module.exports = function selectedIndex() {
   const props = {
-    open: boolean('Open', false),
-    selectedIndex: number('Selected Index', 0, {
+    open: boolean('Open', true),
+    selectedIndex: number('Selected Index', 1, {
       range: true,
       min: 0,
       max: 1,
       step: 1,
     }),
   };
+  const options = [
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 },
+  ];
 
   const sources = [
     {
@@ -42,8 +48,8 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 class App extends React.Component {
 render() {
   const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   return (
@@ -65,8 +71,8 @@ angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
   app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   app.open = ${props.open};
@@ -78,7 +84,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="{{app.open}}" selectedIndex="{{app.selectedIndex}}" />
+  <orion-select options="{{app.options}}" open="{{app.open}}" selected-index="{{app.selectedIndex}}" />
 </body>
 </html>
       `,
@@ -87,6 +93,9 @@ angular.module('app', [])
 
   return (
     <div>
+      <Example minHeight={100}>
+        <Select options={options} selectedIndex={props.selectedIndex} open={props.open} />
+      </Example>
       <SourceViewer sources={sources} />
     </div>
   );

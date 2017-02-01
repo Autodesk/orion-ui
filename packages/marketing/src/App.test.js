@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const ButtonComponent = require('./button');
-const SelectComponent = require('./select');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-// eslint-disable-next-line no-undef
-const orion = angular
-  .module('orion', [])
-  .component('orionButton', ButtonComponent)
-  .component('orionSelect', SelectComponent);
-
-module.exports = orion;
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+});

@@ -18,7 +18,7 @@ limitations under the License.
 const { Skins } = require('@orion-ui/style/lib/2016-12-01');
 
 const colors = Object.keys(Skins.colors);
-const sizes = ['small', 'large'];
+const sizes = ['small', 'medium', 'large'];
 
 function ValidationException(message) {
   this.name = 'ValidationException';

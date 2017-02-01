@@ -14,13 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const ButtonComponent = require('./button');
-const SelectComponent = require('./select');
 
-// eslint-disable-next-line no-undef
-const orion = angular
-  .module('orion', [])
-  .component('orionButton', ButtonComponent)
-  .component('orionSelect', SelectComponent);
+import React from 'react';
 
-module.exports = orion;
+module.exports = function Nav() {
+  const links = [
+    { label: 'See All Components', url: '/storybook' },
+    { label: 'GitHub', url: 'https://github.com/orion-ui/orion' },
+  ];
+
+  const linkNodes = links.map((link) => {
+    return (
+      <li key={link.label} className="fl">
+        <a href={link.url} className="pl3">{link.label}</a>
+      </li>
+    )
+  })
+
+  return (
+    <ul className="fr mt3">{linkNodes}</ul>
+  );
+}

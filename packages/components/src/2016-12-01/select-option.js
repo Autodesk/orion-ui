@@ -21,30 +21,37 @@ const Element = require('./element.js');
 const ButtonState = require('./button-state.js');
 
 class SelectOption extends Element {
-  constructor() {
-    super();
-
-    this._passButtonState = this._passButtonState.bind(this);
-  }
-
   set label(newValue) {
     this.state.label = newValue;
+    this._queueRender();
+  }
+
+  set index(newValue) {
+    this.state.index = newValue;
+    this._queueRender();
+  }
+
+  set hasFocus(newValue) {
+    this.state.hasFocus = newValue;
+    this._queueRender();
+  }
+
+  set isSelected(newValue) {
+    this.state.isSelected = newValue;
     this._queueRender();
   }
 
   connectedCallback() {
     this._ensureButton();
     this._queueRender();
-    this.button.addEventListener('change', this._passButtonState);
+    this.addEventListener('click', this._emitSelectedEvent);
+    this.addEventListener('mouseover', this._emitFocusedEvent);
   }
 
   disconnectedCallback() {
     applyProps(this.button, ButtonState.getInitialState());
-    this.button.removeEventListener('change', this._passButtonState);
-  }
-
-  _passButtonState(event) {
-    applyProps(this.button, event.detail.state);
+    this.removeEventListener('click', this._emitSelectedEvent);
+    this.removeEventListener('mouseover', this._emitFocusedEvent);
   }
 
   _ensureButton() {
@@ -55,16 +62,53 @@ class SelectOption extends Element {
       display: 'block',
       'border-radius': '0',
       size: 'small',
-      background: 'white',
-      color: 'black',
     });
+
+    this.checkMarkEl = document.createElement('orion-element');
+    applyProps(this.checkMarkEl, {
+      display: 'inline-block',
+      'text-align': 'center',
+    });
+    this.checkMarkEl.style.width = '18px';
+    this.labelEl = document.createElement('orion-element');
+
+    this.button.appendChild(this.checkMarkEl);
+    this.button.appendChild(this.labelEl);
 
     this.appendChild(this.button);
   }
 
+  _emitSelectedEvent() {
+    this.dispatchEvent(new CustomEvent('optionSelected', {
+      detail: { selectedIndex: this.state.index },
+      bubbles: true,
+    }));
+  }
+
+  _emitFocusedEvent() {
+    this.dispatchEvent(new CustomEvent('optionFocused', {
+      detail: { focusedIndex: this.state.index },
+      bubbles: true,
+    }));
+  }
+
   _render() {
     if (this.button !== undefined) {
-      this.button.textContent = this.state.label;
+      let styles;
+      if (this.state.hasFocus) {
+        styles = { background: 'blue', color: 'white' };
+      } else {
+        styles = { background: 'white', color: 'black' };
+      }
+
+      if (this.state.isSelected) {
+        this.checkMarkEl.textContent = '✓';
+      } else {
+        this.checkMarkEl.textContent = '';
+      }
+
+      applyProps(this.button, styles);
+      this.labelEl.textContent = this.state.label;
     }
 
     super._render();

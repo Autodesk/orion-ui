@@ -53,8 +53,8 @@ constructor(props) {
 
 render() {
   const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
@@ -75,18 +75,14 @@ angular.module('app', [Select.moduleName])
 .controller('AppController', function() {
   var app = this;
   app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
-  app.selectState = Select.State.create();
-
   app.onChange = (event) => {
-    if (event.type === 'selectedIndexChange') {
+    if (event.detail.type === 'optionSelected') {
       // do something
     }
-
-    app.selectState = event.state;
   }
 }]);
 
@@ -97,8 +93,7 @@ angular.module('app', [Select.moduleName])
 <body ng-controller="AppController as app">
   <orion-select
     options="{{app.options}}"
-    selectState="{{app.selectState}}"
-    ng-change="app.onChange(selectState)" />
+    on-change="app.onChange(selectState)" />
 </body>
 </html>
       `,

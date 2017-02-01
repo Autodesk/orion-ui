@@ -28,11 +28,10 @@ class SelectMenu extends Element {
     super();
 
     this.MENU_WIDTH = '100px';
-    this.addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('closed'));
-    });
 
-    this._close = this._close.bind(this);
+    ['_cloneEvent', '_close'].forEach((handler) => {
+      this[handler] = this[handler].bind(this);
+    });
   }
 
   set options(newOptions) {
@@ -60,18 +59,22 @@ class SelectMenu extends Element {
     this._queueRender();
   }
 
+  set focusedIndex(newValue) {
+    this.state.focusedIndex = newValue;
+    this._queueRender();
+  }
+
+  set selectedIndex(newValue) {
+    this.state.selectedIndex = newValue;
+    this._queueRender();
+  }
+
   connectedCallback() {
-    this._addPopoverHandlers();
+    this._addHandlers();
   }
 
   disconnectedCallback() {
-    this._removePopoverHandlers();
-  }
-
-  _addPopoverHandlers() {
-    this._ensurePopover();
-
-    this.popover.addEventListener('clickedAway', this._close);
+    this._removeHandlers();
   }
 
   _ensurePopover() {
@@ -95,8 +98,21 @@ class SelectMenu extends Element {
     });
   }
 
-  _removePopoverHandlers() {
+  _addHandlers() {
+    this._ensurePopover();
+    this.popover.addEventListener('clickedAway', this._close);
+    this.list.addEventListener('optionSelected', this._cloneEvent);
+    this.list.addEventListener('optionFocused', this._cloneEvent);
+  }
+
+  _cloneEvent(event) {
+    this.dispatchEvent(new CustomEvent(event.type, event));
+  }
+
+  _removeHandlers() {
     this.popover.removeEventListener('clickedAway', this._close);
+    this.list.removeEventListener('optionSelected', this._cloneEvent);
+    this.list.removeEventListener('optionFocused', this._cloneEvent);
   }
 
   _close() {
@@ -114,8 +130,15 @@ class SelectMenu extends Element {
       open: this.state.open,
     });
 
+    const options = this.state.options.map((option, i) => {
+      option.hasFocus = (i === this.state.focusedIndex);
+      option.index = i;
+      option.isSelected = (i === this.state.selectedIndex);
+      return option;
+    });
+
     applyProps(this.list, {
-      items: this.state.options,
+      items: options,
     });
 
     super._render();

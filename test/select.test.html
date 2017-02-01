@@ -67,7 +67,28 @@ limitations under the License.
 
         context('and clicking an option', () => {
           beforeEach(() => {
-            let clickTrap = select.closest('body').querySelector('orion-element');
+            let menu = select.closest('body').querySelector('[data-test-id="orion-popover__content"]');
+            menu.querySelectorAll('orion-select-option')[1].dispatchEvent(new Event('click'));
+          });
+
+          it('closes the menu', (done) => {
+            setTimeout(() => {
+              expect(select.closest('body').querySelector('orion-list')).to.be.null;
+              done();
+            }, 75);
+          });
+
+          it('shows the selected label', (done) => {
+            setTimeout(() => {
+              expect(select.innerText).to.have.string('Aardvarks');
+              done();
+            }, 705);
+          });
+        });
+
+        context('and clicking away', () => {
+          beforeEach(() => {
+            let clickTrap = select.closest('body').querySelector('[data-test-id="orion-popover__click-trap"]');
             clickTrap.dispatchEvent(new Event('click'));
           });
 
@@ -77,7 +98,7 @@ limitations under the License.
               done();
             }, 75);
           });
-        })
+        });
       });
     });
 

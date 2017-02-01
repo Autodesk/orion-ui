@@ -181,7 +181,7 @@ storiesOf('Button', module)
         <html>
         <body ng-app="app">
           <div ng-controller="DemoController as ctrl">
-            <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-disabled="ctrl.button.disabled" ng-click="ctrl.action('clicked')">
+            <orion-button background="ctrl.button.background" color="ctrl.button.color" disabled="ctrl.button.disabled" ng-click="ctrl.action('clicked')">
               {{ctrl.button.label}}
             </orion-button>
           </div>

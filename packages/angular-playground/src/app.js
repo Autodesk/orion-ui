@@ -15,6 +15,7 @@ limitations under the License.
 
 */
 
+import '../vendor/custom-elements-polyfill';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular

@@ -19,7 +19,7 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const colorValidator = new ColorValidator();
 const sizeValidator = new SizeValidator();
-const configurable = ['color', 'background', 'size'];
+const configurable = ['color', 'background', 'size', 'disabled'];
 
 const validations = {
   color: colorValidator,
@@ -27,16 +27,19 @@ const validations = {
   size: sizeValidator,
 };
 
-// Use ng-disabled and ng-click
+// Use ng-click
 const ButtonComponent = {
   bindings: {
     background: '<',
     color: '<',
     size: '<',
+    disabled: '<',
   },
 
   controller: function controller($element, $log) { // eslint-disable object-shorthand
-    this.$onChanges = (changesObj) => {
+    const elementReady = window.customElements.whenDefined('orion-button');
+
+    this.$onChanges = changesObj => elementReady.then(() => {
       const el = $element[0];
       const props = Object.keys(changesObj);
       props.forEach((prop) => {
@@ -61,7 +64,7 @@ const ButtonComponent = {
           $log.error(e);
         }
       });
-    };
+    });
   },
 };
 

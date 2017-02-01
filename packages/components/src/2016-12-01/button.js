@@ -40,11 +40,20 @@ class Button extends Element {
       pointer: true,
       ...this.defaults,
     });
+
+    ['_focus', '_blur'].forEach((fn) => {
+      this[fn] = this[fn].bind(this);
+    });
   }
 
   connectedCallback() {
     this._addListeners();
     this.setAttribute('tabIndex', 0);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('focus', this._focus);
+    this.removeEventListener('blur', this._blur);
   }
 
   _addListeners() {
@@ -77,6 +86,9 @@ class Button extends Element {
         event.stopImmediatePropagation();
       }
     });
+
+    this.addEventListener('focus', this._focus);
+    this.addEventListener('blur', this._blur);
   }
 
   set background(val = this.defaults.background) {
@@ -101,9 +113,9 @@ class Button extends Element {
 
   set disabled(val) {
     if (val) {
-      this.state = ButtonState.enterDisabled(this.state);
+      applyProps(this.state, ButtonState.enterDisabled(this.state));
     } else {
-      this.state = ButtonState.leaveDisabled(this.state);
+      applyProps(this.state, ButtonState.leaveDisabled(this.state));
     }
 
     this._queueRender();
@@ -122,11 +134,20 @@ class Button extends Element {
     return this.state.size;
   }
 
+  set hasFocus(val) {
+    this.state.hasFocus = val;
+    this._queueRender();
+  }
+
+  get hasFocus() {
+    return this.state.hasFocus;
+  }
+
   set hover(val) {
     if (val) {
-      this.state = ButtonState.enterHover(this.state);
+      applyProps(this.state, ButtonState.enterHover(this.state));
     } else {
-      this.state = ButtonState.leaveHover(this.state);
+      applyProps(this.state, ButtonState.leaveHover(this.state));
     }
 
     this._queueRender();
@@ -136,11 +157,31 @@ class Button extends Element {
     return this.state.hover;
   }
 
+  _focus() {
+    let nextState = ButtonState.focus(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'focus',
+        state: nextState,
+      },
+    }));
+  }
+
+  _blur() {
+    let nextState = ButtonState.blur(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'blur',
+        state: nextState,
+      },
+    }));
+  }
+
   _render() {
     if (this.state.disabled) {
       this.state.background = 'grey';
       this.state.color = 'white';
-    } else if (this.state.hover) {
+    } else if (this.state.hover || this.state.hasFocus) {
       this.state.background = 'blue';
       this.state.color = 'white';
     } else {

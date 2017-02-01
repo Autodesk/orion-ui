@@ -26,7 +26,7 @@ describe('ButtonState', () => {
     it('returns a default state', () => {
       const initialState = ButtonState.getInitialState();
       expect(initialState.disabled).to.be.false;
-      expect(initialState.focus).to.be.false;
+      expect(initialState.hasFocus).to.be.false;
       expect(initialState.hover).to.be.false;
     });
 
@@ -34,7 +34,7 @@ describe('ButtonState', () => {
       it('extends default state with passed state', () => {
         const initialState = ButtonState.getInitialState({ disabled: true });
         expect(initialState.disabled).to.be.true;
-        expect(initialState.focus).to.be.false;
+        expect(initialState.hasFocus).to.be.false;
         expect(initialState.hover).to.be.false;
       });
     });
@@ -65,6 +65,27 @@ describe('ButtonState', () => {
     it('sets disabled to false', () => {
       const nextState = ButtonState.leaveDisabled({ disabled: true });
       expect(nextState.disabled).to.be.false;
+    });
+  });
+
+  describe('focus', () => {
+    it('sets hasFocus to true', () => {
+      const nextState = ButtonState.focus({ hasFocus: false });
+      expect(nextState.hasFocus).to.be.true;
+    });
+  });
+
+  describe('blur', () => {
+    it('sets hasFocus to false', () => {
+      const nextState = ButtonState.blur({ hasFocus: true });
+      expect(nextState.hasFocus).to.be.false;
+    });
+  });
+
+  context('with an irrelevant property', () => {
+    it('does not return it', () => {
+      const nextState = ButtonState.focus({ foo: 'bar' });
+      expect(nextState.foo).to.be.undefined;
     });
   });
 });

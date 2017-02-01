@@ -20,15 +20,23 @@ const knownPaths = require('./modules/known-paths');
 const deployConfig = require('./modules/deploy-config');
 const program = require('commander');
 const s3 = require('s3');
+const GithubUploadNotification = require('./modules/github-upload-notification');
 
 program
   .description('deploy build directory')
   .option('--build-id <id>', 'Unique build id')
+  .option('--gh-token <token>', 'GitHub token with access to create statuses.')
+  .option('--gh-sha <sha>', 'The SHA1 of the commit being deployed.')
   .parse(process.argv);
 
 if (!program.buildId) {
   console.error('Error missing buildId');
   program.outputHelp();
+}
+
+if (!program.ghToken || !program.ghSha) {
+  program.outputHelp();
+  throw new Error('Error missing gh-token and gh-sha');
 }
 
 // Upload the root build
@@ -40,9 +48,12 @@ const s3Params = {
   Prefix: deployConfig.SnapshotPrefix(program.buildId),
 };
 
-
 const client = s3.createClient();
 const uploader = client.uploadDir({ localDir, s3Params });
+
+const notice = new GithubUploadNotification(program.ghToken, program.ghSha);
+
+const creatingStatus = notice.startDeploy();
 
 uploader.on('error', (err) => {
   console.error(err);
@@ -52,5 +63,11 @@ uploader.on('error', (err) => {
 uploader.on('fileUploadEnd', localFilePath => console.log(`> ${localFilePath}`));
 
 uploader.on('end', () => {
-  console.log(`Uploaded to https://${s3Params.Bucket}/${s3Params.Prefix}`);
+  const targetUrl = `https://${s3Params.Bucket}/${s3Params.Prefix}/storybook/index.html`;
+
+  creatingStatus.then(() => {
+    notice.finishDeploy(targetUrl).then(() => {
+      console.log(`Uploaded to ${targetUrl}`);
+    });
+  });
 });

@@ -67,7 +67,7 @@ class GithubUploadNotification {
       const status = {
         context: 'deployment',
         repo: 'orion',
-        url: 'orion-ui',
+        owner: 'orion-ui',
         description,
         sha: this.sha,
         state,
@@ -98,7 +98,7 @@ class GithubUploadNotification {
    */
   finishDeploy(targetUrl) {
     return this.createStatus({
-      status: 'success',
+      state: 'success',
       description: 'deployed',
       targetUrl,
     });

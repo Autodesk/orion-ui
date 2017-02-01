@@ -2,7 +2,7 @@ machine:
   node:
     version: 6.9.2
   environment:
-    NODE_ENV: ci # default is test which suppresses errors in lerna
+    NODE_ENV: production # default is test which suppresses errors in lerna
 dependencies:
   post:
     - bower install
@@ -26,3 +26,16 @@ test:
   override:
     - npm run test-ci
     - gemini test gemini/*
+deployment:
+  production:
+    branch: master
+    commands:
+      - npm run build
+      - npm run copy-package-builds
+      - npm run deploy-master
+  snapshot:
+    branch: /.*/
+    commands:
+      - npm run build
+      - npm run copy-package-builds
+      - npm run deploy-snapshot

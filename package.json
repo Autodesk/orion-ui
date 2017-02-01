@@ -12,8 +12,6 @@
     "deploy-snapshot": "npm run deploy -- --build-id $CIRCLE_BUILD_NUM",
     "deploy-master": "npm run deploy -- --build-id=master",
     "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds",
-    "deploy-master": "node ./packages/scripts/orion.js deploy --build-id=master",
-    "deploy-snapshot": "node ./packages/scripts/orion.js deploy --build-id $CIRCLE_BUILD_NUM",
     "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./",
     "prepublish": "bower install",
     "specs": "node ./packages/scripts/orion.js specs",

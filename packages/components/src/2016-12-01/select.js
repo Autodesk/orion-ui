@@ -22,6 +22,7 @@ const SelectState = require('./select-state.js');
 
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
+const eventKey = require('../utils/event-key');
 
 class Select extends Element {
   constructor() {
@@ -103,7 +104,7 @@ class Select extends Element {
 
   _handleKeydown(event) {
     let nextState;
-    switch (event.key) {
+    switch (eventKey(event)) {
       case 'Escape':
         nextState = SelectState.deactivated(this.state);
         this.dispatchEvent(new CustomEvent('change', {

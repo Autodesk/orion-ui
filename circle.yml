@@ -32,10 +32,12 @@ deployment:
     commands:
       - npm run build
       - npm run copy-package-builds
+      - npm run set-marketing-to-root
       - npm run deploy-master
   snapshot:
     branch: /.*/
     commands:
       - npm run build
       - npm run copy-package-builds
+      - npm run set-marketing-to-root
       - npm run deploy-snapshot

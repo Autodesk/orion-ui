@@ -63,7 +63,7 @@ uploader.on('error', (err) => {
 uploader.on('fileUploadEnd', localFilePath => console.log(`> ${localFilePath}`));
 
 uploader.on('end', () => {
-  const targetUrl = `https://${s3Params.Bucket}/${s3Params.Prefix}/storybook/index.html`;
+  const targetUrl = `https://${s3Params.Bucket}/${s3Params.Prefix}/index.html`;
 
   creatingStatus.then(() => {
     notice.finishDeploy(targetUrl).then(() => {

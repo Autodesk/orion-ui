@@ -139,7 +139,7 @@ To fix:
               if (!match) {
                 reject('deployment status not found');
               } else {
-                expect(match.target_url).to.equal(`https://cdn.web-platform.io/orion-ui/orion/snapshot-${buildId}/storybook/index.html`);
+                expect(match.target_url).to.equal(`https://cdn.web-platform.io/orion-ui/orion/snapshot-${buildId}/index.html`);
                 resolve();
               }
             }

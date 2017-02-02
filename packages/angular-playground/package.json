@@ -4,8 +4,9 @@
   "private": true,
   "main": "lib/index.js",
   "scripts": {
-    "build": "NODE_ENV=development mkdir -p lib && browserify src/app.js -o lib/app.js -t [ babelify --presets [ es2015 ] ]",
-    "start": "NODE_ENV=development npm run build && node ./server.js"
+    "build": "rm -rf build && npm run bundle && mkdir build && cp lib/app.js build && cp src/index.html build",
+    "bundle": "NODE_ENV=development mkdir -p lib && NODE_ENV=development browserify src/app.js -o lib/app.js -t [ babelify --presets [ es2015 ] ]",
+    "start": "NODE_ENV=development npm run bundle && node ./server.js"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

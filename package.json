@@ -8,16 +8,17 @@
     "build": "lerna run build",
     "clean": "node ./packages/scripts/orion.js clean",
     "compile": "node ./packages/scripts/orion.js compile",
-    "deploy": "node ./packages/scripts/orion.js deploy --gh-token $GITHUB_TOKEN --gh-sha $CIRCLE_SHA1",
-    "deploy-snapshot": "npm run deploy -- --build-id $CIRCLE_BUILD_NUM",
-    "deploy-master": "npm run deploy -- --build-id=master",
     "copy-package-builds": "node ./packages/scripts/orion.js copy-package-builds",
+    "deploy-master": "npm run deploy -- --build-id=master",
+    "deploy-snapshot": "npm run deploy -- --build-id $CIRCLE_BUILD_NUM",
+    "deploy": "node ./packages/scripts/orion.js deploy --gh-token $GITHUB_TOKEN --gh-sha $CIRCLE_SHA1",
     "ensure-copyright": "node ./packages/scripts/orion.js ensure-copyright --dir ./",
     "prepublish": "bower install",
-    "specs": "node ./packages/scripts/orion.js specs",
+    "set-marketing-to-root": "node ./packages/scripts/orion.js set-package-to-root -p marketing",
     "specs-ci": "node ./packages/scripts/orion.js specs --sauce --report",
-    "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright",
-    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright"
+    "specs": "node ./packages/scripts/orion.js specs",
+    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright",
+    "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright"
   },
   "repository": {
     "type": "git",

@@ -19,11 +19,17 @@ import React from 'react';
 import { boolean } from '@kadira/storybook-addon-knobs';
 
 import SourceViewer from '../../components/source_viewer';
+import Example from '../../components/example';
+import { Select } from '../../../react/lib/2016-12-01';
 
 module.exports = function focus() {
   const props = {
-    focus: boolean('Focus', true),
+    focus: boolean('Has focus', true),
   };
+  const options = [
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 },
+  ];
 
   const sources = [
     {
@@ -41,7 +47,7 @@ render() {
   ];
 
   return (
-    <Select options={options} focus={${props.focus}} />
+    <Select options={options} hasFocus={${props.focus}} />
   )
 }
 }
@@ -71,7 +77,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" focus="{{app.focus}}" />
+  <orion-select options="{{app.options}}" hasFocus="{{app.focus}}" />
 </body>
 </html>
       `,
@@ -80,6 +86,9 @@ angular.module('app', [])
 
   return (
     <div>
+      <Example minHeight={100}>
+        <Select options={options} hasFocus={props.focus} open={props.open} />
+      </Example>
       <SourceViewer sources={sources} />
     </div>
   );

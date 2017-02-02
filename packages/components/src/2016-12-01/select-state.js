@@ -112,7 +112,7 @@ const SelectState = {
   blur(state) {
     return {
       ...state,
-      hasFocus: false,
+      hasFocus: false,  
       open: false,
     };
   },

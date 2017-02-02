@@ -18,10 +18,20 @@ require('../../vendor/es5-custom-element-shim.js');
 require('../../vendor/object-entries-shim.js');
 require('../utils/inject-styles.js');
 const Registry = require('../utils/private-registry.js');
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
+const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, ResetFocusStyle, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
 const nativeStyles = ['top', 'left', 'width'];
-const styles = [BorderRadius, BoxShadow, Container, Display, Hovers, Position, Skins, Spacing];
+const styles = [
+  BorderRadius,
+  BoxShadow,
+  Container,
+  Display,
+  Hovers,
+  Position,
+  ResetFocusStyle,
+  Skins,
+  Spacing,
+];
 
 class Element extends HTMLElement {
   constructor() {

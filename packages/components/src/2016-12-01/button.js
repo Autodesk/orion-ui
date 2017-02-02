@@ -38,6 +38,7 @@ class Button extends Element {
       'padding-horizontal': 3,
       'padding-vertical': 2,
       pointer: true,
+      'reset-focus-style': true,
       ...this.defaults,
     });
 

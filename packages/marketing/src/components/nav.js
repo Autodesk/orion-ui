@@ -19,7 +19,7 @@ import React from 'react';
 
 module.exports = function Nav() {
   const links = [
-    { label: 'See All Components', url: '/storybook' },
+    { label: 'See All Components', url: './storybook/index.html' },
     { label: 'GitHub', url: 'https://github.com/orion-ui/orion' },
   ];
 

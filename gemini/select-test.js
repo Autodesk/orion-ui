@@ -42,3 +42,10 @@ gemini.suite('selected-index-select', (suite) => {
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
+
+gemini.suite('focus-select', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=focus')
+    .setCaptureElements(".example")
+    .capture('expanded-select')
+});

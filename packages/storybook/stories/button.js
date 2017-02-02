@@ -510,4 +510,4 @@ storiesOf('Button', module)
       <SourceViewer sources={sources} />
     </div>
   );
-})
+});

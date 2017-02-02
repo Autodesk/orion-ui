@@ -14,11 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+const keyStrings = {
+  9: 'Tab',
+  13: 'Enter',
+  27: 'Escape',
+  37: 'ArrowLeft',
+  38: 'ArrowUp',
+  39: 'ArrowRight',
+  40: 'ArrowDown',
+};
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-});
+module.exports = function eventKey(event) {
+  if (event.key !== undefined) { return event.key; }
+  return keyStrings[event.keyCode];
+};

@@ -37,6 +37,8 @@ describe('orion-deploy', () => {
   });
 
   beforeEach(() => {
+    if (!process.env.GITHUB_TOKEN) { return null; }
+
     // erase any status on sha
     github.authenticate({ type: 'oauth', token: process.env.GITHUB_TOKEN });
 
@@ -58,6 +60,19 @@ describe('orion-deploy', () => {
   });
 
   it('uploads the top level build directory to s3 and creates a github status', function testWithTimeout() {
+    if (!process.env.GITHUB_TOKEN) {
+      console.warn(`
+WARNING: GitHub credentials not present
+
+Some functional tests will be skipped
+
+To fix:
+1. Generate a personal access token
+2. Set access token to GITHUB_TOKEN
+`);
+      return null;
+    }
+
     // mark pending if no AWS creds present
     if (!process.env.AWS_ACCESS_KEY_ID) {
       console.warn(`

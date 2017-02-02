@@ -17,56 +17,49 @@ limitations under the License.
 */
 import React from 'react';
 
-import SourceViewer from '../../components/source_viewer';
-import Example from '../../components/example';
 import { Select } from '../../../react/lib/2016-12-01';
+import { WithSource } from '../../addons/source-addon';
 
-module.exports = function interactive() {
+export default function interactive() {
   const options = [
     { value: 'one', label: 'One', key: 1 },
     { value: 'two', label: 'Two', key: 2 },
   ];
-  const sources = [
-    {
-      label: 'React',
-      source: `
+
+  const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
-constructor(props) {
-  super(props);
+  constructor(props) {
+    super(props);
 
-  this.state = {
-    selectState: Select.State.create()
-  };
+    this.state = {
+      selectState: Select.State.create()
+    };
 
-  this.onChange = (event) => {
-    if (event.type === 'selectedIndexChange') {
-      // do something
+    this.onChange = (event) => {
+      if (event.type === 'selectedIndexChange') {
+        // do something
+      }
+
+      this.setState({ selectState: event.state });
     }
+  }
 
-    this.setState({ selectState: event.state });
+  render() {
+    const options = [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 }
+    ];
+
+    return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
   }
 }
 
-render() {
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
-
-  return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
-}
-}
-
-ReactDOM.render(React.createElement(App), document.body);
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+  const angular = `
 // app controller
 import 'angular';
 import {Select} from '@orion-ui/angular/lib/2016-12-01';
@@ -95,17 +88,11 @@ angular.module('app', [Select.moduleName])
     options="{{app.options}}"
     on-change="app.onChange(selectState)" />
 </body>
-</html>
-      `,
-    },
-  ];
+</html>`;
 
   return (
-    <div>
-      <Example>
-        <Select options={options} />
-      </Example>
-      <SourceViewer sources={sources} />
-    </div>
+    <WithSource react={react} angular={angular}>
+      <Select options={options} />
+    </WithSource>
   );
-};
+}

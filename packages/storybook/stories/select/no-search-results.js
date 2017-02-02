@@ -18,19 +18,16 @@ limitations under the License.
 import React from 'react';
 import { boolean, text } from '@kadira/storybook-addon-knobs';
 
-import SourceViewer from '../../components/source_viewer';
+import { WithSource } from '../../addons/source-addon';
 
-module.exports = function noSearchResults() {
+export default function noSearchResults() {
   const props = {
     searchable: boolean('Searchable', true),
     // query text makes the select open
     query: text('Query', 'Hello World'),
   };
 
-  const sources = [
-    {
-      label: 'React',
-      source: `
+  const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Select} from '@orion-ui/react/lib/2016-12-01';
@@ -48,12 +45,8 @@ render() {
 }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+  const angular = `
 // app controller
 import 'angular';
 
@@ -77,14 +70,11 @@ angular.module('app', [])
 <body ng-controller="AppController as app">
   <orion-select options="{{app.options}}" searchable="{{app.searchable}}" query="{{app.query}}" />
 </body>
-</html>
-      `,
-    },
-  ];
+</html>`;
 
   return (
-    <div>
-      <SourceViewer sources={sources} />
-    </div>
+    <WithSource react={react} angular={angular}>
+      <span>TODO</span>
+    </WithSource>
   );
-};
+}

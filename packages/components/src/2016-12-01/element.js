@@ -20,7 +20,6 @@ require('../utils/inject-styles.js');
 const Registry = require('../utils/private-registry.js');
 const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, ResetFocusStyle, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
-const nativeStyles = ['top', 'left', 'width'];
 const styles = [
   BorderRadius,
   BoxShadow,
@@ -37,17 +36,7 @@ class Element extends HTMLElement {
   constructor() {
     super();
     this.state = {};
-  }
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    // Guard no change
-    if (oldVal === newVal) {
-      return;
-    }
-
-    this.state[attrName] = newVal;
-
-    this._queueRender();
+    this.viewState = {};
   }
 
   _queueRender() {
@@ -82,7 +71,7 @@ class Element extends HTMLElement {
       }
     }
 
-    Object.entries(this.state).forEach(([name, value]) => {
+    Object.entries(this.viewState).forEach(([name, value]) => {
       styles.forEach(style => appendClassName(style, name, value));
     });
 
@@ -91,19 +80,19 @@ class Element extends HTMLElement {
   }
 }
 
-Element.observedAttributes = styles
-                              .map(style => style.attributes)
-                              .reduce((acc, memo) => acc.concat(memo));
+const styleProps = styles
+  .map(style => style.attributes)
+  .reduce((acc, memo) => acc.concat(memo));
 
-Element.observedAttributes.concat(nativeStyles).forEach((attr) => {
+styleProps.forEach((attr) => {
   Object.defineProperty(Element.prototype, attr, {
     get() {
-      return this.state[attr];
+      return this.viewState[attr];
     },
     set(newValue) {
-      if (this.state[attr] === newValue) { return; }
+      if (this.viewState[attr] === newValue) { return; }
 
-      this.state[attr] = newValue;
+      this.viewState[attr] = newValue;
       this._queueRender();
     },
   });

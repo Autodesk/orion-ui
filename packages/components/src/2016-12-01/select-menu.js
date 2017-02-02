@@ -44,8 +44,8 @@ class SelectMenu extends Element {
     this._queueRender();
   }
 
-  set right(val) {
-    this.state.right = val;
+  set left(val) {
+    this.state.left = val;
     this._queueRender();
   }
 

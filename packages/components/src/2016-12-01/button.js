@@ -94,22 +94,20 @@ class Button extends Element {
 
   set background(val = this.defaults.background) {
     this.state.background = val;
-    this._background = val;
     this._queueRender();
   }
 
   get background() {
-    return this._background;
+    return this.state.background;
   }
 
   set color(val = this.defaults.color) {
     this.state.color = val;
-    this._color = val;
     this._queueRender();
   }
 
   get color() {
-    return this._color;
+    return this.state.color;
   }
 
   set disabled(val) {
@@ -180,28 +178,28 @@ class Button extends Element {
 
   _render() {
     if (this.state.disabled) {
-      this.state.background = 'grey';
-      this.state.color = 'white';
+      this.viewState.background = 'grey';
+      this.viewState.color = 'white';
     } else if (this.state.hover || this.state.hasFocus) {
-      this.state.background = 'blue';
-      this.state.color = 'white';
+      this.viewState.background = 'blue';
+      this.viewState.color = 'white';
     } else {
-      this.state.background = this._background;
-      this.state.color = this._color;
+      this.viewState.background = this.state.background;
+      this.viewState.color = this.state.color;
     }
 
     switch (this.state.size) {
       case 'small':
-        this.state['padding-horizontal'] = 2;
-        this.state['padding-vertical'] = 1;
+        this.viewState['padding-horizontal'] = 2;
+        this.viewState['padding-vertical'] = 1;
         break;
       case 'large':
-        this.state['padding-horizontal'] = 4;
-        this.state['padding-vertical'] = 3;
+        this.viewState['padding-horizontal'] = 4;
+        this.viewState['padding-vertical'] = 3;
         break;
       default:
-        this.state['padding-horizontal'] = 3;
-        this.state['padding-vertical'] = 2;
+        this.viewState['padding-horizontal'] = 3;
+        this.viewState['padding-vertical'] = 2;
         break;
     }
 

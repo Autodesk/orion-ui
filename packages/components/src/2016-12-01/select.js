@@ -74,6 +74,7 @@ class Select extends Element {
 
   disconnectedCallback() {
     this._removeListeners();
+    this._removeChildren();
   }
 
   _ensureButton() {
@@ -106,6 +107,11 @@ class Select extends Element {
     this.button.removeEventListener('blur', this._blur);
     this.menu.removeEventListener('optionSelected', this._setSelectedOption);
     this.menu.removeEventListener('optionFocused', this._setFocusedOption);
+  }
+
+  _removeChildren() {
+    if (this.menu) { this.menu.remove(); }
+    if (this.button) { this.button.remove(); }
   }
 
   _activate() {

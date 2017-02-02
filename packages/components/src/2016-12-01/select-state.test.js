@@ -248,4 +248,18 @@ describe('SelectState', () => {
       });
     });
   });
+
+  describe('focus', () => {
+    it('sets hasFocus to true', () => {
+      const nextState = SelectState.focus({ hasFocus: false });
+      expect(nextState.hasFocus).to.be.true;
+    });
+  });
+
+  describe('blur', () => {
+    it('sets hasFocus to false', () => {
+      const nextState = SelectState.blur({ hasFocus: true });
+      expect(nextState.hasFocus).to.be.false;
+    });
+  });
 });

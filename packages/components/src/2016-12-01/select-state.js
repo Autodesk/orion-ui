@@ -92,6 +92,20 @@ const SelectState = {
       focusedIndex,
     };
   },
+
+  focus(state) {
+    return {
+      ...state,
+      hasFocus: true,
+    };
+  },
+
+  blur(state) {
+    return {
+      ...state,
+      hasFocus: false,
+    };
+  },
 };
 
 module.exports = SelectState;

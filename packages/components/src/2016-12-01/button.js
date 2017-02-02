@@ -158,7 +158,7 @@ class Button extends Element {
   }
 
   _focus() {
-    let nextState = ButtonState.focus(this.state);
+    const nextState = ButtonState.focus(this.state);
     this.dispatchEvent(new CustomEvent('change', {
       detail: {
         type: 'focus',
@@ -168,7 +168,7 @@ class Button extends Element {
   }
 
   _blur() {
-    let nextState = ButtonState.blur(this.state);
+    const nextState = ButtonState.blur(this.state);
     this.dispatchEvent(new CustomEvent('change', {
       detail: {
         type: 'blur',

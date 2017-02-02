@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 const css = `
-  .foc-nope:focus {
+  .rst-foc:focus {
     outline: none;
   }
 `;
@@ -26,7 +26,7 @@ const attributes = [
 
 function attributeChangedCallback(attrName, value) {
   if (value) {
-    return 'foc-nope';
+    return 'rst-foc';
   }
   return '';
 }

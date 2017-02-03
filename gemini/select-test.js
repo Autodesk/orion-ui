@@ -46,6 +46,11 @@ gemini.suite('selected-index-select', (suite) => {
 gemini.suite('focus-select', (suite) => {
   suite
     .setUrl('iframe.html?selectedKind=Select&selectedStory=focus')
+});
+
+gemini.suite('scrolling-select', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Select&selectedStory=scrolling')
     .setCaptureElements(".example")
     .capture('expanded-select')
 });

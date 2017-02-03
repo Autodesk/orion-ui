@@ -38,13 +38,23 @@ class Button extends Element {
       'padding-horizontal': 3,
       'padding-vertical': 2,
       pointer: true,
+      'reset-focus-style': true,
       ...this.defaults,
+    });
+
+    ['_focus', '_blur'].forEach((fn) => {
+      this[fn] = this[fn].bind(this);
     });
   }
 
   connectedCallback() {
     this._addListeners();
     this.setAttribute('tabIndex', 0);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('focus', this._focus);
+    this.removeEventListener('blur', this._blur);
   }
 
   _addListeners() {
@@ -77,33 +87,34 @@ class Button extends Element {
         event.stopImmediatePropagation();
       }
     });
+
+    this.addEventListener('focus', this._focus);
+    this.addEventListener('blur', this._blur);
   }
 
   set background(val = this.defaults.background) {
     this.state.background = val;
-    this._background = val;
     this._queueRender();
   }
 
   get background() {
-    return this._background;
+    return this.state.background;
   }
 
   set color(val = this.defaults.color) {
     this.state.color = val;
-    this._color = val;
     this._queueRender();
   }
 
   get color() {
-    return this._color;
+    return this.state.color;
   }
 
   set disabled(val) {
     if (val) {
-      this.state = ButtonState.enterDisabled(this.state);
+      applyProps(this.state, ButtonState.enterDisabled(this.state));
     } else {
-      this.state = ButtonState.leaveDisabled(this.state);
+      applyProps(this.state, ButtonState.leaveDisabled(this.state));
     }
 
     this._queueRender();
@@ -122,11 +133,20 @@ class Button extends Element {
     return this.state.size;
   }
 
+  set hasFocus(val) {
+    this.state.hasFocus = val;
+    this._queueRender();
+  }
+
+  get hasFocus() {
+    return this.state.hasFocus;
+  }
+
   set hover(val) {
     if (val) {
-      this.state = ButtonState.enterHover(this.state);
+      applyProps(this.state, ButtonState.enterHover(this.state));
     } else {
-      this.state = ButtonState.leaveHover(this.state);
+      applyProps(this.state, ButtonState.leaveHover(this.state));
     }
 
     this._queueRender();
@@ -136,30 +156,50 @@ class Button extends Element {
     return this.state.hover;
   }
 
+  _focus() {
+    const nextState = ButtonState.focus(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'focus',
+        state: nextState,
+      },
+    }));
+  }
+
+  _blur() {
+    const nextState = ButtonState.blur(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'blur',
+        state: nextState,
+      },
+    }));
+  }
+
   _render() {
     if (this.state.disabled) {
-      this.state.background = 'grey';
-      this.state.color = 'white';
-    } else if (this.state.hover) {
-      this.state.background = 'blue';
-      this.state.color = 'white';
+      this.viewState.background = 'grey';
+      this.viewState.color = 'white';
+    } else if (this.state.hover || this.state.hasFocus) {
+      this.viewState.background = 'blue';
+      this.viewState.color = 'white';
     } else {
-      this.state.background = this._background;
-      this.state.color = this._color;
+      this.viewState.background = this.state.background;
+      this.viewState.color = this.state.color;
     }
 
     switch (this.state.size) {
       case 'small':
-        this.state['padding-horizontal'] = 2;
-        this.state['padding-vertical'] = 1;
+        this.viewState['padding-horizontal'] = 2;
+        this.viewState['padding-vertical'] = 1;
         break;
       case 'large':
-        this.state['padding-horizontal'] = 4;
-        this.state['padding-vertical'] = 3;
+        this.viewState['padding-horizontal'] = 4;
+        this.viewState['padding-vertical'] = 3;
         break;
       default:
-        this.state['padding-horizontal'] = 3;
-        this.state['padding-vertical'] = 2;
+        this.viewState['padding-horizontal'] = 3;
+        this.viewState['padding-vertical'] = 2;
         break;
     }
 

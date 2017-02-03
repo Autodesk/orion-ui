@@ -14,24 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const BorderRadius = require('../border-radius.js');
-const BoxShadow = require('../box-shadow.js');
-const Container = require('../container.js');
-const Display = require('../display.js');
-const Hovers = require('../hovers.js');
-const Position = require('../position.js');
-const ResetFocusStyle = require('../reset-focus-style.js');
-const Skins = require('../skins.js');
-const Spacing = require('../spacing.js');
+const Focus = require('./reset-focus-style');
+const chai = require('chai');
 
-module.exports = {
-  BorderRadius,
-  BoxShadow,
-  Container,
-  Display,
-  Hovers,
-  Position,
-  ResetFocusStyle,
-  Skins,
-  Spacing,
-};
+const expect = chai.expect;
+
+describe('ResetFocusStyle', () => {
+  describe('attributeChangedCallback', () => {
+    context('with true', () => {
+      it('returns class foc-nope', () => {
+        expect(Focus.attributeChangedCallback('reset-focus-style', true)).to.eq('foc-nope');
+      });
+    });
+  });
+});

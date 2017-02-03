@@ -437,4 +437,77 @@ storiesOf('Button', module)
       <SourceViewer sources={sources} />
     </div>
   );
+})
+
+.add('focus button', () => {
+  const buttonText = text('Text', 'Button');
+  const props = {
+    hasFocus: boolean('Has Focus', true),
+  };
+
+  const filteredProps = filterEmptyProps(props);
+
+  const sources = [
+    {
+      label: 'React',
+      source: `
+        <Button
+          onClick={action('clicked')}
+          hasFocus="${props.hasFocus}"
+        >
+          {"${buttonText}"}
+        </Button>
+      `,
+    },
+    {
+      label: 'Angular 1.5.x',
+      source: `
+        // ------------------------------
+        // controller.js
+
+        import 'angular';
+        import '@orion-ui/angular/lib/2016-12-01';
+
+        angular
+          .module('app', ['orion']) // include orion module
+          .controller('DemoController', function() {
+            var ctrl = this;
+
+            ctrl.button = {
+              label: '${buttonText}',
+              hasFocus: '${props.hasFocus}',
+            };
+
+            ctrl.action = function(arg) {
+              alert(arg);
+            }
+          });
+
+        // ------------------------------
+        // index.html
+
+        <!doctype html>
+        <html>
+        <body ng-app="app">
+          <div ng-controller="DemoController as ctrl">
+            <orion-button hasFocus="ctrl.button.hasFocus">
+              {{ctrl.button.label}}
+            </orion-button>
+          </div>
+        </body>
+        </html>
+      `,
+    },
+  ];
+
+  return (
+    <div>
+      <Example {...filteredProps}>
+        <Button {...filteredProps}>
+          {buttonText}
+        </Button>
+      </Example>
+      <SourceViewer sources={sources} />
+    </div>
+  );
 });

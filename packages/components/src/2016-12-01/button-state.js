@@ -18,7 +18,7 @@ const ButtonState = {
   getInitialState(state = {}) {
     return {
       disabled: false,
-      focus: false,
+      hasFocus: false,
       hover: false,
       ...state,
     };
@@ -36,6 +36,13 @@ const ButtonState = {
   },
   leaveDisabled(state) {
     return { ...state, disabled: false };
+  },
+
+  focus(state) {
+    return { ...state, hasFocus: true };
+  },
+  blur(state) {
+    return { ...state, hasFocus: false };
   },
 };
 

@@ -34,7 +34,7 @@ class Select extends Element {
     this.state.options = [];
     this.display = 'inline-block';
 
-    ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate'].forEach((handler) => {
+    ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate', '_focus', '_blur'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -57,6 +57,15 @@ class Select extends Element {
   set selectedIndex(newValue) {
     this.state.selectedIndex = newValue;
     this._queueRender();
+  }
+
+  set hasFocus(val) {
+    this.state.hasFocus = val;
+    this._queueRender();
+  }
+
+  get hasFocus() {
+    return this.state.hasFocus;
   }
 
   connectedCallback() {
@@ -84,6 +93,8 @@ class Select extends Element {
 
     this.addEventListener('keydown', this._handleKeydown);
     this.addEventListener('click', this._activate);
+    this.button.addEventListener('focus', this._focus);
+    this.button.addEventListener('blur', this._blur);
     this.menu.addEventListener('optionSelected', this._setSelectedOption);
     this.menu.addEventListener('optionFocused', this._setFocusedOption);
   }
@@ -91,6 +102,8 @@ class Select extends Element {
   _removeListeners() {
     this.removeEventListener('keydown', this._handleKeydown);
     this.removeEventListener('click', this._activate);
+    this.button.removeEventListener('focus', this._focus);
+    this.button.removeEventListener('blur', this._blur);
     this.menu.removeEventListener('optionSelected', this._setSelectedOption);
     this.menu.removeEventListener('optionFocused', this._setFocusedOption);
   }
@@ -162,6 +175,26 @@ class Select extends Element {
     }));
   }
 
+  _focus() {
+    const nextState = SelectState.focus(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'focus',
+        state: nextState,
+      },
+    }));
+  }
+
+  _blur() {
+    const nextState = SelectState.blur(this.state);
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'blur',
+        state: nextState,
+      },
+    }));
+  }
+
   _ensureMenu() {
     if (this.menu !== undefined) { return; }
 
@@ -198,6 +231,7 @@ class Select extends Element {
     }
     applyProps(this.button, {
       textContent: label,
+      hasFocus: (this.state.hasFocus && !this.state.open),
     });
 
     super._render();

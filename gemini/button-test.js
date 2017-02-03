@@ -66,3 +66,13 @@ gemini.suite('large-button', (suite) => {
     })
     .capture('default')
 });
+
+gemini.suite('focus-button', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Button&selectedStory=focus%20button')
+    .setCaptureElements(".example")
+    .before(function(actions, find) {
+      this.button = find('orion-button');
+    })
+    .capture('default')
+});

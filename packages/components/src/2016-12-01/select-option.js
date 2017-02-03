@@ -116,6 +116,7 @@ class SelectOption extends Element {
       let styles;
       if (this.state.hasFocus) {
         styles = { background: 'blue', color: 'white' };
+        this.scrollIntoView();
       } else {
         styles = { background: 'white', color: 'black' };
       }

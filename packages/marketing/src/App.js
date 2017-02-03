@@ -16,13 +16,17 @@ limitations under the License.
 */
 
 import '../vendor/custom-elements-polyfill';
-import React, { Component } from 'react';
+
 import 'tachyons';
-import { Button, Select } from '@orion-ui/react/lib/2016-12-01';
-import Nav from './components/nav';
-import GetStarted from './components/get-started';
-import FeaturesBenefits from './components/features-benefits';
+import { Select } from '@orion-ui/react/lib/2016-12-01';
+import React, { Component } from 'react';
+
 import './App.css';
+import Anchor from './components/anchor';
+import constants from './constants';
+import FeaturesBenefits from './components/features-benefits';
+import GetStarted from './components/get-started';
+import Nav from './components/nav';
 
 class App extends Component {
   constructor() {
@@ -52,7 +56,7 @@ class App extends Component {
           <p>A resusable, HIG compliant, UI component library for Autodesk applications based on web standards and open source best pracices.</p>
         </div>
         <div className="pv3 center w-20">
-          <Button size="large">See All Components</Button>
+          <Anchor href={constants.storybookPath}>See All Components</Anchor>
         </div>
         <div className="pv3">
           <h2 className="f2">Get Started</h2>

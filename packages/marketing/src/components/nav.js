@@ -17,9 +17,11 @@ limitations under the License.
 
 import React from 'react';
 
+import constants from '../constants';
+
 module.exports = function Nav() {
   const links = [
-    { label: 'See All Components', url: './storybook/index.html' },
+    { label: 'See All Components', url: constants.storybookPath },
     { label: 'GitHub', url: 'https://github.com/orion-ui/orion' },
   ];
 

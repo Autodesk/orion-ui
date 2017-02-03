@@ -14,26 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const BorderRadius = require('../border-radius.js');
-const BoxShadow = require('../box-shadow.js');
-const Container = require('../container.js');
-const Display = require('../display.js');
-const Hovers = require('../hovers.js');
-const Overflow = require('../overflow.js');
-const Position = require('../position.js');
-const ResetFocusStyle = require('../reset-focus-style.js');
-const Skins = require('../skins.js');
-const Spacing = require('../spacing.js');
+const css = `
+  .ovy-a {
+    overflow-y: auto;
+  }
+`;
+
+const attributes = [
+  'overflow-y',
+];
+
+function attributeChangedCallback(attrName, value) {
+  if (value === 'auto') {
+    return 'ovy-a';
+  }
+  return '';
+}
 
 module.exports = {
-  BorderRadius,
-  BoxShadow,
-  Container,
-  Display,
-  Hovers,
-  Overflow,
-  Position,
-  ResetFocusStyle,
-  Skins,
-  Spacing,
+  css,
+  attributes,
+  attributeChangedCallback,
 };

@@ -26,7 +26,9 @@ class SelectMenu extends Element {
   constructor() {
     super();
 
-    this.MENU_WIDTH = '100px';
+    this.MENU_WIDTH = '160px';
+    this.OPTION_HEIGHT = 26;
+    this.MAX_OPTIONS_VISIBLE = 6;
 
     ['_cloneEvent', '_close'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
@@ -81,7 +83,9 @@ class SelectMenu extends Element {
       itemTagname: 'orion-select-option',
       container: 'column',
       'box-shadow': 1,
+      'overflow-y': 'auto',
     });
+    this.list.style.maxHeight = `${this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE}px`;
   }
 
   _removeList() {

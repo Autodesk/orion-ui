@@ -29,14 +29,16 @@ const SelectComponent = {
   },
 
   controller: function controller($element, $log) { // eslint-disable object-shorthand
-    this.$onInit = () => {
+    const elementReady = window.customElements.whenDefined('orion-select');
+
+    this.$onInit = () => elementReady.then(() => {
       $element[0].addEventListener('change', (event) => {
         applyProps($element[0], event.detail.state);
         this.onChange({ event });
       });
-    };
+    });
 
-    this.$onChanges = (changesObj) => {
+    this.$onChanges = changesObj => elementReady.then(() => {
       const el = $element[0];
       const props = Object.keys(changesObj);
       props.forEach((prop) => {
@@ -56,7 +58,7 @@ const SelectComponent = {
           $log.error(e);
         }
       });
-    };
+    });
   },
 };
 

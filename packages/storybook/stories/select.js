@@ -15,7 +15,6 @@ limitations under the License.
 
 */
 import { storiesOf } from '@kadira/storybook';
-import { withKnobs } from '@kadira/storybook-addon-knobs';
 
 import collapsed from './select/collapsed';
 import expanded from './select/expanded';
@@ -31,7 +30,6 @@ import interactive from './select/interactive';
 import kitchenSink from './select/kitchen-sink';
 
 storiesOf('Select', module)
-  .addDecorator(withKnobs)
   .add('collapsed', collapsed)
   .add('expanded', expanded)
   .add('disabled option', disabledOption)

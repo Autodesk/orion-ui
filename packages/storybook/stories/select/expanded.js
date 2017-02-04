@@ -18,11 +18,10 @@ limitations under the License.
 import React from 'react';
 import { boolean } from '@kadira/storybook-addon-knobs';
 
-import SourceViewer from '../../components/source_viewer';
-import Example from '../../components/example';
 import { Select } from '../../../react/lib/2016-12-01';
+import { WithSource } from '../../addons/source-addon';
 
-module.exports = function expanded() {
+export default function expanded() {
   const props = {
     open: boolean('Open', true),
   };
@@ -31,10 +30,7 @@ module.exports = function expanded() {
     { value: 'two', label: 'Two', key: 2 },
   ];
 
-  const sources = [
-    {
-      label: 'React',
-      source: `
+  const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Select} from '@orion-ui/react/lib/2016-12-01';
@@ -50,12 +46,8 @@ render() {
 }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+  const angular = `
 // app controller
 import 'angular';
 
@@ -77,17 +69,11 @@ angular.module('app', [])
 <body ng-controller="AppController as app">
   <orion-select options="{{app.options}}" open="{{app.open}}" />
 </body>
-</html>
-      `,
-    },
-  ];
+</html>`;
 
   return (
-    <div>
-      <Example minHeight={100}>
-        <Select options={options} open={props.open} />
-      </Example>
-      <SourceViewer sources={sources} />
-    </div>
+    <WithSource react={react} angular={angular}>
+      <Select options={options} open={props.open} />
+    </WithSource>
   );
-};
+}

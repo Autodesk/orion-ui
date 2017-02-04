@@ -15,32 +15,25 @@ limitations under the License.
 
 */
 import React, { PropTypes } from 'react';
+import addons from '@kadira/storybook-addons';
 
-class SourceViewerButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this._handleClick = this._handleClick.bind(this);
-  }
-
-  _handleClick() {
-    this.props.onClick(this.props.index);
-  }
-
+export class WithSource extends React.Component {
   render() {
-    const style = {
-      color: this.props.active ? 'blue' : null,
-    };
+    const { children, react, angular } = this.props;
+    const channel = addons.getChannel();
 
-    return <button style={style} onClick={this._handleClick}>{this.props.label}</button>;
+    channel.emit('kadira/source/add_react', react);
+    channel.emit('kadira/source/add_angular', angular);
+
+    // return children;
+    return children;
   }
 }
 
-SourceViewerButton.propTypes = {
-  label: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
-  active: PropTypes.bool,
+WithSource.propTypes = {
+  children: PropTypes.element.isRequired,
+  react: PropTypes.string.isRequired,
+  angular: PropTypes.string.isRequired,
 };
 
-
-export default SourceViewerButton;
+export default WithSource;

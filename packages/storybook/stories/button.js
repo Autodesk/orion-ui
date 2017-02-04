@@ -15,13 +15,12 @@ limitations under the License.
 
 */
 
-import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
-import { withKnobs, text, select, boolean } from '@kadira/storybook-addon-knobs';
-import { Button } from '../../react/lib/2016-12-01';
-import SourceViewer from '../components/source_viewer';
+import { text, select, boolean } from '@kadira/storybook-addon-knobs';
+import React from 'react';
 
-const Example = require('../components/example');
+import { Button } from '../../react/lib/2016-12-01';
+import { WithSource } from '../addons/source-addon';
 
 const colorOptions = {
   '': '',
@@ -45,7 +44,6 @@ function filterEmptyProps(props) {
 }
 
 storiesOf('Button', module)
-  .addDecorator(withKnobs)
   .add('with text', () => {
     const buttonText = text('Text', 'Hello, button!');
     const props = {
@@ -56,412 +54,345 @@ storiesOf('Button', module)
 
     const filteredProps = filterEmptyProps(props);
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
-          <Button
-            background="${props.background}"
-            color="${props.color}"
-            onClick={action('clicked')}
-          >
-            {"${buttonText}"}
-          </Button>
-        `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
-          // ------------------------------
-          // controller.js
+    const react = `
+<Button
+  background="${props.background}"
+  color="${props.color}"
+  onClick={action('clicked')}
+>
+  ${buttonText}
+</Button>`;
 
-          import 'angular';
-          import '@orion-ui/angular/lib/2016-12-01';
+    const angular = `
+// ------------------------------
+// controller.js
 
-          angular
-            .module('app', ['orion']) // include orion module
-            .controller('DemoController', function() {
-              var ctrl = this;
+import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-              ctrl.button = {
-                label: '${buttonText}',
-                color: '${props.color}',
-                background: '${props.background}'
-              };
+angular
+  .module('app', ['orion']) // include orion module
+  .controller('DemoController', function() {
+    var ctrl = this;
 
-              ctrl.action = function(arg) {
-                alert(arg);
-              }
-            });
+    ctrl.button = {
+      label: '${buttonText}',
+      color: '${props.color}',
+      background: '${props.background}'
+    };
 
-          // ------------------------------
-          // index.html
+    ctrl.action = function(arg) {
+      alert(arg);
+    }
+  });
 
-          <!doctype html>
-          <html>
-          <body ng-app="app">
-            <div ng-controller="DemoController as ctrl">
-              <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-click="ctrl.action('clicked')">
-                {{ctrl.button.label}}
-              </orion-button>
-            </div>
-          </body>
-          </html>
-        `,
-      },
-    ];
+// ------------------------------
+// index.html
+
+<!doctype html>
+<html>
+<body ng-app="app">
+  <div ng-controller="DemoController as ctrl">
+    <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-click="ctrl.action('clicked')">
+      {{ctrl.button.label}}
+    </orion-button>
+  </div>
+</body>
+</html>`;
 
     return (
-      <div>
-        <Example {...filteredProps}>
-          <Button {...filteredProps}>
-            {buttonText}
-          </Button>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <Button {...filteredProps}>
+          {buttonText}
+        </Button>
+      </WithSource>
     );
   },
 )
 
-.add('disabled', () => {
-  const buttonText = text('Text', 'Disabled button!');
-  const props = {
-    background: select('Background Color', colorOptions, ''),
-    color: select('Color', colorOptions, ''),
-    disabled: true,
-  };
+  .add('disabled', () => {
+    const buttonText = text('Text', 'Disabled button!');
+    const props = {
+      background: select('Background Color', colorOptions, ''),
+      color: select('Color', colorOptions, ''),
+      disabled: true,
+    };
 
-  const filteredProps = filterEmptyProps(props);
+    const filteredProps = filterEmptyProps(props);
 
-  const sources = [
-    {
-      label: 'React',
-      source: `
-        <Button
-          background="${props.background}"
-          color="${props.color}"
-          onClick={action('clicked')}
-          disabled={${props.disabled}}
-        >
-          {"${buttonText}"}
-        </Button>
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
-        // ------------------------------
-        // controller.js
+    const react = `
+<Button
+  background="${props.background}"
+  color="${props.color}"
+  onClick={action('clicked')}
+  disabled={${props.disabled}}
+>
+  ${buttonText}
+</Button>`;
 
-        import 'angular';
-        import '@orion-ui/angular/lib/2016-12-01';
+    const angular = `
+// ------------------------------
+// controller.js
 
-        angular
-          .module('app', ['orion']) // include orion module
-          .controller('DemoController', function() {
-            var ctrl = this;
+import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-            ctrl.button = {
-              label: '${buttonText}',
-              color: '${props.color}',
-              background: '${props.background}',
-              disabled: '${props.disabled}'
-            };
+angular
+  .module('app', ['orion']) // include orion module
+  .controller('DemoController', function () {
+    var ctrl = this;
 
-            ctrl.action = function(arg) {
-              alert(arg);
-            }
-          });
+    ctrl.button = {
+      label: '${buttonText}',
+      color: '${props.color}',
+      background: '${props.background}',
+      disabled: '${props.disabled}'
+    };
 
-        // ------------------------------
-        // index.html
+    ctrl.action = function (arg) {
+      alert(arg);
+    }
+  });
 
-        <!doctype html>
-        <html>
-        <body ng-app="app">
-          <div ng-controller="DemoController as ctrl">
-            <orion-button background="ctrl.button.background" color="ctrl.button.color" disabled="ctrl.button.disabled" ng-click="ctrl.action('clicked')">
-              {{ctrl.button.label}}
-            </orion-button>
-          </div>
-        </body>
-        </html>
-      `,
-    },
-  ];
+// ------------------------------
+// index.html
 
-  return (
-    <div>
-      <Example {...filteredProps}>
+<!doctype html>
+<html>
+  <body ng-app="app">
+    <div ng-controller="DemoController as ctrl">
+      <orion-button background="ctrl.button.background" color="ctrl.button.color" disabled="ctrl.button.disabled" ng-click="ctrl.action('clicked')">
+        {{ ctrl.button.label }}
+      </orion-button>
+    </div>
+  </body>
+</html>`;
+
+    return (
+      <WithSource react={react} angular={angular}>
         <Button {...filteredProps}>
           {buttonText}
         </Button>
-      </Example>
-      <SourceViewer sources={sources} />
+      </WithSource>
+    );
+  })
+  //
+  .add('hover state', () => {
+    const buttonText = text('Text', 'Hover state');
+    const props = {
+      background: select('Background Color', colorOptions, ''),
+      color: select('Color', colorOptions, ''),
+      hover: boolean('Hover', true),
+    };
+
+    const filteredProps = filterEmptyProps(props);
+
+    const react = `
+<Button
+  background="${props.background}"
+  color="${props.color}"
+  hover="${props.hover}"
+  onClick={action('clicked')}
+>
+  ${buttonText}
+</Button>`;
+
+    const angular = `
+// ------------------------------
+// controller.js
+
+import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
+
+angular
+  .module('app', ['orion']) // include orion module
+  .controller('DemoController', function () {
+    var ctrl = this;
+
+    ctrl.button = {
+      label: '${buttonText}',
+      color: '${props.color}',
+      background: '${props.background}'
+    };
+
+    ctrl.action = function (arg) {
+      alert(arg);
+    }
+  });
+
+// ------------------------------
+// index.html
+
+<!doctype html>
+<html>
+  <body ng-app="app">
+    <div ng-controller="DemoController as ctrl">
+      <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-click="ctrl.action('clicked')">
+        {{ ctrl.button.label }}
+      </orion-button>
     </div>
-  );
-})
-//
-.add('hover state', () => {
-  const buttonText = text('Text', 'Hover state');
-  const props = {
-    background: select('Background Color', colorOptions, ''),
-    color: select('Color', colorOptions, ''),
-    hover: boolean('Hover', true),
-  };
+  </body>
+</html>`;
 
-  const filteredProps = filterEmptyProps(props);
-
-  const sources = [
-    {
-      label: 'React',
-      source: `
-        <Button
-          background="${props.background}"
-          color="${props.color}"
-          hover="${props.hover}"
-          onClick={action('clicked')}
-        >
-          {"${buttonText}"}
-        </Button>
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
-        // ------------------------------
-        // controller.js
-
-        import 'angular';
-        import '@orion-ui/angular/lib/2016-12-01';
-
-        angular
-          .module('app', ['orion']) // include orion module
-          .controller('DemoController', function() {
-            var ctrl = this;
-
-            ctrl.button = {
-              label: '${buttonText}',
-              color: '${props.color}',
-              background: '${props.background}'
-            };
-
-            ctrl.action = function(arg) {
-              alert(arg);
-            }
-          });
-
-        // ------------------------------
-        // index.html
-
-        <!doctype html>
-        <html>
-        <body ng-app="app">
-          <div ng-controller="DemoController as ctrl">
-            <orion-button background="ctrl.button.background" color="ctrl.button.color" ng-click="ctrl.action('clicked')">
-              {{ctrl.button.label}}
-            </orion-button>
-          </div>
-        </body>
-        </html>
-      `,
-    },
-  ];
-
-  return (
-    <div>
-      <Example {...filteredProps}>
+    return (
+      <WithSource react={react} angular={angular}>
         <Button {...filteredProps}>
           {buttonText}
         </Button>
-      </Example>
-      <SourceViewer sources={sources} />
+      </WithSource>
+    );
+  })
+
+  .add('small button', () => {
+    const buttonText = text('Text', 'Hover state');
+    const props = {
+      background: select('Background Color', colorOptions, ''),
+      color: select('Color', colorOptions, ''),
+      size: 'small',
+    };
+
+    const filteredProps = filterEmptyProps(props);
+
+    const react = `
+<Button
+  background="${props.background}"
+  color="${props.color}"
+  onClick={action('clicked')}
+  size="${props.size}"
+>
+  ${buttonText}
+</Button>`;
+
+    const angular = `
+// ------------------------------
+// controller.js
+
+import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
+
+angular
+  .module('app', ['orion']) // include orion module
+  .controller('DemoController', function () {
+    var ctrl = this;
+
+    ctrl.button = {
+      label: '${buttonText}',
+      color: '${props.color}',
+      background: '${props.background}',
+      size: '${props.size}'
+    };
+
+    ctrl.action = function (arg) {
+      alert(arg);
+    }
+  });
+
+// ------------------------------
+// index.html
+
+<!doctype html>
+<html>
+  <body ng-app="app">
+    <div ng-controller="DemoController as ctrl">
+      <orion-button background="ctrl.button.background" color="ctrl.button.color" size="ctrl.button.size" ng-click="ctrl.action('clicked')">
+        {{ ctrl.button.label }}
+      </orion-button>
     </div>
-  );
-})
+  </body>
+</html>`;
 
-.add('small button', () => {
-  const buttonText = text('Text', 'Hover state');
-  const props = {
-    background: select('Background Color', colorOptions, ''),
-    color: select('Color', colorOptions, ''),
-    size: 'small',
-  };
-
-  const filteredProps = filterEmptyProps(props);
-
-  const sources = [
-    {
-      label: 'React',
-      source: `
-        <Button
-          background="${props.background}"
-          color="${props.color}"
-          onClick={action('clicked')}
-          size="${props.size}"
-        >
-          {"${buttonText}"}
-        </Button>
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
-        // ------------------------------
-        // controller.js
-
-        import 'angular';
-        import '@orion-ui/angular/lib/2016-12-01';
-
-        angular
-          .module('app', ['orion']) // include orion module
-          .controller('DemoController', function() {
-            var ctrl = this;
-
-            ctrl.button = {
-              label: '${buttonText}',
-              color: '${props.color}',
-              background: '${props.background}',
-              size: '${props.size}'
-            };
-
-            ctrl.action = function(arg) {
-              alert(arg);
-            }
-          });
-
-        // ------------------------------
-        // index.html
-
-        <!doctype html>
-        <html>
-        <body ng-app="app">
-          <div ng-controller="DemoController as ctrl">
-            <orion-button background="ctrl.button.background" color="ctrl.button.color" size="ctrl.button.size" ng-click="ctrl.action('clicked')">
-              {{ctrl.button.label}}
-            </orion-button>
-          </div>
-        </body>
-        </html>
-      `,
-    },
-  ];
-
-  return (
-    <div>
-      <Example {...filteredProps}>
+    return (
+      <WithSource react={react} angular={angular}>
         <Button {...filteredProps}>
           {buttonText}
         </Button>
-      </Example>
-      <SourceViewer sources={sources} />
+      </WithSource>
+    );
+  })
+
+  .add('large button', () => {
+    const buttonText = text('Text', 'Hover state');
+    const props = {
+      background: select('Background Color', colorOptions, ''),
+      color: select('Color', colorOptions, ''),
+      size: 'large',
+    };
+
+    const filteredProps = filterEmptyProps(props);
+
+    const react = `
+<Button
+  background="${props.background}"
+  color="${props.color}"
+  onClick={action('clicked')}
+  size="${props.size}"
+>
+  ${buttonText}
+</Button>`;
+
+    const angular = `
+// ------------------------------
+// controller.js
+
+import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
+
+angular
+  .module('app', ['orion']) // include orion module
+  .controller('DemoController', function () {
+    var ctrl = this;
+
+    ctrl.button = {
+      label: '${buttonText}',
+      color: '${props.color}',
+      background: '${props.background}',
+      size: '${props.size}'
+    };
+
+    ctrl.action = function (arg) {
+      alert(arg);
+    }
+  });
+
+// ------------------------------
+// index.html
+
+<!doctype html>
+<html>
+  <body ng-app="app">
+    <div ng-controller="DemoController as ctrl">
+      <orion-button background="ctrl.button.background" color="ctrl.button.color" size="ctrl.button.size" ng-click="ctrl.action('clicked')">
+        {{ ctrl.button.label }}
+      </orion-button>
     </div>
-  );
-})
+  </body>
+</html>`;
 
-.add('large button', () => {
-  const buttonText = text('Text', 'Hover state');
-  const props = {
-    background: select('Background Color', colorOptions, ''),
-    color: select('Color', colorOptions, ''),
-    size: 'large',
-  };
-
-  const filteredProps = filterEmptyProps(props);
-
-  const sources = [
-    {
-      label: 'React',
-      source: `
-        <Button
-          background="${props.background}"
-          color="${props.color}"
-          onClick={action('clicked')}
-          size="${props.size}"
-        >
-          {"${buttonText}"}
-        </Button>
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
-        // ------------------------------
-        // controller.js
-
-        import 'angular';
-        import '@orion-ui/angular/lib/2016-12-01';
-
-        angular
-          .module('app', ['orion']) // include orion module
-          .controller('DemoController', function() {
-            var ctrl = this;
-
-            ctrl.button = {
-              label: '${buttonText}',
-              color: '${props.color}',
-              background: '${props.background}',
-              size: '${props.size}'
-            };
-
-            ctrl.action = function(arg) {
-              alert(arg);
-            }
-          });
-
-        // ------------------------------
-        // index.html
-
-        <!doctype html>
-        <html>
-        <body ng-app="app">
-          <div ng-controller="DemoController as ctrl">
-            <orion-button background="ctrl.button.background" color="ctrl.button.color" size="ctrl.button.size" ng-click="ctrl.action('clicked')">
-              {{ctrl.button.label}}
-            </orion-button>
-          </div>
-        </body>
-        </html>
-      `,
-    },
-  ];
-
-  return (
-    <div>
-      <Example {...filteredProps}>
+    return (
+      <WithSource react={react} angular={angular}>
         <Button {...filteredProps}>
           {buttonText}
         </Button>
-      </Example>
-      <SourceViewer sources={sources} />
-    </div>
-  );
-})
+      </WithSource>
+    );
+  })
+  .add('focus button', () => {
+    const buttonText = text('Text', 'Button');
+    const props = {
+      hasFocus: boolean('Has Focus', true),
+    };
 
-.add('focus button', () => {
-  const buttonText = text('Text', 'Button');
-  const props = {
-    hasFocus: boolean('Has Focus', true),
-  };
+    const filteredProps = filterEmptyProps(props);
 
-  const filteredProps = filterEmptyProps(props);
-
-  const sources = [
-    {
-      label: 'React',
-      source: `
+    const react = `
         <Button
           onClick={action('clicked')}
           hasFocus="${props.hasFocus}"
         >
           {"${buttonText}"}
-        </Button>
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
+        </Button>`;
+
+    const angular = `
         // ------------------------------
         // controller.js
 
@@ -495,19 +426,13 @@ storiesOf('Button', module)
             </orion-button>
           </div>
         </body>
-        </html>
-      `,
-    },
-  ];
+        </html>`;
 
-  return (
-    <div>
-      <Example {...filteredProps}>
+    return (
+      <WithSource react={react} angular={angular}>
         <Button {...filteredProps}>
           {buttonText}
         </Button>
-      </Example>
-      <SourceViewer sources={sources} />
-    </div>
-  );
-});
+      </WithSource>
+    );
+  });

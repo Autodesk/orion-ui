@@ -15,18 +15,14 @@ limitations under the License.
 
 */
 import { storiesOf } from '@kadira/storybook';
-import { withKnobs, text, boolean, object } from '@kadira/storybook-addon-knobs';
+import { text, boolean, object } from '@kadira/storybook-addon-knobs';
 import React from 'react';
-import SourceViewer from '../components/source_viewer';
-import Example from '../components/example';
+
+import { WithSource } from '../addons/source-addon';
 
 storiesOf('DatePicker', module)
-  .addDecorator(withKnobs)
   .add('unfocused w/o date', () => {
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
@@ -37,12 +33,9 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+
+    const angular = `
 // app controller
 
 import 'angular';
@@ -63,24 +56,16 @@ angular.module('app', [DatePicker.module])
     <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
   </body>
 </html>
-        `,
-      },
-    ];
+        `;
 
     return (
-      <div>
-        <Example>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('unfocused w date', () => {
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -94,11 +79,8 @@ class App extends React.Component {
 }
 
 ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+                `;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -120,24 +102,15 @@ angular.module('app', [DatePicker.module])
     <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
   </body>
 </html>
-        `,
-      },
-    ];
-
+        `;
     return (
-      <div>
-        <Example>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('clearable', () => {
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -150,12 +123,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -178,17 +147,12 @@ angular.module('app', [DatePicker.module])
     <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" clearable="{{app.clearable}} />
   </body>
 </html>
-        `,
-      },
-    ];
+        `;
 
     return (
-      <div>
-        <Example>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('custom placeholder text', () => {
@@ -196,10 +160,7 @@ angular.module('app', [DatePicker.module])
       placeholder: text('Placeholder', '__ / __ / ____'),
     };
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
@@ -210,12 +171,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -236,18 +193,12 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" placeholder="{{app.placeholder}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('focus', () => {
@@ -255,10 +206,7 @@ angular.module('app', [DatePicker.module])
       focus: boolean('Focus', true),
     };
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -271,12 +219,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -297,18 +241,12 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('focus month & day', () => {
@@ -316,10 +254,7 @@ angular.module('app', [DatePicker.module])
       focusDate: text('Focus Date', '2016-01-01'),
     };
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -333,12 +268,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -359,18 +290,12 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" focusDate="{{app.focusDate}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('custom date formatting', () => {
@@ -380,10 +305,7 @@ angular.module('app', [DatePicker.module])
       monthFormat: text('Month Format', 'YYYY[年]MMMM'),
     };
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -397,12 +319,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -427,18 +345,12 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('i18n', () => {
@@ -450,10 +362,7 @@ angular.module('app', [DatePicker.module])
       }),
     };
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -467,12 +376,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -493,25 +398,16 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" i18n="{{app.i18n}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('custom disabled dates', () => {
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -544,12 +440,9 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+
+    const angular = `
 // app controller
 
 import 'angular';
@@ -586,18 +479,12 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" isEnabled="{{app.isEnabled}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('disabled', () => {
@@ -605,10 +492,7 @@ angular.module('app', [DatePicker.module])
       disabled: boolean('Disabled', true),
     };
 
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -621,12 +505,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -647,29 +527,16 @@ angular.module('app', [DatePicker.module])
   <body ng-controller="AppController as app">
     <orion-date-picker date="{{app.date}}" disabled="{{app.disabled}}" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   })
   .add('interactive', () => {
-    const props = {
-      disabled: boolean('Disabled', true),
-    };
-
-    const sources = [
-      {
-        label: 'React',
-        source: `
+    const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
@@ -698,12 +565,8 @@ class App extends React.Component {
     }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-                `,
-      },
-      {
-        label: 'Angular 1.5.x',
-        source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+    const angular = `
 // app controller
 
 import 'angular';
@@ -735,17 +598,11 @@ angular.module('app', [DatePicker.module])
       datePickerState="{{app.datePickerState}}"
       ng-change="app.onChange(datePickerState)" />
   </body>
-</html>
-        `,
-      },
-    ];
+</html>`;
 
     return (
-      <div>
-        <Example {...props}>
-          <span>todo</span>
-        </Example>
-        <SourceViewer sources={sources} />
-      </div>
+      <WithSource react={react} angular={angular}>
+        <span>todo</span>
+      </WithSource>
     );
   });

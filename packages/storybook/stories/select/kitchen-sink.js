@@ -18,9 +18,9 @@ limitations under the License.
 import React from 'react';
 import { boolean, select, text } from '@kadira/storybook-addon-knobs';
 
-import SourceViewer from '../../components/source_viewer';
+import { WithSource } from '../../addons/source-addon';
 
-module.exports = function kitchenSink() {
+export default function kitchenSink() {
   const props = {
     open: boolean('Open', false),
     disabled: boolean('Disabled', true),
@@ -40,10 +40,7 @@ module.exports = function kitchenSink() {
     clearable: boolean('Clearable', true),
   };
 
-  const sources = [
-    {
-      label: 'React',
-      source: `
+  const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Select} from '@orion-ui/react/lib/2016-12-01';
@@ -70,12 +67,9 @@ render() {
 }
 }
 
-ReactDOM.render(React.createElement(App), document.body);
-      `,
-    },
-    {
-      label: 'Angular 1.5.x',
-      source: `
+ReactDOM.render(React.createElement(App), document.body);`;
+
+  const angular = `
 // app controller
 import 'angular';
 import {SelectState, Select} from '@orion-ui/react/lib/2016-12-01/select';
@@ -114,14 +108,11 @@ angular.module('app', [Select.moduleName])
     query="{{app.query}}"
     clearable="{{app.clearable}}" />
 </body>
-</html>
-      `,
-    },
-  ];
+</html>`;
 
   return (
-    <div>
-      <SourceViewer sources={sources} />
-    </div>
+    <WithSource react={react} angular={angular}>
+      <span>todo</span>
+    </WithSource>
   );
-};
+}

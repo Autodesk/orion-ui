@@ -85,4 +85,4 @@ angular.module('app', [])
       <Select options={options} focusedIndex={props.focusedIndex} open={props.open} />
     </WithSource>
   );
-};
+}

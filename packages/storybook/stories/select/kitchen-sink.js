@@ -115,4 +115,4 @@ angular.module('app', [Select.moduleName])
       <span>todo</span>
     </WithSource>
   );
-};
+}

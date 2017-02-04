@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import { storiesOf } from '@kadira/storybook';
-import { withKnobs, text, boolean, object } from '@kadira/storybook-addon-knobs';
+import { text, boolean, object } from '@kadira/storybook-addon-knobs';
 import React from 'react';
 
 import { WithSource } from '../addons/source-addon';
@@ -442,7 +442,7 @@ class App extends React.Component {
 
 ReactDOM.render(React.createElement(App), document.body);`;
 
-const angular = `
+    const angular = `
 // app controller
 
 import 'angular';
@@ -536,10 +536,6 @@ angular.module('app', [DatePicker.module])
     );
   })
   .add('interactive', () => {
-    const props = {
-      disabled: boolean('Disabled', true),
-    };
-
     const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';

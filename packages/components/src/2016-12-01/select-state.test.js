@@ -42,7 +42,7 @@ describe('SelectState', () => {
     });
   });
 
-  describe('activated', () => {
+  describe.only('activated', () => {
     it('sets open to true', () => {
       const result = SelectState.activated({});
       expect(result.open).to.be.true;
@@ -83,7 +83,7 @@ describe('SelectState', () => {
       nextState = SelectState.optionFocused(state, 1);
     });
 
-    it('sets the focusedOption value', () => {
+    it('sets the focusedIndex value', () => {
       expect(nextState.focusedIndex).to.eq(1);
     });
   });

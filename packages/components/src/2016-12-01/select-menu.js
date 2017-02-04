@@ -17,7 +17,7 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 require('./list');
 require('./select-option');
-require('./popover.js');
+// require('./popover.js');
 
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props.js');
@@ -70,6 +70,7 @@ class SelectMenu extends Element {
   }
 
   connectedCallback() {
+    this._ensureList();
     this._addHandlers();
   }
 
@@ -77,14 +78,14 @@ class SelectMenu extends Element {
     this._removeHandlers();
   }
 
-  _ensurePopover() {
-    this._ensureList();
-    if (this.popover !== undefined) { return; }
-
-    this.popover = document.createElement('orion-popover');
-
-    this.appendChild(this.popover);
-  }
+  // _ensurePopover() {
+  //   this._ensureList();
+  //   if (this.popover !== undefined) { return; }
+  //
+  //   this.popover = document.createElement('orion-popover');
+  //
+  //   this.appendChild(this.popover);
+  // }
 
   _ensureList() {
     if (this.list !== undefined) { return; }
@@ -98,11 +99,15 @@ class SelectMenu extends Element {
     });
   }
 
+  _removeList() {
+    if (this.list !== undefined) { this.list.remove(); }
+  }
+
   _addHandlers() {
-    this._ensurePopover();
-    this.popover.addEventListener('clickedAway', this._close);
-    this.list.addEventListener('optionSelected', this._cloneEvent);
-    this.list.addEventListener('optionFocused', this._cloneEvent);
+    // this._ensurePopover();
+    // this.popover.addEventListener('clickedAway', this._close);
+    // this.list.addEventListener('optionSelected', this._cloneEvent);
+    // this.list.addEventListener('optionFocused', this._cloneEvent);
   }
 
   _cloneEvent(event) {
@@ -110,9 +115,9 @@ class SelectMenu extends Element {
   }
 
   _removeHandlers() {
-    this.popover.removeEventListener('clickedAway', this._close);
-    this.list.removeEventListener('optionSelected', this._cloneEvent);
-    this.list.removeEventListener('optionFocused', this._cloneEvent);
+    // this.popover.removeEventListener('clickedAway', this._close);
+    // this.list.removeEventListener('optionSelected', this._cloneEvent);
+    // this.list.removeEventListener('optionFocused', this._cloneEvent);
   }
 
   _close() {
@@ -120,26 +125,36 @@ class SelectMenu extends Element {
   }
 
   _render() {
-    this._ensurePopover();
+    this._ensureList();
 
-    applyProps(this.popover, {
-      top: this.state.top,
-      left: this.state.left,
-      width: this.MENU_WIDTH,
-      content: this.list,
-      open: this.state.open,
-    });
+    // applyProps(this.popover, {
+    //   top: this.state.top,
+    //   left: this.state.left,
+    //   content: this.list,
+    //   open: this.state.open,
+    // });
 
-    const options = this.state.options.map((option, i) => {
-      option.hasFocus = (i === this.state.focusedIndex);
-      option.index = i;
-      option.isSelected = (i === this.state.selectedIndex);
-      return option;
-    });
+    if (this.state.open) {
+      const options = this.state.options.map((option, i) => {
+        option.hasFocus = (i === this.state.focusedIndex);
+        option.index = i;
+        option.isSelected = (i === this.state.selectedIndex);
+        return option;
+      });
 
-    applyProps(this.list, {
-      items: options,
-    });
+      applyProps(this.list, {
+        items: options,
+        position: 'absolute',
+      });
+
+      applyProps(this.list.style, {
+        width: this.MENU_WIDTH,
+      });
+
+      this.appendChild(this.list);
+    } else {
+      this._removeList();
+    }
 
     super._render();
   }

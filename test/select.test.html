@@ -99,6 +99,15 @@ limitations under the License.
             }, 75);
           });
         });
+
+        context('when select element is removed', () => {
+          it ('removes the menu from the page', () =>{
+            let orionList = select.closest('body').querySelector('orion-list');
+            let body = select.closest('body')
+            select.remove();
+            expect(body.contains(orionList)).to.be.false;
+          });
+        });
       });
     });
 

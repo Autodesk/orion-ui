@@ -22,8 +22,8 @@ const expect = chai.expect;
 describe('ResetFocusStyle', () => {
   describe('attributeChangedCallback', () => {
     context('with true', () => {
-      it('returns class foc-nope', () => {
-        expect(Focus.attributeChangedCallback('reset-focus-style', true)).to.eq('foc-nope');
+      it('returns class rst-foc', () => {
+        expect(Focus.attributeChangedCallback('reset-focus-style', true)).to.eq('rst-foc');
       });
     });
   });

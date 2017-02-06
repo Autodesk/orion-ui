@@ -23,7 +23,7 @@ const SelectState = require('./select-state.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
 const eventKey = require('../utils/event-key');
-const clearChildren = require('../utils/clear-children.js')
+const clearChildren = require('../utils/clear-children.js');
 
 class Select extends Element {
   constructor() {

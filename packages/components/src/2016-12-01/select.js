@@ -23,6 +23,7 @@ const SelectState = require('./select-state.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
 const eventKey = require('../utils/event-key');
+const clearChildren = require('../utils/clear-children.js')
 
 class Select extends Element {
   constructor() {
@@ -33,7 +34,8 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
     this.state.options = [];
     this.display = 'inline-block';
-
+    // Need this to ensure children were removed in firefox in angular ng-repeat
+    clearChildren(this);
     ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate', '_focus', '_blur'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });

@@ -56,10 +56,29 @@ describe('orion-ensure-copyright', () => {
     expect(code).to.equal(1);
   });
 
+  it('ignores if .d.ts file is missing a copyright notice', () => {
+    createFile('somefile.d.ts', false);
+    const code = runScript();
+    expect(code).to.equal(0);
+  });
+
   it('passes if all files have a copyright notice', () => {
     createFile('somefile.js', true);
     const code = runScript();
     expect(code).to.equal(0);
+  });
+
+  describe('given in a examples directory', () => {
+    beforeEach(() => {
+      const modulePath = path.join(TEMP_DIR, 'examples');
+      mkdir(modulePath);
+      createFile('examples/somemodule.js', false);
+    });
+
+    it('ignores it', () => {
+      const code = runScript();
+      expect(code).to.equal(0);
+    });
   });
 
   describe('given a node_modules directory', () => {

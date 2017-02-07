@@ -70,11 +70,6 @@ class SelectMenu extends Element {
 
   connectedCallback() {
     this._ensureList();
-    this._addHandlers();
-  }
-
-  disconnectedCallback() {
-    this._removeHandlers();
   }
 
   _ensureList() {

@@ -81,11 +81,4 @@ describe('ButtonState', () => {
       expect(nextState.hasFocus).to.be.false;
     });
   });
-
-  context('with an irrelevant property', () => {
-    it('does not return it', () => {
-      const nextState = ButtonState.focus({ foo: 'bar' });
-      expect(nextState.foo).to.be.undefined;
-    });
-  });
 });

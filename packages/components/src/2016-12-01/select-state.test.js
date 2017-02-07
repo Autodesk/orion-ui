@@ -261,5 +261,10 @@ describe('SelectState', () => {
       const nextState = SelectState.blur({ hasFocus: true });
       expect(nextState.hasFocus).to.be.false;
     });
+
+    it('closes the menu', () => {
+      const nextState = SelectState.blur({ hasFocus: true, open: true });
+      expect(nextState.open).to.be.false;
+    });
   });
 });

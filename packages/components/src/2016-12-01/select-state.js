@@ -111,6 +111,7 @@ const SelectState = {
     return {
       ...state,
       hasFocus: false,
+      open: false,
     };
   },
 };

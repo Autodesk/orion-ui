@@ -14,10 +14,16 @@
     "noImplicitThis": true,
     "sourceMap": true,
     "target": "es6",
-    "outDir": "lib"
+    "outDir": "2017-02-06"
   },
   "include": [
     "typings_custom/custom.d.ts",
-    "src/*.ts"
+    "modules/**/*.ts"
+  ],
+
+  "types": [
+    "mocha",
+    "shelljs",
+    "node"
   ]
 }

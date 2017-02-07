@@ -12,7 +12,15 @@
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/commander": "^2.3.31",
+    "@types/mocha": "^2.2.39",
     "@types/node": "^6.0.52",
+    "@types/shelljs": "^0.6.0",
+    "chai": "^3.5.0",
+    "commander": "^2.9.0",
+    "mocha": "^3.2.0",
+    "shelljs": "^0.7.6",
     "typescript": "^2.1.4"
   },
   "dependencies": {

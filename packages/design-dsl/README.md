@@ -123,7 +123,7 @@ An example OML component:
 ```html
 1. <orion>
 2.   <component => name: "World">
-3.     Hello {name}
+3.     <text content="Hello, {name}" />
 4.   </component>
 5. </orion>
 ```
@@ -131,12 +131,15 @@ Let's break it down line-by-line:
 
 1. All OML components start with the `<orion>` element
 2. The `<component>` element declares a block with a block parameter with a default Values
-3. The `{name}` expression evaluates to the current block parameter value
+3. The `<text>` element declares some text with a content attribute. The `{name}` argument
+   looks up in the current block and it's value is placed into the text content. Internally we use
+   [ICU Message Syntax](https://formatjs.io/guides/message-syntax/).
+
 
 When compiled with the orion compiler:
 
 ```bash
-orion compile hello.oml
+orion compile HelloWorld.oml > HelloWorld.js
 ```
 
 We can then import the output .js file as an ES2015 module and use it:

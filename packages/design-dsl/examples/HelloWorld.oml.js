@@ -1,21 +1,23 @@
+import IntlMessageFormat from 'intl-messageformat';
+
 function render(root, component) {
   const text = document.createElement('span');
   text.classList = 'size-3';
-  text.appendChild('Hello, ');
 
-  const text2 = document.createTextNode(root.name);
+  const textMessage = new IntlMessageFormat("Hello, {name}", "en-US");
+  const text2 = document.createTextNode(textMessage.format(root));
   text.appendChild(text2);
 
   return {
-    mount: function(target) {
+    mount: target => {
       target.appendChild(text);
     },
 
-    update: function(changed, root) {
-      text2.data = root.name;
+    update: (changed, root) => {
+      text2.data = textMessage.format(root);
     },
 
-    teardown: function() {
+    teardown: () => {
       text.parentNode.removeChild(text);
     }
   }

@@ -1,7 +1,7 @@
-import { WHITESPACE } from './parser';
-
 const ASCII = /[a-zA-Z]/;
 const DIGIT = /[0-9]/;
+const WHITESPACE = /\s/;
+
 export const EOF_CHARACTER = '@@EOF@@';
 
 /**
@@ -112,13 +112,13 @@ export interface World {
  *   - getNextToken(world, char)
  *   - getNextLocation(world, char)
  */
-export function getTokens(source: string): Token[] {
+export function getTokens(source: string, existing = initWorld()): World {
   const world = source
     .split('')
     .reduce((world: World, char: string) =>
-      getNextLocation(getNextToken(world, char), char), initWorld())
+      getNextLocation(getNextToken(world, char), char), existing)
 
-  return getNextToken(world, EOF_CHARACTER).tokens;
+  return getNextToken(world, EOF_CHARACTER);
 }
 
 export function initWorld(): World {

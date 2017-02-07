@@ -1,0 +1,5 @@
+<orion>
+  <component => name>
+    <text size=3 content="Hello, {name}" />
+  </component>
+</orion>

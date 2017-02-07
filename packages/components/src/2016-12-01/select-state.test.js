@@ -42,7 +42,7 @@ describe('SelectState', () => {
     });
   });
 
-  describe.only('activated', () => {
+  describe('activated', () => {
     it('sets open to true', () => {
       const result = SelectState.activated({});
       expect(result.open).to.be.true;

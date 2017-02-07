@@ -17,7 +17,6 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 require('./list');
 require('./select-option');
-// require('./popover.js');
 
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props.js');
@@ -78,15 +77,6 @@ class SelectMenu extends Element {
     this._removeHandlers();
   }
 
-  // _ensurePopover() {
-  //   this._ensureList();
-  //   if (this.popover !== undefined) { return; }
-  //
-  //   this.popover = document.createElement('orion-popover');
-  //
-  //   this.appendChild(this.popover);
-  // }
-
   _ensureList() {
     if (this.list !== undefined) { return; }
 
@@ -103,21 +93,8 @@ class SelectMenu extends Element {
     if (this.list !== undefined) { this.list.remove(); }
   }
 
-  _addHandlers() {
-    // this._ensurePopover();
-    // this.popover.addEventListener('clickedAway', this._close);
-    // this.list.addEventListener('optionSelected', this._cloneEvent);
-    // this.list.addEventListener('optionFocused', this._cloneEvent);
-  }
-
   _cloneEvent(event) {
     this.dispatchEvent(new CustomEvent(event.type, event));
-  }
-
-  _removeHandlers() {
-    // this.popover.removeEventListener('clickedAway', this._close);
-    // this.list.removeEventListener('optionSelected', this._cloneEvent);
-    // this.list.removeEventListener('optionFocused', this._cloneEvent);
   }
 
   _close() {
@@ -126,13 +103,6 @@ class SelectMenu extends Element {
 
   _render() {
     this._ensureList();
-
-    // applyProps(this.popover, {
-    //   top: this.state.top,
-    //   left: this.state.left,
-    //   content: this.list,
-    //   open: this.state.open,
-    // });
 
     if (this.state.open) {
       const options = this.state.options.map((option, i) => {

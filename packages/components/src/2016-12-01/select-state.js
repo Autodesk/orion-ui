@@ -22,6 +22,13 @@ const SelectState = {
     };
   },
 
+  toggleOpen(state) {
+    if (state.open) {
+      return this.deactivated(state);
+    }
+    return this.activated(state);
+  },
+
   activated(state) {
     let focusedIndex = state.selectedIndex;
     if (focusedIndex === undefined) { focusedIndex = 0; }

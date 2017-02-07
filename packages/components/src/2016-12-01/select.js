@@ -34,7 +34,7 @@ class Select extends Element {
     this.state.options = [];
     this.display = 'inline-block';
 
-    ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate', '_focus', '_blur'].forEach((handler) => {
+    ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -92,7 +92,7 @@ class Select extends Element {
     this._ensureMenu();
 
     this.addEventListener('keydown', this._handleKeydown);
-    this.button.addEventListener('click', this._activate);
+    this.button.addEventListener('click', this._toggle);
     this.button.addEventListener('focus', this._focus);
     this.button.addEventListener('blur', this._blur);
     this.addEventListener('optionSelected', this._setSelectedOption);
@@ -101,39 +101,40 @@ class Select extends Element {
 
   _removeListeners() {
     this.removeEventListener('keydown', this._handleKeydown);
-    this.button.removeEventListener('click', this._activate);
+    this.button.removeEventListener('click', this._toggle);
     this.button.removeEventListener('focus', this._focus);
     this.button.removeEventListener('blur', this._blur);
     this.removeEventListener('optionSelected', this._setSelectedOption);
     this.removeEventListener('optionFocused', this._setFocusedOption);
   }
 
-  _activate() {
-    this._dispatchStateChange('activated');
+  _toggle() {
+    this._dispatchStateChange('toggleOpen');
   }
 
   _handleKeydown(event) {
-    event.preventDefault();
-
     switch (eventKey(event)) {
       case 'Escape':
         this._dispatchStateChange('deactivated');
         break;
       case 'ArrowUp':
+        event.preventDefault();
         this._dispatchStateChange('focusPrevious');
         break;
       case 'ArrowDown':
+        event.preventDefault();
         this._dispatchStateChange('focusNext');
         break;
       case 'Tab':
       case 'Enter':
-        this._dispatchStateChange('optionSelected');
+        this._dispatchStateChange('optionSelected', this.state.focusedIndex);
         break;
       default:
     }
   }
 
   _setSelectedOption(event) {
+    event.preventDefault();
     const nextState = SelectState.optionSelected(this.state, event.detail.selectedIndex);
     this.dispatchEvent(new CustomEvent('change', {
       detail: { type: 'optionSelected', state: nextState },
@@ -166,11 +167,8 @@ class Select extends Element {
     });
   }
 
-  _dispatchStateChange(eventType) {
-    const nextState = SelectState[eventType](this.state);
-    if (eventType === 'optionSelected') {
-      console.log(eventType, nextState)
-    }
+  _dispatchStateChange(eventType, arg) {
+    const nextState = SelectState[eventType](this.state, arg);
     this.dispatchEvent(new CustomEvent('change', {
       detail: {
         type: eventType,

@@ -50,6 +50,12 @@ describe('orion-ensure-copyright', () => {
     expect(code).to.equal(1);
   });
 
+  it('fails if ts file is missing a copyright notice', () => {
+    createFile('somefile.ts', false);
+    const code = runScript();
+    expect(code).to.equal(1);
+  });
+
   it('passes if all files have a copyright notice', () => {
     createFile('somefile.js', true);
     const code = runScript();

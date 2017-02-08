@@ -26,7 +26,9 @@ limitations under the License.
 <body>
   <test-fixture id="select">
     <template>
-      <orion-select></orion-select>
+      <div>
+        <orion-select></orion-select>
+      </div>
     </template>
   </test-fixture>
 
@@ -38,10 +40,12 @@ limitations under the License.
     }
 
     describe('<orion-select>', () => {
-      var select, menu;
+      var select, button, menu, wrapper;
 
       beforeEach(() => {
-        select = fixture('select');
+        wrapper = fixture('select');
+        select = wrapper.querySelector('orion-select');
+        button = select.querySelector('orion-button');
         select.addEventListener('change', (event) => {
           applyProps(select, event.detail.state);
         });
@@ -53,27 +57,30 @@ limitations under the License.
 
       context('after clicking', () => {
         beforeEach((done) => {
-          select.dispatchEvent(new Event('click'));
+          button.dispatchEvent(new Event('click'));
           setTimeout(() => {
-            list = select.closest('body').querySelector('orion-list');
+            menu = select.querySelector('orion-list');
             done();
           }, 75);
         });
 
         it('shows a menu of options', () => {
-          expect(list.innerText).to.have.string('Killer Bees');
-          expect(list.innerText).to.have.string('Aardvarks');
+          expect(menu.innerText).to.have.string('Killer Bees');
+          expect(menu.innerText).to.have.string('Aardvarks');
         });
 
         context('and clicking an option', () => {
           beforeEach(() => {
-            let menu = select.closest('body').querySelector('[data-test-id="orion-popover__content"]');
-            menu.querySelectorAll('orion-select-option')[1].dispatchEvent(new Event('click'));
+            let menu = select.querySelector('orion-list');
+            let option = menu.querySelectorAll('orion-select-option')[1];
+            option.dispatchEvent(new Event('mouseover'));
+            option.dispatchEvent(new Event('mousedown'));
+            option.dispatchEvent(new Event('mouseup'));
           });
 
           it('closes the menu', (done) => {
             setTimeout(() => {
-              expect(select.closest('body').querySelector('orion-list')).to.be.null;
+              expect(select.querySelector('orion-list')).to.be.null;
               done();
             }, 75);
           });
@@ -82,24 +89,108 @@ limitations under the License.
             setTimeout(() => {
               expect(select.innerText).to.have.string('Aardvarks');
               done();
-            }, 705);
+            }, 75);
           });
         });
 
         context('and clicking away', () => {
           beforeEach(() => {
-            let clickTrap = select.closest('body').querySelector('[data-test-id="orion-popover__click-trap"]');
-            clickTrap.dispatchEvent(new Event('click'));
+            button.dispatchEvent(new Event('blur'));
           });
 
           it('closes the menu', (done) => {
             setTimeout(() => {
-              expect(select.closest('body').querySelector('orion-list')).to.be.null;
+              let menu = select.querySelector('orion-list');
+              expect(menu).to.be.null;
               done();
             }, 75);
           });
         });
       });
+
+      context('after focusing the button', () => {
+        beforeEach((done) => {
+          setTimeout(() => {
+            button.dispatchEvent(new Event('focus'));
+            done();
+          }, 75);
+        });
+
+        it('has focus', () => {
+          expect(select.state.hasFocus).to.be.true;
+        })
+
+        context('pressing an arrow key', () => {
+          var menu;
+
+          beforeEach((done) => {
+            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            setTimeout(() => {
+              menu = select.querySelector('orion-list');
+              done();
+            }, 75);
+          });
+
+          it('opens the menu', () => {
+            expect(menu.innerText).to.have.string('Killer Bees');
+            expect(menu.innerText).to.have.string('Aardvarks');
+          });
+
+          context('then pressing enter', () => {
+            var initialIndex;
+
+            beforeEach((done) => {
+              initialIndex = select.state.selectedIndex;
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' })); // Focus next option
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+              setTimeout(() => {
+                done();
+              }, 75);
+            });
+
+            it('closes the menu', () => {
+              expect(select.contains(menu)).to.be.false;
+            });
+
+            it('selects the option with focus', () => {
+              expect(select.state.selectedIndex).not.to.eq(initialIndex);
+            });
+          });
+
+          context('then pressing escape', () => {
+            var initialIndex;
+
+            beforeEach((done) => {
+              initialIndex = select.state.selectedIndex;
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+              setTimeout(() => {
+                done();
+              }, 75);
+            });
+
+            it('closes the menu', () => {
+              expect(select.contains(menu)).to.be.false;
+            });
+
+            it('does not change the selected option', () => {
+              expect(select.state.selectedIndex).to.eq(initialIndex);
+            });
+          });
+        });
+
+        context('blurring the button', () => {
+          beforeEach((done) => {
+            setTimeout(() => {
+              button.dispatchEvent(new Event('blur'));
+              done();
+            }, 75);
+          });
+
+          it('no longer has focus', () => {
+            expect(select.state.hasFocus).not.to.be.true;
+          });
+        });
+      })
     });
 
     a11ySuite('select');

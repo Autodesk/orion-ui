@@ -22,6 +22,13 @@ const SelectState = {
     };
   },
 
+  toggleOpen(state) {
+    if (state.open) {
+      return this.deactivated(state);
+    }
+    return this.activated(state);
+  },
+
   activated(state) {
     let focusedIndex = state.selectedIndex;
     if (focusedIndex === undefined) { focusedIndex = 0; }
@@ -40,9 +47,11 @@ const SelectState = {
   },
 
   optionSelected(state, selectedIndex) {
+    let nextSelectedIndex = selectedIndex;
+    if (nextSelectedIndex === undefined) { nextSelectedIndex = state.selectedIndex; }
     return {
       ...state,
-      selectedIndex,
+      nextSelectedIndex,
       open: false,
     };
   },
@@ -104,6 +113,7 @@ const SelectState = {
     return {
       ...state,
       hasFocus: false,
+      open: false,
     };
   },
 };

@@ -83,7 +83,7 @@ describe('SelectState', () => {
       nextState = SelectState.optionFocused(state, 1);
     });
 
-    it('sets the focusedOption value', () => {
+    it('sets the focusedIndex value', () => {
       expect(nextState.focusedIndex).to.eq(1);
     });
   });
@@ -95,6 +95,7 @@ describe('SelectState', () => {
       state = {
         open: true,
         options,
+        selectedIndex: 0,
       };
       nextState = SelectState.optionSelected(state, 1);
     });
@@ -109,11 +110,11 @@ describe('SelectState', () => {
 
     context('with an non-existant option index', () => {
       before(() => {
-        nextState = SelectState.optionSelected(state, 5);
+        nextState = SelectState.optionSelected(state, undefined);
       });
 
-      it('set value to undefined', () => {
-        expect(nextState.value).to.be.undefined;
+      it('does not change the selectedIndex', () => {
+        expect(nextState.selectedIndex).to.eq(0);
       });
     });
   });
@@ -260,6 +261,11 @@ describe('SelectState', () => {
     it('sets hasFocus to false', () => {
       const nextState = SelectState.blur({ hasFocus: true });
       expect(nextState.hasFocus).to.be.false;
+    });
+
+    it('closes the menu', () => {
+      const nextState = SelectState.blur({ hasFocus: true, open: true });
+      expect(nextState.open).to.be.false;
     });
   });
 });

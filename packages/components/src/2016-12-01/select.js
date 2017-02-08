@@ -23,7 +23,6 @@ const SelectState = require('./select-state.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
 const eventKey = require('../utils/event-key');
-const clearChildren = require('../utils/clear-children.js');
 
 class Select extends Element {
   constructor() {
@@ -34,8 +33,6 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
     this.state.options = [];
     this.display = 'inline-block';
-    // Need this to ensure children were removed in firefox in angular ng-repeat
-    clearChildren(this);
     ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate', '_focus', '_blur'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
@@ -80,15 +77,26 @@ class Select extends Element {
   }
 
   _ensureButton() {
-    if (this.button !== undefined) { return; }
-
-    this.button = document.createElement('orion-button');
-    applyProps(this.button, {
-      textContent: 'Select',
-    });
-
+    this.button = this.querySelector('orion-button');
+    if (this.button !== null) {
+      return this.button;
+    } else {
+      this.button = document.createElement('orion-button');
+      applyProps(this.button, {
+        textContent: 'Select',
+      });
+    }
     this.appendChild(this.button);
   }
+  //   if (this.button !== undefined) { return; }
+   //
+  //    this.button = document.createElement('orion-button');
+  //    applyProps(this.button, {
+  //      textContent: 'Select',
+  //    });
+   //
+  //    this.appendChild(this.button);
+  //  }
 
   _addListeners() {
     this._ensureMenu();
@@ -204,9 +212,13 @@ class Select extends Element {
   }
 
   _ensureMenu() {
-    if (this.menu !== undefined) { return; }
+    this.menu = this.querySelector('orion-select-menu');
+    if (this.menu !== null) {
+      return this.menu;
+    } else {
+      this.menu = document.createElement('orion-select-menu');
+    }
 
-    this.menu = document.createElement('orion-select-menu');
     this.appendChild(this.menu);
 
     this.menu.addEventListener('closed', () => {
@@ -222,6 +234,7 @@ class Select extends Element {
 
   _render() {
     this._ensureMenu();
+    this._ensureButton();
 
     applyProps(this.menu, {
       open: this.state.open,

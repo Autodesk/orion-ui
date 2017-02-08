@@ -26,7 +26,9 @@ limitations under the License.
 <body>
   <test-fixture id="select">
     <template>
-      <orion-select></orion-select>
+      <div>
+        <orion-select></orion-select>
+      </div>
     </template>
   </test-fixture>
 
@@ -38,10 +40,11 @@ limitations under the License.
     }
 
     describe('<orion-select>', () => {
-      var select, menu;
+      var select, menu, wrapper;
 
       beforeEach(() => {
-        select = fixture('select');
+        wrapper = fixture('select');
+        select = wrapper.querySelector('orion-select');
         select.addEventListener('change', (event) => {
           applyProps(select, event.detail.state);
         });
@@ -98,6 +101,16 @@ limitations under the License.
               done();
             }, 75);
           });
+        });
+      });
+      context('when button is inside of ng-repeat', () =>{
+        it('does not render more than once', () => {
+          expect(select.querySelectorAll('orion-button').length).to.eq(1)
+
+          const orionSelect = select.cloneNode(true);
+
+          wrapper.appendChild(orionSelect);
+          expect(wrapper.querySelectorAll('orion-button').length).to.eq(2);
         });
       });
     });

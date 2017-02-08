@@ -46,6 +46,7 @@ limitations under the License.
         wrapper = fixture('select');
         select = wrapper.querySelector('orion-select');
         button = select.querySelector('orion-button');
+
         select.addEventListener('change', (event) => {
           applyProps(select, event.detail.state);
         });
@@ -190,7 +191,18 @@ limitations under the License.
             expect(select.state.hasFocus).not.to.be.true;
           });
         });
-      })
+      });
+
+      context('when button is inside of ng-repeat', () =>{
+        it('does not render more than once', () => {
+          expect(select.querySelectorAll('orion-button').length).to.eq(1)
+
+          const orionSelectWrapper = wrapper.cloneNode(true);
+          const orionSelectFixture = document.querySelector('test-fixture');
+          orionSelectFixture.appendChild(orionSelectWrapper);
+          expect(orionSelectFixture.querySelectorAll('orion-button').length).to.eq(2);
+        });
+      });
     });
 
     a11ySuite('select');

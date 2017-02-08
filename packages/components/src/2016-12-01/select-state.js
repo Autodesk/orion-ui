@@ -51,7 +51,7 @@ const SelectState = {
     if (nextSelectedIndex === undefined) { nextSelectedIndex = state.selectedIndex; }
     return {
       ...state,
-      nextSelectedIndex,
+      selectedIndex: nextSelectedIndex,
       open: false,
     };
   },

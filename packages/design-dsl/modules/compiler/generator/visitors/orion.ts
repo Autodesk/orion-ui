@@ -15,13 +15,12 @@ limitations under the License.
 
 */
 
-import {IWalker} from '../walker';
-import {IVisitor} from './visitor';
+import { IOutput, IVisitor } from '../../types';
 
 export default class OrionVisitor implements IVisitor {
   public tagName: string = 'orion';
 
-  visit(walker: IWalker): void {
+  visit(walker: IOutput): void {
     // no-op
   }
 

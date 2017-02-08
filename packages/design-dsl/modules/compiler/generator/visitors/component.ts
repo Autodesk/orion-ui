@@ -15,30 +15,41 @@ limitations under the License.
 
 */
 
-import { IWalker } from '../walker';
-import { IVisitor } from './visitor';
+import { IOutput, IVisitor } from '../../types';
 
 export default class ComponentVisitor implements IVisitor {
-  private walker: IWalker;
   public tagName: string = 'component';
 
-  visit(walker: IWalker) {
-    this.walker.save(this._getClass());
+  visit(output: IOutput) {
+    output.save(this._getClass(output));
 
-    const generator = this._getRender();
+    output.saveDeferred(
+      ['initial', 'mount', 'update', 'teardown'],
+      ([initial, mount, update, teardown]: Function[]) =>
+        `
+        function render(props) {
+          ${initial()}
 
-    generator.next();
-    generator.next(this.walker.getInitial());
-    generator.next(this.walker.getMount());
-    generator.next(this.walker.getUpdate());
-    const { value } = generator.next(this.walker.getTeardown());
+          return {
+            mount: target => {
+              ${mount()}
+            },
 
-    this.walker.save(value);
+            update: (changed, props) => {
+              ${update()}
+            },
+
+            teardown: () => {
+              ${teardown()}
+            }
+          }
+        }
+      `);
   }
 
-  _getClass() {
+  _getClass(output: IOutput) {
     return `
-      export default class ${this.walker.getBaseName()} {
+      export default class ${output.getBaseName()} {
         constructor(mount, props) {
           this._props = props;
           this._fragment = render(this._props, this);
@@ -62,27 +73,5 @@ export default class ComponentVisitor implements IVisitor {
         }
       }
     `
-  }
-
-  *_getRender(): IterableIterator<string> {
-    return `
-      function render(props) {
-        ${yield}
-
-        return {
-          mount: target => {
-            ${yield}
-          },
-
-          update: (changed, props) => {
-            ${yield}
-          },
-
-          teardown: () => {
-            ${yield}
-          }
-        }
-      }
-    `;
   }
 }

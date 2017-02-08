@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { IWalker } from '../walker';
-import { IVisitor } from './visitor';
+import { IOutput, IVisitor } from '../../types';
 
 export interface Props {
   size: number;
@@ -28,12 +27,12 @@ export default class TextVisitor implements IVisitor {
   private prefix: string;
   private props: Props;
 
-  private walker: IWalker;
+  private walker: IOutput;
 
-  visit(walker: IWalker): void {
+  visit(walker: IOutput): void {
     this.walker = walker;
     this.prefix = this.walker.getIdentifier();
-    this.props = this.walker.getProps<Props>();
+    this.props = this.walker.getProps();
   }
 
   getInitial(): string {

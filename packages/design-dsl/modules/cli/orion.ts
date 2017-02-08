@@ -20,69 +20,20 @@ import * as program from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { World, getTokens, initWorld } from '../parser/tokenizer';
-
-import OrionVisitor from '../generator/visitors/orion';
-import ComponentVisitor from '../generator/visitors/component';
-import TextVisitor from '../generator/visitors/text';
-import Walker from '../generator/walker';
-import {IVisitor} from '../generator/visitors/visitor';
+import compile from '../compiler';
 
 export default function cli(argv: string[]): void {
   program
     .command('compile <file>')
     .description('compiles an OML file to JavaScript')
     .action((file: string) => {
-      // const source = path.join(process.cwd(), file);
-      // const stream = fs.createReadStream(source);
+      const source = path.join(process.cwd(), file);
 
-      // let start = initWorld();
+      // const results = compile(
+        // fs.readFileSync(source).toString()
+      // )
 
-      // stream.on('data', (chunk: Buffer) => {
-      //   start = getTokens(chunk.toString(), start);
-      // });
-
-      // stream.on('end', () => {
-      //   console.log('done');
-      // });
-
-      // stream.on('error', (err: Error) => {
-      //   console.error(err);
-      // })
-
-      const visitors: IVisitor[] = [
-        new OrionVisitor(),
-        new ComponentVisitor(),
-        new TextVisitor()
-      ];
-
-      const root = {
-        tagName: 'orion',
-        attributes: [],
-        children: [
-          {
-            tagName: 'component',
-            blockParameters: ['name'],
-            children: [
-              {
-                tagName: 'text',
-                attributes: [
-                  { type: 'json', name: 'size', value: '3' },
-                  { type: 'json', name: 'content', value: '"Hello, {name}"' }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      //TODO
-
-      /**
-       * - start at root and work way down
-       * - call visit on node
-       * - implement walker
-       */
+      console.log('TODO');
     });
 
   program.parse(process.argv);

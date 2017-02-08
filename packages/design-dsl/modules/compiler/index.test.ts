@@ -16,8 +16,9 @@ limitations under the License.
 */
 import { cd, exec, cat, ls, test } from 'shelljs';
 import { expect } from 'chai';
+import * as fs from 'fs';
 
-import version from '../version';
+import compile, {CompilerOptions} from './';
 
 describe('compile HelloWorld.oml', () => {
   ls('examples/*.oml').forEach(file => {
@@ -30,8 +31,14 @@ describe('compile HelloWorld.oml', () => {
         return;
       }
 
-      const { stdout } = exec(`node ${version} compile ${file}`);
-      expect(stdout.toString()).to.equal( cat(output).toString() );
+      const options: CompilerOptions = {
+        filename: 'HelloWorld.oml',
+        source: cat(file).toString()
+      }
+
+      const results = compile(options);
+
+      expect(results).to.equal( cat(output).toString() );
     });
   });
 });

@@ -33,7 +33,6 @@ class Select extends Element {
     this.state = SelectState.getInitialState();
     this.state.options = [];
     this.display = 'inline-block';
-
     ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_activate', '_focus', '_blur'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
@@ -74,18 +73,30 @@ class Select extends Element {
 
   disconnectedCallback() {
     this._removeListeners();
+    this._removeChildren();
   }
 
   _ensureButton() {
-    if (this.button !== undefined) { return; }
-
-    this.button = document.createElement('orion-button');
-    applyProps(this.button, {
-      textContent: 'Select',
-    });
-
+    this.button = this.querySelector('orion-button');
+    if (this.button !== null) {
+      return this.button;
+    } else {
+      this.button = document.createElement('orion-button');
+      applyProps(this.button, {
+        textContent: 'Select',
+      });
+    }
     this.appendChild(this.button);
   }
+  //   if (this.button !== undefined) { return; }
+   //
+  //    this.button = document.createElement('orion-button');
+  //    applyProps(this.button, {
+  //      textContent: 'Select',
+  //    });
+   //
+  //    this.appendChild(this.button);
+  //  }
 
   _addListeners() {
     this._ensureMenu();
@@ -106,6 +117,11 @@ class Select extends Element {
     this.button.removeEventListener('blur', this._blur);
     this.menu.removeEventListener('optionSelected', this._setSelectedOption);
     this.menu.removeEventListener('optionFocused', this._setFocusedOption);
+  }
+
+  _removeChildren() {
+    if (this.menu) { this.menu.remove(); }
+    if (this.button) { this.button.remove(); }
   }
 
   _activate() {
@@ -196,9 +212,13 @@ class Select extends Element {
   }
 
   _ensureMenu() {
-    if (this.menu !== undefined) { return; }
+    this.menu = this.querySelector('orion-select-menu');
+    if (this.menu !== null) {
+      return this.menu;
+    } else {
+      this.menu = document.createElement('orion-select-menu');
+    }
 
-    this.menu = document.createElement('orion-select-menu');
     this.appendChild(this.menu);
 
     this.menu.addEventListener('closed', () => {
@@ -214,6 +234,7 @@ class Select extends Element {
 
   _render() {
     this._ensureMenu();
+    this._ensureButton();
 
     applyProps(this.menu, {
       open: this.state.open,

@@ -19,7 +19,7 @@ const PORT = 8080;
 
 var static = require('node-static');
 
-var fileServer = new static.Server('./lib');
+var fileServer = new static.Server('./lib', { cache: 0 });
 
 require('http').createServer(function (request, response) {
     request.addListener('end', function () {

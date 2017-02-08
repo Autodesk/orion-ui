@@ -39,21 +39,6 @@ export interface IOutput {
    */
   saveDeferred(reqs: string[], cb: (deps: string[]) => string): void
 
-
-  /**
-   * Component stuff
-   */
-
-
-  getInitial(): string;
-
-  getMount(): string;
-
-  getUpdate(): string;
-
-  getTeardown(): string;
-
-
   /**
    * Element stuff
    */

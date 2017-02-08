@@ -160,25 +160,6 @@ class Output implements IOutput {
   }
 
   /**
-   * Component stuff
-   */
-  getInitial(): string {
-    return 'initial';
-  }
-
-  getMount(): string {
-    return 'mount';
-  }
-
-  getUpdate(): string {
-    return 'update';
-  }
-
-  getTeardown(): string {
-    return 'teardown';
-  }
-
-  /**
    * Element stuff
    */
   getIdentifier(): string {

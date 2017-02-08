@@ -95,6 +95,7 @@ describe('SelectState', () => {
       state = {
         open: true,
         options,
+        selectedIndex: 0,
       };
       nextState = SelectState.optionSelected(state, 1);
     });
@@ -109,11 +110,11 @@ describe('SelectState', () => {
 
     context('with an non-existant option index', () => {
       before(() => {
-        nextState = SelectState.optionSelected(state, 5);
+        nextState = SelectState.optionSelected(state, undefined);
       });
 
-      it('set value to undefined', () => {
-        expect(nextState.value).to.be.undefined;
+      it('does not change the selectedIndex', () => {
+        expect(nextState.selectedIndex).to.eq(0);
       });
     });
   });

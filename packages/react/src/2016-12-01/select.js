@@ -58,6 +58,7 @@ Select.propTypes = {
   onChange: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
   background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
+  selectedIndex: PropTypes.number,  // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Select;

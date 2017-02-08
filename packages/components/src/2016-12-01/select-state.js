@@ -47,9 +47,11 @@ const SelectState = {
   },
 
   optionSelected(state, selectedIndex) {
+    let nextSelectedIndex = selectedIndex;
+    if (nextSelectedIndex === undefined) { nextSelectedIndex = state.selectedIndex; }
     return {
       ...state,
-      selectedIndex,
+      nextSelectedIndex,
       open: false,
     };
   },

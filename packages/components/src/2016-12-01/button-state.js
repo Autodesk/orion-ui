@@ -44,13 +44,6 @@ const ButtonState = {
   blur(state) {
     return { ...state, hasFocus: false };
   },
-
-  focus(state) {
-    return { ...state, hasFocus: true };
-  },
-  blur(state) {
-    return { ...state, hasFocus: false };
-  },
 };
 
 module.exports = ButtonState;

@@ -37,7 +37,7 @@ export interface IOutput {
    * can be called back later once the child nodes have been traversed.
    * at that point the deferred source can be replaced with static source
    */
-  saveDeferred(reqs: string[], cb: (deps: Function[]) => string): void
+  saveDeferred(reqs: string[], cb: (deps: string[]) => string): void
 
 
   /**
@@ -57,6 +57,9 @@ export interface IOutput {
   /**
    * Element stuff
    */
+
+  getRequirements(): string[];
+  fullFillReq(req: string, source: string): void;
 
   getIdentifier(): string;
 

@@ -27,12 +27,31 @@ export default class TextVisitor implements IVisitor {
   private prefix: string;
   private props: Props;
 
-  private walker: IOutput;
+  visit(output: IOutput): void {
+    this.prefix = output.getIdentifier();
+    this.props = output.getProps();
 
-  visit(walker: IOutput): void {
-    this.walker = walker;
-    this.prefix = this.walker.getIdentifier();
-    this.props = this.walker.getProps();
+    // get any deferred requirements
+    const requirements = output.getRequirements();
+
+    requirements.forEach(req => {
+      switch (req) {
+        case 'initial':
+          output.fullFillReq(req, this.getInitial())
+          break;
+        case 'mount':
+          output.fullFillReq(req, this.getMount());
+          break;
+        case 'update':
+          output.fullFillReq(req, this.getUpdate());
+          break;
+        case 'teardown':
+          output.fullFillReq(req, this.getTeardown())
+          break;
+        default:
+          // do not handle
+      }
+    });
   }
 
   getInitial(): string {

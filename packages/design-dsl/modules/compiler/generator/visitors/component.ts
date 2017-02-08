@@ -25,22 +25,22 @@ export default class ComponentVisitor implements IVisitor {
 
     output.saveDeferred(
       ['initial', 'mount', 'update', 'teardown'],
-      ([initial, mount, update, teardown]: Function[]) =>
+      ([initial, mount, update, teardown]) =>
         `
         function render(props) {
-          ${initial()}
+          ${initial}
 
           return {
             mount: target => {
-              ${mount()}
+              ${mount}
             },
 
             update: (changed, props) => {
-              ${update()}
+              ${update}
             },
 
             teardown: () => {
-              ${teardown()}
+              ${teardown}
             }
           }
         }

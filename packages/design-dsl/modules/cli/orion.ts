@@ -20,7 +20,7 @@ import * as program from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import compile from '../compiler';
+import compile, { CompilerOptions } from '../compiler';
 
 export default function cli(argv: string[]): void {
   program
@@ -29,11 +29,14 @@ export default function cli(argv: string[]): void {
     .action((file: string) => {
       const source = path.join(process.cwd(), file);
 
-      // const results = compile(
-        // fs.readFileSync(source).toString()
-      // )
+      const options: CompilerOptions = {
+        source: fs.readFileSync(source).toString(),
+        filename: path.basename(file)
+      }
 
-      console.log('TODO');
+      const results = compile(options)
+
+      console.log(results);
     });
 
   program.parse(process.argv);

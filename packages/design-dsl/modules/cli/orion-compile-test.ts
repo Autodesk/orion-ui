@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { cd, exec, cat, ls } from 'shelljs';
+import { cd, exec, cat, ls, test } from 'shelljs';
 import { expect } from 'chai';
 
 import version from '../version';
@@ -22,8 +22,16 @@ import version from '../version';
 describe('compile HelloWorld.oml', () => {
   ls('examples/*.oml').forEach(file => {
     it(`compiles ${file} to ${file}.js`, () => {
+
+      const output = `${file}.js`;
+
+      if (!test('-e', output)) {
+        console.warn(`Skipping ${file} since no expected js file found`);
+        return;
+      }
+
       const { stdout } = exec(`node ${version} compile ${file}`);
-      expect(stdout.toString()).to.equal( cat(`${file}.js`).toString());
+      expect(stdout.toString()).to.equal( cat(output).toString() );
     });
   });
 });

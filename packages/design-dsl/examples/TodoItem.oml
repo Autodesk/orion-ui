@@ -1,0 +1,10 @@
+<orion>
+  <component => checked: false, label, onClick>
+    <interaction onClick={onClick} => clicked>
+      <container orientation="horizontal" opacity.clicked=50>
+        <image src="unchecked.svg" src.checked="checked.svg" />
+        <text content="{label}" textStyle.checked="strikethrough" />
+      </container>
+    <interaction>
+  </component>
+</orion>

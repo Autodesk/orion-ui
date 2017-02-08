@@ -3,18 +3,3 @@
     <text size=3 content="Hello, {name}" />
   </component>
 </orion>
-
-// component visitor
-
-- take filename (from world) and create a class
-- static everything
-- implement render
-  - go to first child
-      - create new template for that element
-        - put template.initialRender in closure
-        - put template.mount in mount section
-        - put template.update in update section
-        - put template.teardown in teardown section
-  - a variable prefix will be provided by the component template
-    - it uses the element tagName plus a number which increments
-      every time it encounters the same tag name

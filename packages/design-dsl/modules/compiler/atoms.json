@@ -1,0 +1,76 @@
+{
+  "elements": {
+    "text": {
+      "attributes": [
+        "fontFamily",
+        "fontWeight",
+        "fontColor",
+        "opacity",
+        "fontDecoration",
+        "fontSize",
+        "lineHeight"
+      ]
+    }
+  },
+  "byAttribute": {
+    "fontFamily": {
+      "default": "'ArtifaktElement', Arial, sans-serif'",
+      "heading": "'ArtifaktLegend', Verdana, sans-serif'"
+    },
+    "fontWeight": {
+      "default": 500,
+      "light": 300,
+      "bold": 600
+    },
+    "fontColor": {
+      "default": "atom.color.base700",
+      "link": "atom.color.blue500",
+      "inverse": "atom.color.base100"
+    },
+    "opacity": {
+      "default": 1,
+      "secondary": 0.6
+    },
+    "fontDecoration": {
+      "default": "none",
+      "link": "underline"
+    },
+    "fontSize": {
+      "s": "0.6875rem",
+      "m": "0.875rem",
+      "l": "1.0rem",
+      "xl": "1.25rem",
+      "xxl": "1.625rem",
+      "xxxl": "2.125rem"
+    },
+    "lineHeight": {
+      "xs": "0.875rem",
+      "s": "1.0rem",
+      "m": "1.25rem",
+      "l": "1.5rem",
+      "xl": "1.75rem",
+      "xxl": "2.25rem"
+    },
+    "color": {
+      "base000": "#FFFFFF",
+      "base100": "#F9F9F9",
+      "base200": "#E5E5E5",
+      "base300": "#D2D2D2",
+      "base400": "#C2C2C2",
+      "base500": "#B4B4B4",
+      "base600": "#999999",
+      "base700": "#828282",
+      "base800": "#585858",
+      "base900": "#3C3C3C",
+      "blue100": "#CDEAF8",
+      "blue200": "#9BD5EF",
+      "blue300": "#6AC0E7",
+      "blue400": "#38ABDF",
+      "blue500": "#0696D7",
+      "blue600": "#0584BD",
+      "blue700": "#0474A5",
+      "blue800": "#046A97",
+      "blue900": "#024B6C"
+    }
+  }
+}

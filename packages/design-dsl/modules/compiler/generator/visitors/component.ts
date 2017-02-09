@@ -21,8 +21,6 @@ export default class ComponentVisitor implements IVisitor {
   public tagName: string = 'component';
 
   visit(output: IOutput) {
-    output.save(this._getClass(output));
-
     output.saveDeferred(
       ['initial', 'mount', 'update', 'teardown'],
       ([initial, mount, update, teardown]) =>
@@ -45,6 +43,8 @@ export default class ComponentVisitor implements IVisitor {
           }
         }
       `);
+
+    output.save(this._getClass(output));
   }
 
   _getClass(output: IOutput) {

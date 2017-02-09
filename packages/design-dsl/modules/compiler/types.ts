@@ -30,6 +30,8 @@ export interface IOutput {
    */
   save(source: string): void
 
+  saveImport(importString: string): void;
+
   /**
    * Defers writing a string to source because it's dependant on someVar
    * child information. The required information is described as strings
@@ -49,11 +51,25 @@ export interface IOutput {
   getIdentifier(): string;
 
 
-  getProps(): any;
+  getAttributes(): any;
 
   /**
    * Get final results
    */
 
    source: string;
+}
+
+export interface IAtomDb {
+  elements: {
+    [key: string]: {
+      attributes: string[];
+    }
+  };
+
+  byAttribute: {
+    [key: string]: {
+      [key: string]: string | number
+    }
+  }
 }

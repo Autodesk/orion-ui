@@ -13,7 +13,7 @@ export default class Parser {
               {
                 tagName: 'text',
                 attributes: [
-                  { type: 'json', name: 'size', value: '3' },
+                  { type: 'json', name: 'fontSize', value: '"s"' },
                   { type: 'json', name: 'content', value: '"Hello, {name}"' }
                 ]
               }

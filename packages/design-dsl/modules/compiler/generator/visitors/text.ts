@@ -16,20 +16,30 @@ limitations under the License.
 */
 import { IOutput, IVisitor } from '../../types';
 
-export interface Props {
-  size: number;
-  content: string;
-}
 
 export default class TextVisitor implements IVisitor {
   public tagName: string = 'text';
 
-  private prefix: string;
-  private props: Props;
+  private identifier: string;
+
+  private content: string;
+  private atoms: {[key: string]: string};
 
   visit(output: IOutput): void {
-    this.prefix = output.getIdentifier();
-    this.props = output.getProps();
+    this.identifier = output.getIdentifier();
+
+    const attributes = output.getAttributes();
+
+    // Split text specific attribute from atoms
+    const { content, ...atoms } = attributes;
+    this.content = content;
+    this.atoms = atoms;
+
+    if (this.content) {
+      output.saveImport(`
+        import IntlMessageFormat from 'intl-messageformat';
+      `)
+    }
 
     // get any deferred requirements
     const requirements = output.getRequirements();
@@ -56,9 +66,9 @@ export default class TextVisitor implements IVisitor {
 
   getInitial(): string {
     return `
-      const ${this.prefix} = document.createElement('span');
+      const ${this.identifier} = document.createElement('span');
 
-      ${this.prefix}.classList = '${this._getClassList()}'
+      ${this.identifier}.classList = '${this._getClassList()}'
 
       ${this._getContentSetup()}
     `
@@ -67,17 +77,17 @@ export default class TextVisitor implements IVisitor {
   getMount(): string {
     return `
       // mount text
-      target.appendChild(${this.prefix});
+      target.appendChild(${this.identifier});
     `;
   }
 
   getUpdate(): string {
-    if (!this.props.content) {
+    if (!this.content) {
       return '';
     } else {
       return `
         // update content
-        ${this.prefix}Content.data = ${this.prefix}ContentMessage.format(props);
+        ${this.identifier}Content.data = ${this.identifier}ContentMessage.format(props);
       `;
     }
   }
@@ -85,7 +95,7 @@ export default class TextVisitor implements IVisitor {
   getTeardown(): string {
     return `
       // unmount text
-      ${this.prefix}.parentNode.removeChild(${this.prefix});
+      ${this.identifier}.parentNode.removeChild(${this.identifier});
     `;
   }
 
@@ -97,25 +107,29 @@ export default class TextVisitor implements IVisitor {
   }
 
   _getContentSetup(): string {
-    if (!this.props.content) {
+    if (!this.content) {
       return '';
     } else {
       return `
         // create message
-        const ${this.prefix}ContentMessage = new IntlMessageFormat("${this.props.content}", "en-US");
+        const ${this.identifier}ContentMessage = new IntlMessageFormat("${this.content}", "en-US");
 
         // create text node
-        const ${this.prefix}Content = document.createTextNode();
+        const ${this.identifier}Content = document.createTextNode();
 
         // update text node
-        ${this.prefix}Content.data = ${this.prefix}ContentMessage.format(props);
+        ${this.identifier}Content.data = ${this.identifier}ContentMessage.format(props);
 
         // mount text node
-        ${this.prefix}.appendChild(${this.prefix}Content);
+        ${this.identifier}.appendChild(${this.identifier}Content);
       `;
     }
   }
   _getClassList(): string {
-    return 'size-3';
+    return Object.keys(this.atoms).reduce((classList: string, key: string) => {
+      const value = this.atoms[key];
+      classList += `${key}-${value}`;
+      return classList;
+    }, '');
   }
 }

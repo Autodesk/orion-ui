@@ -34,7 +34,7 @@ class Select extends Element {
     this.state.options = [];
     this.display = 'inline-block';
 
-    ['_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate'].forEach((handler) => {
+    ['_resetButtonListeners', '_listenForMouseUp', '_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -92,7 +92,7 @@ class Select extends Element {
     this._ensureMenu();
 
     this.addEventListener('keydown', this._handleKeydown);
-    this.button.addEventListener('click', this._toggle);
+    this.button.addEventListener('mousedown', this._listenForMouseUp);
     this.button.addEventListener('focus', this._focus);
     this.button.addEventListener('blur', this._blur);
     this.addEventListener('optionSelected', this._setSelectedOption);
@@ -102,7 +102,7 @@ class Select extends Element {
 
   _removeListeners() {
     this.removeEventListener('keydown', this._handleKeydown);
-    this.button.removeEventListener('click', this._toggle);
+    this.button.removeEventListener('mousedown', this._listenForMouseUp);
     this.button.removeEventListener('focus', this._focus);
     this.button.removeEventListener('blur', this._blur);
     this.removeEventListener('optionSelected', this._setSelectedOption);
@@ -110,7 +110,19 @@ class Select extends Element {
     this.menu.removeEventListener('closed', this._deactivate);
   }
 
+  _listenForMouseUp(event) {
+    event.preventDefault();
+    this.button.addEventListener('mouseup', this._toggle);
+    this.button.addEventListener('mouseout', this._resetButtonListeners);
+  }
+
+  _resetButtonListeners() {
+    this.button.removeEventListener('mouseup', this._toggle);
+    this.button.removeEventListener('mouseout', this._resetButtonListeners);
+  }
+
   _toggle() {
+    this.button.focus();
     this._dispatchStateChange('toggleOpen');
   }
 

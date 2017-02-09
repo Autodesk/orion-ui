@@ -17,16 +17,16 @@ limitations under the License.
 module.exports = function scrollIntoView(element) {
   const parent = element.parentElement;
 
-  const childVisibleAtTop = element.offsetTop;
-  const childIsAboveScrollView = parent.scrollTop > element.offsetTop;
-  if (childIsAboveScrollView) {
-    parent.scrollTop = childVisibleAtTop;
+  const showChildAtTop = element.offsetTop;
+  const isChildAboveScrollView = parent.scrollTop > element.offsetTop;
+  if (isChildAboveScrollView) {
+    parent.scrollTop = showChildAtTop;
     return;
   }
 
-  const childVisibleAtBottom = (element.offsetTop - parent.clientHeight) + element.offsetHeight;
-  const childIsBelowScrollView = parent.scrollTop < childVisibleAtBottom;
-  if (childIsBelowScrollView) {
-    parent.scrollTop = childVisibleAtBottom;
+  const showChildAtBottom = (element.offsetTop - parent.clientHeight) + element.offsetHeight;
+  const isChildBelowScrollView = parent.scrollTop < showChildAtBottom;
+  if (isChildBelowScrollView) {
+    parent.scrollTop = showChildAtBottom;
   }
 };

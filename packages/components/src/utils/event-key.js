@@ -25,6 +25,5 @@ const keyStrings = {
 };
 
 module.exports = function eventKey(event) {
-  if (event.key !== undefined) { return event.key; }
   return keyStrings[event.keyCode];
 };

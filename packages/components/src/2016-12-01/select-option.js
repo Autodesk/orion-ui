@@ -44,13 +44,16 @@ class SelectOption extends Element {
   connectedCallback() {
     this._ensureButton();
     this._queueRender();
-    this.addEventListener('mouseover', this._handleMouseOver);
+
+    this.addEventListener('mouseenter', this._handleMouseEnter);
   }
 
   disconnectedCallback() {
     applyProps(this.button, ButtonState.getInitialState());
-    this._resetListeners();
-    this.removeEventListener('mouseover', this._handleMouseOver);
+    this.removeEventListener('mousedown', this._handleMouseDown);
+    this.removeEventListener('mouseleave', this._resetListeners);
+    this.removeEventListener('mouseup', this._emitSelectedEvent);
+    this.removeEventListener('mouseenter', this._handleMouseEnter);
   }
 
   _ensureButton() {
@@ -77,10 +80,12 @@ class SelectOption extends Element {
     this.appendChild(this.button);
   }
 
-  _handleMouseOver() {
+  _handleMouseEnter() {
+    this.removeEventListener('mouseenter', this._handleMouseEnter);
     this.addEventListener('mousedown', this._handleMouseDown);
-    this.addEventListener('mouseout', this._resetListeners);
+    this.addEventListener('mouseleave', this._resetListeners);
 
+    if (this.state.hasFocus) { return; }
     this.dispatchEvent(new CustomEvent('optionFocused', {
       detail: { focusedIndex: this.state.index },
       bubbles: true,
@@ -101,8 +106,9 @@ class SelectOption extends Element {
 
   _resetListeners() {
     this.removeEventListener('mousedown', this._handleMouseDown);
-    this.removeEventListener('mouseout', this._resetListeners);
+    this.removeEventListener('mouseleave', this._resetListeners);
     this.removeEventListener('mouseup', this._emitSelectedEvent);
+    this.addEventListener('mouseenter', this._handleMouseEnter);
   }
 
   _render() {

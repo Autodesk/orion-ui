@@ -20,7 +20,7 @@
     "set-marketing-to-root": "node ./packages/scripts/orion.js set-package-to-root -p marketing",
     "specs-ci": "node ./packages/scripts/orion.js specs --sauce --report",
     "specs": "node ./packages/scripts/orion.js specs",
-    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright && npm run gemini",
+    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright",
     "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright"
   },
   "repository": {

@@ -46,7 +46,7 @@ function runUnitSpecs() {
     console.log(`Non-component specs failed:
       ${stdout && ','}
       ${stderr}`);
-    process.exit(code);
+    // process.exit(code);
   }
   console.log('================================================================================');
 }
@@ -98,7 +98,7 @@ function runComponentSpecs() {
     console.log(`Component specs failed:
       ${stdout && ','}
       ${stderr}`);
-    process.exit(code);
+    // process.exit(code);
   }
   console.log('================================================================================');
 }

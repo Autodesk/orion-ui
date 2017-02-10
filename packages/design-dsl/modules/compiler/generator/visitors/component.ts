@@ -29,7 +29,7 @@ export default class ComponentVisitor implements IVisitor {
           ${initial}
 
           return {
-            mount: target => {
+            mount: (target, anchor) => {
               ${mount}
             },
 
@@ -50,10 +50,11 @@ export default class ComponentVisitor implements IVisitor {
   _getClass(output: IOutput) {
     return `
       export default class ${output.getBaseName()} {
-        constructor(mount, props) {
+        constructor(options) {
+          const { mount, anchor, props} = options;
           this._props = props;
           this._fragment = render(this._props, this);
-          this._fragment.mount(mount);
+          this._fragment.mount(mount, anchor);
         }
 
         get(key) {

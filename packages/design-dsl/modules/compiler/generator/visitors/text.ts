@@ -77,7 +77,7 @@ export default class TextVisitor implements IVisitor {
   getMount(): string {
     return `
       // mount text
-      target.appendChild(${this.identifier});
+      target.insertBefore(${this.identifier}, anchor);
     `;
   }
 
@@ -115,10 +115,9 @@ export default class TextVisitor implements IVisitor {
         const ${this.identifier}ContentMessage = new IntlMessageFormat("${this.content}", "en-US");
 
         // create text node
-        const ${this.identifier}Content = document.createTextNode();
-
-        // update text node
-        ${this.identifier}Content.data = ${this.identifier}ContentMessage.format(props);
+        const ${this.identifier}Content = document.createTextNode(
+          ${this.identifier}ContentMessage.format(props)
+        );
 
         // mount text node
         ${this.identifier}.appendChild(${this.identifier}Content);

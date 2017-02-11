@@ -58,7 +58,9 @@ limitations under the License.
 
       context('after clicking', () => {
         beforeEach((done) => {
-          button.dispatchEvent(new Event('click'));
+          button.dispatchEvent(new Event('mouseenter'));
+          button.dispatchEvent(new Event('mousedown'));
+          button.dispatchEvent(new Event('mouseup'));
           setTimeout(() => {
             menu = select.querySelector('orion-list');
             done();
@@ -74,7 +76,7 @@ limitations under the License.
           beforeEach(() => {
             let menu = select.querySelector('orion-list');
             let option = menu.querySelectorAll('orion-select-option')[1];
-            option.dispatchEvent(new Event('mouseover'));
+            option.dispatchEvent(new Event('mouseenter'));
             option.dispatchEvent(new Event('mousedown'));
             option.dispatchEvent(new Event('mouseup'));
           });

@@ -70,7 +70,16 @@ describe('boolean attribute', () => {
 
     const ast = p.results[0];
     expect(ast.attribs.enabled).to.equal(true);
+  });
 
+  it('handles multiple booleans', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion enabled disabled></orion>");
+
+    const ast = p.results[0];
+    expect(ast.attribs.enabled).to.equal(true);
+    expect(ast.attribs.disabled).to.equal(true);
   });
 });
 

@@ -62,6 +62,16 @@ describe('boolean attribute', () => {
     const ast = p.results[0];
     expect(ast.attribs.enabled).to.equal(true);
   });
+
+  it('works when the boolean has a space', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion enabled ></orion>");
+
+    const ast = p.results[0];
+    expect(ast.attribs.enabled).to.equal(true);
+
+  });
 });
 
 

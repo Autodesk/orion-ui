@@ -22,7 +22,7 @@ Element -> StartTag _ ChildElements _ EndTag {%
 
 ChildElements -> null
 
-StartTag -> "<" TagName Attributes ">" {%
+StartTag -> "<" TagName Attributes _ ">" {%
   data => {
     return {
       tagName: data[1],

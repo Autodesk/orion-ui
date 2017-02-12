@@ -28,7 +28,7 @@ function id(x) {return x[0]; }
         }
         },
     {"name": "ChildElements", "symbols": []},
-    {"name": "StartTag", "symbols": [{"literal":"<"}, "TagName", "Attributes", {"literal":">"}], "postprocess": 
+    {"name": "StartTag", "symbols": [{"literal":"<"}, "TagName", "Attributes", "_", {"literal":">"}], "postprocess": 
         data => {
           return {
             tagName: data[1],

@@ -12,11 +12,11 @@ function id(x) {return x[0]; }
     {"name": "__", "symbols": ["__$ebnf$1"], "postprocess": function(d) {return null;}},
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
     {"name": "RootElement", "symbols": ["_", "Element", "_"], "postprocess": data => data[1]},
-    {"name": "Element", "symbols": ["StartTag", "_", "EndTag"], "postprocess": 
+    {"name": "Element", "symbols": ["StartTag", "ChildElements", "EndTag"], "postprocess": 
         (data, location, reject) => {
           const startTag = data[0].tagName;
           const attribs = data[0].attribs;
-          //const children = data[2];
+          const children = data[1];
           const endTag = data[2];
         
           if (startTag !== endTag) {
@@ -27,7 +27,7 @@ function id(x) {return x[0]; }
             type: 'tag',
             name: startTag,
             attribs: attribs,
-            children: [],
+            children: children || [],
             startIndex: location
           }
         }
@@ -43,7 +43,8 @@ function id(x) {return x[0]; }
           }
         }
         },
-    {"name": "ChildElements", "symbols": []},
+    {"name": "ChildElements", "symbols": ["_"], "postprocess": id},
+    {"name": "ChildElements", "symbols": ["Element"]},
     {"name": "_ChildElements", "symbols": []},
     {"name": "_ChildElements", "symbols": ["Element"], "postprocess": id},
     {"name": "_ChildElements", "symbols": ["ChildElements", "_", "Element"], "postprocess": d => flatten([d[0], d[2]])},

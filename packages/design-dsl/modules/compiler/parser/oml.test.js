@@ -166,22 +166,14 @@ describe('double quoted string attribute', () => {
   });
 });
 
-// describe('children', () => {
-//   it('supports an array of child elements', () => {
-//     const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-//     p.feed(`
-//       <orion>
-//         <component></component>
-//       </orion>
-//     `);
-
-//     const ast = p.results[0];
-//     expect(ast.children.length).to.equal(1);
-//     expect(ast.children[0].name).to.equal('component');
-//     expect(ast.children[0].type).to.equal('tag');
-//     expect(ast.children[0].startIndex).to.equal(23);
-//   });
+describe('children', () => {
+  it('supports an array of child elements', () => {
+    const ast = parse(`<a><b></b></a>`)
+    expect(ast.children.length).to.equal(1);
+    expect(ast.children[0].name).to.equal('b');
+    expect(ast.children[0].type).to.equal('tag');
+    expect(ast.children[0].startIndex).to.equal(3);
+  });
 
 //   it('supports multiple children', () => {
 //     const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
@@ -193,4 +185,4 @@ describe('double quoted string attribute', () => {
 //     const ast = p.results[0];
 //     expect(ast.children.length).to.equal(2);
 //   });
-// });
+});

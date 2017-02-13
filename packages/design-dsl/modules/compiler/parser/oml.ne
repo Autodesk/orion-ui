@@ -3,11 +3,11 @@
 
 RootElement -> _ Element _ {% data => data[1] %}
 
-Element -> StartTag _ EndTag {%
+Element -> StartTag ChildElements EndTag {%
   (data, location, reject) => {
     const startTag = data[0].tagName;
     const attribs = data[0].attribs;
-    //const children = data[2];
+    const children = data[1];
     const endTag = data[2];
 
     if (startTag !== endTag) {
@@ -18,7 +18,7 @@ Element -> StartTag _ EndTag {%
       type: 'tag',
       name: startTag,
       attribs: attribs,
-      children: [],
+      children: children || [],
       startIndex: location
     }
   }
@@ -36,7 +36,8 @@ StartTag -> "<" TagName Attributes _ ">" {%
   }
 %}
 
-ChildElements -> null
+ChildElements -> _ {% id %}
+  | Element
 
 _ChildElements -> null
   | Element {% id %}

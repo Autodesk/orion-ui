@@ -62,6 +62,7 @@ function id(x) {return x[0]; }
     {"name": "Attributes", "symbols": ["Attributes$ebnf$1"], "postprocess": id},
     {"name": "Attribute", "symbols": ["BooleanAttribute"], "postprocess": id},
     {"name": "Attribute", "symbols": ["NumberAttribute"], "postprocess": id},
+    {"name": "Attribute", "symbols": ["StringAttribute"], "postprocess": id},
     {"name": "BooleanAttribute", "symbols": ["AttributeName"], "postprocess": 
         (data, location, reject) => {
           return [data[0], true];
@@ -77,7 +78,15 @@ function id(x) {return x[0]; }
         },
     {"name": "Int$ebnf$1", "symbols": ["Digit"]},
     {"name": "Int$ebnf$1", "symbols": ["Digit", "Int$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "Int", "symbols": ["Int$ebnf$1"], "postprocess": data => parseInt(data[0].join(''))}
+    {"name": "Int", "symbols": ["Int$ebnf$1"], "postprocess": data => parseInt(data[0].join(''))},
+    {"name": "StringAttribute", "symbols": ["AttributeName", "_", {"literal":"="}, "_", "StringValue"], "postprocess": 
+        data => [data[0], data[4]]
+        },
+    {"name": "StringValue", "symbols": [{"literal":"\""}, "_stringdouble", {"literal":"\""}], "postprocess": data => data[1]},
+    {"name": "_stringdouble", "symbols": []},
+    {"name": "_stringdouble", "symbols": ["_stringdouble", "_stringdoublechar"], "postprocess": d => flatten(d).join('')},
+    {"name": "_stringdoublechar", "symbols": [/[^\\"]/], "postprocess": id},
+    {"name": "_stringdoublechar", "symbols": [{"literal":"\\"}, /[^\n]/], "postprocess": id}
 ]
   , ParserStart: "RootElement"
 }

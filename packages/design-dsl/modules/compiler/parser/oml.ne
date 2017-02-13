@@ -48,8 +48,8 @@ Attributes -> null
   | (__ Attribute {% data => data[1] %}):* {% id %}
 
 Attribute -> BooleanAttribute {% id %}
-  |  NumberAttribute {% id %}
-#  | StringAttribute {% id %}
+  | NumberAttribute {% id %}
+  | StringAttribute {% id %}
 
 BooleanAttribute -> AttributeName {%
   (data, location, reject) => {
@@ -68,20 +68,14 @@ NumberAttribute -> AttributeName _ "=" _ Int {%
 
 Int -> Digit:+ {% data => parseInt(data[0].join('')) %}
 
-#StringAttribute -> AttributeName "=" StringValue _ {%
-#  data => [data[0], data[2]]
-#%}
-#
-#StringValue -> "\"" _stringdouble "\"" {% data => data[1] %}
-#
-#_stringdouble -> null
-#    | _stringdouble _stringdoublechar {% d => flatten(d).join('') %}
-#
-#_stringdoublechar -> [^\\"] {% id %}
-#    | "\\"  [^\n] {% id %}
-#
-#
+StringAttribute -> AttributeName _ "=" _ StringValue {%
+  data => [data[0], data[4]]
+%}
 
-#
-#
+StringValue -> "\"" _stringdouble "\"" {% data => data[1] %}
 
+_stringdouble -> null
+  | _stringdouble _stringdoublechar {% d => flatten(d).join('') %}
+
+_stringdoublechar -> [^\\"] {% id %}
+  | "\\"  [^\n] {% id %}

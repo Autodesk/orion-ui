@@ -41,7 +41,7 @@ describe('valid open and close tag with whitespace', () => {
   });
 
   it('sets attribs to empty object', () => {
-     expect(ast.attribs).to.eql({});
+    expect(ast.attribs).to.eql({});
   });
 
   it('sets children to empty array', () => {
@@ -50,6 +50,40 @@ describe('valid open and close tag with whitespace', () => {
 
   it('sets startIndex', () => {
     expect(ast.startIndex).to.eql(7);
+  });
+});
+
+describe('tagName', () => {
+  it('lets tagName include a number', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion1></orion1>");
+
+    const ast = p.results[0];
+    expect(ast.name).to.equal('orion1');
+  });
+});
+
+describe('Attribute Names', () => {
+  it('lets attribute name include a number', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion boolean1 boolean2></orion>");
+
+    const ast = p.results[0];
+    expect(ast.attribs.boolean1).to.equal(true);
+    expect(ast.attribs.boolean2).to.equal(true);
+  });
+
+  it('does not support a number at the start of an attribute name', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    try {
+      p.feed("<orion 1number></orion>");
+      throw new Error('did not catch');
+    } catch (e) {
+      expect(e.message).to.equal(`nearley: No possible parsings (@7: '1').`);
+    }
   });
 });
 
@@ -83,5 +117,41 @@ describe('boolean attribute', () => {
   });
 });
 
+describe('number attribute', () => {
+  it('works without whitespace', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
 
+    p.feed("<orion number=100></orion>");
+
+    const ast = p.results[0];
+    expect(ast.attribs.number).to.equal(100);
+  });
+
+  it('works with whitespace between equals sign', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion number = 100></orion>");
+
+    const ast = p.results[0];
+    expect(ast.attribs.number).to.equal(100);
+  });
+
+  it('works with a mix of numbers and boolean', () => {
+
+    [
+      '<orion number=10 disabled></orion>',
+      '<orion number = 10 disabled></orion>',
+      '<orion number=10 disabled ></orion>',
+      '<orion disabled number=10 ></orion>',
+      '<orion disabled number = 10 ></orion>',
+      '<orion disabled number=10></orion>'
+    ].forEach(permutation => {
+      const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+      p.feed(permutation);
+      const ast = p.results[0];
+      expect(ast.attribs.number).to.equal(10);
+      expect(ast.attribs.disabled).to.equal(true);
+    });
+  });
+});
 

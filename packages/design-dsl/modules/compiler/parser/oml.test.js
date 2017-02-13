@@ -175,14 +175,11 @@ describe('children', () => {
     expect(ast.children[0].startIndex).to.equal(3);
   });
 
-//   it('supports multiple children', () => {
-//     const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+  it('supports multiple children', () => {
+    const ast = parse(`<a><b></b><c></c></a>`);
+    expect(ast.children.length).to.equal(2);
 
-//     p.feed(`
-//       <a> <b></b> <c></c> </a>
-//     `);
-
-//     const ast = p.results[0];
-//     expect(ast.children.length).to.equal(2);
-//   });
+    expect(ast.children[0].name).to.equal('b');
+    expect(ast.children[1].name).to.equal('c');
+  });
 });

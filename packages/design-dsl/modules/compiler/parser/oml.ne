@@ -37,7 +37,13 @@ StartTag -> "<" TagName Attributes _ ">" {%
 %}
 
 ChildElements -> _ {% id %}
-  | Element
+  | ChildElements _ Element {%
+  (data) => {
+    const rest = data[0] || [];
+    const next = data[2];
+    return rest.concat(next);
+  }
+%}
 
 _ChildElements -> null
   | Element {% id %}

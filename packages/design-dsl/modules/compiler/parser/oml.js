@@ -44,7 +44,13 @@ function id(x) {return x[0]; }
         }
         },
     {"name": "ChildElements", "symbols": ["_"], "postprocess": id},
-    {"name": "ChildElements", "symbols": ["Element"]},
+    {"name": "ChildElements", "symbols": ["ChildElements", "_", "Element"], "postprocess": 
+        (data) => {
+          const rest = data[0] || [];
+          const next = data[2];
+          return rest.concat(next);
+        }
+        },
     {"name": "_ChildElements", "symbols": []},
     {"name": "_ChildElements", "symbols": ["Element"], "postprocess": id},
     {"name": "_ChildElements", "symbols": ["ChildElements", "_", "Element"], "postprocess": d => flatten([d[0], d[2]])},

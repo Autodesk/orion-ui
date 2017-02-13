@@ -12,22 +12,28 @@ function id(x) {return x[0]; }
     {"name": "__", "symbols": ["__$ebnf$1"], "postprocess": function(d) {return null;}},
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
     {"name": "RootElement", "symbols": ["_", "Element", "_"], "postprocess": data => data[1]},
-    {"name": "Element", "symbols": ["StartTag", "_", "ChildElements", "_", "EndTag"], "postprocess": 
+    {"name": "Element$ebnf$1", "symbols": []},
+    {"name": "Element$ebnf$1", "symbols": ["Element", "Element$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "Element", "symbols": ["StartTag", "_", "Element$ebnf$1", "_", "EndTag"], "postprocess": 
         (data, location, reject) => {
           const startTag = data[0].tagName;
           const attribs = data[0].attribs;
+          const children = data[2];
           const endTag = data[4];
+        
+          if (startTag !== endTag) {
+            return reject;
+          }
         
           return {
             type: 'tag',
             name: startTag,
             attribs: attribs,
-            children: [],
+            children: children,
             startIndex: location
           }
         }
         },
-    {"name": "ChildElements", "symbols": []},
     {"name": "StartTag", "symbols": [{"literal":"<"}, "TagName", "Attributes", "_", {"literal":">"}], "postprocess": 
         data => {
           return {
@@ -40,7 +46,7 @@ function id(x) {return x[0]; }
         }
         },
     {"name": "EndTag$string$1", "symbols": [{"literal":"<"}, {"literal":"/"}], "postprocess": function joiner(d) {return d.join('');}},
-    {"name": "EndTag", "symbols": ["EndTag$string$1", "TagName", {"literal":">"}]},
+    {"name": "EndTag", "symbols": ["EndTag$string$1", "TagName", "_", {"literal":">"}], "postprocess": d => d[1]},
     {"name": "TagName$ebnf$1$subexpression$1", "symbols": ["LetterOrDigit"]},
     {"name": "TagName$ebnf$1", "symbols": ["TagName$ebnf$1$subexpression$1"]},
     {"name": "TagName$ebnf$1$subexpression$2", "symbols": ["LetterOrDigit"]},

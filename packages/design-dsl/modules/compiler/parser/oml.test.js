@@ -62,6 +62,23 @@ describe('tagName', () => {
     const ast = p.results[0];
     expect(ast.name).to.equal('orion1');
   });
+
+  it('does not parse unmatched tags', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion1></foo>");
+
+    expect(p.results).to.eql([]);
+  });
+
+  it('lets endTag have some whitespace AFTER the tagName', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed("<orion></orion >");
+
+    const ast = p.results[0];
+    expect(ast.name).to.equal('orion');
+  });
 });
 
 describe('Attribute Names', () => {
@@ -200,4 +217,36 @@ describe('double quoted string attribute', () => {
       expect(ast.attribs.string).to.equal("Value");
     });
   });
+});
+
+describe('children', () => {
+  it('supports an array of child elements', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed(`
+      <orion>
+        <component></component>
+      </orion>
+    `);
+
+    const ast = p.results[0];
+    expect(ast.children.length).to.equal(1);
+    expect(ast.children[0].name).to.equal('component');
+    expect(ast.children[0].type).to.equal('tag');
+    expect(ast.children[0].startIndex).to.equal(23);
+  });
+
+  // it('supports multiple children', () => {
+  //   const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+  //   p.feed(`
+  //     <orion>
+  //       <component1></component1>
+  //       <component2></component2>
+  //     </orion>
+  //   `);
+
+  //   const ast = p.results[0];
+  //   expect(ast.children.length).to.equal(2);
+  // });
 });

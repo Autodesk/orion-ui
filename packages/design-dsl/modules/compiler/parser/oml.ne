@@ -4,23 +4,26 @@
 
 RootElement -> _ Element _ {% data => data[1] %}
 
-Element -> StartTag _ ChildElements _ EndTag {%
+Element -> StartTag _ Element:* _ EndTag {%
   (data, location, reject) => {
     const startTag = data[0].tagName;
     const attribs = data[0].attribs;
+    const children = data[2];
     const endTag = data[4];
+
+    if (startTag !== endTag) {
+      return reject;
+    }
 
     return {
       type: 'tag',
       name: startTag,
       attribs: attribs,
-      children: [],
+      children: children,
       startIndex: location
     }
   }
 %}
-
-ChildElements -> null
 
 StartTag -> "<" TagName Attributes _ ">" {%
   data => {
@@ -34,7 +37,7 @@ StartTag -> "<" TagName Attributes _ ">" {%
   }
 %}
 
-EndTag -> "</" TagName ">"
+EndTag -> "</" TagName _ ">" {% d => d[1] %}
 TagName -> Letter (LetterOrDigit):+ {% d => flatten(d).join('').toLowerCase() %}
 AttributeName -> Letter (LetterOrDigit):+ {% d => flatten(d).join('').toLowerCase() %}
 

@@ -12,14 +12,12 @@ function id(x) {return x[0]; }
     {"name": "__", "symbols": ["__$ebnf$1"], "postprocess": function(d) {return null;}},
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
     {"name": "RootElement", "symbols": ["_", "Element", "_"], "postprocess": data => data[1]},
-    {"name": "Element$ebnf$1", "symbols": []},
-    {"name": "Element$ebnf$1", "symbols": ["Element", "Element$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "Element", "symbols": ["StartTag", "_", "Element$ebnf$1", "_", "EndTag"], "postprocess": 
+    {"name": "Element", "symbols": ["StartTag", "_", "EndTag"], "postprocess": 
         (data, location, reject) => {
           const startTag = data[0].tagName;
           const attribs = data[0].attribs;
-          const children = data[2];
-          const endTag = data[4];
+          //const children = data[2];
+          const endTag = data[2];
         
           if (startTag !== endTag) {
             return reject;
@@ -29,7 +27,7 @@ function id(x) {return x[0]; }
             type: 'tag',
             name: startTag,
             attribs: attribs,
-            children: children,
+            children: [],
             startIndex: location
           }
         }
@@ -45,23 +43,24 @@ function id(x) {return x[0]; }
           }
         }
         },
+    {"name": "ChildElements", "symbols": []},
+    {"name": "_ChildElements", "symbols": []},
+    {"name": "_ChildElements", "symbols": ["Element"], "postprocess": id},
+    {"name": "_ChildElements", "symbols": ["ChildElements", "_", "Element"], "postprocess": d => flatten([d[0], d[2]])},
     {"name": "EndTag$string$1", "symbols": [{"literal":"<"}, {"literal":"/"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "EndTag", "symbols": ["EndTag$string$1", "TagName", "_", {"literal":">"}], "postprocess": d => d[1]},
+    {"name": "TagName$ebnf$1", "symbols": []},
     {"name": "TagName$ebnf$1$subexpression$1", "symbols": ["LetterOrDigit"]},
-    {"name": "TagName$ebnf$1", "symbols": ["TagName$ebnf$1$subexpression$1"]},
-    {"name": "TagName$ebnf$1$subexpression$2", "symbols": ["LetterOrDigit"]},
-    {"name": "TagName$ebnf$1", "symbols": ["TagName$ebnf$1$subexpression$2", "TagName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "TagName$ebnf$1", "symbols": ["TagName$ebnf$1$subexpression$1", "TagName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
     {"name": "TagName", "symbols": ["Letter", "TagName$ebnf$1"], "postprocess": d => flatten(d).join('').toLowerCase()},
+    {"name": "AttributeName$ebnf$1", "symbols": []},
     {"name": "AttributeName$ebnf$1$subexpression$1", "symbols": ["LetterOrDigit"]},
-    {"name": "AttributeName$ebnf$1", "symbols": ["AttributeName$ebnf$1$subexpression$1"]},
-    {"name": "AttributeName$ebnf$1$subexpression$2", "symbols": ["LetterOrDigit"]},
-    {"name": "AttributeName$ebnf$1", "symbols": ["AttributeName$ebnf$1$subexpression$2", "AttributeName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "AttributeName$ebnf$1", "symbols": ["AttributeName$ebnf$1$subexpression$1", "AttributeName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
     {"name": "AttributeName", "symbols": ["Letter", "AttributeName$ebnf$1"], "postprocess": d => flatten(d).join('').toLowerCase()},
     {"name": "LetterOrDigit", "symbols": ["Letter"], "postprocess": id},
     {"name": "LetterOrDigit", "symbols": ["Digit"], "postprocess": id},
     {"name": "Letter", "symbols": [/[a-zA-Z]/]},
     {"name": "Digit", "symbols": [/[0-9]/]},
-    {"name": "Attributes", "symbols": []},
     {"name": "Attributes$ebnf$1", "symbols": []},
     {"name": "Attributes$ebnf$1$subexpression$1", "symbols": ["__", "Attribute"], "postprocess": data => data[1]},
     {"name": "Attributes$ebnf$1", "symbols": ["Attributes$ebnf$1$subexpression$1", "Attributes$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},

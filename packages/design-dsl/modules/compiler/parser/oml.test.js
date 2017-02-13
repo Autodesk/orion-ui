@@ -18,18 +18,18 @@ if (stderr) {
 var grammar = require("./oml.js");
 var nearley = require("nearley");
 
+function parse(source) {
+  const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+  p.feed(source);
+  expect(p.results.length).to.equal(1);
+  return p.results[0];
+}
+
 describe('valid open and close tag with whitespace', () => {
   let ast;
 
   beforeEach(() => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed(`
-      <orion>
-      </orion>
-    `)
-
-    ast = p.results[0];
+    ast = parse(` <o> </o> `);
   });
 
   it('sets type to tag', () => {
@@ -37,7 +37,7 @@ describe('valid open and close tag with whitespace', () => {
   });
 
   it('sets name to the tag name', () => {
-    expect(ast.name).to.equal('orion');
+    expect(ast.name).to.equal('o');
   });
 
   it('sets attribs to empty object', () => {
@@ -49,54 +49,37 @@ describe('valid open and close tag with whitespace', () => {
   });
 
   it('sets startIndex', () => {
-    expect(ast.startIndex).to.eql(7);
+    expect(ast.startIndex).to.eql(1);
   });
 });
 
 describe('tagName', () => {
   it('lets tagName include a number', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion1></orion1>");
-
-    const ast = p.results[0];
+    const ast = parse("<orion1></orion1>");
     expect(ast.name).to.equal('orion1');
   });
 
   it('does not parse unmatched tags', () => {
     const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
     p.feed("<orion1></foo>");
-
     expect(p.results).to.eql([]);
   });
 
   it('lets endTag have some whitespace AFTER the tagName', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion></orion >");
-
-    const ast = p.results[0];
+    const ast = parse("<orion></orion >");
     expect(ast.name).to.equal('orion');
   });
 });
 
 describe('Attribute Names', () => {
   it('lets attribute name include a number', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion boolean1 boolean2></orion>");
-
-    const ast = p.results[0];
-    expect(ast.attribs.boolean1).to.equal(true);
-    expect(ast.attribs.boolean2).to.equal(true);
+    const ast = parse("<o b1></o>");
+    expect(ast.attribs.b1).to.equal(true);
   });
 
   it('does not support a number at the start of an attribute name', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
     try {
-      p.feed("<orion 1number></orion>");
+      parse("<orion 1number></orion>");
       throw new Error('did not catch');
     } catch (e) {
       expect(e.message).to.equal(`nearley: No possible parsings (@7: '1').`);
@@ -106,29 +89,17 @@ describe('Attribute Names', () => {
 
 describe('boolean attribute', () => {
   it('sets a boolean attribute to true', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion enabled></orion>");
-
-    const ast = p.results[0];
+    const ast = parse("<orion enabled></orion>");
     expect(ast.attribs.enabled).to.equal(true);
   });
 
   it('works when the boolean has a space', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion enabled ></orion>");
-
-    const ast = p.results[0];
+    const ast = parse("<orion enabled ></orion>");
     expect(ast.attribs.enabled).to.equal(true);
   });
 
   it('handles multiple booleans', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion enabled disabled></orion>");
-
-    const ast = p.results[0];
+    const ast = parse("<orion enabled disabled></orion>");
     expect(ast.attribs.enabled).to.equal(true);
     expect(ast.attribs.disabled).to.equal(true);
   });
@@ -136,20 +107,12 @@ describe('boolean attribute', () => {
 
 describe('number attribute', () => {
   it('works without whitespace', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion number=100></orion>");
-
-    const ast = p.results[0];
+    const ast = parse("<orion number=100></orion>");
     expect(ast.attribs.number).to.equal(100);
   });
 
   it('works with whitespace between equals sign', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed("<orion number = 100></orion>");
-
-    const ast = p.results[0];
+    const ast = parse("<orion number = 100></orion>");
     expect(ast.attribs.number).to.equal(100);
   });
 
@@ -162,9 +125,7 @@ describe('number attribute', () => {
       '<orion disabled number = 10 ></orion>',
       '<orion disabled number=10></orion>'
     ].forEach(permutation => {
-      const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-      p.feed(permutation);
-      const ast = p.results[0];
+      const ast = parse(permutation);
       expect(ast.attribs.number).to.equal(10);
       expect(ast.attribs.disabled).to.equal(true);
     });
@@ -173,29 +134,17 @@ describe('number attribute', () => {
 
 describe('double quoted string attribute', () => {
   it('works without whitespace', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed(`<orion string="Hello World"></orion>`);
-
-    const ast = p.results[0];
+    const ast = parse(`<orion string="Hello World"></orion>`);
     expect(ast.attribs.string).to.equal("Hello World");
   });
 
   it('works with whitespace between equals sign', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed(`<orion string = "Hello World"></orion>`);
-
-    const ast = p.results[0];
+    const ast = parse(`<orion string = "Hello World"></orion>`);
     expect(ast.attribs.string).to.equal("Hello World");
   });
 
   it('works with multiple strings', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-
-    p.feed(`<orion string1="Hello World 1" string2="Hello World 2"></orion>`);
-
-    const ast = p.results[0];
+    const ast = parse(`<orion string1="Hello World 1" string2="Hello World 2"></orion>`);
     expect(ast.attribs.string1).to.equal("Hello World 1");
     expect(ast.attribs.string2).to.equal("Hello World 2");
   });
@@ -209,9 +158,7 @@ describe('double quoted string attribute', () => {
       '<orion disabled string = "Value" number = 10 ></orion>',
       '<orion disabled string="Value" number=10></orion>'
     ].forEach(permutation => {
-      const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-      p.feed(permutation);
-      const ast = p.results[0];
+      const ast = parse(permutation);
       expect(ast.attribs.number).to.equal(10);
       expect(ast.attribs.disabled).to.equal(true);
       expect(ast.attribs.string).to.equal("Value");
@@ -219,34 +166,31 @@ describe('double quoted string attribute', () => {
   });
 });
 
-describe('children', () => {
-  it('supports an array of child elements', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+// describe('children', () => {
+//   it('supports an array of child elements', () => {
+//     const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
 
-    p.feed(`
-      <orion>
-        <component></component>
-      </orion>
-    `);
+//     p.feed(`
+//       <orion>
+//         <component></component>
+//       </orion>
+//     `);
 
-    const ast = p.results[0];
-    expect(ast.children.length).to.equal(1);
-    expect(ast.children[0].name).to.equal('component');
-    expect(ast.children[0].type).to.equal('tag');
-    expect(ast.children[0].startIndex).to.equal(23);
-  });
+//     const ast = p.results[0];
+//     expect(ast.children.length).to.equal(1);
+//     expect(ast.children[0].name).to.equal('component');
+//     expect(ast.children[0].type).to.equal('tag');
+//     expect(ast.children[0].startIndex).to.equal(23);
+//   });
 
-  // it('supports multiple children', () => {
-  //   const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+//   it('supports multiple children', () => {
+//     const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
 
-  //   p.feed(`
-  //     <orion>
-  //       <component1></component1>
-  //       <component2></component2>
-  //     </orion>
-  //   `);
+//     p.feed(`
+//       <a> <b></b> <c></c> </a>
+//     `);
 
-  //   const ast = p.results[0];
-  //   expect(ast.children.length).to.equal(2);
-  // });
-});
+//     const ast = p.results[0];
+//     expect(ast.children.length).to.equal(2);
+//   });
+// });

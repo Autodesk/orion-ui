@@ -1,15 +1,14 @@
 @builtin "whitespace.ne"
-
 @{% function flatten(list) {return list.reduce(function (acc, val) {return acc.concat((val && val.constructor === Array) ? flatten(val) : val);}, []);} %}
 
 RootElement -> _ Element _ {% data => data[1] %}
 
-Element -> StartTag _ Element:* _ EndTag {%
+Element -> StartTag _ EndTag {%
   (data, location, reject) => {
     const startTag = data[0].tagName;
     const attribs = data[0].attribs;
-    const children = data[2];
-    const endTag = data[4];
+    //const children = data[2];
+    const endTag = data[2];
 
     if (startTag !== endTag) {
       return reject;
@@ -19,7 +18,7 @@ Element -> StartTag _ Element:* _ EndTag {%
       type: 'tag',
       name: startTag,
       attribs: attribs,
-      children: children,
+      children: [],
       startIndex: location
     }
   }
@@ -37,9 +36,16 @@ StartTag -> "<" TagName Attributes _ ">" {%
   }
 %}
 
+ChildElements -> null
+
+_ChildElements -> null
+  | Element {% id %}
+  | ChildElements _ Element {% d => flatten([d[0], d[2]]) %}
+
 EndTag -> "</" TagName _ ">" {% d => d[1] %}
-TagName -> Letter (LetterOrDigit):+ {% d => flatten(d).join('').toLowerCase() %}
-AttributeName -> Letter (LetterOrDigit):+ {% d => flatten(d).join('').toLowerCase() %}
+TagName -> Letter (LetterOrDigit):* {% d => flatten(d).join('').toLowerCase() %}
+
+AttributeName -> Letter (LetterOrDigit):* {% d => flatten(d).join('').toLowerCase() %}
 
 LetterOrDigit -> Letter {% id %}
   | Digit {% id %}
@@ -47,8 +53,7 @@ LetterOrDigit -> Letter {% id %}
 Letter -> [a-zA-Z]
 Digit -> [0-9]
 
-Attributes -> null
-  | (__ Attribute {% data => data[1] %}):* {% id %}
+Attributes -> (__ Attribute {% data => data[1] %}):* {% id %}
 
 Attribute -> BooleanAttribute {% id %}
   | NumberAttribute {% id %}

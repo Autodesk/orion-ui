@@ -180,8 +180,13 @@ describe('children', () => {
     expect(ast.children[0].startIndex).to.equal(3);
   });
 
-  it('supports a single child element with whitespace', () => {
-    const ast = parse(`<a> <b></b></a>`)
+  it('supports a single child element with whitespace at the beginning', () => {
+    const ast = parse(`<a> <b></b></a> `)
+    expect(ast.children.length).to.equal(1);
+  });
+
+  it('supports a single child element with whitespace at the end', () => {
+    const ast = parse(`<a><b></b> </a> `)
     expect(ast.children.length).to.equal(1);
   });
 
@@ -191,5 +196,18 @@ describe('children', () => {
 
     expect(ast.children[0].name).to.equal('b');
     expect(ast.children[1].name).to.equal('c');
+  });
+
+  it('supports multiple children with whitespace', () => {
+    [
+      `<a> <b></b><c></c></a>`,
+      `<a><b> </b><c></c></a>`,
+      `<a><b></b> <c></c></a>`,
+      `<a><b></b><c> </c></a>`,
+      `<a><b></b><c></c> </a>`,
+    ].forEach(permuation => {
+      const ast = parse(permuation);
+      expect(ast.children.length).to.equal(2);
+    })
   });
 });

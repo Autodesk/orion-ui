@@ -43,7 +43,8 @@ function id(x) {return x[0]; }
           }
         }
         },
-    {"name": "ChildElements", "symbols": ["_"], "postprocess": id},
+    {"name": "ChildElements", "symbols": []},
+    {"name": "ChildElements", "symbols": ["ChildElements", "__"], "postprocess": id},
     {"name": "ChildElements", "symbols": ["ChildElements", "Element"], "postprocess": 
         (data) => {
           const rest = data[0] || [];

@@ -137,7 +137,6 @@ describe('number attribute', () => {
   });
 
   it('works with a mix of numbers and boolean', () => {
-
     [
       '<orion number=10 disabled></orion>',
       '<orion number = 10 disabled></orion>',
@@ -155,3 +154,50 @@ describe('number attribute', () => {
   });
 });
 
+describe('double quoted string attribute', () => {
+  it('works without whitespace', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed(`<orion string="Hello World"></orion>`);
+
+    const ast = p.results[0];
+    expect(ast.attribs.string).to.equal("Hello World");
+  });
+
+  it('works with whitespace between equals sign', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed(`<orion string = "Hello World"></orion>`);
+
+    const ast = p.results[0];
+    expect(ast.attribs.string).to.equal("Hello World");
+  });
+
+  it('works with multiple strings', () => {
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+
+    p.feed(`<orion string1="Hello World 1" string2="Hello World 2"></orion>`);
+
+    const ast = p.results[0];
+    expect(ast.attribs.string1).to.equal("Hello World 1");
+    expect(ast.attribs.string2).to.equal("Hello World 2");
+  });
+
+  it('works with a mix of string, boolean, and number', () => {
+    [
+      '<orion number=10 disabled string="Value"></orion>',
+      '<orion number = 10 disabled string = "Value"></orion>',
+      '<orion number=10 disabled string="Value" ></orion>',
+      '<orion disabled string="Value" number=10 ></orion>',
+      '<orion disabled string = "Value" number = 10 ></orion>',
+      '<orion disabled string="Value" number=10></orion>'
+    ].forEach(permutation => {
+      const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+      p.feed(permutation);
+      const ast = p.results[0];
+      expect(ast.attribs.number).to.equal(10);
+      expect(ast.attribs.disabled).to.equal(true);
+      expect(ast.attribs.string).to.equal("Value");
+    });
+  });
+});

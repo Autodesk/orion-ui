@@ -42,8 +42,9 @@ limitations under the License.
     describe('<orion-select>', () => {
       var select, button, menu, wrapper;
 
+      beforeEach(() => wrapper = fixture('select'))
+
       beforeEach(() => {
-        wrapper = fixture('select');
         select = wrapper.querySelector('orion-select');
         button = select.querySelector('orion-button');
 
@@ -127,7 +128,7 @@ limitations under the License.
           var menu;
 
           beforeEach((done) => {
-            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 }));
             setTimeout(() => {
               menu = select.querySelector('orion-list');
               done();
@@ -144,8 +145,8 @@ limitations under the License.
 
             beforeEach((done) => {
               initialIndex = select.state.selectedIndex;
-              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' })); // Focus next option
-              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 })); // Focus next option
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13 }));
               setTimeout(() => {
                 done();
               }, 75);

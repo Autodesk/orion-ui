@@ -14,16 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const keyStrings = {
-  9: 'Tab',
-  13: 'Enter',
-  27: 'Escape',
-  37: 'ArrowLeft',
-  38: 'ArrowUp',
-  39: 'ArrowRight',
-  40: 'ArrowDown',
-};
+const valueSets = [
+  { key: 'Tab', values: [9, 'Tab'] },
+  { key: 'Enter', values: [13, 'Enter'] },
+  { key: 'Escape', values: [27, 'Escape'] },
+  { key: 'ArrowLeft', values: [37, 'ArrowLeft', 'Left'] },
+  { key: 'ArrowUp', values: [38, 'ArrowUp', 'Up'] },
+  { key: 'ArrowRight', values: [39, 'ArrowRight', 'Right'] },
+  { key: 'ArrowDown', values: [40, 'ArrowDown', 'Down'] },
+];
+
+function match(valueSet, keyCode, key) {
+  return valueSet.values.includes(keyCode) || valueSet.values.includes(key);
+}
 
 module.exports = function eventKey(event) {
-  return keyStrings[event.keyCode];
+  const matchingSet = valueSets.find((valueSet) => {
+    return match(valueSet, event.key, event.keyCode);
+  });
+
+  if (matchingSet === undefined) { return null; }
+  return matchingSet.key;
 };

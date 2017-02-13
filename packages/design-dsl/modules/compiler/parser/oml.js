@@ -41,23 +41,43 @@ function id(x) {return x[0]; }
         },
     {"name": "EndTag$string$1", "symbols": [{"literal":"<"}, {"literal":"/"}], "postprocess": function joiner(d) {return d.join('');}},
     {"name": "EndTag", "symbols": ["EndTag$string$1", "TagName", {"literal":">"}]},
-    {"name": "TagName$ebnf$1", "symbols": [/[a-zA-Z]/]},
-    {"name": "TagName$ebnf$1", "symbols": [/[a-zA-Z]/, "TagName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "TagName", "symbols": ["TagName$ebnf$1"], "postprocess": d => flatten(d).join('').toLowerCase()},
-    {"name": "AttributeName$ebnf$1", "symbols": [/[a-zA-Z]/]},
-    {"name": "AttributeName$ebnf$1", "symbols": [/[a-zA-Z]/, "AttributeName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "AttributeName", "symbols": ["AttributeName$ebnf$1"], "postprocess": d => flatten(d).join('').toLowerCase()},
+    {"name": "TagName$ebnf$1$subexpression$1", "symbols": ["LetterOrDigit"]},
+    {"name": "TagName$ebnf$1", "symbols": ["TagName$ebnf$1$subexpression$1"]},
+    {"name": "TagName$ebnf$1$subexpression$2", "symbols": ["LetterOrDigit"]},
+    {"name": "TagName$ebnf$1", "symbols": ["TagName$ebnf$1$subexpression$2", "TagName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "TagName", "symbols": ["Letter", "TagName$ebnf$1"], "postprocess": d => flatten(d).join('').toLowerCase()},
+    {"name": "AttributeName$ebnf$1$subexpression$1", "symbols": ["LetterOrDigit"]},
+    {"name": "AttributeName$ebnf$1", "symbols": ["AttributeName$ebnf$1$subexpression$1"]},
+    {"name": "AttributeName$ebnf$1$subexpression$2", "symbols": ["LetterOrDigit"]},
+    {"name": "AttributeName$ebnf$1", "symbols": ["AttributeName$ebnf$1$subexpression$2", "AttributeName$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "AttributeName", "symbols": ["Letter", "AttributeName$ebnf$1"], "postprocess": d => flatten(d).join('').toLowerCase()},
+    {"name": "LetterOrDigit", "symbols": ["Letter"], "postprocess": id},
+    {"name": "LetterOrDigit", "symbols": ["Digit"], "postprocess": id},
+    {"name": "Letter", "symbols": [/[a-zA-Z]/]},
+    {"name": "Digit", "symbols": [/[0-9]/]},
     {"name": "Attributes", "symbols": []},
     {"name": "Attributes$ebnf$1", "symbols": []},
     {"name": "Attributes$ebnf$1$subexpression$1", "symbols": ["__", "Attribute"], "postprocess": data => data[1]},
     {"name": "Attributes$ebnf$1", "symbols": ["Attributes$ebnf$1$subexpression$1", "Attributes$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
     {"name": "Attributes", "symbols": ["Attributes$ebnf$1"], "postprocess": id},
     {"name": "Attribute", "symbols": ["BooleanAttribute"], "postprocess": id},
+    {"name": "Attribute", "symbols": ["NumberAttribute"], "postprocess": id},
     {"name": "BooleanAttribute", "symbols": ["AttributeName"], "postprocess": 
         (data, location, reject) => {
           return [data[0], true];
         }
+        },
+    {"name": "NumberAttribute", "symbols": ["AttributeName", "_", {"literal":"="}, "_", "Int"], "postprocess": 
+        (data, location, reject) => {
+          const name = data[0];
+          const value = data[4];
+        
+          return [name, value];
         }
+        },
+    {"name": "Int$ebnf$1", "symbols": ["Digit"]},
+    {"name": "Int$ebnf$1", "symbols": ["Digit", "Int$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "Int", "symbols": ["Int$ebnf$1"], "postprocess": data => parseInt(data[0].join(''))}
 ]
   , ParserStart: "RootElement"
 }

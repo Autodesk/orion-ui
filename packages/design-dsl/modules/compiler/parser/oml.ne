@@ -35,14 +35,20 @@ StartTag -> "<" TagName Attributes _ ">" {%
 %}
 
 EndTag -> "</" TagName ">"
-TagName -> [a-zA-Z]:+ {% d => flatten(d).join('').toLowerCase() %}
-AttributeName -> [a-zA-Z]:+ {% d => flatten(d).join('').toLowerCase() %}
+TagName -> Letter (LetterOrDigit):+ {% d => flatten(d).join('').toLowerCase() %}
+AttributeName -> Letter (LetterOrDigit):+ {% d => flatten(d).join('').toLowerCase() %}
+
+LetterOrDigit -> Letter {% id %}
+  | Digit {% id %}
+
+Letter -> [a-zA-Z]
+Digit -> [0-9]
 
 Attributes -> null
   | (__ Attribute {% data => data[1] %}):* {% id %}
 
 Attribute -> BooleanAttribute {% id %}
-#  |  NumberAttribute {% id %}
+  |  NumberAttribute {% id %}
 #  | StringAttribute {% id %}
 
 BooleanAttribute -> AttributeName {%
@@ -51,16 +57,17 @@ BooleanAttribute -> AttributeName {%
   }
 %}
 
-#
-#NumberAttribute -> AttributeName "=" Int _ {%
-#  (data, location, reject) => {
-#    const name = data[0];
-#    const value = data[2];
-#
-#    return [name, value];
-#  }
-#%}
-#
+NumberAttribute -> AttributeName _ "=" _ Int {%
+  (data, location, reject) => {
+    const name = data[0];
+    const value = data[4];
+
+    return [name, value];
+  }
+%}
+
+Int -> Digit:+ {% data => parseInt(data[0].join('')) %}
+
 #StringAttribute -> AttributeName "=" StringValue _ {%
 #  data => [data[0], data[2]]
 #%}
@@ -76,6 +83,5 @@ BooleanAttribute -> AttributeName {%
 #
 
 #
-#Int ->  [0-9]:+ {% data => parseInt(data.join('')) %}
 #
 

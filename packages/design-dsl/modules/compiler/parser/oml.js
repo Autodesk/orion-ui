@@ -44,10 +44,10 @@ function id(x) {return x[0]; }
         }
         },
     {"name": "ChildElements", "symbols": ["_"], "postprocess": id},
-    {"name": "ChildElements", "symbols": ["ChildElements", "_", "Element"], "postprocess": 
+    {"name": "ChildElements", "symbols": ["ChildElements", "Element"], "postprocess": 
         (data) => {
           const rest = data[0] || [];
-          const next = data[2];
+          const next = data[1];
           return rest.concat(next);
         }
         },

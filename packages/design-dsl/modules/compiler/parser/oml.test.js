@@ -21,9 +21,14 @@ var nearley = require("nearley");
 function parse(source) {
   const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
   p.feed(source);
-  expect(p.results.length).to.equal(1);
+  expect(p.results.length, 'Ambigious results!').to.equal(1);
   return p.results[0];
 }
+
+it('parses a single basic tag', () => {
+  const ast = parse('<o></o>');
+  expect(ast.type).to.equal('tag');
+});
 
 describe('valid open and close tag with whitespace', () => {
   let ast;
@@ -167,12 +172,17 @@ describe('double quoted string attribute', () => {
 });
 
 describe('children', () => {
-  it('supports an array of child elements', () => {
+  it('supports a single child element', () => {
     const ast = parse(`<a><b></b></a>`)
     expect(ast.children.length).to.equal(1);
     expect(ast.children[0].name).to.equal('b');
     expect(ast.children[0].type).to.equal('tag');
     expect(ast.children[0].startIndex).to.equal(3);
+  });
+
+  it('supports a single child element with whitespace', () => {
+    const ast = parse(`<a> <b></b></a>`)
+    expect(ast.children.length).to.equal(1);
   });
 
   it('supports multiple children', () => {

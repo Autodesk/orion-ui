@@ -65,7 +65,7 @@ limitations under the License.
           setTimeout(() => {
             menu = select.querySelector('orion-list');
             done();
-          }, 75);
+          }, 300);
         });
 
         it('shows a menu of options', () => {
@@ -86,14 +86,14 @@ limitations under the License.
             setTimeout(() => {
               expect(select.querySelector('orion-list')).to.be.null;
               done();
-            }, 75);
+            }, 300);
           });
 
           it('shows the selected label', (done) => {
             setTimeout(() => {
               expect(select.innerText).to.have.string('Aardvarks');
               done();
-            }, 75);
+            }, 300);
           });
         });
 
@@ -107,7 +107,7 @@ limitations under the License.
               let menu = select.querySelector('orion-list');
               expect(menu).to.be.null;
               done();
-            }, 75);
+            }, 300);
           });
         });
       });
@@ -117,7 +117,7 @@ limitations under the License.
           setTimeout(() => {
             button.dispatchEvent(new Event('focus'));
             done();
-          }, 75);
+          }, 300);
         });
 
         it('has focus', () => {
@@ -132,7 +132,7 @@ limitations under the License.
             setTimeout(() => {
               menu = select.querySelector('orion-list');
               done();
-            }, 75);
+            }, 300);
           });
 
           it('opens the menu', () => {
@@ -149,7 +149,7 @@ limitations under the License.
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13 }));
               setTimeout(() => {
                 done();
-              }, 75);
+              }, 300);
             });
 
             it('closes the menu', () => {
@@ -169,7 +169,7 @@ limitations under the License.
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
               setTimeout(() => {
                 done();
-              }, 75);
+              }, 300);
             });
 
             it('closes the menu', () => {
@@ -187,7 +187,7 @@ limitations under the License.
             setTimeout(() => {
               button.dispatchEvent(new Event('blur'));
               done();
-            }, 75);
+            }, 300);
           });
 
           it('no longer has focus', () => {

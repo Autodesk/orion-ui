@@ -1,97 +1,51 @@
-@builtin "whitespace.ne"
 @{% function flatten(list) {return list.reduce(function (acc, val) {return acc.concat((val && val.constructor === Array) ? flatten(val) : val);}, []);} %}
 
-RootElement -> _ Element _ {% data => data[1] %}
+# TOKENS
 
-Element -> StartTag ChildElements EndTag {%
+@{%
+var START_TAG = { test: x => x.type === 'start-tag' }
+var END_TAG = { test: x => x.type === 'end-tag' }
+var WS = { test: x => x.type === 'character' && x.data.match(/\s/) }
+var EOF = { test: x => x.type === 'eof' }
+%}
+
+# MAIN DOCUMENT
+
+Document -> __ Element __ %EOF {% data => data[1] %}
+
+# WHITESPACE
+
+__ -> %WS:*
+
+Element -> %START_TAG Contents %END_TAG {%
   (data, location, reject) => {
-    const startTag = data[0].tagName;
-    const attribs = data[0].attribs;
+    const startTag = data[0];
     const children = data[1];
     const endTag = data[2];
 
-    if (startTag !== endTag) {
+    const attribs = startTag.attributes.reduce((acc, memo) => {
+      const key = memo.name;
+      const value = (memo.value == "") ? true : JSON.parse(memo.value);
+
+      acc[key] = value;
+
+      return acc;
+    }, {});
+
+    if (startTag.tagName !== endTag.tagName) {
       return reject;
     }
 
     return {
       type: 'tag',
-      name: startTag,
+      name: startTag.tagName,
       attribs: attribs,
-      children: children || [],
-      startIndex: location
+      children: children
     }
   }
 %}
 
-StartTag -> "<" TagName Attributes _ ">" {%
-  data => {
-    return {
-      tagName: data[1],
-      attribs: data[2].reduce((acc, memo) => {
-        acc[memo[0]] = memo[1];
-        return acc;
-      }, {})
-    }
-  }
-%}
-
-ChildElements -> null
-  | ChildElements __ {% id %}
-  | ChildElements Element {%
-  (data) => {
-    const rest = data[0] || [];
-    const next = data[1];
-    return rest.concat(next);
-  }
-%}
-
-_ChildElements -> null
-  | Element {% id %}
-  | ChildElements _ Element {% d => flatten([d[0], d[2]]) %}
-
-EndTag -> "</" TagName _ ">" {% d => d[1] %}
-TagName -> Letter (LetterOrDigit):* {% d => flatten(d).join('').toLowerCase() %}
-
-AttributeName -> Letter (LetterOrDigit):* {% d => flatten(d).join('').toLowerCase() %}
-
-LetterOrDigit -> Letter {% id %}
-  | Digit {% id %}
-
-Letter -> [a-zA-Z]
-Digit -> [0-9]
-
-Attributes -> (__ Attribute {% data => data[1] %}):* {% id %}
-
-Attribute -> BooleanAttribute {% id %}
-  | NumberAttribute {% id %}
-  | StringAttribute {% id %}
-
-BooleanAttribute -> AttributeName {%
-  (data, location, reject) => {
-    return [data[0], true];
-  }
-%}
-
-NumberAttribute -> AttributeName _ "=" _ Int {%
-  (data, location, reject) => {
-    const name = data[0];
-    const value = data[4];
-
-    return [name, value];
-  }
-%}
-
-Int -> Digit:+ {% data => parseInt(data[0].join('')) %}
-
-StringAttribute -> AttributeName _ "=" _ StringValue {%
-  data => [data[0], data[4]]
-%}
-
-StringValue -> "\"" _stringdouble "\"" {% data => data[1] %}
-
-_stringdouble -> null
-  | _stringdouble _stringdoublechar {% d => flatten(d).join('') %}
-
-_stringdoublechar -> [^\\"] {% id %}
-  | "\\"  [^\n] {% id %}
+Contents -> (
+      %WS {% d => [] %}
+    | Element {% id %}
+  ):* {% d => flatten(d) %}

@@ -15,12 +15,15 @@ if (stderr) {
   process.exit(1);
 }
 
+const { getTokens } = require('../../../2017-02-06/parser/tokenizer');
+
 var grammar = require("./oml.js");
 var nearley = require("nearley");
 
 function parse(source) {
   const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-  p.feed(source);
+  const { tokens } = getTokens(source);
+  p.feed(tokens);
   expect(p.results.length, 'Ambigious results!').to.equal(1);
   return p.results[0];
 }
@@ -52,10 +55,6 @@ describe('valid open and close tag with whitespace', () => {
   it('sets children to empty array', () => {
     expect(ast.children).to.eql([]);
   });
-
-  it('sets startIndex', () => {
-    expect(ast.startIndex).to.eql(1);
-  });
 });
 
 describe('tagName', () => {
@@ -65,14 +64,11 @@ describe('tagName', () => {
   });
 
   it('does not parse unmatched tags', () => {
-    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-    p.feed("<orion1></foo>");
-    expect(p.results).to.eql([]);
-  });
-
-  it('lets endTag have some whitespace AFTER the tagName', () => {
-    const ast = parse("<orion></orion >");
-    expect(ast.name).to.equal('orion');
+    try {
+      parse("<orion1></foo>");
+    } catch (e) {
+      expect(e.message).to.match(/No possible parsings \(\@2\:/);
+    }
   });
 });
 
@@ -80,15 +76,6 @@ describe('Attribute Names', () => {
   it('lets attribute name include a number', () => {
     const ast = parse("<o b1></o>");
     expect(ast.attribs.b1).to.equal(true);
-  });
-
-  it('does not support a number at the start of an attribute name', () => {
-    try {
-      parse("<orion 1number></orion>");
-      throw new Error('did not catch');
-    } catch (e) {
-      expect(e.message).to.equal(`nearley: No possible parsings (@7: '1').`);
-    }
   });
 });
 
@@ -177,7 +164,6 @@ describe('children', () => {
     expect(ast.children.length).to.equal(1);
     expect(ast.children[0].name).to.equal('b');
     expect(ast.children[0].type).to.equal('tag');
-    expect(ast.children[0].startIndex).to.equal(3);
   });
 
   it('supports a single child element with whitespace at the beginning', () => {
@@ -209,5 +195,15 @@ describe('children', () => {
       const ast = parse(permuation);
       expect(ast.children.length).to.equal(2);
     })
+  });
+
+  it('supports three levels of nesting', () => {
+    const ast = parse(`<a><b><c></c></b></a>`);
+    expect(ast.children[0].children[0].name).to.equal('c');
+  });
+
+  it('supports three levels of nesting with whitespace', () => {
+    const ast = parse('<o>           <c> <t> </t> </c> </o>');
+    expect(ast.children[0].children[0].name).to.equal('t');
   });
 });

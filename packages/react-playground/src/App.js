@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import '../vendor/custom-elements-polyfill';
-import { Button, Select } from '@orion-ui/react/lib/2016-12-01';
+import { Button, Select, Datepicker } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -68,6 +68,9 @@ class App extends React.Component {
           <input />
           <Select options={this.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
+        </div>
+        <div>
+          <Datepicker></Datepicker>
         </div>
         <div>
           <Button size={selectedSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>

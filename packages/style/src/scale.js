@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const Button = require('./button');
-const Select = require('./select');
-const Datepicker = require('./datepicker');
-
-module.exports = { Button, Select, Datepicker };
+module.exports = [
+  0, '.25rem', '.5rem', '1rem',
+  '2rem', '4rem', '8rem', '16rem',
+];

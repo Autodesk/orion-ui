@@ -25,7 +25,7 @@ angular
 
     $scope.buttons = [
       { label: 'Large white on black', color: 'white', background: 'black', size: 'large' },
-      { label: 'Black on grey', color: 'black', background: 'grey' },
+      { label: 'Black on grey', color: 'black', background: 'grey1' },
       { label: 'White on blue', color: 'white', background: 'blue', size: 'small' },
     ];
 

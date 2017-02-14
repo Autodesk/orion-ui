@@ -17,7 +17,9 @@ limitations under the License.
 import { storiesOf } from '@kadira/storybook';
 import { text, boolean, object } from '@kadira/storybook-addon-knobs';
 import React from 'react';
+import moment from 'moment';
 
+import { Datepicker } from '../../react/lib/2016-12-01';
 import { WithSource } from '../addons/source-addon';
 
 storiesOf('DatePicker', module)
@@ -41,7 +43,7 @@ ReactDOM.render(React.createElement(App), document.body);`;
 import 'angular';
 import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [DatePicker.module])
+angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = null;
@@ -53,14 +55,14 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
+    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" />
   </body>
 </html>
         `;
 
     return (
       <WithSource react={react} angular={angular}>
-        <span>todo</span>
+        <Datepicker />
       </WithSource>
     );
   })
@@ -99,13 +101,13 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
+    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" />
   </body>
 </html>
         `;
     return (
       <WithSource react={react} angular={angular}>
-        <span>todo</span>
+        <Datepicker date={moment()} />
       </WithSource>
     );
   })
@@ -144,7 +146,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" clearable="{{app.clearable}} />
+    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" clearable="{{app.clearable}} />
   </body>
 </html>
         `;
@@ -191,7 +193,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" placeholder="{{app.placeholder}}" />
+    <orion-datepicker date="{{app.date}}" placeholder="{{app.placeholder}}" />
   </body>
 </html>`;
 
@@ -239,13 +241,13 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" />
+    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" />
   </body>
 </html>`;
 
     return (
       <WithSource react={react} angular={angular}>
-        <span>todo</span>
+        <Datepicker focus={props.focus} />
       </WithSource>
     );
   })
@@ -288,7 +290,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focusDate="{{app.focusDate}}" />
+    <orion-datepicker date="{{app.date}}" focusDate="{{app.focusDate}}" />
   </body>
 </html>`;
 
@@ -343,7 +345,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
+    <orion-datepicker date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
   </body>
 </html>`;
 
@@ -396,7 +398,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" i18n="{{app.i18n}}" />
+    <orion-datepicker date="{{app.date}}" i18n="{{app.i18n}}" />
   </body>
 </html>`;
 
@@ -477,7 +479,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" focus="{{app.focus}}" isEnabled="{{app.isEnabled}}" />
+    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" isEnabled="{{app.isEnabled}}" />
   </body>
 </html>`;
 
@@ -525,7 +527,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker date="{{app.date}}" disabled="{{app.disabled}}" />
+    <orion-datepicker date="{{app.date}}" disabled="{{app.disabled}}" />
   </body>
 </html>`;
 
@@ -593,7 +595,7 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-date-picker
+    <orion-datepicker
       date="{{app.date}}"
       datePickerState="{{app.datePickerState}}"
       ng-change="app.onChange(datePickerState)" />

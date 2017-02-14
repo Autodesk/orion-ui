@@ -14,6 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+const scale = require('./scale');
+
+const concat = (acc, memo) => acc + memo;
+
+function buildPositions() {
+  const dimensions = ['top', 'right', 'bottom', 'left'];
+
+  return dimensions.map((dimension) => {
+    return scale.map((scaleValue, scaleIndex) => {
+      return `.pos-${dimension}-${scaleIndex} { ${dimension}: ${scaleValue} } `;
+    }).reduce(concat);
+  }).reduce(concat);
+}
+
 const css = `
   .pos-st {
     position: static;
@@ -34,13 +48,21 @@ const css = `
     right: 0;
     bottom: 0;
   }
+
+  ${buildPositions()}
 `;
 
 const attributes = [
-  'position',
+  'position', 'top', 'right', 'bottom', 'left',
 ];
 
 function attributeChangedCallback(attrName, value) {
+  // Absolute positioning dimensions
+  if (['top', 'right', 'bottom', 'left'].includes(attrName)) {
+    return `pos-${attrName}-${value}`;
+  }
+
+  // Positioning
   switch (value) {
     case 'absolute':
       return 'pos-abs';

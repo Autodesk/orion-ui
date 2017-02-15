@@ -30,19 +30,19 @@ class RenderQueue {
 
   add(element) {
     this.queue.add(element);
-    if (this._renderQueued) { return; }
+    if (this.renderQueued) { return; }
 
-    this._renderQueued = true;
+    this.renderQueued = true;
     requestAnimationFrame(this.flush);
   }
 
   flush() {
     const elements = new Set(this.queue);
     this.queue.clear();
-    this._renderQueued = false;
+    this.renderQueued = false;
 
     elements.forEach((element) => {
-      element._render(); // eslint-disable-line no-underscore-dangle
+      element.render(); // eslint-disable-line no-underscore-dangle
     });
   }
 }

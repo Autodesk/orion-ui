@@ -111,7 +111,7 @@ class SelectOption extends Element {
     this.addEventListener('mouseenter', this._handleMouseEnter);
   }
 
-  _render() {
+  render() {
     if (this.button !== undefined) {
       let styles;
       if (this.state.hasFocus) {
@@ -130,7 +130,7 @@ class SelectOption extends Element {
       this.labelEl.textContent = this.state.label;
     }
 
-    super._render();
+    super.render();
   }
 }
 

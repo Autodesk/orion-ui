@@ -192,7 +192,7 @@ class Select extends Element {
     }));
   }
 
-  _render() {
+  render() {
     this._ensureButton();
     this._ensureMenu();
 
@@ -215,7 +215,7 @@ class Select extends Element {
       hasFocus: (this.state.hasFocus && !this.state.open),
     });
 
-    super._render();
+    super.render();
   }
 }
 

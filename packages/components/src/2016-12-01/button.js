@@ -176,7 +176,7 @@ class Button extends Element {
     }));
   }
 
-  _render() {
+  render() {
     if (this.state.disabled) {
       this.viewState.background = 'grey';
       this.viewState.color = 'white';
@@ -203,7 +203,7 @@ class Button extends Element {
         break;
     }
 
-    super._render();
+    super.render();
   }
 }
 

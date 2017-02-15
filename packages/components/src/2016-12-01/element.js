@@ -45,7 +45,7 @@ class Element extends HTMLElement {
     (new RenderQueue()).add(this);
   }
 
-  _render() {
+  render() {
     this._updateClassName();
   }
 

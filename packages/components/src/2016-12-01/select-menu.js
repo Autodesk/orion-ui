@@ -96,7 +96,7 @@ class SelectMenu extends Element {
     this.dispatchEvent(new CustomEvent('closed'));
   }
 
-  _render() {
+  render() {
     this._ensureList();
 
     if (this.state.open) {
@@ -121,7 +121,7 @@ class SelectMenu extends Element {
       this._removeList();
     }
 
-    super._render();
+    super.render();
   }
 }
 

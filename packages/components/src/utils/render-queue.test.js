@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -43,7 +44,7 @@ describe('Utils.RenderQueue', () => {
       let element;
 
       beforeEach(() => {
-        element = { _render: sinon.spy() };
+        element = { render: sinon.spy() };
         renderQueue.add(element);
         renderQueue.add(element);
         renderQueue.add(element);
@@ -55,7 +56,7 @@ describe('Utils.RenderQueue', () => {
         });
 
         it('calls the callback once', () => {
-          expect(element._render).to.have.been.calledOnce;
+          expect(element.render).to.have.been.calledOnce;
         });
       });
 
@@ -65,10 +66,9 @@ describe('Utils.RenderQueue', () => {
         });
 
         it('is called only once', () => {
-          expect(element._render).to.have.been.calledOnce;
+          expect(element.render).to.have.been.calledOnce;
         });
       });
-
     });
 
     context('when a render triggers another render', () => {
@@ -79,8 +79,8 @@ describe('Utils.RenderQueue', () => {
       beforeEach(() => {
         childRender = sinon.spy();
 
-        childElement = { _render: childRender };
-        parentElement = { _render: () => { renderQueue.add(childElement); } };
+        childElement = { render: childRender };
+        parentElement = { render: () => { renderQueue.add(childElement); } };
 
         renderQueue.add(parentElement);
       });
@@ -94,9 +94,9 @@ describe('Utils.RenderQueue', () => {
     });
 
     context('with 3 different elements', () => {
-      const element1 = { _render: sinon.spy() };
-      const element2 = { _render: sinon.spy() };
-      const element3 = { _render: sinon.spy() };
+      const element1 = { render: sinon.spy() };
+      const element2 = { render: sinon.spy() };
+      const element3 = { render: sinon.spy() };
 
       beforeEach(() => {
         renderQueue.add(element1);
@@ -106,15 +106,15 @@ describe('Utils.RenderQueue', () => {
       });
 
       it('renders each of them once', () => {
-        expect(element1._render).to.have.been.calledOnce;
-        expect(element2._render).to.have.been.calledOnce;
-        expect(element3._render).to.have.been.calledOnce;
+        expect(element1.render).to.have.been.calledOnce;
+        expect(element2.render).to.have.been.calledOnce;
+        expect(element3.render).to.have.been.calledOnce;
       });
     });
   });
 
   describe('#flush', () => {
-    const element = { _render: sinon.spy() };
+    const element = { render: sinon.spy() };
 
     beforeEach(() => {
       renderQueue.add(element);
@@ -122,7 +122,7 @@ describe('Utils.RenderQueue', () => {
 
     it('calls all queued callbacks synchronously', () => {
       renderQueue.flush();
-      expect(element._render).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
+      expect(element.render).to.have.been.calledOnce;
     });
   });
 });

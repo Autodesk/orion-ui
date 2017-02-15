@@ -1,12 +1,10 @@
 machine:
   node:
-    version: 6.9.2
-  environment:
-    NODE_ENV: production # default is test which suppresses errors in lerna
+    version: 7.5.0
 dependencies:
   post:
     - bower install
-    - lerna bootstrap
+    - NODE_ENV=production lerna bootstrap
   cache_directories:
     - "node_modules"
     - "packages/components/node_modules"
@@ -19,10 +17,8 @@ dependencies:
 test:
   pre:
     - npm run compile
-    - cd packages/storybook && NODE_ENV=test npm start:
+    - cd packages/storybook && npm start:
         background: true
-    # This sleep is to ensure storybook is running before gemini starts
-    - sleep 10
   override:
     - npm run test-ci
     - npm run gemini

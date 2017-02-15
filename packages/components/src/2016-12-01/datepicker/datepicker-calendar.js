@@ -19,8 +19,8 @@ limitations under the License.
 import moment from 'moment';
 
 require('../../../vendor/es5-custom-element-shim');
-
 require('./calendar-header');
+require('./calendar-day');
 
 const Element = require('../element');
 const Registry = require('../../utils/private-registry');
@@ -64,7 +64,7 @@ class DatepickerCalendar extends Element {
   _monthChanged(newDate) {
     const oldDate = this.state.focusDate;
 
-    if (!oldDate) { return true; }
+    if (!oldDate || !newDate) { return true; }
 
     return oldDate.month() !== newDate.month() ||
            oldDate.year() !== newDate.year();
@@ -170,37 +170,11 @@ class DatepickerCalendar extends Element {
     let lastCreatedDay = null;
 
     [...Array(7)].forEach((_, i) => {
-      const day = moment(startDate).add(i, 'days');
-      const div = document.createElement('orion-element');
-      lastCreatedDay = div;
-
-      applyProps(div, {
-        'border-right': 1,
-        'border-color': 'grey2',
-      });
-
-      if (day.isBefore(focusDate)) {
-        applyProps(div, { color: 'grey4' });
-      } else {
-        applyProps(div, { pointer: true });
-      }
-
-      // Current Day
-      if (day.month() === focusDate.month() && day.date() === focusDate.date()) {
-        applyProps(div, { color: 'black', pointer: true });
-        div.style.fontWeight = 'bold';
-      }
-
-      div.style.width = '14%';
-      div.style.paddingLeft = '4px';
-      div.style.lineHeight = '1.75em';
-
-      // Add day of the month to div if its part of this month
-      if (day.month() === focusDate.month()) {
-        div.textContent = day.date();
-      }
-
-      week.appendChild(div);
+      const date = moment(startDate).add(i, 'days');
+      const dayEl = document.createElement('orion-calendar-day');
+      lastCreatedDay = dayEl;
+      applyProps(dayEl, { date, focusDate });
+      week.appendChild(dayEl);
     });
 
     applyProps(lastCreatedDay, {

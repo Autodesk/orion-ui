@@ -58,6 +58,10 @@ const DatepickerState = {
   leaveFocused(state) {
     return { ...state, focus: false, focusDate: null };
   },
+
+  dateSelected(state, selectedDate) {
+    return { ...state, date: selectedDate };
+  },
 };
 
 module.exports = DatepickerState;

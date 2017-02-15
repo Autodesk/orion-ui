@@ -32,6 +32,7 @@ class Datepicker extends Element {
   constructor() {
     super();
     this.state = DatepickerState.getInitialState();
+
     applyProps(this, {
       color: 'black',
       background: 'white',
@@ -87,7 +88,12 @@ class Datepicker extends Element {
   }
 
   _blur() {
-    this._dispatchStateChange('leaveFocused');
+    // Delay hiding of calendar to allow click events on days
+    setTimeout(() => { this._dispatchStateChange('leaveFocused'); }, 150);
+  }
+
+  _handleDateSelected(event) {
+    this._dispatchStateChange('dateSelected', event.detail.selectedDate);
   }
 
   _dispatchStateChange(eventType, arg) {
@@ -104,12 +110,14 @@ class Datepicker extends Element {
     this.dateInput.addEventListener('keydown', this._handleKeydown);
     this.dateInput.addEventListener('focus', this._focus);
     this.dateInput.addEventListener('blur', this._blur);
+    this.addEventListener('dateSelected', this._handleDateSelected);
   }
 
   _removeListeners() {
     this.dateInput.removeEventListener('keydown', this._handleKeydown);
     this.dateInput.removeEventListener('focus', this._focus);
     this.dateInput.removeEventListener('blur', this._blur);
+    this.removeEventListener('dateSelected', this._handleDateSelected);
   }
 
   _ensureInput() {

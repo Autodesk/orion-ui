@@ -22,7 +22,7 @@ const knownPaths = require('./modules/known-paths');
 const fs = require('fs');
 require('shelljs/global');
 
-xdescribe('orion-compile', () => {
+describe('orion-compile', () => {
   /**
    * Creates a package with an index.js in src and a
    * package.json with {orion: compiled: ?}

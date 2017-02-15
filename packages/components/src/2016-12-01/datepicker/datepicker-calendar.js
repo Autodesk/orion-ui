@@ -186,7 +186,7 @@ class DatepickerCalendar extends Element {
     return week;
   }
 
-  _render() {
+  render() {
     this.ensureElements();
 
     applyProps(this.header, {
@@ -205,7 +205,7 @@ class DatepickerCalendar extends Element {
       this._renderWeeks();
     }
 
-    super._render();
+    super.render();
   }
 }
 

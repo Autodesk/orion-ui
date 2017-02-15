@@ -1,0 +1,76 @@
+<!doctype html>
+
+<!--
+
+Copyright 2016 Autodesk,Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/web-component-tester/browser.js"></script>
+  <script src="../bower_components/moment/min/moment.min.js"></script>
+  <script src="../build/bundle.js"></script>
+</head>
+
+<body>
+  <test-fixture id="datepicker">
+    <template>
+      <orion-datepicker></orion-datepicker>
+    </template>
+  </test-fixture>
+
+  <script>
+    function applyProps(el, props) {
+      Object.keys(props).forEach((name) => {
+        el[name] = props[name];
+      });
+    }
+
+    function isHidden(el) {
+      return el.offsetParent === null;
+    }
+
+    let wrapper, datepicker, input, calendar;
+
+    describe('<orion-datepicker>', () => {
+      beforeEach((done) => {
+        datepicker = fixture('datepicker');
+
+        datepicker.addEventListener('change', (event) => {
+          applyProps(datepicker, event.detail.state);
+        });
+
+        setTimeout(() => {
+          input = datepicker.querySelector('input');
+          calendar = datepicker.querySelector('orion-datepicker-calendar');
+          if (input && calendar) { done(); }
+        }, 75);
+      });
+
+      it('input is visible', () => {
+        expect(isHidden(input)).to.be.false;
+      });
+
+      it('has an empty value', () => {
+        expect(input.value).to.eq('');
+      });
+
+      it('calendar is not visible', () => {
+        expect(isHidden(calendar)).to.be.true;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -101,7 +101,7 @@ class CalendarDay extends Element {
     this.removeEventListener('click', this._emitDateSelected);
   }
 
-  _render() {
+  render() {
     if (this.state.date && this.state.focusDate) {
       this.textContent = this.dayNumber;
 
@@ -121,7 +121,7 @@ class CalendarDay extends Element {
       }
     }
 
-    super._render();
+    super.render();
   }
 }
 

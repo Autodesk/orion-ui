@@ -68,7 +68,7 @@ class CalendarHeader extends Element {
     this.appendChild(this.nextDiv);
   }
 
-  _render() {
+  render() {
     this._ensurePrev();
     this._ensureMonth();
     this._ensureNext();
@@ -79,7 +79,7 @@ class CalendarHeader extends Element {
       });
     }
 
-    super._render();
+    super.render();
   }
 }
 

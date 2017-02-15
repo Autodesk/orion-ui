@@ -57,6 +57,7 @@ class Datepicker extends Element {
   }
 
   set focus(val) {
+    this._ensureCalendar();
     this.state.focus = val;
 
     if (val) {
@@ -144,7 +145,7 @@ class Datepicker extends Element {
 
   // Event Listeners
 
-  _render() {
+  render() {
     this._ensureInput();
     this._ensureCalendar();
 
@@ -161,7 +162,7 @@ class Datepicker extends Element {
       monthFormat: this.state.monthFormat,
     });
 
-    super._render();
+    super.render();
   }
 }
 

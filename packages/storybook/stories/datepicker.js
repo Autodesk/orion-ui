@@ -22,7 +22,7 @@ import moment from 'moment';
 import { Datepicker } from '../../react/lib/2016-12-01';
 import { WithSource } from '../addons/source-addon';
 
-storiesOf('DatePicker', module)
+storiesOf('Datepicker', module)
   .add('unfocused w/o date', () => {
     const react = `
 import React from 'react';

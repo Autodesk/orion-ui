@@ -25,7 +25,7 @@ test:
     - sleep 10
   override:
     - npm run test-ci
-    - gemini test gemini/*
+    - npm run gemini
 deployment:
   production:
     branch: master

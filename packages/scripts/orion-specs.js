@@ -46,6 +46,7 @@ function runUnitSpecs() {
     console.log(`Non-component specs failed:
       ${stdout && ','}
       ${stderr}`);
+    process.exit(code);
   }
   console.log('================================================================================');
 }
@@ -64,13 +65,13 @@ function browserify() {
   const { code, stdout, stderr } = exec(`${browserifyPath} ${srcPath} -t [ babelify ] -o ${destPath}`);
 
   if (code === 0) {
-    return true;
+    return;
   }
 
   console.log(`Transpiling with babel and browserify failed:
     ${stdout && ','}
     ${stderr}`);
-  return false;
+  process.exit(code);
 }
 
 /**
@@ -81,10 +82,7 @@ function browserify() {
 function runComponentSpecs() {
   console.log('');
   mkdir('-p', knownPaths.build);
-  if (!browserify()) {
-    return;
-  }
-
+  browserify();
   let cmd = 'wct';
   if (program.sauce) {
     cmd = `${cmd} --plugin sauce --skip-plugin local`;
@@ -100,6 +98,7 @@ function runComponentSpecs() {
     console.log(`Component specs failed:
       ${stdout && ','}
       ${stderr}`);
+    process.exit(code);
   }
   console.log('================================================================================');
 }
@@ -119,6 +118,7 @@ function reportToCodacy() {
     console.log(`Coverage reporting failed:
       ${stdout && ','}
       ${stderr}`);
+    process.exit(code);
   }
 }
 

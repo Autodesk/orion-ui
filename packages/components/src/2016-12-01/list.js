@@ -49,7 +49,7 @@ class List extends Element {
     return this.state.itemTagname;
   }
 
-  _render() {
+  render() {
     // TODO: raise warning if no key
     // TODO: raise warning if duplicate key
 
@@ -68,7 +68,7 @@ class List extends Element {
     });
 
     this.lastItemsHash = hashFromItems(this.items);
-    super._render();
+    super.render();
   }
 }
 

@@ -42,8 +42,9 @@ limitations under the License.
     describe('<orion-select>', () => {
       var select, button, menu, wrapper;
 
+      beforeEach(() => wrapper = fixture('select'))
+
       beforeEach(() => {
-        wrapper = fixture('select');
         select = wrapper.querySelector('orion-select');
         button = select.querySelector('orion-button');
 
@@ -57,14 +58,13 @@ limitations under the License.
       });
 
       context('after clicking', () => {
-        beforeEach((done) => {
+        beforeEach(() => {
           button.dispatchEvent(new Event('mouseenter'));
           button.dispatchEvent(new Event('mousedown'));
           button.dispatchEvent(new Event('mouseup'));
-          setTimeout(() => {
-            menu = select.querySelector('orion-list');
-            done();
-          }, 75);
+          (new RenderQueue()).flush();
+
+          menu = select.querySelector('orion-list');
         });
 
         it('shows a menu of options', () => {
@@ -79,44 +79,35 @@ limitations under the License.
             option.dispatchEvent(new Event('mouseenter'));
             option.dispatchEvent(new Event('mousedown'));
             option.dispatchEvent(new Event('mouseup'));
+            (new RenderQueue()).flush();
           });
 
-          it('closes the menu', (done) => {
-            setTimeout(() => {
-              expect(select.querySelector('orion-list')).to.be.null;
-              done();
-            }, 75);
+          it('closes the menu', () => {
+            expect(select.querySelector('orion-list')).to.be.null;
           });
 
-          it('shows the selected label', (done) => {
-            setTimeout(() => {
-              expect(select.innerText).to.have.string('Aardvarks');
-              done();
-            }, 75);
+          it('shows the selected label', () => {
+            expect(select.innerText).to.have.string('Aardvarks');
           });
         });
 
         context('and clicking away', () => {
           beforeEach(() => {
             button.dispatchEvent(new Event('blur'));
+            (new RenderQueue()).flush();
           });
 
-          it('closes the menu', (done) => {
-            setTimeout(() => {
-              let menu = select.querySelector('orion-list');
-              expect(menu).to.be.null;
-              done();
-            }, 75);
+          it('closes the menu', () => {
+            let menu = select.querySelector('orion-list');
+            expect(menu).to.be.null;
           });
         });
       });
 
       context('after focusing the button', () => {
-        beforeEach((done) => {
-          setTimeout(() => {
-            button.dispatchEvent(new Event('focus'));
-            done();
-          }, 75);
+        beforeEach(() => {
+          button.dispatchEvent(new Event('focus'));
+          (new RenderQueue()).flush();
         });
 
         it('has focus', () => {
@@ -126,12 +117,11 @@ limitations under the License.
         context('pressing an arrow key', () => {
           var menu;
 
-          beforeEach((done) => {
-            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
-            setTimeout(() => {
-              menu = select.querySelector('orion-list');
-              done();
-            }, 75);
+          beforeEach(() => {
+            select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 }));
+            (new RenderQueue()).flush();
+
+            menu = select.querySelector('orion-list');
           });
 
           it('opens the menu', () => {
@@ -142,13 +132,11 @@ limitations under the License.
           context('then pressing enter', () => {
             var initialIndex;
 
-            beforeEach((done) => {
+            beforeEach(() => {
               initialIndex = select.state.selectedIndex;
-              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' })); // Focus next option
-              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-              setTimeout(() => {
-                done();
-              }, 75);
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 })); // Focus next option
+              select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13 }));
+              (new RenderQueue()).flush();
             });
 
             it('closes the menu', () => {
@@ -163,12 +151,10 @@ limitations under the License.
           context('then pressing escape', () => {
             var initialIndex;
 
-            beforeEach((done) => {
+            beforeEach(() => {
               initialIndex = select.state.selectedIndex;
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-              setTimeout(() => {
-                done();
-              }, 75);
+              (new RenderQueue()).flush();
             });
 
             it('closes the menu', () => {
@@ -182,11 +168,9 @@ limitations under the License.
         });
 
         context('blurring the button', () => {
-          beforeEach((done) => {
-            setTimeout(() => {
-              button.dispatchEvent(new Event('blur'));
-              done();
-            }, 75);
+          beforeEach(() => {
+            button.dispatchEvent(new Event('blur'));
+            (new RenderQueue()).flush();
           });
 
           it('no longer has focus', () => {

@@ -54,7 +54,9 @@
     "nyc": "^10.1.2",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
+    "raf-stub": "^2.0.0",
     "react-dom": "^15.4.1",
+    "sinon-chai": "^2.8.0",
     "web-component-tester": "4.2.2",
     "web-component-tester-istanbul": "^0.10.0"
   }

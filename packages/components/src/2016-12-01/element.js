@@ -17,6 +17,7 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 require('../../vendor/object-entries-shim.js');
 require('../utils/inject-styles.js');
+const RenderQueue = require('../utils/render-queue.js');
 const Registry = require('../utils/private-registry.js');
 const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, ResetFocusStyle, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
 
@@ -37,21 +38,14 @@ class Element extends HTMLElement {
     super();
     this.state = {};
     this.viewState = {};
+    this._queueRender();
   }
 
   _queueRender() {
-    if (this._renderQueued) {
-      return;
-    }
-
-    this._renderQueued = true;
-    requestAnimationFrame(() => {
-      this._renderQueued = false;
-      this._render();
-    });
+    (new RenderQueue()).add(this);
   }
 
-  _render() {
+  render() {
     this._updateClassName();
   }
 

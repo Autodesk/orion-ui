@@ -43,7 +43,7 @@ limitations under the License.
         list = fixture('list');
         list.itemTagname = 'span';
         list.items = options;
-        list._render();
+        list.render();
       });
 
       it('renders each item', () => {
@@ -55,7 +55,7 @@ limitations under the License.
       context('adding an item', () => {
         beforeEach(() => {
           list.items = options.concat([{ textContent: 'Bax' }]);
-          list._render();
+          list.render();
         });
 
         it('adds the item to the dom', () => {
@@ -69,7 +69,7 @@ limitations under the License.
             item.textContent = item.textContent + 'bi';
             return item;
           });
-          list._render();
+          list.render();
         });
 
         it('updates item in the dom', () => {
@@ -87,7 +87,7 @@ limitations under the License.
             { textContent: 'Foo', key: 1 },
             { textContent: 'Bar', key: 2 },
           ]
-          list._render();
+          list.render();
         });
 
         it('renders items in new order', () => {
@@ -101,7 +101,7 @@ limitations under the License.
       context('removing an item', () => {
         beforeEach(() => {
           list.items = options.slice(1, 3);
-          list._render();
+          list.render();
         });
 
         it('removes the item from the dom', () => {

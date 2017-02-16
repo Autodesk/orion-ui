@@ -120,7 +120,9 @@ class SelectMenu extends Element {
         width: this.MENU_WIDTH,
       });
 
-      this.appendChild(this.list);
+      if (!this.contains(this.list)) {
+        this.appendChild(this.list);
+      }
     } else {
       this._removeList();
     }

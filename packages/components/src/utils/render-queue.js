@@ -30,16 +30,16 @@ class RenderQueue {
 
   add(element) {
     this.queue.add(element);
-    if (this.renderQueued) { return; }
+    if (this._renderQueued) { return; }
 
-    this.renderQueued = true;
+    this._renderQueued = true;
     requestAnimationFrame(this.flush);
   }
 
   flush() {
     const elements = new Set(this.queue);
     this.queue.clear();
-    this.renderQueued = false;
+    this._renderQueued = false;
 
     elements.forEach((element) => {
       element.render(); // eslint-disable-line no-underscore-dangle

@@ -26,7 +26,7 @@ class SelectMenu extends Element {
   constructor() {
     super();
 
-    this.MENU_WIDTH = '160px';
+    this.MENU_MIN_WIDTH = '100px';
     this.OPTION_HEIGHT = 26;
     this.MAX_OPTIONS_VISIBLE = 6;
 
@@ -117,7 +117,7 @@ class SelectMenu extends Element {
       });
 
       applyProps(this.list.style, {
-        width: this.MENU_WIDTH,
+        minWidth: this.MENU_MIN_WIDTH,
       });
 
       if (!this.contains(this.list)) {

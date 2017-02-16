@@ -182,6 +182,25 @@ describe('SelectState', () => {
         expect(nextState.focusedIndex).to.eq(0);
       });
     });
+
+    context('with a disabled option', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 2,
+          options: [
+            { label: 'Red', value: '#F00' },
+            { label: 'Green', value: '#0F0', disabled: true },
+            { label: 'Blue', value: '#00F' },
+          ],
+        };
+        nextState = SelectState.focusPrevious(state);
+      });
+
+      it('skips it', () => {
+        expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
   });
 
   describe('focusNext', () => {

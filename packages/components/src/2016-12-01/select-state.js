@@ -66,8 +66,9 @@ const SelectState = {
 
   focusPrevious(state) {
     if (!state.open) { return this.activated(state); }
+    if (state.focusedIndex === undefined) { return this._firstFocusableIndex(state.options); }
 
-    const prevIndex = this._nextFocusableIndex(
+    const focusedIndex = this._nextFocusableIndex(
       state.focusedIndex,
       state.options,
       (index, options) => {
@@ -77,59 +78,46 @@ const SelectState = {
       },
     );
 
-    return { ...state, focusedIndex: prevIndex };
-  },
-
-  _nextFocusableIndex(focusedIndex, options, findNextIndex) {
-    if (focusedIndex === undefined) {
-      return this._firstFocusableIndex(options);
-    }
-
-    const focusableOptions = options.filter(option => !option.disabled);
-    let focusableIndex = this._correspondingIndex(focusedIndex, options, focusableOptions);
-
-    if (focusableIndex < 0) {
-      return this._firstFocusableIndex(options);
-    }
-
-    focusableIndex = findNextIndex(focusableIndex, focusableOptions);
-
-    const nextIndex = this._correspondingIndex(
-      focusableIndex,
-      focusableOptions,
-      options,
-    );
-
-    return nextIndex;
-  },
-
-  _correspondingIndex(firstIndex, firstArray, correspondingArray) {
-    const item = firstArray[firstIndex];
-    return correspondingArray.indexOf(item);
-  },
-
-  _firstFocusableIndex(options) {
-    const firstfocusableOption = options.find(option => !option.disabled);
-    return options.indexOf(firstfocusableOption);
+    return {
+      ...state,
+      focusedIndex,
+    };
   },
 
   focusNext(state) {
     if (!state.open) { return this.activated(state); }
+    if (state.focusedIndex === undefined) { return this._firstFocusableIndex(state.options); }
 
-    let focusedIndex = state.focusedIndex;
-    if (focusedIndex === undefined) {
-      focusedIndex = 0;
-    } else {
-      focusedIndex = state.focusedIndex + 1;
-      if (focusedIndex > state.options.length - 1) {
-        focusedIndex = 0;
-      }
-    }
+    const focusedIndex = this._nextFocusableIndex(
+      state.focusedIndex,
+      state.options,
+      (index, options) => {
+        index += 1;
+        if (index > options.length - 1) {
+          index = 0;
+        }
+        return index;
+      },
+    );
 
     return {
       ...state,
       focusedIndex,
     };
+  },
+
+  _nextFocusableIndex(initialIndex, options, step) {
+    let index = initialIndex;
+    for (let i = 0; i < options.length; i += 1) {
+      index = step(index, options);
+      if (!options[index].disabled) { return index; }
+    }
+    return 0;
+  },
+
+  _firstFocusableIndex(options) {
+    const firstfocusableOption = options.find(option => !option.disabled);
+    return options.indexOf(firstfocusableOption);
   },
 
   focus(state) {

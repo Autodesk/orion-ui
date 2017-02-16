@@ -67,20 +67,50 @@ const SelectState = {
   focusPrevious(state) {
     if (!state.open) { return this.activated(state); }
 
-    let focusedIndex = state.focusedIndex;
+    const prevIndex = this._nextFocusableIndex(
+      state.focusedIndex,
+      state.options,
+      (index, options) => {
+        index -= 1;
+        if (index < 0) { index = options.length - 1; }
+        return index;
+      },
+    );
+
+    return { ...state, focusedIndex: prevIndex };
+  },
+
+  _nextFocusableIndex(focusedIndex, options, findNextIndex) {
     if (focusedIndex === undefined) {
-      focusedIndex = 0;
-    } else {
-      focusedIndex = state.focusedIndex - 1;
-      if (focusedIndex < 0) {
-        focusedIndex = state.options.length - 1;
-      }
+      return this._firstFocusableIndex(options);
     }
 
-    return {
-      ...state,
-      focusedIndex,
-    };
+    const focusableOptions = options.filter(option => !option.disabled);
+    let focusableIndex = this._correspondingIndex(focusedIndex, options, focusableOptions);
+
+    if (focusableIndex < 0) {
+      return this._firstFocusableIndex(options);
+    }
+
+    focusableIndex = findNextIndex(focusableIndex, focusableOptions);
+
+    const nextIndex = this._correspondingIndex(
+      focusableIndex,
+      focusableOptions,
+      options,
+    );
+
+    return nextIndex;
+  },
+
+  _correspondingIndex(firstIndex, firstArray, correspondingArray) {
+    const item = firstArray[firstIndex];
+    return correspondingArray.indexOf(item);
+  },
+
+  _firstFocusableIndex(options) {
+    const firstfocusableOption = options.find(option => !option.disabled);
+    return options.indexOf(firstfocusableOption);
   },
 
   focusNext(state) {

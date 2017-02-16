@@ -31,7 +31,10 @@ const SelectState = {
 
   activated(state) {
     let focusedIndex = state.selectedIndex;
-    if (focusedIndex === undefined) { focusedIndex = 0; }
+    if (focusedIndex === undefined) {
+      focusedIndex = this._firstFocusableIndex(state.options);
+    }
+
     return {
       ...state,
       focusedIndex,
@@ -40,6 +43,11 @@ const SelectState = {
   },
 
   optionFocused(state, focusedIndex) {
+    const focusedOption = state.options[focusedIndex];
+    if (focusedOption.disabled) {
+      focusedIndex = undefined;
+    }
+
     return {
       ...state,
       focusedIndex,
@@ -116,6 +124,7 @@ const SelectState = {
   },
 
   _firstFocusableIndex(options) {
+    if (options === undefined) { options = []; }
     const firstfocusableOption = options.find(option => !option.disabled);
     return options.indexOf(firstfocusableOption);
   },

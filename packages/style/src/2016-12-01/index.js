@@ -24,6 +24,7 @@ const Position = require('../position.js');
 const ResetFocusStyle = require('../reset-focus-style.js');
 const Skins = require('../skins.js');
 const Spacing = require('../spacing.js');
+const Typography = require('../typography.js');
 
 module.exports = {
   BorderRadius,
@@ -36,4 +37,5 @@ module.exports = {
   ResetFocusStyle,
   Skins,
   Spacing,
+  Typography,
 };

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, Position, ResetFocusStyle, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
+const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, Position, ResetFocusStyle, Skins, Spacing, Typography } = require('@orion-ui/style/lib/2016-12-01');
 
 (function injectStyles() {
   if (!document) {
@@ -38,6 +38,7 @@ const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, Position,
     ResetFocusStyle,
     Skins,
     Spacing,
+    Typography,
   ];
 
   let textContent = '';

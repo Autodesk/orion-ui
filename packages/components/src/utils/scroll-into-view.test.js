@@ -19,7 +19,7 @@ const chai = require('chai');
 
 const expect = chai.expect;
 
-describe.only('Utils.scrollIntoView', () => {
+describe('Utils.scrollIntoView', () => {
   let element;
 
   context('when the child is fully in view', () => {

@@ -24,7 +24,11 @@ const ButtonState = require('./button-state.js');
 class SelectOption extends Element {
   constructor() {
     super();
-    this.display = 'block';
+
+    applyProps(this, {
+      display: 'block',
+      'text-align': 'left',
+    });
   }
 
   set label(newValue) {

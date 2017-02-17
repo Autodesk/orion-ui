@@ -28,6 +28,7 @@ import someSearchResults from './select/some-search-results';
 import clearable from './select/clearable';
 import interactive from './select/interactive';
 import kitchenSink from './select/kitchen-sink';
+import scrolling from './select/scrolling';
 
 storiesOf('Select', module)
   .add('collapsed', collapsed)
@@ -41,4 +42,5 @@ storiesOf('Select', module)
   .add('some search results', someSearchResults)
   .add('clearable', clearable)
   .add('interactive', interactive)
-  .add('kitchen sink', kitchenSink);
+  .add('kitchen sink', kitchenSink)
+  .add('scrolling', scrolling);

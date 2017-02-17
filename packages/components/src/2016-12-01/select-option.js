@@ -17,10 +17,20 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
+const scrollIntoView = require('../utils/scroll-into-view');
 const Element = require('./element.js');
 const ButtonState = require('./button-state.js');
 
 class SelectOption extends Element {
+  constructor() {
+    super();
+
+    applyProps(this, {
+      display: 'block',
+      'text-align': 'left',
+    });
+  }
+
   set label(newValue) {
     this.state.label = newValue;
     this._queueRender();
@@ -116,6 +126,7 @@ class SelectOption extends Element {
       let styles;
       if (this.state.hasFocus) {
         styles = { background: 'blue', color: 'white' };
+        scrollIntoView(this);
       } else {
         styles = { background: 'white', color: 'black' };
       }

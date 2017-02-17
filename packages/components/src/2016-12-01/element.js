@@ -19,7 +19,7 @@ require('../../vendor/object-entries-shim.js');
 require('../utils/inject-styles.js');
 const RenderQueue = require('../utils/render-queue.js');
 const Registry = require('../utils/private-registry.js');
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Position, ResetFocusStyle, Skins, Spacing } = require('@orion-ui/style/lib/2016-12-01');
+const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, Position, ResetFocusStyle, Skins, Spacing, Typography } = require('@orion-ui/style/lib/2016-12-01');
 
 const styles = [
   BorderRadius,
@@ -27,10 +27,12 @@ const styles = [
   Container,
   Display,
   Hovers,
+  Overflow,
   Position,
   ResetFocusStyle,
   Skins,
   Spacing,
+  Typography,
 ];
 
 class Element extends HTMLElement {

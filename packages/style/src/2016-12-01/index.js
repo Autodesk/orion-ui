@@ -20,10 +20,12 @@ const BoxShadow = require('../box-shadow.js');
 const Container = require('../container.js');
 const Display = require('../display.js');
 const Hovers = require('../hovers.js');
+const Overflow = require('../overflow.js');
 const Position = require('../position.js');
 const ResetFocusStyle = require('../reset-focus-style.js');
 const Skins = require('../skins.js');
 const Spacing = require('../spacing.js');
+const Typography = require('../typography.js');
 
 module.exports = {
   Scale,
@@ -32,8 +34,10 @@ module.exports = {
   Container,
   Display,
   Hovers,
+  Overflow,
   Position,
   ResetFocusStyle,
   Skins,
   Spacing,
+  Typography,
 };

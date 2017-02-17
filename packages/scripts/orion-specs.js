@@ -29,6 +29,7 @@ program
   .description('runs specs for each package')
   .option('-s, --sauce', 'Run web component specs remotely on Sauce Labs')
   .option('-r, --report', 'Report coverage to codacy')
+  .option('-u, --unit-only', 'Run only unit specs')
   .parse(process.argv);
 
 /**
@@ -126,7 +127,11 @@ function reportToCodacy() {
  * Main program
  */
 runUnitSpecs();
-runComponentSpecs();
+
+if (!program.unitOnly) {
+  runComponentSpecs();
+}
+
 if (program.report) {
   reportToCodacy();
 }

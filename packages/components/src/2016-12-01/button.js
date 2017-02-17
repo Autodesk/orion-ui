@@ -178,7 +178,7 @@ class Button extends Element {
 
   render() {
     if (this.state.disabled) {
-      this.viewState.background = 'grey';
+      this.viewState.background = 'grey1';
       this.viewState.color = 'white';
     } else if (this.state.hover || this.state.hasFocus) {
       this.viewState.background = 'blue';

@@ -21,6 +21,7 @@ const css = `
 
   .dis-flx {
     display: flex;
+    justify-content: space-between;
   }
 
   .dis-inl {
@@ -30,10 +31,15 @@ const css = `
   .dis-inb {
     display: inline-block;
   }
+
+  .dis-none {
+    display: none;
+  }
 `;
 
 const attrMap = {
   display: {
+    none: 'dis-none',
     block: 'dis-blk',
     flex: 'dis-flx',
     inline: 'dis-inl',

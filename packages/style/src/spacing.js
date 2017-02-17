@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const scale = [
-  0, '.25rem', '.5rem', '1rem',
-  '2rem', '4rem', '8rem', '16rem',
-];
+const scale = require('./scale');
 
 const selectors = {
   pa: ['padding'],
@@ -62,6 +59,8 @@ const css = `
 const attributes = [
   'padding-horizontal',
   'padding-vertical',
+  'padding-bottom',
+  'padding-left',
 ];
 
 function attributeChangedCallback(attrName, value) {
@@ -70,6 +69,10 @@ function attributeChangedCallback(attrName, value) {
       return `ph${value}`;
     case 'padding-vertical':
       return `pv${value}`;
+    case 'padding-bottom':
+      return `pb${value}`;
+    case 'padding-left':
+      return `pl${value}`;
     default:
       throw new Error('unknown style');
   }

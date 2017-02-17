@@ -47,6 +47,18 @@ class Element extends HTMLElement {
     (new RenderQueue()).add(this);
   }
 
+  // _ensureElements([
+  //   ['header', 'orion-element'],
+  //   ['body', 'orion-element'],
+  // ]);
+  _ensureElements(propertyArray) {
+    propertyArray.forEach(([propertyName, tagName]) => {
+      if (this[propertyName] !== undefined) { return; }
+      this[propertyName] = document.createElement(tagName);
+      this.appendChild(this[propertyName]);
+    });
+  }
+
   render() {
     this._updateClassName();
   }

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+const Scale = require('../scale.js');
 const BorderRadius = require('../border-radius.js');
 const BoxShadow = require('../box-shadow.js');
 const Container = require('../container.js');
@@ -27,6 +28,7 @@ const Spacing = require('../spacing.js');
 const Typography = require('../typography.js');
 
 module.exports = {
+  Scale,
   BorderRadius,
   BoxShadow,
   Container,

@@ -7,6 +7,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "web-component-tester": "4.2.2",
-    "webcomponentsjs": "^0.7.23"
+    "webcomponentsjs": "^0.7.23",
+    "moment": "2.x"
   }
 }

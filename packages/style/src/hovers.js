@@ -31,10 +31,14 @@ const css = `
   .pointer:hover {
     cursor: pointer;
   }
+
+  .notallowed:hover {
+    cursor: not-allowed;
+  }
 `;
 
 const attributes = [
-  'dim', 'pointer',
+  'dim', 'pointer', 'notallowed',
 ];
 
 function attributeChangedCallback(attrName) {

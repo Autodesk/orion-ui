@@ -46,6 +46,11 @@ class SelectOption extends Element {
     this._queueRender();
   }
 
+  set disabled(newValue) {
+    this.state.disabled = newValue;
+    this._queueRender();
+  }
+
   set isSelected(newValue) {
     this.state.isSelected = newValue;
     this._queueRender();
@@ -107,7 +112,11 @@ class SelectOption extends Element {
     this.addEventListener('mouseup', this._emitSelectedEvent);
   }
 
-  _emitSelectedEvent() {
+  _emitSelectedEvent(event) {
+    if (this.state.disabled) {
+      event.preventDefault();
+      return;
+    }
     this.dispatchEvent(new CustomEvent('optionSelected', {
       detail: { selectedIndex: this.state.index },
       bubbles: true,
@@ -137,7 +146,10 @@ class SelectOption extends Element {
         this.checkMarkEl.textContent = '';
       }
 
-      applyProps(this.button, styles);
+      applyProps(this.button, {
+        ...styles,
+        disabled: this.state.disabled,
+      });
       this.labelEl.textContent = this.state.label;
     }
 

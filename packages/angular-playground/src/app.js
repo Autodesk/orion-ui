@@ -30,21 +30,23 @@ angular
     ];
 
     $scope.sizes = [
-      { label: 'Small', value: 'small', key: 1 },
+      { label: 'X-small', value: 'x-small', key: 0, disabled: true },
+      { label: 'Small', value: 'small', key: 1},
       { label: 'Medium', value: 'medium', key: 2 },
       { label: 'Large', value: 'large', key: 3 },
+      { label: 'X-Large', value: 'x-large', key: 4, disabled: true },
     ];
 
     $scope.buttonSize = 'medium';
+
+    $scope.disabled = false
 
     that.handleClick = () => {
       alert('button clicked!');
     }
 
     this.toggleDisability = () => {
-      $scope.buttons.forEach((button) => {
-        button.disabled = !button.disabled;
-      });
+      $scope.disabled= !$scope.disabled;
     }
 
     this.setSize = (event) => {

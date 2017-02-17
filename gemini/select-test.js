@@ -54,3 +54,17 @@ gemini.suite('scrolling-select', (suite) => {
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
+
+gemini.suite('disabled-select', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=disabled')
+    .setCaptureElements(".example")
+    .capture('disabled-select')
+});
+
+gemini.suite('disabled-option', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=disabled%20option')
+    .setCaptureElements(".example")
+    .capture('expanded-select')
+});

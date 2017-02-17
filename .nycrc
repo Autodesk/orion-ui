@@ -6,12 +6,19 @@
   ],
   "include": [
     "packages/angular/**/*.js",
+    "packages/components/**/*.js",
     "packages/react/**/*.js",
     "packages/scripts/**/*.js",
     "packages/style/**/*.js"
   ],
   "exclude": [
     "packages/**/*.test.js",
-    "packages/**/vendor/**/*.js"
+    "packages/**/vendor/**/*.js",
+    "packages/**/build/**/*.js",
+    "packages/**/lib/**/*.js",
+    "build/**/*.js",
+    "packages/package1/**.*js",
+    "packages/package2/**.*js",
+    "packages/package3/**.*js"
   ]
 }

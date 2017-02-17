@@ -26,6 +26,7 @@ const integration = `
     array=["item1", ["item2", "item3"], "item4"]
     object={"key": "value", "key2": ["value2"], "key3": { "key4": "value4"}}
     expression={hello()}>
+
     <!--take each item and convert it to a text item-->
     <map collection=["item1", "item2"] => item, index>
       <text size=1>{item} {index + 1}</text>
@@ -104,7 +105,7 @@ const expectedIntegration = [
   EOF(15, 1)
 ];
 
-deepEqual(actualIntegration, expectedIntegration);
+deepEqual(actualIntegration.tokens, expectedIntegration);
 
 /**
  * locations
@@ -964,22 +965,8 @@ try {
 
 
 /**
- * block-parameter-state
+ * block-parameter state
  */
-
-// ASCII letter appends character to current block parameter value
-{
-  const prev = initWorld();
-  prev.state = 'block-parameter';
-  prev.currentToken = startTag('a', { blockParameters: ['a'] });
-
-  const next = initWorld();
-  next.state = 'block-parameter';
-  next.currentToken = startTag('a', { blockParameters: ['ab'] });
-
-  deepEqual(getNextToken(prev, 'b'), next);
-}
-
 
 // , switches to before-block-parameter state
 {
@@ -1006,8 +993,21 @@ try {
   deepEqual(getNextToken(prev, '>'), next);
 }
 
+// If the character is a letter or digit append to current block param
+['b', '1'].forEach(char => {
+const prev = initWorld();
+  prev.state = 'block-parameter';
+  prev.currentToken = startTag('a', { blockParameters: ['a'] });
+
+  const next = initWorld();
+  next.state = 'block-parameter';
+  next.currentToken = startTag('a', { blockParameters: [`a${char}`] });
+
+  deepEqual(getNextToken(prev, char), next);
+});
+
 // anything else is a parse error
-['\t', ' ', '\n', '1', '<', '='].forEach(char => {
+['\t', ' ', '\n', '<', '='].forEach(char => {
   const prev = initWorld();
   prev.state = 'block-parameter';
 

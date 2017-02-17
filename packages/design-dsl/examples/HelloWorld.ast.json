@@ -1,0 +1,26 @@
+{
+  "type": "tag",
+  "name": "orion",
+  "attribs": {},
+  "blockParameters": [],
+  "children": [
+    {
+      "type": "tag",
+      "name": "component",
+      "attribs": {},
+      "blockParameters": ["name"],
+      "children": [
+        {
+          "type": "tag",
+          "name": "text",
+          "attribs": {
+            "size": 3,
+            "content": "Hello, {name}"
+          },
+          "blockParameters": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

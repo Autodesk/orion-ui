@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { ES2015_IDENTIFIER } from './utils/es6-identifier-regex';
+// import { ES2015_IDENTIFIER } from './utils/es6-identifier-regex';
 
 export type Attribute = Binding | JSObject | Lambda;
 export const WHITESPACE = /\s/;
@@ -543,7 +543,7 @@ export function parse(source: string): ASTNode {
   }
 
   function saveLambdaBinding(): void {
-    if (env.lambdaBindingBuffer.match(ES2015_IDENTIFIER)) {
+    if (env.lambdaBindingBuffer.match(/foo/)) {
       if (env.currentScope.currentLambda) {
         env.currentScope.currentLambda.bindings.push(env.lambdaBindingBuffer);
       } else {

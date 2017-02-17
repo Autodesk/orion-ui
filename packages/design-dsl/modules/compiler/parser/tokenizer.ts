@@ -17,6 +17,7 @@ limitations under the License.
 const ASCII = /[a-zA-Z]/;
 const DIGIT = /[0-9]/;
 const WHITESPACE = /\s/;
+import { ES2015_IDENTIFIER } from './es6-identifier-regex';
 
 export const EOF_CHARACTER = '@@EOF@@';
 
@@ -1002,7 +1003,7 @@ function handleSelfClosingStartTag(char: string, world: World): Action[] {
 }
 
 function handleBeforeAttributeName(char: string, world: World): Action[] {
-  handleEOF(char, world );
+  handleEOF(char, world);
 
   if (char.match(WHITESPACE)) {
     return [];
@@ -1406,11 +1407,7 @@ function handleBeforeBlockParameter(char: string, world: World): Action[] {
 function handleBlockParameter(char: string, world: World): Action[] {
   handleEOF(char, world);
 
-  if (char.match(ASCII)) {
-    return [
-      { type: 'append-block-parameter', payload: char }
-    ]
-  } else if (char === ',') {
+  if (char === ',') {
     return [
       createTransition('before-block-parameter')
     ];
@@ -1418,6 +1415,10 @@ function handleBlockParameter(char: string, world: World): Action[] {
     return [
       createTransition('data'),
       { type: 'emit-current-token' }
+    ]
+  } else if (char.match(ASCII) || char.match(DIGIT)) {
+    return [
+      { type: 'append-block-parameter', payload: char }
     ]
   } else {
     throw unknownCharacter(world);

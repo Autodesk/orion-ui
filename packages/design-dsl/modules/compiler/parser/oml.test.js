@@ -1,6 +1,7 @@
 require('shelljs/global');
 
 const path = require('path');
+const fs = require('fs');
 const { expect } = require('chai');
 
 const compiler = `./node_modules/.bin/nearleyc`;
@@ -15,7 +16,7 @@ if (stderr) {
   process.exit(1);
 }
 
-const { getTokens } = require('../../../2017-02-06/parser/tokenizer');
+const { getTokens } = require('../../../2017-02-06/compiler/parser/tokenizer');
 
 var grammar = require("./oml.js");
 var nearley = require("nearley");
@@ -30,6 +31,11 @@ function parse(source) {
 
 it('parses a single basic tag', () => {
   const ast = parse('<o></o>');
+  expect(ast.type).to.equal('tag');
+});
+
+it('parses a single self-closing tag', () => {
+  const ast = parse('<o />');
   expect(ast.type).to.equal('tag');
 });
 
@@ -158,6 +164,13 @@ describe('double quoted string attribute', () => {
   });
 });
 
+describe('block parameters', () => {
+  it('supports block parameters', () => {
+    const ast = parse(`<a => param1, param2></a>`);
+    expect(ast.blockParameters).to.eql(['param1', 'param2']);
+  });
+});
+
 describe('children', () => {
   it('supports a single child element', () => {
     const ast = parse(`<a><b></b></a>`)
@@ -205,5 +218,16 @@ describe('children', () => {
   it('supports three levels of nesting with whitespace', () => {
     const ast = parse('<o>           <c> <t> </t> </c> </o>');
     expect(ast.children[0].children[0].name).to.equal('t');
+  });
+});
+
+describe('hello world', () => {
+  it('parses the expected tree', () => {
+    const source = fs.readFileSync(path.join(__dirname, '../../../examples/HelloWorld.oml')).toString();
+    const ast = parse(source);
+
+    const expected = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../examples/HelloWorld.ast.json')));
+
+    expect(ast).to.eql(expected);
   });
 });

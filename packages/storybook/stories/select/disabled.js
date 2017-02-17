@@ -18,12 +18,18 @@ limitations under the License.
 import React from 'react';
 import { boolean } from '@kadira/storybook-addon-knobs';
 
+import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function disabled() {
   const props = {
     disabled: boolean('Disabled', true),
   };
+
+  const options = [
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 },
+  ]
 
   const react = `
 import React from 'react';
@@ -70,7 +76,7 @@ angular.module('app', [])
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>TODO</span>
+      <Select options={options} open={props.open} disabled={props.disabled} />
     </WithSource>
   );
 }

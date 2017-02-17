@@ -41,8 +41,8 @@ const attributes = [
   'dim', 'pointer', 'notallowed',
 ];
 
-function attributeChangedCallback(attrName) {
-  return attrName;
+function attributeChangedCallback(attrName, value) {
+  return value ? attrName : undefined;
 }
 
 module.exports = {

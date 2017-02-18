@@ -61,11 +61,17 @@ class Datepicker extends Element {
     this.state.focus = val;
 
     if (val) {
-      this.state.focusDate = moment();
+      if (!this.state.focusDate) {
+        this.state.focusDate = moment();
+      }
       this.calendar.focusDate = this.state.focusDate;
     }
 
     this._queueRender();
+  }
+
+  get focusDate() {
+    return this.state.focusDate;
   }
 
   set focusDate(val) {
@@ -76,6 +82,27 @@ class Datepicker extends Element {
   set date(val) {
     this.state.date = val;
     this._queueRender();
+  }
+
+  get currentDate() {
+    return this.state.currentDate;
+  }
+
+  set currentDate(val) {
+    this.state.currentDate = val;
+    this._queueRender();
+  }
+
+  get monthFormat() {
+    return this.state.monthFormat;
+  }
+
+  get formattedDate() {
+    if (this.state.date && this.state.displayFormat) {
+      return this.state.date.format(this.state.displayFormat);
+    }
+
+    return '';
   }
 
   _handleKeydown(event) {
@@ -149,17 +176,13 @@ class Datepicker extends Element {
     this._ensureInput();
     this._ensureCalendar();
 
-    if (this.state.date && this.state.displayFormat) {
-      const formattedDate = this.state.date.format(this.state.displayFormat);
-      applyProps(this.dateInput, {
-        value: formattedDate,
-      });
-    }
+    applyProps(this.dateInput, { value: this.formattedDate });
 
     applyProps(this.calendar, {
       display: this.state.focus ? 'block' : 'none',
-      focusDate: this.state.focusDate,
-      monthFormat: this.state.monthFormat,
+      focusDate: this.focusDate,
+      monthFormat: this.monthFormat,
+      currentDate: this.currentDate,
     });
 
     super.render();

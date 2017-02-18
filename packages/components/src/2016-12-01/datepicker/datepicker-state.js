@@ -28,6 +28,7 @@ const DatepickerState = {
       date: null,
       clearable: false,
       focusDate: null,
+      currentDate: moment(),
       displayFormat: 'MM-DD-YYYY',
       monthFormat: 'MMMM YYYY',
       i18n: {
@@ -36,7 +37,7 @@ const DatepickerState = {
         clearDate: 'Clear Date',
       },
       isEnabled: (date) => {
-        return date.isAfter(moment());
+        return date.isAfter(this.currentDate);
       },
       ...state,
     };
@@ -51,16 +52,19 @@ const DatepickerState = {
   },
 
   enterFocused(state) {
-    const today = moment();
-    return { ...state, focus: true, focusDate: today };
+    return { ...state, focus: true, focusDate: state.currentDate };
   },
 
   leaveFocused(state) {
     return { ...state, focus: false, focusDate: null };
   },
 
-  dateSelected(state, selectedDate) {
-    return { ...state, date: selectedDate };
+  dateSelected(state, date) {
+    return { ...state, date };
+  },
+
+  setCurrentDate(state, currentDate) {
+    return { ...state, currentDate };
   },
 };
 

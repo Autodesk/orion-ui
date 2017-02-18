@@ -16,8 +16,6 @@ limitations under the License.
 
 */
 
-import moment from 'moment';
-
 require('../../../vendor/es5-custom-element-shim');
 
 const Element = require('../element');
@@ -49,9 +47,14 @@ class CalendarDay extends Element {
     this._queueRender();
   }
 
+  set currentDate(val) {
+    this.state.currentDate = val;
+    this._queueRender();
+  }
+
   isCurrentDay() {
-    if (!this.state.date) { return false; }
-    const today = moment();
+    if (!this.state.date || !this.state.currentDate) { return false; }
+    const today = this.state.currentDate;
     const day = this.state.date;
     return day.year() === today.year() &&
            day.month() === today.month() &&
@@ -63,7 +66,7 @@ class CalendarDay extends Element {
       return 'current';
     }
 
-    if (this.state.date.isBefore(this.state.focusDate)) {
+    if (this.state.date.isBefore(this.state.currentDate)) {
       return 'past';
     }
 
@@ -102,7 +105,7 @@ class CalendarDay extends Element {
   }
 
   render() {
-    if (this.state.date && this.state.focusDate) {
+    if (this.state.date && this.state.focusDate && this.state.currentDate) {
       this.textContent = this.dayNumber;
 
       switch (this.kind) {

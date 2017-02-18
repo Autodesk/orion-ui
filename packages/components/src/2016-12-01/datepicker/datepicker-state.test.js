@@ -38,6 +38,10 @@ describe('DatepickerState', () => {
       expect(initialState.i18n.previousMonth).to.equal('Previous Month');
       expect(initialState.i18n.nextMonth).to.equal('Next Month');
       expect(initialState.i18n.clearDate).to.equal('Clear Date');
+
+      expect(initialState.currentDate.year()).to.equal(moment().year());
+      expect(initialState.currentDate.month()).to.equal(moment().month());
+      expect(initialState.currentDate.date()).to.equal(moment().date());
     });
 
     context('with a state', () => {
@@ -94,9 +98,10 @@ describe('DatepickerState', () => {
     });
 
     it('sets the focusDate to today', () => {
-      const today = moment().toISOString;
-      const nextState = DatepickerState.enterFocused({ focusDate: null });
-      expect(nextState.focusDate.toISOString).to.equal(today);
+      const today = moment();
+      const todayStr = today.toISOString();
+      const nextState = DatepickerState.enterFocused({ currentDate: today, focusDate: null });
+      expect(nextState.focusDate.toISOString()).to.equal(todayStr);
     });
   });
 
@@ -110,6 +115,28 @@ describe('DatepickerState', () => {
       const today = moment();
       const nextState = DatepickerState.leaveFocused({ focusDate: today });
       expect(nextState.focusDate).to.be.null;
+    });
+  });
+
+  describe('setCurrentDate', () => {
+    let state;
+    let nextState;
+    let setDate;
+
+    beforeEach(() => {
+      setDate = moment().set({
+        year: 2015,
+        month: 0,
+        date: 10,
+      });
+      state = { currentDate: moment() };
+      nextState = DatepickerState.setCurrentDate(state, setDate);
+    });
+
+    it('sets the date to the given date', () => {
+      expect(nextState.currentDate.year()).to.equal(2015);
+      expect(nextState.currentDate.month()).to.equal(0);
+      expect(nextState.currentDate.date()).to.equal(10);
     });
   });
 });

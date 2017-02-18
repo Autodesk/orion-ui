@@ -16,9 +16,10 @@
     "packages/**/vendor/**/*.js",
     "packages/**/build/**/*.js",
     "packages/**/lib/**/*.js",
-    "build/**/*.js",
-    "packages/package1/**.*js",
-    "packages/package2/**.*js",
-    "packages/package3/**.*js"
+    "build",
+    "packages/package1",
+    "packages/package2",
+    "packages/package3",
+    "packages/test"
   ]
 }

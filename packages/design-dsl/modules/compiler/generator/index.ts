@@ -1,4 +1,4 @@
-import { Node, IVisitor, IOutput, Attribute } from '../types';
+import { Node, IVisitor, IOutput } from '../types';
 
 import OrionVisitor from './visitors/orion';
 import ComponentVisitor from './visitors/component';
@@ -200,12 +200,12 @@ class Output implements IOutput {
       throw new Error('no current node');
     }
 
-    const count = this._incCounterForTag(this._currentNode.tagName);
+    const count = this._incCounterForTag(this._currentNode.name);
 
     // avoid using 0 as suffix for vanity
     let suffix = (count == 0) ? '' : count;
 
-    return `${this._currentNode.tagName}${suffix}`;
+    return `${this._currentNode.name}${suffix}`;
   }
 
   /**
@@ -232,40 +232,34 @@ class Output implements IOutput {
       return {};
     }
 
-    if (!this._currentNode.attributes) {
+    if (!this._currentNode.attribs) {
       return {};
     }
 
-    const tagName = this._currentNode.tagName;
+    const tagName = this._currentNode.name;
+    const attribs = this._currentNode.attribs;
 
-    return this._currentNode.attributes
+    return Object.keys(attribs)
       // go through each attribute and convert JSON strings to JavaScript objects
       // flatten attributes array into a single keyed object
-      .reduce((acc: any, memo: Attribute) => {
-        if (memo.type === 'json') {
-          const name = memo.name;
-          const value = JSON.parse(memo.value);
+      .reduce((acc: any, name: string) => {
+        const value = attribs[name];
 
-
-          // Atom's take priority...
-
-          const validation = this._atomRegistry.validate(tagName, name, value);
-
-          if (!validation.isAtomicAttribute) {
-            acc[name] = value;
-          } else if (validation.isAtomicAttribute && !validation.isElementAllowedAttribute) {
-            console.error(`${tagName} is not allowed to use ${name}. Ignoring`);
-          } else if (validation.isValidAtomValue) {
-            acc[name] = value;
-          } else {
-            if (!validation.validValues) {
-              console.error(`${value} is not a valid value for ${name}`);
-            } else {
-              console.error(`${value} is not a valid value for ${name}. Valid values: ${validation.validValues.join(', ')}`)
-            }
-          }
+        // TODO - move to validation
+        // Atom's take priority...
+        const validation = this._atomRegistry.validate(tagName, name, value);
+        if (!validation.isAtomicAttribute) {
+          acc[name] = value;
+        } else if (validation.isAtomicAttribute && !validation.isElementAllowedAttribute) {
+          console.error(`${tagName} is not allowed to use ${name}. Ignoring`);
+        } else if (validation.isValidAtomValue) {
+          acc[name] = value;
         } else {
-          throw new Error('unknown attribute type');
+          if (!validation.validValues) {
+            console.error(`${value} is not a valid value for ${name}`);
+          } else {
+            console.error(`${value} is not a valid value for ${name}. Valid values: ${validation.validValues.join(', ')}`)
+          }
         }
 
         return acc;
@@ -290,10 +284,10 @@ export default class Generator {
       output.setDepth(depth);
       output.setCurrentNode(node);
 
-      const visitor = visitors.find(visitor => visitor.tagName === node.tagName);
+      const visitor = visitors.find(visitor => visitor.tagName === node.name);
 
       if (!visitor) {
-        throw new Error(`could not parse ${node.tagName}`);
+        throw new Error(`could not parse ${node.name}`);
       }
 
       visitor.visit(output);

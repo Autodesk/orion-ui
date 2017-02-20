@@ -1,25 +1,19 @@
-import {Node} from '../types';
+import * as assert from 'assert';
+import * as nearley from 'nearley';
+
+import { getTokens } from './tokenizer';
+import { Node } from '../types';
+import * as grammar from './oml';
 
 export default class Parser {
   parse(source: string): Node {
-    return {
-        tagName: 'orion',
-        attributes: [],
-        children: [
-          {
-            tagName: 'component',
-            blockParameters: ['name'],
-            children: [
-              {
-                tagName: 'text',
-                attributes: [
-                  { type: 'json', name: 'fontSize', value: '"s"' },
-                  { type: 'json', name: 'content', value: '"Hello, {name}"' }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+    const p = new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
+    const { tokens } = getTokens(source);
+
+    p.feed(tokens);
+
+    assert.equal(p.results.length, 1);
+
+    return p.results[0];
   }
 }

@@ -1,15 +1,12 @@
 
 export interface Node {
-  tagName: string;
-  blockParameters?: string[];
-  attributes?: Attribute[];
-  children?: Node[];
-}
-
-export interface Attribute {
-  type: 'json';
+  type: 'tag',
   name: string;
-  value: string;
+  blockParameters?: string[];
+  attribs?: {
+    [key: string]: any;
+  }
+  children?: Node[];
 }
 
 export interface IVisitor {

@@ -2,27 +2,27 @@
   "elements": {
     "text": {
       "attributes": [
-        "fontFamily",
-        "fontWeight",
-        "fontColor",
+        "font-family",
+        "font-weight",
+        "font-color",
         "opacity",
-        "fontDecoration",
-        "fontSize",
-        "lineHeight"
+        "font-decoration",
+        "font-size",
+        "line-height"
       ]
     }
   },
   "byAttribute": {
-    "fontFamily": {
+    "font-family": {
       "default": "'ArtifaktElement', Arial, sans-serif'",
       "heading": "'ArtifaktLegend', Verdana, sans-serif'"
     },
-    "fontWeight": {
+    "font-weight": {
       "default": 500,
       "light": 300,
       "bold": 600
     },
-    "fontColor": {
+    "font-color": {
       "default": "atom.color.base700",
       "link": "atom.color.blue500",
       "inverse": "atom.color.base100"
@@ -31,11 +31,11 @@
       "default": 1,
       "secondary": 0.6
     },
-    "fontDecoration": {
+    "font-decoration": {
       "default": "none",
       "link": "underline"
     },
-    "fontSize": {
+    "font-size": {
       "s": "0.6875rem",
       "m": "0.875rem",
       "l": "1.0rem",
@@ -43,7 +43,7 @@
       "xxl": "1.625rem",
       "xxxl": "2.125rem"
     },
-    "lineHeight": {
+    "line-height": {
       "xs": "0.875rem",
       "s": "1.0rem",
       "m": "1.25rem",

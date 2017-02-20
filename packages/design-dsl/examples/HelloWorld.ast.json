@@ -14,7 +14,7 @@
           "type": "tag",
           "name": "text",
           "attribs": {
-            "size": 3,
+            "font-size": "s",
             "content": "Hello, {name}"
           },
           "blockParameters": [],

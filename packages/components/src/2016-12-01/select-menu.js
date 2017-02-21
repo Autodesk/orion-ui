@@ -84,6 +84,7 @@ class SelectMenu extends Element {
       container: 'column',
       'box-shadow': 1,
       'overflow-y': 'auto',
+      position: 'absolute',
     });
     this.list.style.maxHeight = `${this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE}px`;
   }
@@ -113,7 +114,6 @@ class SelectMenu extends Element {
 
       applyProps(this.list, {
         items: options,
-        position: 'absolute',
       });
 
       applyProps(this.list.style, {

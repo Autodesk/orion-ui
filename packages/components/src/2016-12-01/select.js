@@ -29,10 +29,12 @@ class Select extends Element {
     super();
 
     this.BUTTON_HEIGHT = 35;
+    this.Z_INDEX = 1000;
 
     this.state = SelectState.getInitialState();
     this.state.options = [];
     this.display = 'inline-block';
+    this.position = 'relative';
 
     ['_resetButtonListeners', '_listenForMouseUp', '_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
@@ -195,6 +197,10 @@ class Select extends Element {
   render() {
     this._ensureButton();
     this._ensureMenu();
+
+    applyProps(this.style, {
+      zIndex: this.Z_INDEX,
+    });
 
     applyProps(this.menu, {
       open: this.state.open,

@@ -24,6 +24,7 @@ class RenderQueue {
 
     this.queue = new Set();
     this.flush = this.flush.bind(this);
+    this.clearQueue = this.clearQueue.bind(this);
 
     return instance;
   }
@@ -33,7 +34,7 @@ class RenderQueue {
     if (this._renderQueued) { return; }
 
     this._renderQueued = true;
-    requestAnimationFrame(this.flush);
+    requestAnimationFrame(this.clearQueue);
   }
 
   flush() {
@@ -45,6 +46,17 @@ class RenderQueue {
       element.render(); // eslint-disable-line no-underscore-dangle
     });
   }
+
+  clearQueue() {
+    while (this.queue.size > 0) {
+      this.flush();
+    }
+  }
+}
+
+// The code below is necessary to have RenderQueue defined in the broweser
+if (typeof window !== 'undefined') {
+  window.RenderQueue = RenderQueue;
 }
 
 module.exports = RenderQueue;

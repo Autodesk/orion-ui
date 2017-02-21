@@ -24,7 +24,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      disabled: true,
+      disabled: false,
       selectedIndex: undefined,
     };
 

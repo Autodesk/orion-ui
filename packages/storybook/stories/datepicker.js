@@ -105,9 +105,12 @@ angular.module('app', [DatePicker.module])
   </body>
 </html>
         `;
+
+    const staticDate = moment().set({ year: 2015, month: 0, date: 14 });
+
     return (
       <WithSource react={react} angular={angular}>
-        <Datepicker date={moment()} />
+        <Datepicker date={staticDate} currentDate={staticDate} />
       </WithSource>
     );
   })
@@ -245,9 +248,11 @@ angular.module('app', [DatePicker.module])
   </body>
 </html>`;
 
+    const staticDate = moment().set({ year: 2015, month: 0, date: 14 });
+
     return (
       <WithSource react={react} angular={angular}>
-        <Datepicker focus={props.focus} />
+        <Datepicker focusDate={staticDate} focus={props.focus} currentDate={staticDate} />
       </WithSource>
     );
   })

@@ -72,9 +72,15 @@ class DatepickerCalendar extends Element {
 
   set focusDate(val) {
     if (this._monthChanged(val)) {
-      this._weeksRenderQueued = true;
+      this._queueWeeksRender = true;
     }
     this.state.focusDate = val;
+    this._queueRender();
+  }
+
+  set currentDate(val) {
+    this.state.currentDate = val;
+    this._queueWeeksRender = true;
     this._queueRender();
   }
 
@@ -117,11 +123,12 @@ class DatepickerCalendar extends Element {
   }
 
   _renderWeeks() {
-    if (!this.state.focusDate) { return; }
+    if (!this.state.focusDate || !this.state.currentDate) { return; }
 
     this.style.opacity = '0';
 
     const focusDate = this.state.focusDate;
+    const currentDate = this.state.currentDate;
 
     this._renderWeeksHeader();
 
@@ -135,13 +142,13 @@ class DatepickerCalendar extends Element {
     let weekIdx = 0;
 
     // Always render first week
-    this._renderWeek(focusDate, firstDayOfWeek);
+    this._renderWeek(currentDate, focusDate, firstDayOfWeek);
     firstDayOfWeek = firstDayOfWeek.add(1, 'week');
 
     // Keep rendering until we end up outside the displayed month
     while (firstDayOfWeek.month() === month) {
       const even = (weekIdx % 2 === 0);
-      lastCreatedWeek = this._renderWeek(focusDate, firstDayOfWeek, even);
+      lastCreatedWeek = this._renderWeek(currentDate, focusDate, firstDayOfWeek, even);
       firstDayOfWeek = firstDayOfWeek.add(1, 'week');
       weekIdx += 1;
     }
@@ -154,10 +161,10 @@ class DatepickerCalendar extends Element {
       this.style.opacity = '1';
     });
 
-    this._weeksRenderQueued = false;
+    this._queueWeeksRender = false;
   }
 
-  _renderWeek(focusDate, startDate, even) {
+  _renderWeek(currentDate, focusDate, startDate, even) {
     const week = document.createElement('orion-element');
 
     applyProps(week, {
@@ -173,7 +180,7 @@ class DatepickerCalendar extends Element {
       const date = moment(startDate).add(i, 'days');
       const dayEl = document.createElement('orion-calendar-day');
       lastCreatedDay = dayEl;
-      applyProps(dayEl, { date, focusDate });
+      applyProps(dayEl, { date, focusDate, currentDate });
       week.appendChild(dayEl);
     });
 
@@ -200,7 +207,7 @@ class DatepickerCalendar extends Element {
       display: 'block',
     });
 
-    if (this._weeksRenderQueued === true) {
+    if (this._queueWeeksRender === true) {
       this.weeks.innerHTML = '';
       this._renderWeeks();
     }

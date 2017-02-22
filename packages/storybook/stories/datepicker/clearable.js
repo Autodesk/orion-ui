@@ -66,5 +66,4 @@ angular.module('app', [DatePicker.module])
       <span>todo</span>
     </WithSource>
   );
-
 }

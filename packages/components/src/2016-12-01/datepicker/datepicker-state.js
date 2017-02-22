@@ -52,7 +52,11 @@ const DatepickerState = {
   },
 
   enterFocused(state) {
-    return { ...state, focus: true, focusDate: state.currentDate };
+    if (state.date) {
+      return { ...state, focus: true, focusDate: moment(state.date) };
+    }
+
+    return { ...state, focus: true, focusDate: moment(state.currentDate) };
   },
 
   leaveFocused(state) {
@@ -60,7 +64,7 @@ const DatepickerState = {
   },
 
   dateSelected(state, date) {
-    return { ...state, date };
+    return { ...state, date, focusDate: moment(date) };
   },
 
   dateCleared(state) {
@@ -68,7 +72,35 @@ const DatepickerState = {
   },
 
   setCurrentDate(state, currentDate) {
-    return { ...state, currentDate };
+    return { ...state, currentDate: moment(currentDate) };
+  },
+
+  focusNextDay(state) {
+    return {
+      ...state, focusDate: moment(state.focusDate).add(1, 'day'),
+    };
+  },
+
+  focusPreviousDay(state) {
+    return {
+      ...state, focusDate: moment(state.focusDate).subtract(1, 'day'),
+    };
+  },
+
+  focusNextWeek(state) {
+    return {
+      ...state, focusDate: moment(state.focusDate).add(1, 'week'),
+    };
+  },
+
+  focusPreviousWeek(state) {
+    return {
+      ...state, focusDate: moment(state.focusDate).subtract(1, 'week'),
+    };
+  },
+
+  selectFocusDate(state) {
+    return { ...state, date: moment(state.focusDate) };
   },
 };
 

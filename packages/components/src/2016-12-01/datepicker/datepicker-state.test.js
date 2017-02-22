@@ -97,11 +97,34 @@ describe('DatepickerState', () => {
       expect(nextState.focus).to.be.true;
     });
 
-    it('sets the focusDate to today', () => {
-      const today = moment();
-      const todayStr = today.toISOString();
-      const nextState = DatepickerState.enterFocused({ currentDate: today, focusDate: null });
-      expect(nextState.focusDate.toISOString()).to.equal(todayStr);
+    context('with no date selected', () => {
+      let today;
+      let todayStr;
+      let nextState;
+
+      beforeEach(() => {
+        today = moment();
+        todayStr = today.toISOString();
+        nextState = DatepickerState.enterFocused({ currentDate: today, focusDate: null });
+      });
+
+      it('sets the focusDate to today', () => {
+        expect(nextState.focusDate.isSame(todayStr, 'day')).to.be.true;
+      });
+    });
+
+    context('with date selected', () => {
+      let selectedDate;
+      let nextState;
+
+      beforeEach(() => {
+        selectedDate = moment().set({ year: 2020 });
+        nextState = DatepickerState.enterFocused({ date: selectedDate, focusDate: null });
+      });
+
+      it('sets the focusDate to the selected date', () => {
+        expect(nextState.focusDate.isSame(selectedDate, 'day')).to.be.true;
+      });
     });
   });
 
@@ -115,6 +138,22 @@ describe('DatepickerState', () => {
       const today = moment();
       const nextState = DatepickerState.leaveFocused({ focusDate: today });
       expect(nextState.focusDate).to.be.null;
+    });
+  });
+
+  describe('dateSelected', () => {
+    let nextState;
+    const selectedDate = moment('2017-02-02');
+    beforeEach(() => {
+      nextState = DatepickerState.dateSelected({}, selectedDate);
+    });
+
+    it('sets the selected date', () => {
+      expect(nextState.date.isSame(selectedDate, 'date')).to.be.true;
+    });
+
+    it('set the focusDate', () => {
+      expect(nextState.focusDate.isSame(selectedDate, 'date')).to.be.true;
     });
   });
 
@@ -137,6 +176,71 @@ describe('DatepickerState', () => {
       expect(nextState.currentDate.year()).to.equal(2015);
       expect(nextState.currentDate.month()).to.equal(0);
       expect(nextState.currentDate.date()).to.equal(10);
+    });
+  });
+
+  describe('focusNextDay', () => {
+    const focusDate = moment().add(1, 'month');
+    let nextState;
+
+    beforeEach(() => {
+      nextState = DatepickerState.focusNextDay({ focusDate });
+    });
+
+    it('sets focusDate to the next day', () => {
+      expect(nextState.focusDate.isSame(focusDate.add(1, 'day'), 'date')).to.be.true;
+    });
+  });
+
+  describe('focusPreviousDay', () => {
+    const focusDate = moment().add(1, 'month');
+    let nextState;
+
+    beforeEach(() => {
+      nextState = DatepickerState.focusPreviousDay({ focusDate });
+    });
+
+    it('sets focusDate to the previous day', () => {
+      expect(nextState.focusDate.isSame(focusDate.subtract(1, 'day'), 'date')).to.be.true;
+    });
+  });
+
+  describe('focusNextWeek', () => {
+    const focusDate = moment().add(1, 'month');
+    let nextState;
+
+    beforeEach(() => {
+      nextState = DatepickerState.focusNextWeek({ focusDate });
+    });
+
+    it('sets focusDate to the next week', () => {
+      expect(nextState.focusDate.isSame(focusDate.add(1, 'week'), 'date')).to.be.true;
+    });
+  });
+
+  describe('focusPreviousWeek', () => {
+    const focusDate = moment().add(1, 'month');
+    let nextState;
+
+    beforeEach(() => {
+      nextState = DatepickerState.focusPreviousWeek({ focusDate });
+    });
+
+    it('sets focusDate to the previous week', () => {
+      expect(nextState.focusDate.isSame(focusDate.subtract(1, 'week'), 'date')).to.be.true;
+    });
+  });
+
+  describe('selectFocusDate', () => {
+    const focusDate = moment().add(1, 'month');
+    let nextState;
+
+    beforeEach(() => {
+      nextState = DatepickerState.selectFocusDate({ focusDate });
+    });
+
+    it('sets the date to the focusDate', () => {
+      expect(nextState.date.isSame(focusDate, 'date')).to.be.true;
     });
   });
 });

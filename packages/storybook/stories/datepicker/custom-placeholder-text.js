@@ -16,6 +16,7 @@ limitations under the License.
 
 */
 import React from 'react';
+import { text } from '@kadira/storybook-addon-knobs';
 
 // import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';

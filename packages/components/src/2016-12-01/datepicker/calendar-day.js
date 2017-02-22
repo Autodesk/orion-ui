@@ -34,6 +34,7 @@ class CalendarDay extends Element {
     this.pastDayStyle = { ...baseStyle, color: 'grey4', notallowed: true };
     this.currentDayStyle = { ...baseStyle, color: 'black', pointer: true };
     this.futureDayStyle = { ...baseStyle, pointer: true };
+    this.focusedDayStyle = { background: 'blue', color: 'white' };
   }
 
   set date(val) {
@@ -74,7 +75,11 @@ class CalendarDay extends Element {
   }
 
   isInMonth() {
-    return this.state.date.month() === this.state.focusDate.month();
+    return this.state.date.isSame(this.state.focusDate, 'month');
+  }
+
+  isFocusedDay() {
+    return this.state.date.isSame(this.state.focusDate, 'day');
   }
 
   get dayNumber() {
@@ -121,6 +126,10 @@ class CalendarDay extends Element {
           break;
         default:
           break;
+      }
+
+      if (this.isFocusedDay()) {
+        applyProps(this, this.focusedDayStyle);
       }
     }
 

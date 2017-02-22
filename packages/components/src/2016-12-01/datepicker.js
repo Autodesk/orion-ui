@@ -15,9 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-
-import moment from 'moment';
-
 require('../../vendor/es5-custom-element-shim');
 
 require('./datepicker/datepicker-calendar');
@@ -62,7 +59,7 @@ class Datepicker extends Element {
 
     if (val) {
       if (!this.state.focusDate) {
-        this.state.focusDate = moment();
+        this.state.focusDate = this.state.date || this.state.currentDate;
       }
       this.calendar.focusDate = this.state.focusDate;
     }
@@ -93,6 +90,11 @@ class Datepicker extends Element {
     this._queueRender();
   }
 
+  set monthFormat(val) {
+    this.state.monthFormat = val;
+    this._queueRender();
+  }
+
   get monthFormat() {
     return this.state.monthFormat;
   }
@@ -107,6 +109,27 @@ class Datepicker extends Element {
 
   _handleKeydown(event) {
     switch (eventKey(event)) {
+      case 'ArrowUp':
+        event.preventDefault();
+        this._dispatchStateChange('focusPreviousWeek');
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        this._dispatchStateChange('focusNextWeek');
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        this._dispatchStateChange('focusPreviousDay');
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this._dispatchStateChange('focusNextDay');
+        break;
+      case 'Enter':
+        this._dispatchStateChange('selectFocusDate');
+        this.dateInput.blur();
+        break;
+      case 'Escape':
       case 'Tab':
         this._dispatchStateChange('leaveFocused');
         break;

@@ -180,7 +180,11 @@ class DatepickerCalendar extends Element {
       const date = moment(startDate).add(i, 'days');
       const dayEl = document.createElement('orion-calendar-day');
       lastCreatedDay = dayEl;
-      applyProps(dayEl, { date, focusDate, currentDate });
+      applyProps(dayEl, {
+        date,
+        focusDate,
+        currentDate,
+      });
       week.appendChild(dayEl);
     });
 

@@ -46,6 +46,11 @@ class DatepickerCalendar extends Element {
   ensureElements() {
     this._ensureElements([
       ['header', 'orion-calendar-header'],
+    ]);
+
+    this._ensureWeeksHeader();
+
+    this._ensureElements([
       ['weeks', 'orion-element'],
     ]);
   }
@@ -84,8 +89,12 @@ class DatepickerCalendar extends Element {
     this._queueRender();
   }
 
-  _renderWeeksHeader() {
-    const weeksHeader = document.createElement('orion-element');
+  _ensureWeeksHeader() {
+    let weeksHeader = this.querySelector('[data-orion-id=weeks-header]');
+    if (weeksHeader !== null) { return; }
+
+    weeksHeader = document.createElement('orion-element');
+    weeksHeader.setAttribute('data-orion-id', 'weeks-header');
 
     applyProps(weeksHeader, {
       display: 'flex',
@@ -96,8 +105,7 @@ class DatepickerCalendar extends Element {
     let lastCreatedHeaderCell = null;
 
     [...Array(7)].forEach((_, i) => {
-      const day = moment(this.state.focusDate);
-      const dayOfWeek = day.weekday(i).format('dd');
+      const dayOfWeek = moment().weekday(i).format('dd');
       const div = document.createElement('orion-element');
 
       applyProps(div, {
@@ -113,25 +121,21 @@ class DatepickerCalendar extends Element {
       lastCreatedHeaderCell = div;
 
       weeksHeader.appendChild(div);
+      this.appendChild(weeksHeader);
     });
 
     applyProps(lastCreatedHeaderCell, {
       'border-right': 0,
     });
 
-    this.weeks.appendChild(weeksHeader);
+    this.appendChild(weeksHeader);
   }
 
   _renderWeeks() {
     if (!this.state.focusDate || !this.state.currentDate) { return; }
 
-    this.style.opacity = '0';
-
     const focusDate = this.state.focusDate;
     const currentDate = this.state.currentDate;
-
-    this._renderWeeksHeader();
-
     const year = focusDate.year();
     const month = focusDate.month();
     const startDate = moment([year, month]);
@@ -155,10 +159,6 @@ class DatepickerCalendar extends Element {
 
     applyProps(lastCreatedWeek, {
       'border-bottom': 0,
-    });
-
-    requestAnimationFrame(() => {
-      this.style.opacity = '1';
     });
 
     this._queueWeeksRender = false;

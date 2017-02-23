@@ -38,6 +38,7 @@ class Button extends Element {
       'padding-horizontal': 3,
       'padding-vertical': 2,
       'reset-focus-style': true,
+      userSelect: false,
       ...this.defaults,
     });
 
@@ -189,9 +190,11 @@ class Button extends Element {
     if (this.state.disabled) {
       this.removeAttribute('tabIndex');
       this.pointer = false;
+      this.pointerEvents = 'none';
     } else {
       this.setAttribute('tabIndex', 0);
       this.pointer = true;
+      this.pointerEvents = 'initial';
     }
 
     switch (this.state.size) {

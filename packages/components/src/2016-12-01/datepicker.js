@@ -107,6 +107,15 @@ class Datepicker extends Element {
     return '';
   }
 
+  get isEnabled() {
+    return this.state.isEnabled;
+  }
+
+  set isEnabled(fn) {
+    this.state.isEnabled = fn;
+    this._queueRender();
+  }
+
   _handleRegularKeydown(event) {
     switch (eventKey(event)) {
       case 'ArrowUp':
@@ -254,6 +263,7 @@ class Datepicker extends Element {
       focusDate: this.focusDate,
       monthFormat: this.monthFormat,
       currentDate: this.currentDate,
+      isEnabled: this.isEnabled,
     });
 
     super.render();

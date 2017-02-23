@@ -65,7 +65,7 @@ angular.module('app', [DatePicker.module])
   </body>
 </html>`;
 
-  const staticDate = moment().set({ year: 2015, month: 0, date: 14 });
+  const staticDate = moment('2015-01-14');
 
   return (
     <WithSource react={react} angular={angular}>

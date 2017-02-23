@@ -87,6 +87,15 @@ class DatepickerCalendar extends Element {
     this._queueRender();
   }
 
+  get isEnabled() {
+    return this.state.isEnabled;
+  }
+
+  set isEnabled(fn) {
+    this.state.isEnabled = fn;
+    this._queueRender();
+  }
+
   _ensureWeeksHeader() {
     let weeksHeader = this.querySelector('[data-orion-id=weeks-header]');
     if (weeksHeader !== null) { return; }
@@ -195,6 +204,7 @@ class DatepickerCalendar extends Element {
       const date = moment(startDate).add(i, 'days');
       const dayEl = week.childNodes[i];
       applyProps(dayEl, {
+        isEnabled: this.isEnabled,
         date,
         focusDate,
         currentDate,

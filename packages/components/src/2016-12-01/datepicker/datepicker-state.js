@@ -24,7 +24,7 @@ const DatepickerState = {
   MAXIMUM_DISABLED_SKIP: 31,
 
   getInitialState(state = {}) {
-    return {
+    const initialState = {
       disabled: false,
       focus: false,
       date: null,
@@ -38,11 +38,15 @@ const DatepickerState = {
         nextMonth: 'Next Month',
         clearDate: 'Clear Date',
       },
-      isEnabled: (date) => {
+      isEnabled: function isEnabled(date) {
         return date.isSameOrAfter(this.currentDate, 'date');
       },
       ...state,
     };
+
+    initialState.isEnabled.bind(initialState);
+
+    return initialState;
   },
 
   enterDisabled(state) {

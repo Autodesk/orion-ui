@@ -34,9 +34,9 @@ class CalendarDay extends Element {
       notallowed: false,
     };
 
-    this.pastDayStyle = { ...baseStyle, color: 'grey4', pointer: false, notallowed: true };
+    this.disabledDayStyle = { ...baseStyle, color: 'grey4', pointer: false, notallowed: true };
     this.currentDayStyle = { ...baseStyle, color: 'black' };
-    this.futureDayStyle = { ...baseStyle, color: 'black' };
+    this.enabledDayStyle = { ...baseStyle, color: 'black' };
     this.focusedDayStyle = { background: 'blue', color: 'white' };
     this.otherMonthStyle = { pointer: false, notallowed: true };
   }
@@ -57,6 +57,11 @@ class CalendarDay extends Element {
     this._queueRender();
   }
 
+  set isEnabled(fn) {
+    this.state.isEnabled = fn;
+    this._queueRender();
+  }
+
   isCurrentDay() {
     if (!this.state.date || !this.state.currentDate) { return false; }
     return this.state.date.isSame(this.state.currentDate, 'day');
@@ -67,11 +72,11 @@ class CalendarDay extends Element {
       return 'current';
     }
 
-    if (this.state.date.isBefore(this.state.currentDate)) {
-      return 'past';
+    if (!this.state.isEnabled || this.state.isEnabled(this.state.date)) {
+      return 'enabled';
     }
 
-    return 'future';
+    return 'disabled';
   }
 
   isInMonth() {
@@ -87,7 +92,7 @@ class CalendarDay extends Element {
   }
 
   _emitDateSelected() {
-    if (this.kind !== 'past') {
+    if (this.kind !== 'disabled' && this.isInMonth()) {
       this.dispatchEvent(new CustomEvent('selectDate', {
         detail: { selectedDate: this.state.date },
         bubbles: true,
@@ -96,7 +101,7 @@ class CalendarDay extends Element {
   }
 
   _emitHover() {
-    if (this.kind !== 'past' && this.isInMonth()) {
+    if (this.kind !== 'disabled' && this.isInMonth()) {
       this.dispatchEvent(new CustomEvent('hoverDate', {
         detail: { hoveredDate: this.state.date },
         bubbles: true,
@@ -129,12 +134,12 @@ class CalendarDay extends Element {
           applyProps(this, this.currentDayStyle);
           this.style.fontWeight = 'bold';
           break;
-        case 'past':
-          applyProps(this, this.pastDayStyle);
+        case 'disabled':
+          applyProps(this, this.disabledDayStyle);
           this.style.fontWeight = 'normal';
           break;
-        case 'future':
-          applyProps(this, this.futureDayStyle);
+        case 'enabled':
+          applyProps(this, this.enabledDayStyle);
           this.style.fontWeight = 'normal';
           break;
         default:

@@ -59,10 +59,12 @@ class CalendarHeader extends Element {
 
   _ensurePrev() {
     if (this.prevDiv !== undefined) { return; }
-    this.prevDiv = document.createElement('a');
-    this.prevDiv.href = '#';
-    this.prevDiv.innerHTML = '&larr;';
-    this.prevDiv.style.textDecoration = 'none';
+    this.prevDiv = document.createElement('orion-element');
+    applyProps(this.prevDiv, {
+      innerHTML: '&larr;',
+      color: 'black',
+      pointer: true,
+    });
     this.appendChild(this.prevDiv);
   }
 
@@ -74,10 +76,12 @@ class CalendarHeader extends Element {
 
   _ensureNext() {
     if (this.nextDiv !== undefined) { return; }
-    this.nextDiv = document.createElement('a');
-    this.nextDiv.href = '#';
-    this.nextDiv.innerHTML = '&rarr;';
-    this.nextDiv.style.textDecoration = 'none';
+    this.nextDiv = document.createElement('orion-element');
+    applyProps(this.nextDiv, {
+      innerHTML: '&rarr;',
+      color: 'black',
+      pointer: true,
+    });
     this.appendChild(this.nextDiv);
   }
 

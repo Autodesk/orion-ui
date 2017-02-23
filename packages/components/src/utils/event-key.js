@@ -22,6 +22,7 @@ const valueSets = [
   { key: 'ArrowUp', values: [38, 'ArrowUp', 'Up'] },
   { key: 'ArrowRight', values: [39, 'ArrowRight', 'Right'] },
   { key: 'ArrowDown', values: [40, 'ArrowDown', 'Down'] },
+  { key: 'Backspace', values: [8, 'Backspace'] },
 ];
 
 function match(valueSet, keyCode, key) {

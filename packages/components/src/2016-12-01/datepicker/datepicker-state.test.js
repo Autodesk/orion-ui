@@ -24,7 +24,7 @@ const expect = chai.expect;
 
 const DatepickerState = require('./datepicker-state');
 
-describe('DatepickerState', () => {
+describe.only('DatepickerState', () => {
   describe('getInitialState', () => {
     it('returns a default state', () => {
       const initialState = DatepickerState.getInitialState();
@@ -65,9 +65,9 @@ describe('DatepickerState', () => {
         expect(initialState.isEnabled(tomorrow)).to.be.true;
       });
 
-      it('is false for today', () => {
+      it('is true for today', () => {
         const today = moment();
-        expect(initialState.isEnabled(today)).to.be.false;
+        expect(initialState.isEnabled(today)).to.be.true;
       });
 
       it('is false for days before today', () => {
@@ -228,6 +228,23 @@ describe('DatepickerState', () => {
 
     it('sets focusDate to the previous week', () => {
       expect(nextState.focusDate.isSame(focusDate.subtract(1, 'week'), 'date')).to.be.true;
+    });
+  });
+
+  describe('setFocusDate', () => {
+    context('with a disabled date', () => {
+      const prevFocusDate = moment().add(1, 'month');
+      const disabedFocusDate = moment().subtract(1, 'month');
+      let nextState;
+
+      beforeEach(() => {
+        const state = { focusDate: prevFocusDate, isEnabled: () => false };
+        nextState = DatepickerState.focusPreviousWeek(state, disabedFocusDate);
+      });
+
+      it('does not set it', () => {
+        expect(nextState.focusDate).to.eq(prevFocusDate);
+      });
     });
   });
 

@@ -37,7 +37,7 @@ const DatepickerState = {
         clearDate: 'Clear Date',
       },
       isEnabled: (date) => {
-        return date.isAfter(this.currentDate);
+        return date.isSameOrAfter(this.currentDate, 'date');
       },
       ...state,
     };
@@ -76,26 +76,25 @@ const DatepickerState = {
   },
 
   focusNextDay(state) {
-    return {
-      ...state, focusDate: moment(state.focusDate).add(1, 'day'),
-    };
+    return this.setFocusDate(state, moment(state.focusDate).add(1, 'day'));
   },
 
   focusPreviousDay(state) {
-    return {
-      ...state, focusDate: moment(state.focusDate).subtract(1, 'day'),
-    };
+    return this.setFocusDate(state, moment(state.focusDate).subtract(1, 'day'));
   },
 
   focusNextWeek(state) {
-    return {
-      ...state, focusDate: moment(state.focusDate).add(1, 'week'),
-    };
+    return this.setFocusDate(state, moment(state.focusDate).add(1, 'week'));
   },
 
   focusPreviousWeek(state) {
+    return this.setFocusDate(state, moment(state.focusDate).subtract(1, 'week'));
+  },
+
+  setFocusDate(state, date) {
+    if (state.isEnabled === undefined || !state.isEnabled(date)) { return state; }
     return {
-      ...state, focusDate: moment(state.focusDate).subtract(1, 'week'),
+      ...state, focusDate: moment(date),
     };
   },
 

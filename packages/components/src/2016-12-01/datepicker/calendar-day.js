@@ -30,12 +30,15 @@ class CalendarDay extends Element {
       'border-right': 1,
       'border-color': 'grey2',
       background: 'white',
+      pointer: true,
+      notallowed: false,
     };
 
-    this.pastDayStyle = { ...baseStyle, color: 'grey4', notallowed: true };
-    this.currentDayStyle = { ...baseStyle, color: 'black', pointer: true };
-    this.futureDayStyle = { ...baseStyle, color: 'black', pointer: true };
+    this.pastDayStyle = { ...baseStyle, color: 'grey4', pointer: false, notallowed: true };
+    this.currentDayStyle = { ...baseStyle, color: 'black' };
+    this.futureDayStyle = { ...baseStyle, color: 'black' };
     this.focusedDayStyle = { background: 'blue', color: 'white' };
+    this.otherMonthStyle = { pointer: false, notallowed: true };
   }
 
   set date(val) {
@@ -85,8 +88,17 @@ class CalendarDay extends Element {
 
   _emitDateSelected() {
     if (this.kind !== 'past') {
-      this.dispatchEvent(new CustomEvent('dateSelected', {
+      this.dispatchEvent(new CustomEvent('selectDate', {
         detail: { selectedDate: this.state.date },
+        bubbles: true,
+      }));
+    }
+  }
+
+  _emitHover() {
+    if (this.kind !== 'past' && this.isInMonth()) {
+      this.dispatchEvent(new CustomEvent('hoverDate', {
+        detail: { hoveredDate: this.state.date },
         bubbles: true,
       }));
     }
@@ -97,13 +109,15 @@ class CalendarDay extends Element {
     this.style.paddingLeft = '4px';
     this.style.lineHeight = '1.75em';
 
-    this.addEventListener('click', this._emitDateSelected);
+    this.addEventListener('mousedown', this._emitDateSelected);
+    this.addEventListener('mouseenter', this._emitHover);
 
     this._queueRender();
   }
 
   disconnectedCallback() {
-    this.removeEventListener('click', this._emitDateSelected);
+    this.removeEventListener('mousedown', this._emitDateSelected);
+    this.removeEventListener('mouseenter', this._emitHover);
   }
 
   render() {
@@ -125,6 +139,10 @@ class CalendarDay extends Element {
           break;
         default:
           break;
+      }
+
+      if (!this.isInMonth()) {
+        applyProps(this, this.otherMonthStyle);
       }
 
       if (this.isFocusedDay()) {

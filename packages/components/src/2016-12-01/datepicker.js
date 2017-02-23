@@ -107,7 +107,7 @@ class Datepicker extends Element {
     return '';
   }
 
-  _handleKeydown(event) {
+  _handleRegularKeydown(event) {
     switch (eventKey(event)) {
       case 'ArrowUp':
         event.preventDefault();
@@ -142,6 +142,28 @@ class Datepicker extends Element {
     }
   }
 
+  _handleShiftKeydown(event) {
+    switch (eventKey(event)) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        this._dispatchStateChange('focusPreviousMonth');
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this._dispatchStateChange('focusNextMonth');
+        break;
+      default:
+    }
+  }
+
+  _handleKeydown(event) {
+    if (event.shiftKey) {
+      this._handleShiftKeydown(event);
+    }
+
+    this._handleRegularKeydown(event);
+  }
+
   _focus() {
     this._dispatchStateChange('enterFocused');
   }
@@ -152,7 +174,19 @@ class Datepicker extends Element {
   }
 
   _handleDateSelected(event) {
-    this._dispatchStateChange('dateSelected', event.detail.selectedDate);
+    this._dispatchStateChange('selectDate', event.detail.selectedDate);
+  }
+
+  _handleHoverDate(event) {
+    this._dispatchStateChange('setFocusDate', event.detail.hoveredDate);
+  }
+
+  _handlePreviousMonth() {
+    this._dispatchStateChange('focusPreviousMonth');
+  }
+
+  _handleNextMonth() {
+    this._dispatchStateChange('focusNextMonth');
   }
 
   _dispatchStateChange(eventType, arg) {
@@ -169,14 +203,20 @@ class Datepicker extends Element {
     this.dateInput.addEventListener('keydown', this._handleKeydown);
     this.dateInput.addEventListener('focus', this._focus);
     this.dateInput.addEventListener('blur', this._blur);
-    this.addEventListener('dateSelected', this._handleDateSelected);
+    this.addEventListener('selectDate', this._handleDateSelected);
+    this.addEventListener('hoverDate', this._handleHoverDate);
+    this.addEventListener('nextMonth', this._handleNextMonth);
+    this.addEventListener('previousMonth', this._handlePreviousMonth);
   }
 
   _removeListeners() {
     this.dateInput.removeEventListener('keydown', this._handleKeydown);
     this.dateInput.removeEventListener('focus', this._focus);
     this.dateInput.removeEventListener('blur', this._blur);
-    this.removeEventListener('dateSelected', this._handleDateSelected);
+    this.removeEventListener('selectDate', this._handleDateSelected);
+    this.removeEventListener('hoverDate', this._handleHoverDate);
+    this.removeEventListener('nextMonth', this._handleNextMonth);
+    this.removeEventListener('previousMonth', this._handlePreviousMonth);
   }
 
   _ensureInput() {

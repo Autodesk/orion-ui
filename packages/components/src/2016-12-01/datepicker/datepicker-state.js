@@ -21,6 +21,8 @@ limitations under the License.
 import moment from 'moment';
 
 const DatepickerState = {
+  MAXIMUM_DISABLED_SKIP: 31,
+
   getInitialState(state = {}) {
     return {
       disabled: false,
@@ -63,8 +65,30 @@ const DatepickerState = {
     return { ...state, focus: false, focusDate: null };
   },
 
-  dateSelected(state, date) {
-    return { ...state, date, focusDate: moment(date) };
+  _findEnabledDate(state, date, iterations = 0) {
+    if (iterations >= this.MAXIMUM_DISABLED_SKIP) {
+      return null;
+    }
+
+    if (state.isEnabled(date)) {
+      return date;
+    }
+
+    const nextDate = moment(date).add(1, 'day');
+    return this._findEnabledDate(state, nextDate, iterations + 1);
+  },
+
+  selectDate(state, date) {
+    if (state.isEnabled === undefined) {
+      return { ...state, date: moment(date), focusDate: moment(date) };
+    }
+
+    const nextEnabledDate = this._findEnabledDate(state, date);
+    if (nextEnabledDate) {
+      return { ...state, date: moment(nextEnabledDate), focusDate: moment(nextEnabledDate) };
+    }
+
+    return state;
   },
 
   dateCleared(state) {
@@ -92,10 +116,24 @@ const DatepickerState = {
   },
 
   setFocusDate(state, date) {
-    if (state.isEnabled === undefined || !state.isEnabled(date)) { return state; }
-    return {
-      ...state, focusDate: moment(date),
-    };
+    if (state.isEnabled === undefined) {
+      return { ...state, focusDate: moment(date) };
+    }
+
+    const nextEnabledDate = this._findEnabledDate(state, date);
+    if (nextEnabledDate) {
+      return { ...state, focusDate: moment(nextEnabledDate) };
+    }
+
+    return state;
+  },
+
+  focusNextMonth(state) {
+    return this.setFocusDate(state, moment(state.focusDate).add(1, 'month'));
+  },
+
+  focusPreviousMonth(state) {
+    return this.setFocusDate(state, moment(state.focusDate).subtract(1, 'month'));
   },
 
   selectFocusDate(state) {

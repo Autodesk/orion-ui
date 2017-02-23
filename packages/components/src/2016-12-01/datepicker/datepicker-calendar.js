@@ -53,6 +53,8 @@ class DatepickerCalendar extends Element {
     this._ensureElements([
       ['weeks', 'orion-element'],
     ]);
+
+    this._ensureWeeks();
   }
 
   connectedCallback() {
@@ -76,16 +78,12 @@ class DatepickerCalendar extends Element {
   }
 
   set focusDate(val) {
-    if (this._monthChanged(val)) {
-      this._queueWeeksRender = true;
-    }
     this.state.focusDate = val;
     this._queueRender();
   }
 
   set currentDate(val) {
     this.state.currentDate = val;
-    this._queueWeeksRender = true;
     this._queueRender();
   }
 
@@ -98,7 +96,7 @@ class DatepickerCalendar extends Element {
 
     applyProps(weeksHeader, {
       display: 'flex',
-      'border-bottom': 1,
+      border: 1,
       'border-color': 'grey2',
     });
 
@@ -131,6 +129,40 @@ class DatepickerCalendar extends Element {
     this.appendChild(weeksHeader);
   }
 
+  _ensureWeeks() {
+    if (this.weeks.childNodes.length > 0) { return; }
+
+    applyProps(this.weeks, {
+      'border-left': 1,
+      'border-color': 'grey3',
+      display: 'block',
+    });
+
+    this.state.rows = [...Array(7)].map((_, weekIdx) => {
+      const even = (weekIdx % 2 === 0);
+      return this._ensureWeek(even);
+    });
+  }
+
+  _ensureWeek(even) {
+    const week = document.createElement('orion-element');
+
+    applyProps(week, {
+      'border-bottom': 1,
+      'border-color': 'grey2',
+      background: even ? 'grey0' : 'white',
+    });
+
+    [...Array(7)].forEach(() => {
+      const dayEl = document.createElement('orion-calendar-day');
+      week.appendChild(dayEl);
+    });
+
+    this.weeks.appendChild(week);
+
+    return week;
+  }
+
   _renderWeeks() {
     if (!this.state.focusDate || !this.state.currentDate) { return; }
 
@@ -142,59 +174,32 @@ class DatepickerCalendar extends Element {
     const startDayOfCalendar = moment(startDate).startOf('week');
 
     let firstDayOfWeek = moment(startDayOfCalendar);
-    let lastCreatedWeek = null;
-    let weekIdx = 0;
 
-    // Always render first week
-    this._renderWeek(currentDate, focusDate, firstDayOfWeek);
-    firstDayOfWeek = firstDayOfWeek.add(1, 'week');
-
-    // Keep rendering until we end up outside the displayed month
-    while (firstDayOfWeek.month() === month) {
-      const even = (weekIdx % 2 === 0);
-      lastCreatedWeek = this._renderWeek(currentDate, focusDate, firstDayOfWeek, even);
+    [...Array(7)].forEach((_, dayIdx) => {
+      const shouldRender = firstDayOfWeek.isSame(focusDate, 'month') || dayIdx === 0;
+      this._renderWeek(dayIdx, currentDate, focusDate, firstDayOfWeek, shouldRender);
       firstDayOfWeek = firstDayOfWeek.add(1, 'week');
-      weekIdx += 1;
-    }
-
-    applyProps(lastCreatedWeek, {
-      'border-bottom': 0,
     });
-
-    this._queueWeeksRender = false;
   }
 
-  _renderWeek(currentDate, focusDate, startDate, even) {
-    const week = document.createElement('orion-element');
-
-    applyProps(week, {
-      display: 'flex',
-      'border-bottom': 1,
-      'border-color': 'grey2',
-      background: even ? 'grey0' : 'white',
-    });
-
-    let lastCreatedDay = null;
+  _renderWeek(index, currentDate, focusDate, startDate, shouldRender) {
+    const week = this.weeks.childNodes[index];
+    if (shouldRender) {
+      week.display = 'flex';
+    } else {
+      week.display = 'none';
+      return;
+    }
 
     [...Array(7)].forEach((_, i) => {
       const date = moment(startDate).add(i, 'days');
-      const dayEl = document.createElement('orion-calendar-day');
-      lastCreatedDay = dayEl;
+      const dayEl = week.childNodes[i];
       applyProps(dayEl, {
         date,
         focusDate,
         currentDate,
       });
-      week.appendChild(dayEl);
     });
-
-    applyProps(lastCreatedDay, {
-      'border-right': 0,
-    });
-
-    this.weeks.appendChild(week);
-
-    return week;
   }
 
   render() {
@@ -205,16 +210,7 @@ class DatepickerCalendar extends Element {
       focusDate: this.state.focusDate,
     });
 
-    applyProps(this.weeks, {
-      border: 1,
-      'border-color': 'grey3',
-      display: 'block',
-    });
-
-    if (this._queueWeeksRender === true) {
-      this.weeks.innerHTML = '';
-      this._renderWeeks();
-    }
+    this._renderWeeks();
 
     super.render();
   }

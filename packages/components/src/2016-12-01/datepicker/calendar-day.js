@@ -29,11 +29,12 @@ class CalendarDay extends Element {
     const baseStyle = {
       'border-right': 1,
       'border-color': 'grey2',
+      background: 'white',
     };
 
     this.pastDayStyle = { ...baseStyle, color: 'grey4', notallowed: true };
     this.currentDayStyle = { ...baseStyle, color: 'black', pointer: true };
-    this.futureDayStyle = { ...baseStyle, pointer: true };
+    this.futureDayStyle = { ...baseStyle, color: 'black', pointer: true };
     this.focusedDayStyle = { background: 'blue', color: 'white' };
   }
 
@@ -55,11 +56,7 @@ class CalendarDay extends Element {
 
   isCurrentDay() {
     if (!this.state.date || !this.state.currentDate) { return false; }
-    const today = this.state.currentDate;
-    const day = this.state.date;
-    return day.year() === today.year() &&
-           day.month() === today.month() &&
-           day.date() === today.date();
+    return this.state.date.isSame(this.state.currentDate, 'day');
   }
 
   get kind() {
@@ -120,9 +117,11 @@ class CalendarDay extends Element {
           break;
         case 'past':
           applyProps(this, this.pastDayStyle);
+          this.style.fontWeight = 'normal';
           break;
         case 'future':
           applyProps(this, this.futureDayStyle);
+          this.style.fontWeight = 'normal';
           break;
         default:
           break;

@@ -39,6 +39,7 @@ class Button extends Element {
       'padding-vertical': 2,
       pointer: true,
       'reset-focus-style': true,
+      userSelect: false,
       ...this.defaults,
     });
 
@@ -186,6 +187,16 @@ class Button extends Element {
     } else {
       this.viewState.background = this.state.background;
       this.viewState.color = this.state.color;
+    }
+
+    if (this.state.disabled) {
+      this.removeAttribute('tabIndex');
+      this.pointer = false;
+      this.pointerEvents = 'none';
+    } else {
+      this.setAttribute('tabIndex', 0);
+      this.pointer = true;
+      this.pointerEvents = 'initial';
     }
 
     switch (this.state.size) {

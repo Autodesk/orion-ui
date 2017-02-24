@@ -16,41 +16,62 @@ limitations under the License.
 
 */
 import React from 'react';
+import moment from 'moment';
+import { boolean } from '@kadira/storybook-addon-knobs';
 
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function customDisabledDates() {
+  const staticDate = moment('2015-01-07');
+
+  const isEnabled = function isEnabled(date) {
+    const twoWeeksFromNow = moment(staticDate).add(2, 'weeks');
+    if (date.isBefore(staticDate)) {
+      return false;
+    }
+
+    if (date.isAfter(twoWeeksFromNow)) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const props = {
+    focus: boolean('Focus', true),
+  };
+
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     constructor() {
-      this.isEnabled = this.isEnabled.bind(this);
+        this.isEnabled = this.isEnabled.bind(this);
     }
 
     // Only enable dates in the next two weeks
     isEnabled(date) {
-      const now = moment();
-      const twoWeeksFromNow = moment().add(2, 'weeks');
+        const now = moment();
+        const twoWeeksFromNow = moment().add(2, 'weeks');
 
-      if (date.isBefore(now)) {
-        return false;
-      }
+        if (date.isBefore(now)) {
+            return false;
+        }
 
-      if (date.isAfter(twoWeeksFromNow)) {
-        return false;
-      }
+        if (date.isAfter(twoWeeksFromNow)) {
+            return false;
+        }
 
-      return true;
+        return true;
     }
 
     render() {
         const date = moment();
-        return <DatePicker date={date} focus={true} isEnabled={this.isEnabled} />;
+        return <Datepicker date={date} focus={${props.focus}} isEnabled={this.isEnabled} />;
     }
 }
 
@@ -61,13 +82,13 @@ ReactDOM.render(React.createElement(App), document.body);`;
 
 import 'angular';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [DatePicker.module])
+angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();
-    app.focus = true;
+    app.focus = ${props.focus};
 
     app.isEnabled(date) {
       const now = moment();
@@ -97,7 +118,12 @@ angular.module('app', [DatePicker.module])
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker
+        focusDate={staticDate}
+        focus={props.focus}
+        currentDate={staticDate}
+        isEnabled={isEnabled}
+      />
     </WithSource>
   );
 }

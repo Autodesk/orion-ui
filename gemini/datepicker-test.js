@@ -35,3 +35,10 @@ gemini.suite('datepicker-focused', (suite) => {
     .setCaptureElements(".example")
     .capture('datepicker-focused')
 });
+
+gemini.suite('datepicker-focused-month-day', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=focus%20month%20%26%20day')
+    .setCaptureElements(".example")
+    .capture('datepicker-focused-month-day')
+});

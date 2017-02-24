@@ -71,7 +71,11 @@ angular.module('app', [DatePicker.module])
 
   return (
     <WithSource react={react} angular={angular}>
-      <Datepicker focusDate={moment(props.focusDate)} focus={props.focus} currentDate={staticDate} />
+      <Datepicker
+        focusDate={moment(props.focusDate)}
+        focus={props.focus}
+        currentDate={staticDate}
+      />
     </WithSource>
   );
 }

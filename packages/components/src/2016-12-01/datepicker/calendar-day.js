@@ -29,7 +29,7 @@ class CalendarDay extends Element {
     const baseStyle = {
       'border-right': 1,
       'border-color': 'grey2',
-      background: 'white',
+      background: 'transparent',
       pointer: true,
       notallowed: false,
     };

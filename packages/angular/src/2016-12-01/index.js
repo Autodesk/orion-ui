@@ -16,11 +16,13 @@ limitations under the License.
 */
 const ButtonComponent = require('./button');
 const SelectComponent = require('./select');
+const DatepickerComponent = require('./datepicker');
 
 // eslint-disable-next-line no-undef
 const orion = angular
   .module('orion', [])
   .component('orionButton', ButtonComponent)
-  .component('orionSelect', SelectComponent);
+  .component('orionSelect', SelectComponent)
+  .component('orionDatepicker', DatepickerComponent);
 
 module.exports = orion;

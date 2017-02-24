@@ -136,7 +136,7 @@ class Datepicker extends Element {
         break;
       case 'Enter':
         this._dispatchStateChange('selectFocusDate');
-        this.dateInput.blur();
+        this._dispatchStateChange('leaveFocused');
         break;
       case 'Escape':
       case 'Tab':
@@ -168,9 +168,9 @@ class Datepicker extends Element {
   _handleKeydown(event) {
     if (event.shiftKey) {
       this._handleShiftKeydown(event);
+    } else {
+      this._handleRegularKeydown(event);
     }
-
-    this._handleRegularKeydown(event);
   }
 
   _focus() {
@@ -184,6 +184,7 @@ class Datepicker extends Element {
 
   _handleDateSelected(event) {
     this._dispatchStateChange('selectDate', event.detail.selectedDate);
+    this._dispatchStateChange('leaveFocused');
   }
 
   _handleHoverDate(event) {

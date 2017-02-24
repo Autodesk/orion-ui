@@ -42,7 +42,7 @@ const attributes = [
 ];
 
 function attributeChangedCallback(attrName, value) {
-  return value ? attrName : null;
+  return value ? attrName : undefined;
 }
 
 module.exports = {

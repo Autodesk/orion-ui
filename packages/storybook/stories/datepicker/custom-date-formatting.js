@@ -32,13 +32,13 @@ export default function customDateFormatting() {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
         moment.locale('${props.locale}');
         const date = moment();
-        return <DatePicker date={date} focus={true} displayFormat="${props.displayFormat}" monthFormat="${props.monthFormat}" />;
+        return <Datepicker date={date} focus={true} displayFormat="${props.displayFormat}" monthFormat="${props.monthFormat}" />;
     }
 }
 
@@ -49,9 +49,9 @@ ReactDOM.render(React.createElement(App), document.body);`;
 
 import 'angular';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [DatePicker.module])
+angular.module('app', ['orion'])
   .controller('AppController', function() {
     moment.locale('${props.locale}');
 

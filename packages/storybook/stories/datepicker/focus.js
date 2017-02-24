@@ -31,12 +31,12 @@ export default function focus() {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
         const date = moment();
-        return <DatePicker date={date} focus={${props.focus}} />;
+        return <Datepicker date={date} focus={${props.focus}} />;
     }
 }
 
@@ -47,9 +47,9 @@ ReactDOM.render(React.createElement(App), document.body);`;
 
 import 'angular';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [DatePicker.module])
+angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();

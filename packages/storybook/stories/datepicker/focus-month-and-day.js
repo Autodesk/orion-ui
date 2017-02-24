@@ -16,14 +16,16 @@ limitations under the License.
 
 */
 import React from 'react';
-import { text } from '@kadira/storybook-addon-knobs';
+import moment from 'moment';
+import { text, boolean } from '@kadira/storybook-addon-knobs';
 
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function focusMonthAndDay() {
   const props = {
-    focusDate: text('Focus Date', '2016-01-01'),
+    focusDate: text('Focus Date', '2015-01-02'),
+    focus: boolean('Focus', true),
   };
 
   const react = `
@@ -65,9 +67,11 @@ angular.module('app', [DatePicker.module])
   </body>
 </html>`;
 
+  const staticDate = moment('2014-12-01');
+
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker focusDate={moment(props.focusDate)} focus={props.focus} currentDate={staticDate} />
     </WithSource>
   );
 }

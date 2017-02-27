@@ -37,7 +37,6 @@ class Button extends Element {
       'border-radius': 2,
       'padding-horizontal': 3,
       'padding-vertical': 2,
-      pointer: true,
       'reset-focus-style': true,
       ...this.defaults,
     });
@@ -49,7 +48,6 @@ class Button extends Element {
 
   connectedCallback() {
     this._addListeners();
-    this.setAttribute('tabIndex', 0);
   }
 
   disconnectedCallback() {
@@ -186,6 +184,14 @@ class Button extends Element {
     } else {
       this.viewState.background = this.state.background;
       this.viewState.color = this.state.color;
+    }
+
+    if (this.state.disabled) {
+      this.removeAttribute('tabIndex');
+      this.pointer = false;
+    } else {
+      this.setAttribute('tabIndex', 0);
+      this.pointer = true;
     }
 
     switch (this.state.size) {

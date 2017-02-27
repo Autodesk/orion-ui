@@ -51,6 +51,11 @@ class Select extends Element {
     this._queueRender();
   }
 
+  set disabled(newValue) {
+    this.state.disabled = newValue;
+    this._queueRender();
+  }
+
   set focusedIndex(newValue) {
     this.state.focusedIndex = newValue;
     this._queueRender();
@@ -124,6 +129,7 @@ class Select extends Element {
   }
 
   _toggle() {
+    if (this.state.disabled) { return; }
     this.button.focus();
     this._dispatchStateChange('toggleOpen');
   }
@@ -219,6 +225,7 @@ class Select extends Element {
     applyProps(this.button, {
       textContent: label,
       hasFocus: (this.state.hasFocus && !this.state.open),
+      disabled: this.state.disabled,
     });
 
     super.render();

@@ -16,67 +16,62 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean } from '@kadira/storybook-addon-knobs';
+import { object } from '@kadira/storybook-addon-knobs';
 
-import { Select } from '../../../react/lib/2016-12-01';
+// import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
-export default function disabled() {
+export default function i18n() {
   const props = {
-    disabled: boolean('Disabled', true),
+    i18n: object('Phrases', {
+      previousMonth: '前一个月',
+      nextMonth: '下个月',
+      clearDate: '清除日期',
+    }),
   };
-
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-  ];
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
-render() {
-  const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
-  ];
-
-  return (
-    <Select options={options} disabled={${props.disabled}} />
-  )
-}
+    render() {
+        const i18n = ${JSON.stringify(props.i18n, null, 10)};
+        const date = moment();
+        return <DatePicker date={date} focus={true} i18n={i18n}  />;
+    }
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
+
   const angular = `
 // app controller
+
 import 'angular';
+import * as moment from 'moment';
+import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
-  ];
-
-  app.disabled = ${props.disabled};
-}]);
+angular.module('app', [DatePicker.module])
+  .controller('AppController', function() {
+    var app = this;
+    app.i18n = ${JSON.stringify(props.i18n, null, 10)};
+    app.date = moment();
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-<body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" disabled="{{app.disabled}}" />
-</body>
+  <body ng-controller="AppController as app">
+    <orion-datepicker date="{{app.date}}" i18n="{{app.i18n}}" />
+  </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} open={props.open} disabled={props.disabled} />
+      <span>todo</span>
     </WithSource>
   );
 }

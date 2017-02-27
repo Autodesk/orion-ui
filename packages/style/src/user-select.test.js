@@ -14,5 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../packages/components/lib/utils/render-queue.js')
-require('../packages/components/lib/2016-12-01/index.js')
+const UserSelect = require('./user-select');
+const chai = require('chai');
+
+const expect = chai.expect;
+
+describe('UserSelect', () => {
+  describe('attributeChangedCallback', () => {
+    context('with false', () => {
+      it('returns class user-select', () => {
+        expect(UserSelect.attributeChangedCallback('userSelect', false)).to.eq('user-select');
+      });
+    });
+  });
+});

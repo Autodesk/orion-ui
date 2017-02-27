@@ -15,34 +15,30 @@ limitations under the License.
 
 */
 const css = `
-  .dim {
-    opacity: 1;
-    transition: opacity .15s ease-in;
-  }
-  .dim:hover,
-  .dim:focus {
-    opacity: .5;
-    transition: opacity .15s ease-in;
-  }
-  .dim:active {
-    opacity: .8; transition: opacity .15s ease-out;
+  .pe-initial {
+    pointer-events: initial;
   }
 
-  .pointer:hover {
-    cursor: pointer;
-  }
-
-  .notallowed:hover {
-    cursor: not-allowed;
+  .pe-none {
+    pointer-events: none;
   }
 `;
 
-const attributes = [
-  'dim', 'pointer', 'notallowed',
-];
+const attrMap = {
+  pointerEvents: {
+    initial: 'pe-initial',
+    none: 'pe-none',
+  },
+};
+
+const attributes = Object.keys(attrMap);
 
 function attributeChangedCallback(attrName, value) {
-  return value ? attrName : undefined;
+  const styleClass = attrMap[attrName][value];
+  if (typeof styleClass === 'undefined') {
+    throw new Error(`Unknown style for ${attrName}="${value}"`);
+  }
+  return styleClass;
 }
 
 module.exports = {

@@ -15,34 +15,24 @@ limitations under the License.
 
 */
 const css = `
-  .dim {
-    opacity: 1;
-    transition: opacity .15s ease-in;
-  }
-  .dim:hover,
-  .dim:focus {
-    opacity: .5;
-    transition: opacity .15s ease-in;
-  }
-  .dim:active {
-    opacity: .8; transition: opacity .15s ease-out;
-  }
-
-  .pointer:hover {
-    cursor: pointer;
-  }
-
-  .notallowed:hover {
-    cursor: not-allowed;
+  .user-select {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 `;
 
 const attributes = [
-  'dim', 'pointer', 'notallowed',
+  'userSelect',
 ];
 
 function attributeChangedCallback(attrName, value) {
-  return value ? attrName : undefined;
+  console.log(attrName, value)
+  if (!value) {
+    return 'user-select';
+  }
+  return '';
 }
 
 module.exports = {

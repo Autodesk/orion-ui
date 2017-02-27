@@ -31,7 +31,7 @@ const s3 = new AWS.S3();
 const TEST_SHA = '90fbcc639f4bc1deab7e99f423e2ccb5639755a9';
 const github = new GitHubApi();
 
-describe('orion-deploy', () => {
+describe.skip('orion-deploy', () => {
   afterEach(() => {
     rm('-r', knownPaths.build);
   });

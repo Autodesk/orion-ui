@@ -49,9 +49,14 @@ describe('SelectState', () => {
     });
 
     context('without a selectedIndex', () => {
-      it('focuses on the first option', () => {
-        const result = SelectState.activated({});
-        expect(result.focusedIndex).to.eq(0);
+      it('focuses on the first selectable option', () => {
+        const opts = [
+          { label: 'Red', value: '#F00', disabled: true },
+          { label: 'Green', value: '#0F0' },
+          { label: 'Blue', value: '#00F' },
+        ];
+        const result = SelectState.activated({ options: opts });
+        expect(result.focusedIndex).to.eq(1);
       });
     });
 
@@ -75,16 +80,37 @@ describe('SelectState', () => {
   describe('optionFocused', () => {
     let state;
     let nextState;
-    before(() => {
-      state = {
-        open: true,
-        options,
-      };
-      nextState = SelectState.optionFocused(state, 1);
+
+    context('with a valid option', () => {
+      beforeEach(() => {
+        state = {
+          open: true,
+          options,
+        };
+        nextState = SelectState.optionFocused(state, 1);
+      });
+
+      it('sets the focusedIndex value', () => {
+        expect(nextState.focusedIndex).to.eq(1);
+      });
     });
 
-    it('sets the focusedIndex value', () => {
-      expect(nextState.focusedIndex).to.eq(1);
+    context('with a disabled option', () => {
+      beforeEach(() => {
+        state = {
+          open: true,
+          options: [
+            { label: 'Red', value: '#F00' },
+            { label: 'Green', value: '#0F0', disabled: true },
+            { label: 'Blue', value: '#00F' },
+          ],
+        };
+        nextState = SelectState.optionFocused(state, 1);
+      });
+
+      it('sets focusedIndex to undefined', () => {
+        expect(nextState.focusedIndex).to.be.undefined;
+      });
     });
   });
 
@@ -182,6 +208,25 @@ describe('SelectState', () => {
         expect(nextState.focusedIndex).to.eq(0);
       });
     });
+
+    context('with a disabled option', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 2,
+          options: [
+            { label: 'Red', value: '#F00' },
+            { label: 'Green', value: '#0F0', disabled: true },
+            { label: 'Blue', value: '#00F' },
+          ],
+        };
+        nextState = SelectState.focusPrevious(state);
+      });
+
+      it('skips it', () => {
+        expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
   });
 
   describe('focusNext', () => {
@@ -246,6 +291,25 @@ describe('SelectState', () => {
 
       it('focuses the first item', () => {
         expect(nextState.focusedIndex).to.eq(0);
+      });
+    });
+
+    context('with a disabled option', () => {
+      beforeEach(() => {
+        const state = {
+          open: true,
+          focusedIndex: 2,
+          options: [
+            { label: 'Red', value: '#F00', disabled: true },
+            { label: 'Green', value: '#0F0' },
+            { label: 'Blue', value: '#00F' },
+          ],
+        };
+        nextState = SelectState.focusNext(state);
+      });
+
+      it('skips it', () => {
+        expect(nextState.focusedIndex).to.eq(1);
       });
     });
   });

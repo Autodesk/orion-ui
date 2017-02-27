@@ -14,5 +14,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-
+require('../packages/components/lib/utils/render-queue.js')
 require('../packages/components/lib/2016-12-01/index.js')

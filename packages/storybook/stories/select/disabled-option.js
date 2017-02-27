@@ -18,12 +18,17 @@ limitations under the License.
 import React from 'react';
 import { boolean } from '@kadira/storybook-addon-knobs';
 
+import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function disabledOption() {
   const props = {
     open: boolean('Open', true),
   };
+  const options = [
+    { value: 'one', label: 'One', key: 1, disabled: true },
+    { value: 'two', label: 'Two', key: 2 },
+  ];
 
   const react = `
 import React from 'react';
@@ -33,8 +38,8 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 class App extends React.Component {
 render() {
   const options = [
-    { value: 'one', label: 'One', disabled: true },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1, disabled: true },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   return <Select options={options} open={${props.open}} />;
@@ -50,8 +55,8 @@ angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
   app.options = [
-    { value: 'one', label: 'One', disabled: true },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1, disabled: true },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   app.open = ${props.open};
@@ -68,7 +73,7 @@ angular.module('app', [])
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>TODO</span>
+      <Select options={options} open={props.open} />
     </WithSource>
   );
 }

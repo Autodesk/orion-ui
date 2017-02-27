@@ -25,7 +25,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       disabled: false,
-      selectedIndex: 1,
+      selectedIndex: undefined,
     };
 
     ['setSelectedIndex', 'handleClick', 'toggleDisabled'].forEach((fn) => {
@@ -33,9 +33,11 @@ class App extends React.Component {
     });
 
     this.buttonSizes = [
+      { label: 'X-small', value: 'x-small', key: 0, disabled: true },
       { label: 'Small', value: 'small', key: 1 },
       { label: 'Medium', value: 'medium', key: 2 },
       { label: 'Large', value: 'large', key: 3 },
+      { label: 'X-Large', value: 'x-large', key: 4, disabled: true },
     ];
   }
 
@@ -66,7 +68,7 @@ class App extends React.Component {
         </div>
         <div style={{ margin: '40px' }}>
           <input />
-          <Select options={this.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
+          <Select disabled={this.state.disabled} options={this.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
         </div>
         <div>

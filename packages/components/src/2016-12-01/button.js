@@ -37,7 +37,6 @@ class Button extends Element {
       'border-radius': 2,
       'padding-horizontal': 3,
       'padding-vertical': 2,
-      pointer: true,
       'reset-focus-style': true,
       userSelect: false,
       ...this.defaults,
@@ -50,7 +49,6 @@ class Button extends Element {
 
   connectedCallback() {
     this._addListeners();
-    this.setAttribute('tabIndex', 0);
   }
 
   disconnectedCallback() {

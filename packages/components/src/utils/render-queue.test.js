@@ -85,9 +85,7 @@ describe('Utils.RenderQueue', () => {
         renderQueue.add(parentElement);
       });
 
-      it('gets called on the next frame', () => {
-        requestAnimationFrame.step();
-        expect(childRender).not.to.have.been.called;
+      it('gets called in that animation frame', () => {
         requestAnimationFrame.step();
         expect(childRender).to.have.been.calledOnce;
       });
@@ -123,6 +121,28 @@ describe('Utils.RenderQueue', () => {
     it('calls all queued callbacks synchronously', () => {
       renderQueue.flush();
       expect(element.render).to.have.been.calledOnce;
+    });
+  });
+
+  describe('#clearQueue', () => {
+    let parentElement;
+    let childElement;
+    let childRender;
+
+    beforeEach(() => {
+      childRender = sinon.spy();
+
+      childElement = { render: childRender };
+      parentElement = { render: () => { renderQueue.add(childElement); } };
+
+      renderQueue.add(parentElement);
+    });
+
+    it('calls flush until queue has been cleared', () => {
+      expect(renderQueue.queue.size).to.eq(1);
+      renderQueue.clearQueue();
+      expect(childElement.render).to.have.been.calledOnce;
+      expect(renderQueue.queue.size).to.eq(0);
     });
   });
 });

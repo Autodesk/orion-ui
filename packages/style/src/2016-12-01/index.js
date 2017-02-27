@@ -21,11 +21,13 @@ const Container = require('../container.js');
 const Display = require('../display.js');
 const Hovers = require('../hovers.js');
 const Overflow = require('../overflow.js');
+const PointerEvents = require('../pointer-events.js');
 const Position = require('../position.js');
 const ResetFocusStyle = require('../reset-focus-style.js');
 const Skins = require('../skins.js');
 const Spacing = require('../spacing.js');
 const Typography = require('../typography.js');
+const UserSelect = require('../user-select.js');
 
 module.exports = {
   Scale,
@@ -35,9 +37,11 @@ module.exports = {
   Display,
   Hovers,
   Overflow,
+  PointerEvents,
   Position,
   ResetFocusStyle,
   Skins,
   Spacing,
   Typography,
+  UserSelect,
 };

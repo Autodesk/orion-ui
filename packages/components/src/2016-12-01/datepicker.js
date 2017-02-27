@@ -106,8 +106,16 @@ class Datepicker extends Element {
   }
 
   _handleKeydown(event) {
-    if (eventKey(event) === 'Tab') {
-      this._dispatchStateChange('leaveFocused');
+    switch (eventKey(event)) {
+      case 'Tab':
+        this._dispatchStateChange('leaveFocused');
+        break;
+      case 'Backspace':
+        event.preventDefault();
+        this._dispatchStateChange('dateCleared');
+        break;
+      default:
+        event.preventDefault();
     }
   }
 

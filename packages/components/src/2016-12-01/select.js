@@ -36,7 +36,10 @@ class Select extends Element {
     this.display = 'inline-block';
     this.position = 'relative';
 
-    ['_resetButtonListeners', '_listenForMouseUp', '_setFocusedOption', '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate'].forEach((handler) => {
+    [
+      '_setFilter', '_resetButtonListeners', '_listenForMouseUp', '_setFocusedOption',
+      '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate',
+    ].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -56,13 +59,39 @@ class Select extends Element {
     this._queueRender();
   }
 
-  set focusedIndex(newValue) {
-    this.state.focusedIndex = newValue;
+  set focusedKey(newValue) {
+    this.state.focusedKey = newValue;
     this._queueRender();
   }
 
-  set selectedIndex(newValue) {
-    this.state.selectedIndex = newValue;
+  set selectedIndex(index) {
+    this.state.selectedIndex = index;
+    const option = this.state.options[index];
+    if (option) {
+      this.selectedKey = option.key;
+    } else {
+      this.selectedKey = undefined;
+    }
+  }
+
+  set selectedKey(newValue) {
+    this.state.selectedKey = newValue;
+    this._queueRender();
+  }
+
+  set searchable(newValue) {
+    if (newValue === this.state.searchable) { return; }
+
+    this.state.searchable = newValue;
+    this._removeListeners();
+    this.button.remove();
+    this._addListeners();
+
+    this._queueRender();
+  }
+
+  set filter(newValue) {
+    this.state.filter = newValue;
     this._queueRender();
   }
 
@@ -84,24 +113,34 @@ class Select extends Element {
   }
 
   _ensureButton() {
-    this.button = this.querySelector('orion-button');
+    this.button = this.querySelector('[data-orion-id=select-button]');
     if (this.button === null) {
-      this.button = document.createElement('orion-button');
-      applyProps(this.button, {
-        textContent: 'Select',
-      });
-      this.appendChild(this.button);
+      if (this.state.searchable) {
+        this.button = document.createElement('input');
+        applyProps(this.button, {
+          placeholder: 'Select',
+        });
+      } else {
+        this.button = document.createElement('orion-button');
+        applyProps(this.button, {
+          textContent: 'Select',
+        });
+      }
+
+      this.button.setAttribute('data-orion-id', 'select-button');
+      this.insertBefore(this.button, this.menu);
     }
   }
 
   _addListeners() {
-    this._ensureButton();
     this._ensureMenu();
+    this._ensureButton();
 
     this.addEventListener('keydown', this._handleKeydown);
     this.button.addEventListener('mousedown', this._listenForMouseUp);
     this.button.addEventListener('focus', this._focus);
     this.button.addEventListener('blur', this._blur);
+    this.button.addEventListener('input', this._setFilter);
     this.addEventListener('optionSelected', this._setSelectedOption);
     this.addEventListener('optionFocused', this._setFocusedOption);
     this.menu.addEventListener('closed', this._deactivate);
@@ -112,6 +151,7 @@ class Select extends Element {
     this.button.removeEventListener('mousedown', this._listenForMouseUp);
     this.button.removeEventListener('focus', this._focus);
     this.button.removeEventListener('blur', this._blur);
+    this.button.removeEventListener('input', this._setFilter);
     this.removeEventListener('optionSelected', this._setSelectedOption);
     this.removeEventListener('optionFocused', this._setFocusedOption);
     this.menu.removeEventListener('closed', this._deactivate);
@@ -153,7 +193,7 @@ class Select extends Element {
         break;
       case 'Tab':
       case 'Enter':
-        this._dispatchStateChange('optionSelected', this.state.focusedIndex);
+        this._dispatchStateChange('optionSelected', this.state.focusedKey);
         break;
       default:
     }
@@ -161,14 +201,15 @@ class Select extends Element {
 
   _setSelectedOption(event) {
     event.preventDefault();
-    const nextState = SelectState.optionSelected(this.state, event.detail.selectedIndex);
+    const nextState = SelectState.optionSelected(this.state, event.detail.selectedKey);
     this.dispatchEvent(new CustomEvent('change', {
       detail: { type: 'optionSelected', state: nextState },
     }));
   }
 
   _setFocusedOption(event) {
-    const nextState = SelectState.optionFocused(this.state, event.detail.focusedIndex);
+    const focusedKey = event.detail.focusedKey;
+    const nextState = SelectState.optionFocused(this.state, focusedKey);
     this.dispatchEvent(new CustomEvent('change', {
       detail: { type: 'optionFocused', state: nextState },
     }));
@@ -200,6 +241,11 @@ class Select extends Element {
     }));
   }
 
+  _setFilter(event) {
+    // event.stopPropagation();
+    this.filter = event.target.value;
+  }
+
   render() {
     this._ensureButton();
     this._ensureMenu();
@@ -208,22 +254,27 @@ class Select extends Element {
       zIndex: this.Z_INDEX,
     });
 
+    const filter = this.state.filter || '';
+    const optionFilter = new RegExp(`^${filter}`, 'i');
+    const filteredOptions = this.state.options.filter(option => option.label.match(optionFilter));
+
     applyProps(this.menu, {
       open: this.state.open,
-      options: this.state.options,
+      options: filteredOptions,
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
-      focusedIndex: this.state.focusedIndex,
-      selectedIndex: this.state.selectedIndex,
+      focusedKey: this.state.focusedKey,
+      selectedKey: this.state.selectedKey,
     });
 
     let label = 'Select';
-    const selectedOption = this.state.options[this.state.selectedIndex];
+    const selectedOption = this.state.options.find(o => o.key === this.state.selectedKey);
     if (selectedOption !== undefined) {
       label = selectedOption.label;
     }
     applyProps(this.button, {
       textContent: label,
+      // value: label,
       hasFocus: (this.state.hasFocus && !this.state.open),
       disabled: this.state.disabled,
     });

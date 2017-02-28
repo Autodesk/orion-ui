@@ -60,13 +60,13 @@ class SelectMenu extends Element {
     this._queueRender();
   }
 
-  set focusedIndex(newValue) {
-    this.state.focusedIndex = newValue;
+  set focusedKey(newValue) {
+    this.state.focusedKey = newValue;
     this._queueRender();
   }
 
-  set selectedIndex(newValue) {
-    this.state.selectedIndex = newValue;
+  set selectedKey(newValue) {
+    this.state.selectedKey = newValue;
     this._queueRender();
   }
 
@@ -105,10 +105,9 @@ class SelectMenu extends Element {
     this._ensureList();
 
     if (this.state.open) {
-      const options = this.state.options.map((option, i) => {
-        option.hasFocus = (i === this.state.focusedIndex);
-        option.index = i;
-        option.isSelected = (i === this.state.selectedIndex);
+      const options = this.state.options.map((option) => {
+        option.hasFocus = (option.key === this.state.focusedKey);
+        option.isSelected = (option.key === this.state.selectedKey);
         return option;
       });
 

@@ -25,7 +25,7 @@ export default function interactive() {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     constructor(props) {
@@ -46,7 +46,7 @@ class App extends React.Component {
 
     render() {
         const date = moment();
-        return <DatePicker {...this.state.datePickerState} date={date} onChange={this.onChange}  />;
+        return <Datepicker {...this.state.datePickerState} date={date} onChange={this.onChange}  />;
     }
 }
 
@@ -57,9 +57,9 @@ ReactDOM.render(React.createElement(App), document.body);`;
 
 import 'angular';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [DatePicker.module])
+angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();

@@ -16,27 +16,29 @@ limitations under the License.
 
 */
 import React from 'react';
-import { text } from '@kadira/storybook-addon-knobs';
+import moment from 'moment';
+import { text, boolean } from '@kadira/storybook-addon-knobs';
 
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function focusMonthAndDay() {
   const props = {
-    focusDate: text('Focus Date', '2016-01-01'),
+    focusDate: text('Focus Date', '2015-01-02'),
+    focus: boolean('Focus', true),
   };
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
         const date = moment();
         const focusDate = moment("${props.focusDate}")
-        return <DatePicker date={date} focus={true} focusDate={focusDate} />;
+        return <Datepicker date={date} focus={${props.focus}} focusDate={focusDate} />;
     }
 }
 
@@ -47,12 +49,13 @@ ReactDOM.render(React.createElement(App), document.body);`;
 
 import 'angular';
 import * as moment from 'moment';
-import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [DatePicker.module])
+angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();
+    app.focus = ${props.focus};
     app.focusDate = moment("${props.focusDate}")
   });
 
@@ -61,13 +64,19 @@ angular.module('app', [DatePicker.module])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" focusDate="{{app.focusDate}}" />
+    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" focusDate="{{app.focusDate}}" />
   </body>
 </html>`;
 
+  const staticDate = moment('2014-12-01');
+
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker
+        focusDate={moment(props.focusDate)}
+        focus={props.focus}
+        currentDate={staticDate}
+      />
     </WithSource>
   );
 }

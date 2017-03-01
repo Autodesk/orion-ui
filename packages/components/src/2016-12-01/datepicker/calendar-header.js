@@ -35,7 +35,16 @@ class CalendarHeader extends Element {
     this._ensurePrev();
     this._ensureMonth();
     this._ensureNext();
+
+    this.prevDiv.addEventListener('mousedown', this._emitPreviousMonth);
+    this.nextDiv.addEventListener('mousedown', this._emitNextMonth);
+
     this._queueRender();
+  }
+
+  disconnectedCallback() {
+    this.prevDiv.removeEventListener('mousedown', this._emitPreviousMonth);
+    this.nextDiv.removeEventListener('mousedown', this._emitNextMonth);
   }
 
   set monthFormat(val) {
@@ -50,8 +59,12 @@ class CalendarHeader extends Element {
 
   _ensurePrev() {
     if (this.prevDiv !== undefined) { return; }
-    this.prevDiv = document.createElement('a');
-    this.prevDiv.innerHTML = '&larr;';
+    this.prevDiv = document.createElement('orion-element');
+    applyProps(this.prevDiv, {
+      innerHTML: '&larr;',
+      color: 'black',
+      pointer: true,
+    });
     this.appendChild(this.prevDiv);
   }
 
@@ -63,9 +76,23 @@ class CalendarHeader extends Element {
 
   _ensureNext() {
     if (this.nextDiv !== undefined) { return; }
-    this.nextDiv = document.createElement('a');
-    this.nextDiv.innerHTML = '&rarr;';
+    this.nextDiv = document.createElement('orion-element');
+    applyProps(this.nextDiv, {
+      innerHTML: '&rarr;',
+      color: 'black',
+      pointer: true,
+    });
     this.appendChild(this.nextDiv);
+  }
+
+  _emitPreviousMonth(event) {
+    event.preventDefault();
+    this.dispatchEvent(new CustomEvent('previousMonth', { bubbles: true }));
+  }
+
+  _emitNextMonth(event) {
+    event.preventDefault();
+    this.dispatchEvent(new CustomEvent('nextMonth', { bubbles: true }));
   }
 
   render() {

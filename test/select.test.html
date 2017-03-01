@@ -39,18 +39,23 @@ limitations under the License.
       });
     }
 
+    function flushQueue(done) {
+      (new RenderQueue()).flush();
+      if (done) { setTimeout(() => { done() }, 50); };
+    }
+
     describe('<orion-select>', () => {
       var select, button, menu, wrapper;
 
-      beforeEach(() => wrapper = fixture('select'))
-
       beforeEach(() => {
+        wrapper = fixture('select');
         select = wrapper.querySelector('orion-select');
         button = select.querySelector('orion-button');
 
         select.addEventListener('change', (event) => {
           applyProps(select, event.detail.state);
         });
+
         select.options = [
           { label: 'Killer Bees', value: 1, key: 1 },
           { label: 'Aardvarks', value: 2, key: 2 },
@@ -58,23 +63,23 @@ limitations under the License.
       });
 
       context('after clicking', () => {
-        beforeEach(() => {
+        beforeEach((done) => {
           button.dispatchEvent(new Event('mouseenter'));
           button.dispatchEvent(new Event('mousedown'));
           button.dispatchEvent(new Event('mouseup'));
           (new RenderQueue()).clearQueue();
-          menu = select.querySelector('orion-list');
         });
 
         it('shows a menu of options', () => {
+          menu = select.querySelector('orion-list');
           expect(menu.innerText).to.have.string('Killer Bees');
           expect(menu.innerText).to.have.string('Aardvarks');
         });
 
         context('and clicking an option', () => {
-          beforeEach(() => {
-            let menu = select.querySelector('orion-list');
-            let option = menu.querySelectorAll('orion-select-option')[1];
+          beforeEach((done) => {
+            menu = select.querySelector('orion-list');
+            const option = menu.querySelectorAll('orion-select-option')[1];
             option.dispatchEvent(new Event('mouseenter'));
             option.dispatchEvent(new Event('mousedown'));
             option.dispatchEvent(new Event('mouseup'));
@@ -91,7 +96,7 @@ limitations under the License.
         });
 
         context('and clicking away', () => {
-          beforeEach(() => {
+          beforeEach((done) => {
             button.dispatchEvent(new Event('blur'));
             (new RenderQueue()).clearQueue();
           });
@@ -104,7 +109,7 @@ limitations under the License.
       });
 
       context('after focusing the button', () => {
-        beforeEach(() => {
+        beforeEach((done) => {
           button.dispatchEvent(new Event('focus'));
           (new RenderQueue()).clearQueue();
         });
@@ -116,15 +121,13 @@ limitations under the License.
         context('pressing an arrow key', () => {
           var menu;
 
-          beforeEach(() => {
+          beforeEach((done) => {
             select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 }));
             (new RenderQueue()).clearQueue();
-
-            menu = select.querySelector('orion-list');
           });
 
           it('opens the menu', () => {
-            (new RenderQueue()).flush();
+            menu = select.querySelector('orion-list');
             expect(menu.innerText).to.have.string('Killer Bees');
             expect(menu.innerText).to.have.string('Aardvarks');
           });
@@ -132,7 +135,7 @@ limitations under the License.
           context('then pressing enter', () => {
             var initialIndex;
 
-            beforeEach(() => {
+            beforeEach((done) => {
               initialIndex = select.state.selectedIndex;
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 })); // Focus next option
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13 }));
@@ -151,7 +154,7 @@ limitations under the License.
           context('then pressing escape', () => {
             var initialIndex;
 
-            beforeEach(() => {
+            beforeEach((done) => {
               initialIndex = select.state.selectedIndex;
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
               (new RenderQueue()).clearQueue();

@@ -29,13 +29,14 @@ function template(dictionary, templateFn) {
  */
 const colors = {
   black: '#000',
-  white: '#fff',
   blue: '#00f',
   grey4: '#999', // 160-ish
   grey3: '#aaa', // 170-ish
   grey2: '#ccc', // 200-ish
   grey1: '#ddd', // 220-ish
   grey0: '#eee', // 240-ish
+  transparent: 'transparent',
+  white: '#fff',
 };
 
 /**

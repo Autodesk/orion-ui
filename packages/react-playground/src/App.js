@@ -26,19 +26,19 @@ class App extends React.Component {
     this.state = {
       disabled: false,
       selectedIndex: undefined,
+
+      buttonSizes: [
+        { label: 'X-small', value: 'x-small', key: 0, disabled: true },
+        { label: 'Small', value: 'small', key: 1 },
+        { label: 'Medium', value: 'medium', key: 2 },
+        { label: 'Large', value: 'large', key: 3 },
+        { label: 'X-Large', value: 'x-large', key: 4, disabled: true },
+      ]
     };
 
-    ['setSelectedIndex', 'handleClick', 'toggleDisabled'].forEach((fn) => {
+    ['setSelectedIndex', 'handleClick', 'toggleDisabled', 'toggleDisabledOption'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
-
-    this.buttonSizes = [
-      { label: 'X-small', value: 'x-small', key: 0, disabled: true },
-      { label: 'Small', value: 'small', key: 1 },
-      { label: 'Medium', value: 'medium', key: 2 },
-      { label: 'Large', value: 'large', key: 3 },
-      { label: 'X-Large', value: 'x-large', key: 4, disabled: true },
-    ];
   }
 
   handleClick() {
@@ -49,13 +49,19 @@ class App extends React.Component {
     this.setState({ disabled: !this.state.disabled });
   }
 
+  toggleDisabledOption() {
+    const buttonSizes = this.state.buttonSizes;
+    buttonSizes[0].disabled = !buttonSizes[0].disabled;
+    this.setState({ buttonSizes });
+  }
+
   setSelectedIndex(event) {
     this.setState({ selectedIndex: event.detail.state.selectedIndex });
   }
 
   render() {
     let selectedSize;
-    const selectedOption = this.buttonSizes[this.state.selectedIndex];
+    const selectedOption = this.state.buttonSizes[this.state.selectedIndex];
     if (selectedOption !== undefined) {
       selectedSize = selectedOption.value;
     }
@@ -68,8 +74,9 @@ class App extends React.Component {
         </div>
         <div style={{ margin: '40px' }}>
           <input />
-          <Select disabled={this.state.disabled} options={this.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
+          <Select disabled={this.state.disabled} options={this.state.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex} />
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
+          <button onClick={this.toggleDisabledOption}>Toggle disabled option</button>
         </div>
         <div>
           <Datepicker></Datepicker>

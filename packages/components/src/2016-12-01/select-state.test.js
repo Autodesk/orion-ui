@@ -21,7 +21,7 @@ const expect = chai.expect;
 
 const SelectState = require('./select-state.js');
 
-describe.only('SelectState', () => {
+describe('SelectState', () => {
   const options = [
     { label: 'Red', value: '#F00', key: 'a' },
     { label: 'Green', value: '#0F0', key: 'b' },
@@ -122,6 +122,7 @@ describe.only('SelectState', () => {
         open: true,
         options,
         selectedKey: 'a',
+        filter: 'foo',
       };
       nextState = SelectState.optionSelected(state, 'b');
     });
@@ -132,6 +133,10 @@ describe.only('SelectState', () => {
 
     it('closes the menu', () => {
       expect(nextState.open).to.be.false;
+    });
+
+    it('clears the filter', () => {
+      expect(nextState.filter).to.eq('');
     });
 
     context('with an non-existant option key', () => {
@@ -148,7 +153,7 @@ describe.only('SelectState', () => {
   describe('deactivated', () => {
     let nextState;
     before(() => {
-      nextState = SelectState.deactivated({ open: true, focusedKey: 'b' });
+      nextState = SelectState.deactivated({ open: true, focusedKey: 'b', filter: 'foo' });
     });
 
     it('sets open to false', () => {
@@ -157,6 +162,10 @@ describe.only('SelectState', () => {
 
     it('sets focusedKey to undefined', () => {
       expect(nextState.focusedKey).to.be.undefined;
+    });
+
+    it('clears the filter', () => {
+      expect(nextState.filter).to.eq('');
     });
   });
 
@@ -330,6 +339,66 @@ describe.only('SelectState', () => {
     it('closes the menu', () => {
       const nextState = SelectState.blur({ hasFocus: true, open: true });
       expect(nextState.open).to.be.false;
+    });
+
+    it('clears the filter', () => {
+      const nextState = SelectState.blur({ filter: 'foo' });
+      expect(nextState.filter).to.eq('');
+    });
+  });
+
+  describe('filter', () => {
+    let nextState;
+
+    context('matching one option', () => {
+      beforeEach(() => {
+        nextState = SelectState.filter({ options }, 'gr');
+      });
+
+      it('sets filteredOptions to the matching option', () => {
+        expect(nextState.filteredOptions.length).to.eq(1);
+        expect(nextState.filteredOptions[0].label).to.eq('Green');
+      });
+    });
+
+    context('matching no options', () => {
+      beforeEach(() => {
+        nextState = SelectState.filter({ options }, 'growlith');
+      });
+
+      it('sets filteredOptions to an empty array', () => {
+        expect(nextState.filteredOptions.length).to.eq(0);
+      });
+    });
+
+    context('with empty string', () => {
+      beforeEach(() => {
+        nextState = SelectState.filter({ options }, '');
+      });
+
+      it('sets filteredOptions to all options', () => {
+        expect(nextState.filteredOptions.length).to.eq(3);
+      });
+    });
+
+    context('with undefined', () => {
+      beforeEach(() => {
+        nextState = SelectState.filter({ options }, undefined);
+      });
+
+      it('sets filteredOptions to all options', () => {
+        expect(nextState.filteredOptions.length).to.eq(3);
+      });
+    });
+
+    it('sets the filter', () => {
+      nextState = SelectState.filter({ options }, 'foo');
+      expect(nextState.filter).to.eq('foo');
+    });
+
+    it('opens the menu', () => {
+      nextState = SelectState.filter({ options }, 'foo');
+      expect(nextState.open).to.eq(true);
     });
   });
 });

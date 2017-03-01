@@ -23,10 +23,10 @@ import { WithSource } from '../../addons/source-addon';
 
 export default function optionFocus() {
   const props = {
-    focusedIndex: number('Focus Index', 1, {
+    focusedKey: number('Focus Key', 2, {
       range: true,
-      min: 0,
-      max: 1,
+      min: 1,
+      max: 2,
       step: 1,
     }),
     open: boolean('Open', true),
@@ -49,7 +49,7 @@ render() {
   ];
 
   return (
-    <Select options={options} open={true} focusedIndex={${props.focusedIndex}} />
+    <Select options={options} open={true} focusedKey={${props.focusedKey}} />
   )
 }
 }
@@ -68,7 +68,7 @@ angular.module('app', [])
     { value: 'two', label: 'Two', key: 2 }
   ];
 
-  app.focusedIndex = ${props.focusedIndex};
+  app.focusedKey = ${props.focusedKey};
 }]);
 
 // app.html
@@ -76,13 +76,13 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="true" focusedIndex="{{app.focusedIndex}}" />
+  <orion-select options="{{app.options}}" open="true" focusedKey="{{app.focusedKey}}" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} focusedIndex={props.focusedIndex} open={props.open} />
+      <Select options={options} focusedKey={props.focusedKey} open={props.open} />
     </WithSource>
   );
 }

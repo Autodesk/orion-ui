@@ -16,6 +16,7 @@ limitations under the License.
 */
 module.exports = function scrollIntoView(element) {
   const parent = element.parentElement;
+  if (parent === null) { return; }
 
   const showChildAtTop = element.offsetTop;
   const isChildAboveScrollView = parent.scrollTop > element.offsetTop;

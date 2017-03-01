@@ -24,6 +24,11 @@ const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props');
 const eventKey = require('../utils/event-key');
 
+function blockInputChangeEvent(event) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
 class Select extends Element {
   constructor() {
     super();
@@ -46,6 +51,16 @@ class Select extends Element {
 
   set options(newOptions) {
     this.state.options = newOptions;
+    this._queueRender();
+  }
+
+  set filteredOptions(newOptions) {
+    this.state.filteredOptions = newOptions;
+    this._queueRender();
+  }
+
+  set filter(val) {
+    this.state.filter = val;
     this._queueRender();
   }
 
@@ -87,11 +102,6 @@ class Select extends Element {
     this.button.remove();
     this._addListeners();
 
-    this._queueRender();
-  }
-
-  set filter(newValue) {
-    this.state.filter = newValue;
     this._queueRender();
   }
 
@@ -141,6 +151,7 @@ class Select extends Element {
     this.button.addEventListener('focus', this._focus);
     this.button.addEventListener('blur', this._blur);
     this.button.addEventListener('input', this._setFilter);
+    this.button.addEventListener('change', blockInputChangeEvent);
     this.addEventListener('optionSelected', this._setSelectedOption);
     this.addEventListener('optionFocused', this._setFocusedOption);
     this.menu.addEventListener('closed', this._deactivate);
@@ -152,6 +163,7 @@ class Select extends Element {
     this.button.removeEventListener('focus', this._focus);
     this.button.removeEventListener('blur', this._blur);
     this.button.removeEventListener('input', this._setFilter);
+    this.button.removeEventListener('change', blockInputChangeEvent);
     this.removeEventListener('optionSelected', this._setSelectedOption);
     this.removeEventListener('optionFocused', this._setFocusedOption);
     this.menu.removeEventListener('closed', this._deactivate);
@@ -242,8 +254,7 @@ class Select extends Element {
   }
 
   _setFilter(event) {
-    // event.stopPropagation();
-    this.filter = event.target.value;
+    this._dispatchStateChange('filter', event.target.value);
   }
 
   render() {
@@ -254,13 +265,9 @@ class Select extends Element {
       zIndex: this.Z_INDEX,
     });
 
-    const filter = this.state.filter || '';
-    const optionFilter = new RegExp(`^${filter}`, 'i');
-    const filteredOptions = this.state.options.filter(option => option.label.match(optionFilter));
-
     applyProps(this.menu, {
       open: this.state.open,
-      options: filteredOptions,
+      options: this.state.filteredOptions || this.state.options,
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
       focusedKey: this.state.focusedKey,
@@ -274,7 +281,8 @@ class Select extends Element {
     }
     applyProps(this.button, {
       textContent: label,
-      // value: label,
+      placeholder: label,
+      value: this.state.filter || null,
       hasFocus: (this.state.hasFocus && !this.state.open),
       disabled: this.state.disabled,
     });

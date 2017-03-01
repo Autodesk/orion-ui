@@ -19,18 +19,19 @@ const chai = require('chai');
 
 const expect = chai.expect;
 
-describe('Typography', () => {
+describe.only('Typography', () => {
   describe('attributeChangedCallback', () => {
     context('for attribute textAlign', () => {
       context('with a valid value', () => {
         [
-          { value: 'left', result: 'ta-l' },
-          { value: 'center', result: 'ta-c' },
-          { value: 'right', result: 'ta-r' },
-        ].forEach(({ value, result }) => {
+          { attr: 'text-align', value: 'left', result: 'ta-l' },
+          { attr: 'text-align', value: 'center', result: 'ta-c' },
+          { attr: 'text-align', value: 'right', result: 'ta-r' },
+          { attr: 'white-space', value: 'nowrap', result: 'ws-nw' },
+        ].forEach(({ attr, value, result }) => {
           context(`with ${value}`, () => {
             it(`returns class ${result}`, () => {
-              expect(Typography.attributeChangedCallback('text-align', value)).to.eq(result);
+              expect(Typography.attributeChangedCallback(attr, value)).to.eq(result);
             });
           });
         });

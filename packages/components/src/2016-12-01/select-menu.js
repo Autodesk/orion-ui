@@ -84,7 +84,7 @@ class SelectMenu extends Element {
       container: 'column',
       'box-shadow': 1,
       'overflow-y': 'auto',
-      position: 'absolute',
+      'white-space': 'nowrap',
     });
     this.list.style.maxHeight = `${this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE}px`;
   }

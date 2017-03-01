@@ -26,6 +26,10 @@ const css = `
   .ta-r {
     text-align: right;
   }
+
+  .ws-nw {
+    white-space: nowrap;
+  }
 `;
 
 const attrMap = {
@@ -33,6 +37,9 @@ const attrMap = {
     left: 'ta-l',
     center: 'ta-c',
     right: 'ta-r',
+  },
+  'white-space': {
+    nowrap: 'ws-nw',
   },
 };
 

@@ -49,6 +49,10 @@ angular
       $scope.disabled= !$scope.disabled;
     }
 
+    this.toggleDisabledOption = () => {
+      $scope.sizes[0].disabled = !$scope.sizes[0].disabled;
+    }
+
     this.setSize = (event) => {
       const selectedOption = $scope.sizes[event.detail.state.selectedIndex];
       if (selectedOption) {

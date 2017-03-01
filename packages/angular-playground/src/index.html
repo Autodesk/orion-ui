@@ -31,6 +31,7 @@ limitations under the License.
     <div ng-controller="Controller as ctrl">
       <h2>Buttons</h2>
       <a href="#" ng-click="ctrl.toggleDisability()">Toggle Button Disability</a> |
+      <orion-button ng-click="ctrl.toggleDisabledOption()">Toggle Disabled Option</orion-button>
       <orion-select on-change="ctrl.setSize(event)" options="sizes" disabled="disabled" ></orion-select>
       <div ng-repeat="b in buttons">
         <p>

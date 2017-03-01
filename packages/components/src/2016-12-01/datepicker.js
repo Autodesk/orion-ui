@@ -15,9 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-
-import moment from 'moment';
-
 require('../../vendor/es5-custom-element-shim');
 
 require('./datepicker/datepicker-calendar');
@@ -62,7 +59,7 @@ class Datepicker extends Element {
 
     if (val) {
       if (!this.state.focusDate) {
-        this.state.focusDate = moment();
+        this.state.focusDate = this.state.date || this.state.currentDate;
       }
       this.calendar.focusDate = this.state.focusDate;
     }
@@ -93,6 +90,11 @@ class Datepicker extends Element {
     this._queueRender();
   }
 
+  set monthFormat(val) {
+    this.state.monthFormat = val;
+    this._queueRender();
+  }
+
   get monthFormat() {
     return this.state.monthFormat;
   }
@@ -105,8 +107,38 @@ class Datepicker extends Element {
     return '';
   }
 
-  _handleKeydown(event) {
+  get isEnabled() {
+    return this.state.isEnabled;
+  }
+
+  set isEnabled(fn) {
+    this.state.isEnabled = fn;
+    this._queueRender();
+  }
+
+  _handleRegularKeydown(event) {
     switch (eventKey(event)) {
+      case 'ArrowUp':
+        event.preventDefault();
+        this._dispatchStateChange('focusPreviousWeek');
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        this._dispatchStateChange('focusNextWeek');
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        this._dispatchStateChange('focusPreviousDay');
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this._dispatchStateChange('focusNextDay');
+        break;
+      case 'Enter':
+        this._dispatchStateChange('selectFocusDate');
+        this._dispatchStateChange('leaveFocused');
+        break;
+      case 'Escape':
       case 'Tab':
         this._dispatchStateChange('leaveFocused');
         break;
@@ -116,6 +148,28 @@ class Datepicker extends Element {
         break;
       default:
         event.preventDefault();
+    }
+  }
+
+  _handleShiftKeydown(event) {
+    switch (eventKey(event)) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        this._dispatchStateChange('focusPreviousMonth');
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this._dispatchStateChange('focusNextMonth');
+        break;
+      default:
+    }
+  }
+
+  _handleKeydown(event) {
+    if (event.shiftKey) {
+      this._handleShiftKeydown(event);
+    } else {
+      this._handleRegularKeydown(event);
     }
   }
 
@@ -129,7 +183,20 @@ class Datepicker extends Element {
   }
 
   _handleDateSelected(event) {
-    this._dispatchStateChange('dateSelected', event.detail.selectedDate);
+    this._dispatchStateChange('selectDate', event.detail.selectedDate);
+    this._dispatchStateChange('leaveFocused');
+  }
+
+  _handleHoverDate(event) {
+    this._dispatchStateChange('setFocusDate', event.detail.hoveredDate);
+  }
+
+  _handlePreviousMonth() {
+    this._dispatchStateChange('focusPreviousMonth');
+  }
+
+  _handleNextMonth() {
+    this._dispatchStateChange('focusNextMonth');
   }
 
   _dispatchStateChange(eventType, arg) {
@@ -146,14 +213,20 @@ class Datepicker extends Element {
     this.dateInput.addEventListener('keydown', this._handleKeydown);
     this.dateInput.addEventListener('focus', this._focus);
     this.dateInput.addEventListener('blur', this._blur);
-    this.addEventListener('dateSelected', this._handleDateSelected);
+    this.addEventListener('selectDate', this._handleDateSelected);
+    this.addEventListener('hoverDate', this._handleHoverDate);
+    this.addEventListener('nextMonth', this._handleNextMonth);
+    this.addEventListener('previousMonth', this._handlePreviousMonth);
   }
 
   _removeListeners() {
     this.dateInput.removeEventListener('keydown', this._handleKeydown);
     this.dateInput.removeEventListener('focus', this._focus);
     this.dateInput.removeEventListener('blur', this._blur);
-    this.removeEventListener('dateSelected', this._handleDateSelected);
+    this.removeEventListener('selectDate', this._handleDateSelected);
+    this.removeEventListener('hoverDate', this._handleHoverDate);
+    this.removeEventListener('nextMonth', this._handleNextMonth);
+    this.removeEventListener('previousMonth', this._handlePreviousMonth);
   }
 
   _ensureInput() {
@@ -191,6 +264,7 @@ class Datepicker extends Element {
       focusDate: this.focusDate,
       monthFormat: this.monthFormat,
       currentDate: this.currentDate,
+      isEnabled: this.isEnabled,
     });
 
     super.render();

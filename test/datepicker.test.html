@@ -38,37 +38,360 @@ limitations under the License.
       });
     }
 
-    function isHidden(el) {
-      return el.offsetParent === null;
+    function flushQueue(done) {
+      (new RenderQueue()).flush();
+      if (done) { setTimeout(() => { done() }, 50); };
     }
 
-    let wrapper, datepicker, input, calendar;
+    function isVisible(el) {
+      return el.display !== 'none';
+    }
+
+    function focusedDay(calendar) {
+      return moment(calendar.state.focusDate);
+    }
+
+    function selectedDay(datepicker) {
+      return moment(datepicker.state.date);
+    }
+
+    function displayedMonth(calendar) {
+      const header = calendar.querySelector('orion-calendar-header');
+      const match = header.innerText.match(/←\s*(.*)\s*→/);
+      return match ? match[1] : null;
+    }
+
+    function pressKey(input, key, keyCode, shiftKey) {
+      input.dispatchEvent(new KeyboardEvent('keydown', { key, keyCode, shiftKey }));
+    }
+
+    let wrapper, datepicker, input, calendar, calendarHeader, today;
 
     describe('<orion-datepicker>', () => {
       beforeEach((done) => {
+        today = moment('2015-01-15');
         datepicker = fixture('datepicker');
+        input = datepicker.querySelector('input');
+        calendar = datepicker.querySelector('orion-datepicker-calendar');
 
         datepicker.addEventListener('change', (event) => {
           applyProps(datepicker, event.detail.state);
         });
 
-        setTimeout(() => {
-          input = datepicker.querySelector('input');
-          calendar = datepicker.querySelector('orion-datepicker-calendar');
-          if (input && calendar) { done(); }
-        }, 75);
+        applyProps(datepicker, { currentDate: today });
+
+        flushQueue(done);
       });
 
-      it('input is visible', () => {
-        expect(isHidden(input)).to.be.false;
+      it('has a visible input', () => {
+        expect(isVisible(input)).to.be.true;
       });
 
       it('has an empty value', () => {
         expect(input.value).to.eq('');
       });
 
-      it('calendar is not visible', () => {
-        expect(isHidden(calendar)).to.be.true;
+      it('has no visible calendar', () => {
+        expect(isVisible(calendar)).to.be.false;
+      });
+
+      context('when focused', () => {
+        beforeEach((done) => {
+          input.dispatchEvent(new Event('focus'));
+          flushQueue(done);
+        });
+
+        it('the calendar is visible', () => {
+          expect(isVisible(calendar)).to.be.true;
+        });
+
+        it('displays the current month', () => {
+          expect(displayedMonth(calendar)).to.equal('January 2015');
+        });
+
+        it('is focused on today', () => {
+          expect(focusedDay(calendar).isSame(today, 'date')).to.be.true;
+        });
+
+        describe('navigating days with keyboard', () => {
+          context('by pressing right arrow key', () => {
+            beforeEach((done) => {
+              pressKey(input, 'ArrowRight', 39);
+              flushQueue(done);
+            });
+
+            it('is focused on the next day', () => {
+              const nextDay = moment(today).add(1, 'day');
+              expect(focusedDay(calendar).isSame(nextDay, 'date')).to.be.true;
+            });
+
+            context('and pressing right arrow key', () => {
+              beforeEach((done) => {
+                pressKey(input, 'ArrowLeft', 37);
+                flushQueue(done);
+              });
+
+              it('is focused back on today', () => {
+                expect(focusedDay(calendar).isSame(today, 'date')).to.be.true;
+              });
+            });
+          });
+        });
+
+        describe('navigating weeks with keyboard', () => {
+          context('by pressing down arrow key', () => {
+            beforeEach((done) => {
+              pressKey(input, 'ArrowDown', 40);
+              flushQueue(done);
+            });
+
+            it('is focused on a week from today', () => {
+              const nextWeek = moment(today).add(1, 'week');
+              expect(focusedDay(calendar).isSame(nextWeek, 'date')).to.be.true;
+            });
+
+            context('and pressing up arrow key', () => {
+              beforeEach((done) => {
+                pressKey(input, 'ArrowUp', 38);
+                flushQueue(done);
+              });
+
+              it('is focused back on today', () => {
+                expect(focusedDay(calendar).isSame(today, 'date')).to.be.true;
+              });
+            });
+          });
+        });
+
+        describe('navigating months with keyboard', () => {
+          context('by pressing shift + right arrow key', () => {
+            beforeEach((done) => {
+              pressKey(input, 'ArrowRight', 39, true);
+              flushQueue(done);
+            });
+
+            it('is focused on a month from today', () => {
+              const nextMonth = moment(today).add(1, 'month');
+              expect(focusedDay(calendar).isSame(nextMonth, 'date')).to.be.true;
+            });
+
+            it('displays the next month', () => {
+              expect(displayedMonth(calendar)).to.equal('February 2015');
+            });
+
+            context('and pressing shift + left arrow key', () => {
+              beforeEach((done) => {
+                pressKey(input, 'ArrowLeft', 37, true);
+                flushQueue(done);
+              });
+
+              it('is focused back on today', () => {
+                expect(focusedDay(calendar).isSame(today, 'date')).to.be.true;
+              });
+
+              it('displays the current month', () => {
+                expect(displayedMonth(calendar)).to.equal('January 2015');
+              });
+            });
+          });
+
+          context('navigating from last day of the month', () => {
+            let lastDayOfMonth;
+
+            beforeEach((done) => {
+              lastDayOfMonth = moment('2015-01-31');
+              applyProps(datepicker, { focusDate: lastDayOfMonth });
+              flushQueue(done);
+            });
+
+            context('and pressing right arrow key', () => {
+              beforeEach((done) => {
+                pressKey(input, 'ArrowRight', 39);
+                flushQueue(done);
+              });
+
+              it('is focused on the next day', () => {
+                const nextDay = moment('2015-02-01');
+                expect(focusedDay(calendar).isSame(nextDay, 'date')).to.be.true;
+              });
+
+              it('displays the next month', () => {
+                expect(displayedMonth(calendar)).to.equal('February 2015');
+              });
+
+              context('and pressing right arrow key', () => {
+                beforeEach((done) => {
+                  pressKey(input, 'ArrowLeft', 37);
+                  flushQueue(done);
+                });
+
+                it('is focused back on today', () => {
+                  expect(focusedDay(calendar).isSame(lastDayOfMonth, 'date')).to.be.true;
+                });
+
+                it('displays the current month', () => {
+                  expect(displayedMonth(calendar)).to.equal('January 2015');
+                });
+              });
+            });
+          });
+        });
+
+        describe('navigating days with the mouse', () => {
+          let hoveredDay;
+          let divToHover;
+
+          beforeEach((done) => {
+            hoveredDay = moment('2015-01-20');
+            divToHover = calendar.querySelectorAll('orion-calendar-day')[23]; // 2015-01-20
+            divToHover.dispatchEvent(new Event('mouseenter'));
+            flushQueue(done);
+          });
+
+          it('is focused on the hovered day', () => {
+            expect(focusedDay(calendar).isSame(hoveredDay, 'date')).to.be.true;
+          });
+        });
+
+        describe('navigating months with the mouse', () => {
+          context('clicks on the next month nav item', () => {
+            let nextMonth;
+
+            beforeEach((done) => {
+              calendarHeader = calendar.querySelector('orion-calendar-header');
+              nextMonth = moment('2015-02-15');
+              const nextMonthDiv = calendarHeader.lastChild;
+              nextMonthDiv.dispatchEvent(new Event('mousedown'));
+              flushQueue(done);
+            });
+
+            it('is focused on a month from today', () => {
+              expect(focusedDay(calendar).isSame(nextMonth, 'date')).to.be.true;
+            });
+
+            it('displays the next month', () => {
+              expect(displayedMonth(calendar)).to.equal('February 2015');
+            });
+
+            context('clicks on the previous month nav item', () => {
+              beforeEach((done) => {
+                const prevMonthDiv = calendarHeader.firstChild;
+                prevMonthDiv.dispatchEvent(new Event('mousedown'));
+                flushQueue(done);
+              });
+
+              it('is focused back on today', () => {
+                expect(focusedDay(calendar).isSame(today, 'date')).to.be.true;
+              });
+
+              it('displays the current month', () => {
+                expect(displayedMonth(calendar)).to.equal('January 2015');
+              });
+            });
+          });
+        });
+
+        describe('selecting days with the keyboard', () => {
+          let focusDate;
+
+          beforeEach((done) => {
+            focusDate = moment('2015-01-20');
+            applyProps(datepicker, { focusDate });
+            flushQueue(done);
+          });
+
+          context('by pressing the enter key', () => {
+            beforeEach((done) => {
+              pressKey(input, 'Enter', 13);
+              flushQueue(done);
+            });
+
+            it('sets the date to the focused day', () => {
+              expect(selectedDay(datepicker).isSame(focusDate, 'date')).to.be.true;
+            });
+
+            it('sets the value to the selected date', () => {
+              expect(input.value).to.equal('01-20-2015');
+            });
+
+            it('hides the calendar', (done) => {
+              setTimeout(() => {
+                expect(isVisible(calendar)).to.be.false;
+                done();
+              }, 100);
+            });
+          });
+        });
+
+        describe('selecting days with the mouse', () => {
+          let clickedDay;
+          let divToClick;
+
+          beforeEach((done) => {
+            clickedDay = moment('2015-01-20');
+            divToClick = calendar.querySelectorAll('orion-calendar-day')[23]; // 2015-01-20
+            input.dispatchEvent(new Event('blur'));
+            divToClick.dispatchEvent(new Event('mousedown'));
+            flushQueue(done);
+          });
+
+          it('sets the date to the focused day', () => {
+            expect(selectedDay(datepicker).isSame(clickedDay, 'date')).to.be.true;
+          });
+
+          it('sets the value to the selected date', () => {
+            expect(input.value).to.equal('01-20-2015');
+          });
+
+          it('hides the calendar', (done) => {
+            setTimeout(() => {
+              expect(isVisible(calendar)).to.be.false;
+              done();
+            }, 100);
+          });
+        });
+
+        context('and clicking away', () => {
+          beforeEach((done) => {
+            input.dispatchEvent(new Event('blur'));
+            flushQueue(done);
+          });
+
+          it('hides the calendar', (done) => {
+            setTimeout(() => {
+              expect(isVisible(calendar)).to.be.false;
+              done();
+            }, 200);
+          });
+        });
+
+        context('and pressing "Tab"', () => {
+          beforeEach((done) => {
+            pressKey(input, 'Tab', 9);
+            flushQueue(done);
+          });
+
+          it('hides the calendar', (done) => {
+            setTimeout(() => {
+              expect(isVisible(calendar)).to.be.false;
+              done();
+            }, 100);
+          });
+        });
+ 
+        context('and pressing "Escape"', () => {
+          beforeEach((done) => {
+            pressKey(input, 'Escape', 27);
+            flushQueue(done);
+          });
+
+          it('hides the calendar', (done) => {
+            setTimeout(() => {
+              expect(isVisible(calendar)).to.be.false;
+              done();
+            }, 100);
+          });
+        });
       });
     });
   </script>

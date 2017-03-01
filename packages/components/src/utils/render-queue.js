@@ -54,9 +54,4 @@ class RenderQueue {
   }
 }
 
-// The code below is necessary to have RenderQueue defined in the broweser
-if (typeof window !== 'undefined') {
-  window.RenderQueue = RenderQueue;
-}
-
 module.exports = RenderQueue;

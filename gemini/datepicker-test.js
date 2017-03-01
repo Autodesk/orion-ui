@@ -35,3 +35,17 @@ gemini.suite('datepicker-focused', (suite) => {
     .setCaptureElements(".example")
     .capture('datepicker-focused')
 });
+
+gemini.suite('datepicker-focused-month-day', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=focus%20month%20%26%20day')
+    .setCaptureElements(".example")
+    .capture('datepicker-focused-month-day')
+});
+
+gemini.suite('datepicker-custom-disabled-dates', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=custom%20disabled%20dates')
+    .setCaptureElements(".example")
+    .capture('datepicker-custom-disabled-dates')
+});

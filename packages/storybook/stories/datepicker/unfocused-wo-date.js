@@ -24,11 +24,11 @@ export default function unfocusedWoDate() {
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {DatePicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
-        return <DatePicker date={null} focus={false} />;
+        return <Datepicker date={null} focus={false} />;
     }
 }
 
@@ -38,7 +38,7 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import {DatePicker} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {

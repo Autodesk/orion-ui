@@ -29,11 +29,16 @@ class CalendarDay extends Element {
     const baseStyle = {
       'border-right': 1,
       'border-color': 'grey2',
+      background: 'transparent',
+      pointer: true,
+      notallowed: false,
     };
 
-    this.pastDayStyle = { ...baseStyle, color: 'grey4', notallowed: true };
-    this.currentDayStyle = { ...baseStyle, color: 'black', pointer: true };
-    this.futureDayStyle = { ...baseStyle, pointer: true };
+    this.disabledDayStyle = { ...baseStyle, color: 'grey4', pointer: false, notallowed: true };
+    this.currentDayStyle = { ...baseStyle, color: 'black' };
+    this.enabledDayStyle = { ...baseStyle, color: 'black' };
+    this.focusedDayStyle = { background: 'blue', color: 'white' };
+    this.otherMonthStyle = { pointer: false, notallowed: true };
   }
 
   set date(val) {
@@ -52,13 +57,14 @@ class CalendarDay extends Element {
     this._queueRender();
   }
 
+  set isEnabled(fn) {
+    this.state.isEnabled = fn;
+    this._queueRender();
+  }
+
   isCurrentDay() {
     if (!this.state.date || !this.state.currentDate) { return false; }
-    const today = this.state.currentDate;
-    const day = this.state.date;
-    return day.year() === today.year() &&
-           day.month() === today.month() &&
-           day.date() === today.date();
+    return this.state.date.isSame(this.state.currentDate, 'day');
   }
 
   get kind() {
@@ -66,15 +72,19 @@ class CalendarDay extends Element {
       return 'current';
     }
 
-    if (this.state.date.isBefore(this.state.currentDate)) {
-      return 'past';
+    if (!this.state.isEnabled || this.state.isEnabled(this.state.date)) {
+      return 'enabled';
     }
 
-    return 'future';
+    return 'disabled';
   }
 
   isInMonth() {
-    return this.state.date.month() === this.state.focusDate.month();
+    return this.state.date.isSame(this.state.focusDate, 'month');
+  }
+
+  isFocusedDay() {
+    return this.state.date.isSame(this.state.focusDate, 'day');
   }
 
   get dayNumber() {
@@ -82,9 +92,18 @@ class CalendarDay extends Element {
   }
 
   _emitDateSelected() {
-    if (this.kind !== 'past') {
-      this.dispatchEvent(new CustomEvent('dateSelected', {
+    if (this.kind !== 'disabled' && this.isInMonth()) {
+      this.dispatchEvent(new CustomEvent('selectDate', {
         detail: { selectedDate: this.state.date },
+        bubbles: true,
+      }));
+    }
+  }
+
+  _emitHover() {
+    if (this.kind !== 'disabled' && this.isInMonth()) {
+      this.dispatchEvent(new CustomEvent('hoverDate', {
+        detail: { hoveredDate: this.state.date },
         bubbles: true,
       }));
     }
@@ -95,33 +114,48 @@ class CalendarDay extends Element {
     this.style.paddingLeft = '4px';
     this.style.lineHeight = '1.75em';
 
-    this.addEventListener('click', this._emitDateSelected);
+    this.addEventListener('mousedown', this._emitDateSelected);
+    this.addEventListener('mouseenter', this._emitHover);
 
     this._queueRender();
   }
 
   disconnectedCallback() {
-    this.removeEventListener('click', this._emitDateSelected);
+    this.removeEventListener('mousedown', this._emitDateSelected);
+    this.removeEventListener('mouseenter', this._emitHover);
   }
 
   render() {
     if (this.state.date && this.state.focusDate && this.state.currentDate) {
       this.textContent = this.dayNumber;
+      const props = {};
 
       switch (this.kind) {
         case 'current':
-          applyProps(this, this.currentDayStyle);
+          Object.assign(props, this.currentDayStyle);
           this.style.fontWeight = 'bold';
           break;
-        case 'past':
-          applyProps(this, this.pastDayStyle);
+        case 'disabled':
+          Object.assign(props, this.disabledDayStyle);
+          this.style.fontWeight = 'normal';
           break;
-        case 'future':
-          applyProps(this, this.futureDayStyle);
+        case 'enabled':
+          Object.assign(props, this.enabledDayStyle);
+          this.style.fontWeight = 'normal';
           break;
         default:
           break;
       }
+
+      if (!this.isInMonth()) {
+        Object.assign(props, this.otherMonthStyle);
+      }
+
+      if (this.isFocusedDay()) {
+        Object.assign(props, this.focusedDayStyle);
+      }
+
+      applyProps(this, props);
     }
 
     super.render();

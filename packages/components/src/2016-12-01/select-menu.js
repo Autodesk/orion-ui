@@ -30,6 +30,13 @@ class SelectMenu extends Element {
     this.OPTION_HEIGHT = 26;
     this.MAX_OPTIONS_VISIBLE = 6;
 
+    applyProps(this, {
+      position: 'absolute',
+      display: 'block',
+      'box-shadow': 1,
+      'white-space': 'nowrap',
+    });
+
     ['_cloneEvent', '_close'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
@@ -82,9 +89,7 @@ class SelectMenu extends Element {
     applyProps(this.list, {
       itemTagname: 'orion-select-option',
       container: 'column',
-      'box-shadow': 1,
       'overflow-y': 'auto',
-      'white-space': 'nowrap',
     });
     this.list.style.maxHeight = `${this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE}px`;
   }
@@ -99,6 +104,29 @@ class SelectMenu extends Element {
 
   _close() {
     this.dispatchEvent(new CustomEvent('closed'));
+  }
+
+  _ensureNoResultsMessage() {
+    let noResultsMessage = this.querySelector('[data-orion-id=no-results-message]');
+    if (noResultsMessage !== null) { return; }
+
+    noResultsMessage = document.createElement('orion-element');
+    noResultsMessage.textContent = 'No results found';
+    noResultsMessage.setAttribute('data-orion-id', 'no-results-message');
+    applyProps(noResultsMessage, {
+      'padding-horizontal': 3,
+      'padding-vertical': 2,
+      background: 'white',
+      display: 'block',
+    });
+
+    this.appendChild(noResultsMessage);
+  }
+
+  _removeNoResultsMessage() {
+    const noResultsMessage = this.querySelector('[data-orion-id=no-results-message]');
+    if (noResultsMessage === null) { return; }
+    noResultsMessage.remove();
   }
 
   render() {
@@ -121,6 +149,13 @@ class SelectMenu extends Element {
 
       if (!this.contains(this.list)) {
         this.appendChild(this.list);
+      }
+
+      // show/hide the no results thing
+      if (options.length === 0) {
+        this._ensureNoResultsMessage();
+      } else {
+        this._removeNoResultsMessage();
       }
     } else {
       this._removeList();

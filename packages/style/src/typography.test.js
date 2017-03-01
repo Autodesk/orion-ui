@@ -19,7 +19,7 @@ const chai = require('chai');
 
 const expect = chai.expect;
 
-describe.only('Typography', () => {
+describe('Typography', () => {
   describe('attributeChangedCallback', () => {
     context('for attribute textAlign', () => {
       context('with a valid value', () => {

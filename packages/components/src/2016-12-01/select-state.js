@@ -83,7 +83,12 @@ const SelectState = {
 
   focusPrevious(state) {
     if (!state.open) { return this.activated(state); }
-    if (state.focusedKey === undefined) { return this._firstFocusableKey(state.filteredOptions); }
+    if (state.focusedKey === undefined) {
+      return {
+        ...state,
+        focusedKey: this._firstFocusableKey(state.filteredOptions),
+      };
+    }
 
     state = this.filter(state, state.filter);
 
@@ -105,7 +110,12 @@ const SelectState = {
 
   focusNext(state) {
     if (!state.open) { return this.activated(state); }
-    if (state.focusedKey === undefined) { return this._firstFocusableKey(state.filteredOptions); }
+    if (state.focusedKey === undefined) {
+      return {
+        ...state,
+        focusedKey: this._firstFocusableKey(state.filteredOptions),
+      };
+    }
 
     state = this.filter(state, state.filter);
 
@@ -128,6 +138,7 @@ const SelectState = {
   },
 
   _nextFocusableKey(initialKey, options, step) {
+    if (options.length === 0) { return undefined; }
     const initialOption = options.find(o => o.key === initialKey);
     let index = options.indexOf(initialOption);
     for (let i = 0; i < options.length; i += 1) {

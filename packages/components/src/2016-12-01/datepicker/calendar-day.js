@@ -128,18 +128,19 @@ class CalendarDay extends Element {
   render() {
     if (this.state.date && this.state.focusDate && this.state.currentDate) {
       this.textContent = this.dayNumber;
+      const props = {};
 
       switch (this.kind) {
         case 'current':
-          applyProps(this, this.currentDayStyle);
+          Object.assign(props, this.currentDayStyle);
           this.style.fontWeight = 'bold';
           break;
         case 'disabled':
-          applyProps(this, this.disabledDayStyle);
+          Object.assign(props, this.disabledDayStyle);
           this.style.fontWeight = 'normal';
           break;
         case 'enabled':
-          applyProps(this, this.enabledDayStyle);
+          Object.assign(props, this.enabledDayStyle);
           this.style.fontWeight = 'normal';
           break;
         default:
@@ -147,12 +148,14 @@ class CalendarDay extends Element {
       }
 
       if (!this.isInMonth()) {
-        applyProps(this, this.otherMonthStyle);
+        Object.assign(props, this.otherMonthStyle);
       }
 
       if (this.isFocusedDay()) {
-        applyProps(this, this.focusedDayStyle);
+        Object.assign(props, this.focusedDayStyle);
       }
+
+      applyProps(this, props);
     }
 
     super.render();

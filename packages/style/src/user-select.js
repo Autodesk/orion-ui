@@ -28,7 +28,6 @@ const attributes = [
 ];
 
 function attributeChangedCallback(attrName, value) {
-  console.log(attrName, value)
   if (!value) {
     return 'user-select';
   }

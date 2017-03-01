@@ -159,6 +159,7 @@ class SelectMenu extends Element {
       }
     } else {
       this._removeList();
+      this._removeNoResultsMessage();
     }
 
     super.render();

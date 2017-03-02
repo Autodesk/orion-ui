@@ -18,9 +18,11 @@ limitations under the License.
 import '../vendor/custom-elements-polyfill';
 import '@orion-ui/angular/lib/2016-12-01';
 
+import moment from 'moment';
+
 angular
   .module('app', ['orion'])
-  .controller('Controller', ['$scope', function($scope) {
+  .controller('Controller', ['$scope', function ($scope) {
     var that = this;
 
     $scope.buttons = [
@@ -31,7 +33,7 @@ angular
 
     $scope.sizes = [
       { label: 'X-small', value: 'x-small', key: 0, disabled: true },
-      { label: 'Small', value: 'small', key: 1},
+      { label: 'Small', value: 'small', key: 1 },
       { label: 'Medium', value: 'medium', key: 2 },
       { label: 'Large', value: 'large', key: 3 },
       { label: 'X-Large', value: 'x-large', key: 4, disabled: true },
@@ -46,7 +48,7 @@ angular
     }
 
     this.toggleDisability = () => {
-      $scope.disabled= !$scope.disabled;
+      $scope.disabled = !$scope.disabled;
     }
 
     this.toggleDisabledOption = () => {
@@ -64,5 +66,21 @@ angular
         });
         $scope.$apply();
       }
+    }
+
+    this.isEnabled = (date) => {
+      debugger;
+      const now = moment();
+      const twoWeeksFromNow = moment().add(2, 'weeks');
+
+      if (date.isBefore(now)) {
+        return false;
+      }
+
+      if (date.isAfter(twoWeeksFromNow)) {
+        return false;
+      }
+
+      return true;
     }
   }]);

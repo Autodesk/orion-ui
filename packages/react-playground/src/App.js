@@ -20,11 +20,14 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import moment from 'moment'
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       disabled: false,
+      isEnabled: false,
       selectedIndex: undefined,
 
       buttonSizes: [
@@ -36,7 +39,7 @@ class App extends React.Component {
       ]
     };
 
-    ['setSelectedIndex', 'handleClick', 'toggleDisabled', 'toggleDisabledOption'].forEach((fn) => {
+    ['setSelectedIndex', 'handleClick', 'toggleDisabled', 'toggleDisabledOption', 'isEnabled', 'handleIsEnabled'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
   }
@@ -59,6 +62,25 @@ class App extends React.Component {
     this.setState({ selectedIndex: event.detail.state.selectedIndex });
   }
 
+  handleIsEnabled(event) {
+    this.setState({ isEnabled: event.target.checked });
+  }
+
+  isEnabled(date) {
+    const now = moment();
+    const twoWeeksFromNow = moment().add(2, 'weeks');
+
+    if (date.isBefore(now)) {
+      return false;
+    }
+
+    if (date.isAfter(twoWeeksFromNow)) {
+      return false;
+    }
+
+    return true;
+  }
+
   render() {
     let selectedSize;
     const selectedOption = this.state.buttonSizes[this.state.selectedIndex];
@@ -79,7 +101,14 @@ class App extends React.Component {
           <button onClick={this.toggleDisabledOption}>Toggle disabled option</button>
         </div>
         <div>
-          <Datepicker></Datepicker>
+          {this.state.isEnabled &&
+            <Datepicker isEnabled={this.isEnabled}></Datepicker>
+          }
+
+          {!this.state.isEnabled &&
+            <Datepicker></Datepicker>
+          }
+          <label>Custom isEnabled: <input type="checkbox" value={this.state.isEnabled} onChange={this.handleIsEnabled} /></label>
         </div>
         <div>
           <Button size={selectedSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>

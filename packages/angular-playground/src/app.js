@@ -41,7 +41,9 @@ angular
 
     $scope.buttonSize = 'medium';
 
-    $scope.disabled = false
+    $scope.disabled = false;
+
+    $scope.searchable = true;
 
     that.handleClick = () => {
       alert('button clicked!');
@@ -82,5 +84,9 @@ angular
       }
 
       return true;
+    }
+
+    this.setSelectedIndex = (event) => {
+      $scope.selectedIndex = event.detail.state.selectedIndex;
     }
   }]);

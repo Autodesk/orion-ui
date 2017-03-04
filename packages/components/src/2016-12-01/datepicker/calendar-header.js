@@ -20,6 +20,7 @@ require('../../../vendor/es5-custom-element-shim');
 const Element = require('../element');
 const Registry = require('../../utils/private-registry');
 const applyProps = require('../../utils/apply-props');
+const formatMoment = require('../../utils/format-moment');
 
 class CalendarHeader extends Element {
   constructor() {
@@ -54,6 +55,16 @@ class CalendarHeader extends Element {
 
   set focusDate(val) {
     this.state.focusDate = val;
+    this._queueRender();
+  }
+
+  set locale(val) {
+    this.state.locale = val;
+    this._queueRender();
+  }
+
+  set i18n(val) {
+    this.state.i18n = val;
     this._queueRender();
   }
 
@@ -100,11 +111,12 @@ class CalendarHeader extends Element {
     this._ensureMonth();
     this._ensureNext();
 
-    if (this.state.focusDate && this.state.monthFormat) {
-      applyProps(this.monthDiv, {
-        textContent: this.state.focusDate.format(this.state.monthFormat),
-      });
-    }
+    this.prevDiv.setAttribute('title', this.state.i18n ? this.state.i18n.previousMonth : '');
+    this.nextDiv.setAttribute('title', this.state.i18n ? this.state.i18n.nextMonth : '');
+
+    applyProps(this.monthDiv, {
+      textContent: formatMoment(this.state.focusDate, this.state.monthFormat, this.state.locale),
+    });
 
     super.render();
   }

@@ -25,6 +25,7 @@ require('./calendar-day');
 const Element = require('../element');
 const Registry = require('../../utils/private-registry');
 const applyProps = require('../../utils/apply-props');
+const formatMoment = require('../../utils/format-moment');
 
 class DatepickerCalendar extends Element {
   constructor() {
@@ -68,15 +69,6 @@ class DatepickerCalendar extends Element {
     this._queueRender();
   }
 
-  _monthChanged(newDate) {
-    const oldDate = this.state.focusDate;
-
-    if (!oldDate || !newDate) { return true; }
-
-    return oldDate.month() !== newDate.month() ||
-           oldDate.year() !== newDate.year();
-  }
-
   set focusDate(val) {
     this.state.focusDate = val;
     this._queueRender();
@@ -84,6 +76,16 @@ class DatepickerCalendar extends Element {
 
   set currentDate(val) {
     this.state.currentDate = val;
+    this._queueRender();
+  }
+
+  set locale(val) {
+    this.state.locale = val;
+    this._queueRender();
+  }
+
+  set i18n(val) {
+    this.state.i18n = val;
     this._queueRender();
   }
 
@@ -97,13 +99,13 @@ class DatepickerCalendar extends Element {
   }
 
   _ensureWeeksHeader() {
-    let weeksHeader = this.querySelector('[data-orion-id=weeks-header]');
-    if (weeksHeader !== null) { return; }
+    this.weeksHeader = this.querySelector('[data-orion-id=weeks-header]');
+    if (this.weeksHeader !== null) { return; }
 
-    weeksHeader = document.createElement('orion-element');
-    weeksHeader.setAttribute('data-orion-id', 'weeks-header');
+    this.weeksHeader = document.createElement('orion-element');
+    this.weeksHeader.setAttribute('data-orion-id', 'weeks-header');
 
-    applyProps(weeksHeader, {
+    applyProps(this.weeksHeader, {
       display: 'flex',
       border: 1,
       'border-color': 'grey2',
@@ -111,12 +113,10 @@ class DatepickerCalendar extends Element {
 
     let lastCreatedHeaderCell = null;
 
-    [...Array(7)].forEach((_, i) => {
-      const dayOfWeek = moment().weekday(i).format('dd');
+    [...Array(7)].forEach(() => {
       const div = document.createElement('orion-element');
 
       applyProps(div, {
-        textContent: dayOfWeek,
         'border-right': 1,
         'border-color': 'grey2',
         background: 'grey1',
@@ -127,15 +127,15 @@ class DatepickerCalendar extends Element {
 
       lastCreatedHeaderCell = div;
 
-      weeksHeader.appendChild(div);
-      this.appendChild(weeksHeader);
+      this.weeksHeader.appendChild(div);
+      this.appendChild(this.weeksHeader);
     });
 
     applyProps(lastCreatedHeaderCell, {
       'border-right': 0,
     });
 
-    this.appendChild(weeksHeader);
+    this.appendChild(this.weeksHeader);
   }
 
   _ensureWeeks() {
@@ -185,8 +185,14 @@ class DatepickerCalendar extends Element {
     let firstDayOfWeek = moment(startDayOfCalendar);
 
     [...Array(7)].forEach((_, dayIdx) => {
-      const shouldRender = firstDayOfWeek.isSame(focusDate, 'month') || dayIdx === 0;
-      this._renderWeek(dayIdx, currentDate, focusDate, firstDayOfWeek, shouldRender);
+      const dayOfWeek = formatMoment(moment().weekday(dayIdx), 'dd', this.state.locale);
+      const headerDay = this.weeksHeader.childNodes[dayIdx];
+      headerDay.textContent = dayOfWeek;
+    });
+
+    [...Array(7)].forEach((_, weekIdx) => {
+      const shouldRender = firstDayOfWeek.isSame(focusDate, 'month') || weekIdx === 0;
+      this._renderWeek(weekIdx, currentDate, focusDate, firstDayOfWeek, shouldRender);
       firstDayOfWeek = firstDayOfWeek.add(1, 'week');
     });
   }
@@ -216,8 +222,10 @@ class DatepickerCalendar extends Element {
     this.ensureElements();
 
     applyProps(this.header, {
+      locale: this.state.locale,
       monthFormat: this.state.monthFormat,
       focusDate: this.state.focusDate,
+      i18n: this.state.i18n,
     });
 
     this._renderWeeks();

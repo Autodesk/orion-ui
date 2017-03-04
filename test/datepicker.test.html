@@ -39,8 +39,7 @@ limitations under the License.
     }
 
     function flushQueue(done) {
-      (new RenderQueue()).flush();
-      if (done) { setTimeout(() => { done() }, 50); };
+      (new RenderQueue()).clearQueue();
     }
 
     function isVisible(el) {
@@ -378,7 +377,7 @@ limitations under the License.
             }, 100);
           });
         });
- 
+
         context('and pressing "Escape"', () => {
           beforeEach((done) => {
             pressKey(input, 'Escape', 27);

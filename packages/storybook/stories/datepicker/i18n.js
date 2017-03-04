@@ -18,7 +18,7 @@ limitations under the License.
 import React from 'react';
 import { object } from '@kadira/storybook-addon-knobs';
 
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function i18n() {
@@ -28,6 +28,7 @@ export default function i18n() {
       nextMonth: '下个月',
       clearDate: '清除日期',
     }),
+    focus: true,
   };
 
   const react = `
@@ -71,7 +72,7 @@ angular.module('app', ['orion'])
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker {...props} />
     </WithSource>
   );
 }

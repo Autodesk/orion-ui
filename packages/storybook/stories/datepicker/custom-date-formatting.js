@@ -16,16 +16,19 @@ limitations under the License.
 
 */
 import React from 'react';
-import { text } from '@kadira/storybook-addon-knobs';
+import moment from 'moment';
+import { select, text } from '@kadira/storybook-addon-knobs';
 
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function customDateFormatting() {
   const props = {
-    locale: text('Locale', 'zh-cn'),
+    locale: select('Locale', ['zh-cn', 'en'], 'zh-cn'),
     displayFormat: text('Display Format', 'ddd, hA'),
     monthFormat: text('Month Format', 'YYYY[年]MMMM'),
+    focus: true,
+    currentDate: moment('2014-12-01'),
   };
 
   const react = `
@@ -36,9 +39,8 @@ import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
-        moment.locale('${props.locale}');
         const date = moment();
-        return <Datepicker date={date} focus={true} displayFormat="${props.displayFormat}" monthFormat="${props.monthFormat}" />;
+        return <Datepicker locale={${props.locale}} date={date} focus={true} displayFormat="${props.displayFormat}" monthFormat="${props.monthFormat}" />;
     }
 }
 
@@ -53,11 +55,11 @@ import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {
-    moment.locale('${props.locale}');
 
     var app = this;
     app.date = moment();
 
+    app.locale('${props.locale}');
     app.displayFormat = ${props.displayFormat};
     app.monthFormat = ${props.monthFormat};
   });
@@ -67,13 +69,13 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
+    <orion-datepicker locale="{{app.locale}}" date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
   </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker {...props} />
     </WithSource>
   );
 }

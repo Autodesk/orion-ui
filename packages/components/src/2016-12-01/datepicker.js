@@ -24,6 +24,7 @@ const DatepickerState = require('./datepicker/datepicker-state');
 const Registry = require('../utils/private-registry');
 const applyProps = require('../utils/apply-props');
 const eventKey = require('../utils/event-key');
+const formatMoment = require('../utils/format-moment');
 
 class Datepicker extends Element {
   constructor() {
@@ -81,6 +82,11 @@ class Datepicker extends Element {
     this._queueRender();
   }
 
+  set placeholder(val) {
+    this.state.placeholder = val;
+    this._queueRender();
+  }
+
   get currentDate() {
     return this.state.currentDate;
   }
@@ -99,12 +105,18 @@ class Datepicker extends Element {
     return this.state.monthFormat;
   }
 
-  get formattedDate() {
-    if (this.state.date && this.state.displayFormat) {
-      return this.state.date.format(this.state.displayFormat);
-    }
+  set locale(val) {
+    this.state.locale = val;
+    this._queueRender();
+  }
 
-    return '';
+  get formattedDate() {
+    return formatMoment(this.state.date, this.state.displayFormat, this.state.locale);
+  }
+
+  set displayFormat(val) {
+    this.state.displayFormat = val;
+    this._queueRender();
   }
 
   get isEnabled() {
@@ -113,6 +125,11 @@ class Datepicker extends Element {
 
   set isEnabled(fn) {
     this.state.isEnabled = fn;
+    this._queueRender();
+  }
+
+  set i18n(val) {
+    this.state.i18n = val;
     this._queueRender();
   }
 
@@ -168,9 +185,9 @@ class Datepicker extends Element {
   _handleKeydown(event) {
     if (event.shiftKey) {
       this._handleShiftKeydown(event);
-    } else {
-      this._handleRegularKeydown(event);
     }
+
+    this._handleRegularKeydown(event);
   }
 
   _focus() {
@@ -184,7 +201,6 @@ class Datepicker extends Element {
 
   _handleDateSelected(event) {
     this._dispatchStateChange('selectDate', event.detail.selectedDate);
-    this._dispatchStateChange('leaveFocused');
   }
 
   _handleHoverDate(event) {
@@ -237,7 +253,6 @@ class Datepicker extends Element {
       this.appendChild(this.dateInput);
       applyProps(this.dateInput, {
         type: 'text',
-        placeholder: 'Select Date',
       });
     }
   }
@@ -257,14 +272,16 @@ class Datepicker extends Element {
     this._ensureInput();
     this._ensureCalendar();
 
-    applyProps(this.dateInput, { value: this.formattedDate });
+    applyProps(this.dateInput, { value: this.formattedDate, placeholder: this.state.placeholder });
 
     applyProps(this.calendar, {
       display: this.state.focus ? 'block' : 'none',
       focusDate: this.focusDate,
       monthFormat: this.monthFormat,
       currentDate: this.currentDate,
+      i18n: this.state.i18n,
       isEnabled: this.isEnabled,
+      locale: this.state.locale,
     });
 
     super.render();

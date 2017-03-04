@@ -18,6 +18,7 @@ import '../vendor/custom-elements-polyfill';
 import { Button, Select, Datepicker } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
+import moment from 'moment';
 import './App.css';
 
 import moment from 'moment'
@@ -29,6 +30,9 @@ class App extends React.Component {
       disabled: false,
       isEnabled: false,
       selectedIndex: undefined,
+      localeIndex: 0,
+      date: moment(),
+      displayFormat: 'Do MMMM, YYYY',
 
       buttonSizes: [
         { label: 'X-small', value: 'x-small', key: 0, disabled: true },
@@ -39,9 +43,27 @@ class App extends React.Component {
       ]
     };
 
-    ['setSelectedIndex', 'handleClick', 'toggleDisabled', 'toggleDisabledOption', 'isEnabled', 'handleIsEnabled'].forEach((fn) => {
+    ['setDisplayFormat', 'setLocale', 'setSelectedIndex', 'handleClick', 'toggleDisabled', 'isEnabled', 'handleIsEnabled'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
+
+    this.locales = [
+      { label: 'English', value: 'en', key: 1 },
+      { label: 'Chinese', value: 'zh-cn', key: 2 },
+    ];
+
+    this.i18n = {
+      'zh-cn': {
+          "previousMonth": "前一个月",
+          "nextMonth": "下个月",
+          "clearDate": "清除日期"
+      },
+      'en': {
+        "previousMonth": "Previous Month",
+        "nextMonth": "Next Month",
+        "clearDate": "Clear Date"
+      }
+    }
   }
 
   handleClick() {
@@ -81,6 +103,21 @@ class App extends React.Component {
     return true;
   }
 
+  setLocale(event) {
+    const selectedOption = this.locales[event.detail.state.selectedIndex];
+    if (selectedOption === undefined) { return; }
+
+    this.setState({
+      locale: selectedOption.value,
+      localeIndex: event.detail.state.selectedIndex,
+      i18n: this.i18n[selectedOption.value],
+    });
+  }
+
+  setDisplayFormat(event) {
+    this.setState({ displayFormat: event.target.value });
+  }
+
   render() {
     let selectedSize;
     const selectedOption = this.state.buttonSizes[this.state.selectedIndex];
@@ -95,23 +132,29 @@ class App extends React.Component {
           <h2>Welcome to React</h2>
         </div>
         <div style={{ margin: '40px' }}>
+          <h3>Button</h3>
           <input />
           <Select searchable disabled={this.state.disabled} options={this.state.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <button onClick={this.toggleDisabledOption}>Toggle disabled option</button>
         </div>
         <div>
+          <Button size={selectedSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
+        </div>
+        <div style={{ margin: '40px' }}>
+          <h3>Date Picker</h3>
+          <div style={{ margin: '40px' }}>
+            <input value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
+            <Select options={this.locales} selectedIndex={this.state.localeIndex} onChange={this.setLocale}/>
+          </div>
           {this.state.isEnabled &&
-            <Datepicker isEnabled={this.isEnabled}></Datepicker>
+            <Datepicker isEnabled={this.isEnabled} i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
           }
 
           {!this.state.isEnabled &&
-            <Datepicker></Datepicker>
+            <Datepicker i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
           }
           <label>Custom isEnabled: <input type="checkbox" value={this.state.isEnabled} onChange={this.handleIsEnabled} /></label>
-        </div>
-        <div>
-          <Button size={selectedSize} disabled={this.state.disabled} onClick={this.handleClick}>Hello, Button!</Button>
         </div>
       </div>
     );

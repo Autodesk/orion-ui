@@ -33,6 +33,7 @@ const DatepickerState = {
       currentDate: moment(),
       displayFormat: 'MM-DD-YYYY',
       monthFormat: 'MMMM YYYY',
+      placeholder: 'Select Date',
       i18n: {
         previousMonth: 'Previous Month',
         nextMonth: 'Next Month',
@@ -43,8 +44,6 @@ const DatepickerState = {
       },
       ...state,
     };
-
-    initialState.isEnabled.bind(initialState);
 
     return initialState;
   },

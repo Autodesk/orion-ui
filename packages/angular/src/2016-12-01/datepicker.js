@@ -17,11 +17,32 @@ limitations under the License.
 require('@orion-ui/components/lib/2016-12-01/datepicker');
 const applyProps = require('@orion-ui/components/lib/utils/apply-props');
 
-const configurable = [];
+const configurable = [
+  'currentDate',
+  'date',
+  'displayFormat',
+  'focus',
+  'focusDate',
+  'i18n',
+  'isEnabled',
+  'locale',
+  'monthFormat',
+  'placeholder',
+];
 
 const DatepickerComponent = {
   bindings: {
     onChange: '&',
+    currentDate: '<',
+    date: '<',
+    displayFormat: '<',
+    focus: '<',
+    focusDate: '<',
+    i18n: '<',
+    isEnabled: '<',
+    locale: '<',
+    monthFormat: '<',
+    placeholder: '<',
   },
 
   controller: function controller($element, $log) { // eslint-disable object-shorthand

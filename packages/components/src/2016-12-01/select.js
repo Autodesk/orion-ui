@@ -127,9 +127,11 @@ class Select extends Element {
     if (this.button === null) {
       if (this.state.searchable) {
         this.button = document.createElement('input');
+
         applyProps(this.button, {
           placeholder: 'Select',
         });
+
       } else {
         this.button = document.createElement('orion-button');
         applyProps(this.button, {
@@ -257,6 +259,17 @@ class Select extends Element {
     this._dispatchStateChange('filter', event.target.value);
   }
 
+  _setInitialFocusedKey(state) {
+    const selectedState = SelectState.activated(state);
+    this.focusedKey = selectedState.focusedKey;
+  }
+
+  _setInitialFilteredOptions(state) {
+    const nextState = SelectState.filter(state, state.filter);
+    this.filteredOptions = nextState.filteredOptions;
+    this._setInitialFocusedKey(state);
+  }
+
   render() {
     this._ensureButton();
     this._ensureMenu();
@@ -264,6 +277,11 @@ class Select extends Element {
     applyProps(this.style, {
       zIndex: this.Z_INDEX,
     });
+
+    // This is run if a filter is passed in as a prop initially
+    if (this.state.filter !== undefined && this.state.filteredOptions === undefined) {
+      this._setInitialFilteredOptions(this.state);
+    }
 
     applyProps(this.menu, {
       open: this.state.open,
@@ -274,11 +292,13 @@ class Select extends Element {
       selectedKey: this.state.selectedKey,
     });
 
+
     let label = 'Select';
     const selectedOption = this.state.options.find(o => o.key === this.state.selectedKey);
     if (selectedOption !== undefined) {
       label = selectedOption.label;
     }
+
     applyProps(this.button, {
       textContent: label,
       placeholder: label,

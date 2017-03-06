@@ -256,18 +256,8 @@ class Select extends Element {
   }
 
   _setFilter(event) {
+    this.filter = event.target.value;
     this._dispatchStateChange('filter', event.target.value);
-  }
-
-  _setInitialFocusedKey(state) {
-    const selectedState = SelectState.activated(state);
-    this.focusedKey = selectedState.focusedKey;
-  }
-
-  _setInitialFilteredOptions(state) {
-    const nextState = SelectState.filter(state, state.filter);
-    this.filteredOptions = nextState.filteredOptions;
-    this._setInitialFocusedKey(state);
   }
 
   render() {
@@ -278,14 +268,9 @@ class Select extends Element {
       zIndex: this.Z_INDEX,
     });
 
-    // This is run if a filter is passed in as a prop initially
-    if (this.state.filter !== undefined && this.state.filteredOptions === undefined) {
-      this._setInitialFilteredOptions(this.state);
-    }
-
     applyProps(this.menu, {
       open: this.state.open,
-      options: this.state.filteredOptions || this.state.options,
+      options: SelectState.filteredOptions(this.state),
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
       focusedKey: this.state.focusedKey,

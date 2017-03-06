@@ -62,39 +62,39 @@ const SelectState = {
     let selectedIndex;
     if (option) { selectedIndex = state.options.indexOf(option); }
 
-    state = this.filter(state, undefined);
-
     return {
       ...state,
       selectedKey: nextSelectedKey,
       selectedIndex,
+      filter: undefined,
       open: false,
     };
   },
 
   deactivated(state) {
-    state = this.filter(state, undefined);
     return {
       ...state,
       open: false,
       focusedKey: undefined,
+      filter: undefined,
     };
   },
 
   focusPrevious(state) {
     if (!state.open) { return this.activated(state); }
+
+    const filteredOptions = this.filteredOptions(state);
+
     if (state.focusedKey === undefined) {
       return {
         ...state,
-        focusedKey: this._firstFocusableKey(state.filteredOptions),
+        focusedKey: this._firstFocusableKey(filteredOptions),
       };
     }
 
-    state = this.filter(state, state.filter);
-
     const focusedKey = this._nextFocusableKey(
       state.focusedKey,
-      state.filteredOptions,
+      filteredOptions,
       (index, options) => {
         index -= 1;
         if (index < 0) { index = options.length - 1; }
@@ -110,18 +110,19 @@ const SelectState = {
 
   focusNext(state) {
     if (!state.open) { return this.activated(state); }
+
+    const filteredOptions = this.filteredOptions(state);
+
     if (state.focusedKey === undefined) {
       return {
         ...state,
-        focusedKey: this._firstFocusableKey(state.filteredOptions),
+        focusedKey: this._firstFocusableKey(filteredOptions),
       };
     }
 
-    state = this.filter(state, state.filter);
-
     const focusedKey = this._nextFocusableKey(
       state.focusedKey,
-      state.filteredOptions,
+      filteredOptions,
       (index, options) => {
         index += 1;
         if (index > options.length - 1) {
@@ -165,26 +166,29 @@ const SelectState = {
   },
 
   blur(state) {
-    state = this.filter(state, undefined);
     return {
       ...state,
       hasFocus: false,
       open: false,
+      filter: undefined,
     };
   },
 
   filter(state, filter) {
-    filter = filter || '';
+    return {
+      ...state,
+      open: true,
+      filter,
+    };
+  },
+
+  filteredOptions(state) {
+    const filter = state.filter || '';
     let options = state.options;
     if (options === undefined) { options = []; }
     const optionFilter = new RegExp(`^${filter}`, 'i');
     const filteredOptions = options.filter(option => option.label.match(optionFilter));
-    return {
-      ...state,
-      filteredOptions,
-      filter,
-      open: true,
-    };
+    return filteredOptions;
   },
 };
 

@@ -136,7 +136,7 @@ describe('SelectState', () => {
     });
 
     it('clears the filter', () => {
-      expect(nextState.filter).to.eq('');
+      expect(nextState.filter).to.eq(undefined);
     });
 
     context('with an non-existant option key', () => {
@@ -165,7 +165,7 @@ describe('SelectState', () => {
     });
 
     it('clears the filter', () => {
-      expect(nextState.filter).to.eq('');
+      expect(nextState.filter).to.eq(undefined);
     });
   });
 
@@ -343,53 +343,57 @@ describe('SelectState', () => {
 
     it('clears the filter', () => {
       const nextState = SelectState.blur({ filter: 'foo' });
-      expect(nextState.filter).to.eq('');
+      expect(nextState.filter).to.eq(undefined);
     });
   });
 
-  describe('filter', () => {
-    let nextState;
+  describe('filteredOptions', () => {
+    let filteredOptions;
 
     context('matching one option', () => {
       beforeEach(() => {
-        nextState = SelectState.filter({ options }, 'gr');
+        filteredOptions = SelectState.filteredOptions({ options, filter: 'gr' });
       });
 
       it('sets filteredOptions to the matching option', () => {
-        expect(nextState.filteredOptions.length).to.eq(1);
-        expect(nextState.filteredOptions[0].label).to.eq('Green');
+        expect(filteredOptions.length).to.eq(1);
+        expect(filteredOptions[0].label).to.eq('Green');
       });
     });
 
     context('matching no options', () => {
       beforeEach(() => {
-        nextState = SelectState.filter({ options }, 'growlith');
+        filteredOptions = SelectState.filteredOptions({ options, filter: 'growlith' });
       });
 
       it('sets filteredOptions to an empty array', () => {
-        expect(nextState.filteredOptions.length).to.eq(0);
+        expect(filteredOptions.length).to.eq(0);
       });
     });
 
     context('with empty string', () => {
       beforeEach(() => {
-        nextState = SelectState.filter({ options }, '');
+        filteredOptions = SelectState.filteredOptions({ options, filter: '' });
       });
 
       it('sets filteredOptions to all options', () => {
-        expect(nextState.filteredOptions.length).to.eq(3);
+        expect(filteredOptions.length).to.eq(3);
       });
     });
 
     context('with undefined', () => {
       beforeEach(() => {
-        nextState = SelectState.filter({ options }, undefined);
+        filteredOptions = SelectState.filteredOptions({ options, filter: undefined });
       });
 
       it('sets filteredOptions to all options', () => {
-        expect(nextState.filteredOptions.length).to.eq(3);
+        expect(filteredOptions.length).to.eq(3);
       });
     });
+  });
+
+  describe('filter', () => {
+    let nextState;
 
     it('sets the filter', () => {
       nextState = SelectState.filter({ options }, 'foo');

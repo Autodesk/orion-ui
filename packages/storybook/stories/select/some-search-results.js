@@ -16,7 +16,7 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean, text, number} from '@kadira/storybook-addon-knobs';
+import { boolean, text } from '@kadira/storybook-addon-knobs';
 
 import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';

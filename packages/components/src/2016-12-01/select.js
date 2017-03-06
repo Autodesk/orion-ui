@@ -99,9 +99,12 @@ class Select extends Element {
 
     this.state.searchable = newValue;
     this._removeListeners();
-    this.button.remove();
-    this._addListeners();
 
+    if (this.button !== undefined) {
+      this.button.remove();
+    }
+
+    this._addListeners();
     this._queueRender();
   }
 
@@ -131,7 +134,6 @@ class Select extends Element {
         applyProps(this.button, {
           placeholder: 'Select',
         });
-
       } else {
         this.button = document.createElement('orion-button');
         applyProps(this.button, {
@@ -149,26 +151,34 @@ class Select extends Element {
     this._ensureButton();
 
     this.addEventListener('keydown', this._handleKeydown);
+    this.addEventListener('optionSelected', this._setSelectedOption);
+    this.addEventListener('optionFocused', this._setFocusedOption);
+
     this.button.addEventListener('mousedown', this._listenForMouseUp);
     this.button.addEventListener('focus', this._focus);
     this.button.addEventListener('blur', this._blur);
     this.button.addEventListener('input', this._setFilter);
     this.button.addEventListener('change', blockInputChangeEvent);
-    this.addEventListener('optionSelected', this._setSelectedOption);
-    this.addEventListener('optionFocused', this._setFocusedOption);
+
     this.menu.addEventListener('closed', this._deactivate);
   }
 
   _removeListeners() {
     this.removeEventListener('keydown', this._handleKeydown);
-    this.button.removeEventListener('mousedown', this._listenForMouseUp);
-    this.button.removeEventListener('focus', this._focus);
-    this.button.removeEventListener('blur', this._blur);
-    this.button.removeEventListener('input', this._setFilter);
-    this.button.removeEventListener('change', blockInputChangeEvent);
     this.removeEventListener('optionSelected', this._setSelectedOption);
     this.removeEventListener('optionFocused', this._setFocusedOption);
-    this.menu.removeEventListener('closed', this._deactivate);
+
+    if (this.button) {
+      this.button.removeEventListener('mousedown', this._listenForMouseUp);
+      this.button.removeEventListener('focus', this._focus);
+      this.button.removeEventListener('blur', this._blur);
+      this.button.removeEventListener('input', this._setFilter);
+      this.button.removeEventListener('change', blockInputChangeEvent);
+    }
+
+    if (this.menu) {
+      this.menu.removeEventListener('closed', this._deactivate);
+    }
   }
 
   _listenForMouseUp(event) {

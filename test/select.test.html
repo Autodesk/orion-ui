@@ -32,6 +32,14 @@ limitations under the License.
     </template>
   </test-fixture>
 
+  <test-fixture id="searchable">
+    <template>
+      <div>
+        <orion-select></orion-select>
+      </div>
+    </template>
+  </test-fixture>
+
   <script>
     function applyProps(el, props) {
       Object.keys(props).forEach((name) => {
@@ -200,6 +208,42 @@ limitations under the License.
         it('does not show the menu', () => {
           expect(select.querySelector('orion-list')).to.be.null;
         });
+      });
+    });
+
+    describe('<orion-select>', () => {
+      var select, input, menu, wrapper;
+
+      beforeEach(() => {
+        wrapper = fixture('searchable');
+        select = wrapper.querySelector('orion-select');
+        select.searchable = true;
+
+        input = select.querySelector('input');
+
+
+        select.addEventListener('change', (event) => {
+          applyProps(select, event.detail.state);
+        });
+
+        select.options = [
+          { label: 'Killer Bees', value: 1, key: 1 },
+          { label: 'Aardvarks', value: 2, key: 2 },
+        ]
+      });
+
+      context('after entering a filter', () => {
+        beforeEach(() => {
+          input.value = 'K';
+          input.dispatchEvent(new Event('input'));
+          (new RenderQueue()).clearQueue();
+        });
+
+        it('shows the right options', () => {
+          menu = select.querySelector('orion-list');
+          expect(menu.innerText).to.have.string('Killer Bees');
+          expect(menu.innerText).not.to.have.string('Aardvarks');
+        })
       });
     });
 

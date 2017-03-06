@@ -24,10 +24,9 @@ export default class HelloWorld {
   }
 }
 
-render(props, component) {
+function render(props) {
   const text1 = document.createElement('span');
 
-  // simple classList assignment
   text1.classList = 'size-3';
 
   // create message

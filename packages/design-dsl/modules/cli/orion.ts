@@ -20,7 +20,7 @@ import * as program from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { World, getTokens, initWorld } from '../parser/tokenizer';
+import compile, { CompilerOptions } from '../compiler';
 
 export default function cli(argv: string[]): void {
   program
@@ -28,21 +28,15 @@ export default function cli(argv: string[]): void {
     .description('compiles an OML file to JavaScript')
     .action((file: string) => {
       const source = path.join(process.cwd(), file);
-      const stream = fs.createReadStream(source);
 
-      let start = initWorld();
+      const options: CompilerOptions = {
+        source: fs.readFileSync(source).toString(),
+        filename: path.basename(file)
+      }
 
-      stream.on('data', (chunk: Buffer) => {
-        start = getTokens(chunk.toString(), start);
-      });
+      const results = compile(options)
 
-      stream.on('end', () => {
-        console.log('done');
-      });
-
-      stream.on('error', (err: Error) => {
-        console.error(err);
-      })
+      console.log(results);
     });
 
   program.parse(process.argv);

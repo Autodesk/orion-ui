@@ -24,7 +24,6 @@ import { WithSource } from '../../addons/source-addon';
 module.exports = function someSearchResults() {
   const props = {
     searchable: boolean('Searchable', true),
-    focus: boolean('Has focus', true),
     open: boolean('Open', true),
     // query text makes the select open
     filter: text('Filter', 'one'),
@@ -86,7 +85,6 @@ angular.module('app', [])
         options={options}
         searchable={props.searchable}
         filter={props.filter}
-        hasFocus={props.hasFocus}
         open={props.open}
       />
     </WithSource>

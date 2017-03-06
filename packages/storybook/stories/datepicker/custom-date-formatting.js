@@ -29,6 +29,7 @@ export default function customDateFormatting() {
     monthFormat: text('Month Format', 'YYYY[年]MMMM'),
     focus: true,
     currentDate: moment('2014-12-01'),
+    focusDate: moment('2014-12-01'),
   };
 
   const react = `

@@ -35,7 +35,7 @@ class CalendarDay extends Element {
     };
 
     this.disabledDayStyle = { ...baseStyle, color: 'grey4', pointer: false, notallowed: true };
-    this.currentDayStyle = { ...baseStyle, color: 'black' };
+    this.currentDayStyle = { ...baseStyle, color: 'black', pointer: true };
     this.enabledDayStyle = { ...baseStyle, color: 'black' };
     this.focusedDayStyle = { background: 'blue', color: 'white' };
     this.otherMonthStyle = { pointer: false, notallowed: true };

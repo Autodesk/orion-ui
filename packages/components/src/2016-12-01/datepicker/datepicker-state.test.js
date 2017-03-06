@@ -35,6 +35,7 @@ describe('DatepickerState', () => {
       expect(initialState.focusDate).to.be.null;
       expect(initialState.displayFormat).to.equal('MM-DD-YYYY');
       expect(initialState.monthFormat).to.equal('MMMM YYYY');
+      expect(initialState.placeholder).to.equal('Select Date');
       expect(initialState.i18n.previousMonth).to.equal('Previous Month');
       expect(initialState.i18n.nextMonth).to.equal('Next Month');
       expect(initialState.i18n.clearDate).to.equal('Clear Date');

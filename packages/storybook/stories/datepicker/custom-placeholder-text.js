@@ -18,12 +18,13 @@ limitations under the License.
 import React from 'react';
 import { text } from '@kadira/storybook-addon-knobs';
 
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function customPlaceholderText() {
   const props = {
     placeholder: text('Placeholder', '__ / __ / ____'),
+    date: null,
   };
 
   const react = `
@@ -64,7 +65,7 @@ angular.module('app', ['orion'])
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker {...props} />
     </WithSource>
   );
 }

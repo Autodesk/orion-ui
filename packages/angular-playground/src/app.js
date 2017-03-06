@@ -17,6 +17,7 @@ limitations under the License.
 
 import '../vendor/custom-elements-polyfill';
 import '@orion-ui/angular/lib/2016-12-01';
+import moment from 'moment';
 
 import moment from 'moment';
 
@@ -44,6 +45,15 @@ angular
     $scope.disabled = false;
 
     $scope.searchable = true;
+
+    $scope.locale = 'zh-cn';
+    $scope.monthFormat = '--MMMM YYYY--';
+    $scope.placeholder = '__/__/____';
+    $scope.i18n = {
+        "previousMonth": "前一个月",
+        "nextMonth": "下个月",
+        "clearDate": "清除日期"
+    };
 
     that.handleClick = () => {
       alert('button clicked!');

@@ -49,3 +49,17 @@ gemini.suite('datepicker-custom-disabled-dates', (suite) => {
     .setCaptureElements(".example")
     .capture('datepicker-custom-disabled-dates')
 });
+
+gemini.suite('datepicker-custom-date-formatting', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=custom%20date%20formatting')
+    .setCaptureElements(".example")
+    .capture('datepicker-custom-date-formatting')
+});
+
+gemini.suite('datepicker-custom-placeholder-text', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=custom%20placeholder%20text')
+    .setCaptureElements(".example")
+    .capture('datepicker-custom-placeholder-text')
+});

@@ -17,7 +17,7 @@ limitations under the License.
 require('@orion-ui/components/lib/2016-12-01/select');
 const applyProps = require('@orion-ui/components/lib/utils/apply-props');
 
-const configurable = ['options', 'open', 'focusedIndex', 'selectedIndex', 'disabled'];
+const configurable = ['options', 'open', 'focusedIndex', 'selectedIndex', 'disabled', 'searchable'];
 
 const SelectComponent = {
   bindings: {
@@ -27,6 +27,7 @@ const SelectComponent = {
     focusedIndex: '<',
     selectedIndex: '<',
     disabled: '<',
+    searchable: '<',
   },
 
   controller: function controller($element, $log) { // eslint-disable object-shorthand

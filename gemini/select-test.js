@@ -17,28 +17,28 @@ limitations under the License.
 
 gemini.suite('collapsed-select', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Select&selectedStory=collapsed')
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=collapsed')
     .setCaptureElements(".example")
     .capture('collapsed-select')
 });
 
 gemini.suite('expanded-select', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Select&selectedStory=expanded')
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=expanded')
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
 
 gemini.suite('option-focus-select', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Select&selectedStory=option%20focus')
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=option%20focus')
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
 
 gemini.suite('selected-index-select', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Select&selectedStory=selectedIndex')
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=selectedIndex')
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
@@ -50,7 +50,7 @@ gemini.suite('focus-select', (suite) => {
 
 gemini.suite('scrolling-select', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Select&selectedStory=scrolling')
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=scrolling')
     .setCaptureElements(".example")
     .capture('expanded-select')
 });
@@ -67,4 +67,18 @@ gemini.suite('disabled-option', (suite) => {
     .setUrl('iframe.html?selectedKind=Select&selectedStory=disabled%20option')
     .setCaptureElements(".example")
     .capture('expanded-select')
+});
+
+gemini.suite('no-search-results', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=no%20search%20results')
+    .setCaptureElements(".example")
+    .capture('no-search-results-select')
+});
+
+gemini.suite('some-search-results', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=some%20search%20results')
+    .setCaptureElements(".example")
+    .capture('some-search-results-select')
 });

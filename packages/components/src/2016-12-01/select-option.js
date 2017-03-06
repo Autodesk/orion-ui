@@ -36,8 +36,8 @@ class SelectOption extends Element {
     this._queueRender();
   }
 
-  set index(newValue) {
-    this.state.index = newValue;
+  set key(newValue) {
+    this.state.key = newValue;
     this._queueRender();
   }
 
@@ -102,7 +102,7 @@ class SelectOption extends Element {
 
     if (this.state.hasFocus) { return; }
     this.dispatchEvent(new CustomEvent('optionFocused', {
-      detail: { focusedIndex: this.state.index },
+      detail: { focusedKey: this.state.key },
       bubbles: true,
     }));
   }
@@ -118,7 +118,7 @@ class SelectOption extends Element {
       return;
     }
     this.dispatchEvent(new CustomEvent('optionSelected', {
-      detail: { selectedIndex: this.state.index },
+      detail: { selectedKey: this.state.key },
       bubbles: true,
     }));
   }

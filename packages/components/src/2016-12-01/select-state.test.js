@@ -23,9 +23,9 @@ const SelectState = require('./select-state.js');
 
 describe('SelectState', () => {
   const options = [
-    { label: 'Red', value: '#F00' },
-    { label: 'Green', value: '#0F0' },
-    { label: 'Blue', value: '#00F' },
+    { label: 'Red', value: '#F00', key: 'a' },
+    { label: 'Green', value: '#0F0', key: 'b' },
+    { label: 'Blue', value: '#00F', key: 'c' },
   ];
 
   describe('getInitialState', () => {
@@ -48,31 +48,31 @@ describe('SelectState', () => {
       expect(result.open).to.be.true;
     });
 
-    context('without a selectedIndex', () => {
+    context('without a selectedKey', () => {
       it('focuses on the first selectable option', () => {
         const opts = [
-          { label: 'Red', value: '#F00', disabled: true },
-          { label: 'Green', value: '#0F0' },
-          { label: 'Blue', value: '#00F' },
+          { label: 'Red', value: '#F00', key: 'a', disabled: true },
+          { label: 'Green', value: '#0F0', key: 'b' },
+          { label: 'Blue', value: '#00F', key: 'c' },
         ];
         const result = SelectState.activated({ options: opts });
-        expect(result.focusedIndex).to.eq(1);
+        expect(result.focusedKey).to.eq('b');
       });
     });
 
-    context('with a selectedIndex', () => {
+    context('with a selectedKey', () => {
       let state;
       let nextState;
       before(() => {
         state = {
-          selectedIndex: 1,
+          selectedKey: 'b',
           options,
         };
         nextState = SelectState.activated(state);
       });
 
-      it('sets focus to the selectedIndex', () => {
-        expect(nextState.focusedIndex).to.eq(1);
+      it('sets focus to the selectedKey', () => {
+        expect(nextState.focusedKey).to.eq('b');
       });
     });
   });
@@ -87,11 +87,11 @@ describe('SelectState', () => {
           open: true,
           options,
         };
-        nextState = SelectState.optionFocused(state, 1);
+        nextState = SelectState.optionFocused(state, 'b');
       });
 
-      it('sets the focusedIndex value', () => {
-        expect(nextState.focusedIndex).to.eq(1);
+      it('sets the focusedKey value', () => {
+        expect(nextState.focusedKey).to.eq('b');
       });
     });
 
@@ -100,16 +100,16 @@ describe('SelectState', () => {
         state = {
           open: true,
           options: [
-            { label: 'Red', value: '#F00' },
-            { label: 'Green', value: '#0F0', disabled: true },
-            { label: 'Blue', value: '#00F' },
+            { label: 'Red', value: '#F00', key: 'a' },
+            { label: 'Green', value: '#0F0', key: 'b', disabled: true },
+            { label: 'Blue', value: '#00F', key: 'c' },
           ],
         };
-        nextState = SelectState.optionFocused(state, 1);
+        nextState = SelectState.optionFocused(state, 'b');
       });
 
-      it('sets focusedIndex to undefined', () => {
-        expect(nextState.focusedIndex).to.be.undefined;
+      it('sets focusedKey to undefined', () => {
+        expect(nextState.focusedKey).to.be.undefined;
       });
     });
   });
@@ -121,26 +121,31 @@ describe('SelectState', () => {
       state = {
         open: true,
         options,
-        selectedIndex: 0,
+        selectedKey: 'a',
+        filter: 'foo',
       };
-      nextState = SelectState.optionSelected(state, 1);
+      nextState = SelectState.optionSelected(state, 'b');
     });
 
     it('sets value to the selected option', () => {
-      expect(nextState.selectedIndex).to.eq(1);
+      expect(nextState.selectedKey).to.eq('b');
     });
 
     it('closes the menu', () => {
       expect(nextState.open).to.be.false;
     });
 
-    context('with an non-existant option index', () => {
+    it('clears the filter', () => {
+      expect(nextState.filter).to.eq(undefined);
+    });
+
+    context('with an non-existant option key', () => {
       before(() => {
         nextState = SelectState.optionSelected(state, undefined);
       });
 
-      it('does not change the selectedIndex', () => {
-        expect(nextState.selectedIndex).to.eq(0);
+      it('does not change the selectedKey', () => {
+        expect(nextState.selectedKey).to.eq('a');
       });
     });
   });
@@ -148,15 +153,19 @@ describe('SelectState', () => {
   describe('deactivated', () => {
     let nextState;
     before(() => {
-      nextState = SelectState.deactivated({ open: true, focusedIndex: 1 });
+      nextState = SelectState.deactivated({ open: true, focusedKey: 'b', filter: 'foo' });
     });
 
     it('sets open to false', () => {
       expect(nextState.open).to.be.false;
     });
 
-    it('sets focusedIndex to undefined', () => {
-      expect(nextState.focusedIndex).to.be.undefined;
+    it('sets focusedKey to undefined', () => {
+      expect(nextState.focusedKey).to.be.undefined;
+    });
+
+    it('clears the filter', () => {
+      expect(nextState.filter).to.eq(undefined);
     });
   });
 
@@ -166,14 +175,14 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: true,
-          focusedIndex: 1,
+          focusedKey: 'b',
           options,
         };
         nextState = SelectState.focusPrevious(state);
       });
 
       it('focuses the next item', () => {
-        expect(nextState.focusedIndex).to.eq(0);
+        expect(nextState.focusedKey).to.eq('a');
       });
     });
 
@@ -181,14 +190,14 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: true,
-          focusedIndex: 0,
+          focusedKey: 'a',
           options,
         };
         nextState = SelectState.focusPrevious(state);
       });
 
       it('focuses the last item', () => {
-        expect(nextState.focusedIndex).to.eq(2);
+        expect(nextState.focusedKey).to.eq('c');
       });
     });
 
@@ -205,7 +214,7 @@ describe('SelectState', () => {
       });
 
       it('focuses the first item', () => {
-        expect(nextState.focusedIndex).to.eq(0);
+        expect(nextState.focusedKey).to.eq('a');
       });
     });
 
@@ -213,18 +222,18 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: true,
-          focusedIndex: 2,
+          focusedKey: 'c',
           options: [
-            { label: 'Red', value: '#F00' },
-            { label: 'Green', value: '#0F0', disabled: true },
-            { label: 'Blue', value: '#00F' },
+            { label: 'Red', value: '#F00', key: 'a' },
+            { label: 'Green', value: '#0F0', key: 'b', disabled: true },
+            { label: 'Blue', value: '#00F', key: 'c' },
           ],
         };
         nextState = SelectState.focusPrevious(state);
       });
 
       it('skips it', () => {
-        expect(nextState.focusedIndex).to.eq(0);
+        expect(nextState.focusedKey).to.eq('a');
       });
     });
   });
@@ -235,14 +244,14 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: true,
-          focusedIndex: 1,
+          focusedKey: 'b',
           options,
         };
         nextState = SelectState.focusNext(state);
       });
 
       it('focuses the next item', () => {
-        expect(nextState.focusedIndex).to.eq(2);
+        expect(nextState.focusedKey).to.eq('c');
       });
     });
 
@@ -250,7 +259,7 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: false,
-          focusedIndex: 1,
+          focusedKey: 'b',
           options,
         };
         nextState = SelectState.focusNext(state);
@@ -265,14 +274,14 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: true,
-          focusedIndex: 2,
+          focusedKey: 'c',
           options,
         };
         nextState = SelectState.focusNext(state);
       });
 
       it('focuses the first item', () => {
-        expect(nextState.focusedIndex).to.eq(0);
+        expect(nextState.focusedKey).to.eq('a');
       });
     });
 
@@ -280,7 +289,7 @@ describe('SelectState', () => {
       before(() => {
         nextState = SelectState.focusNext({
           open: false,
-          focusedIndex: undefined,
+          focusedKey: undefined,
           options,
         });
       });
@@ -290,7 +299,7 @@ describe('SelectState', () => {
       });
 
       it('focuses the first item', () => {
-        expect(nextState.focusedIndex).to.eq(0);
+        expect(nextState.focusedKey).to.eq('a');
       });
     });
 
@@ -298,18 +307,18 @@ describe('SelectState', () => {
       beforeEach(() => {
         const state = {
           open: true,
-          focusedIndex: 2,
+          focusedKey: 'c',
           options: [
-            { label: 'Red', value: '#F00', disabled: true },
-            { label: 'Green', value: '#0F0' },
-            { label: 'Blue', value: '#00F' },
+            { label: 'Red', value: '#F00', key: 'a', disabled: true },
+            { label: 'Green', value: '#0F0', key: 'b' },
+            { label: 'Blue', value: '#00F', key: 'c' },
           ],
         };
         nextState = SelectState.focusNext(state);
       });
 
       it('skips it', () => {
-        expect(nextState.focusedIndex).to.eq(1);
+        expect(nextState.focusedKey).to.eq('b');
       });
     });
   });
@@ -330,6 +339,70 @@ describe('SelectState', () => {
     it('closes the menu', () => {
       const nextState = SelectState.blur({ hasFocus: true, open: true });
       expect(nextState.open).to.be.false;
+    });
+
+    it('clears the filter', () => {
+      const nextState = SelectState.blur({ filter: 'foo' });
+      expect(nextState.filter).to.eq(undefined);
+    });
+  });
+
+  describe('filteredOptions', () => {
+    let filteredOptions;
+
+    context('matching one option', () => {
+      beforeEach(() => {
+        filteredOptions = SelectState.filteredOptions({ options, filter: 'gr' });
+      });
+
+      it('sets filteredOptions to the matching option', () => {
+        expect(filteredOptions.length).to.eq(1);
+        expect(filteredOptions[0].label).to.eq('Green');
+      });
+    });
+
+    context('matching no options', () => {
+      beforeEach(() => {
+        filteredOptions = SelectState.filteredOptions({ options, filter: 'growlith' });
+      });
+
+      it('sets filteredOptions to an empty array', () => {
+        expect(filteredOptions.length).to.eq(0);
+      });
+    });
+
+    context('with empty string', () => {
+      beforeEach(() => {
+        filteredOptions = SelectState.filteredOptions({ options, filter: '' });
+      });
+
+      it('sets filteredOptions to all options', () => {
+        expect(filteredOptions.length).to.eq(3);
+      });
+    });
+
+    context('with undefined', () => {
+      beforeEach(() => {
+        filteredOptions = SelectState.filteredOptions({ options, filter: undefined });
+      });
+
+      it('sets filteredOptions to all options', () => {
+        expect(filteredOptions.length).to.eq(3);
+      });
+    });
+  });
+
+  describe('filter', () => {
+    let nextState;
+
+    it('sets the filter', () => {
+      nextState = SelectState.filter({ options }, 'foo');
+      expect(nextState.filter).to.eq('foo');
+    });
+
+    it('opens the menu', () => {
+      nextState = SelectState.filter({ options }, 'foo');
+      expect(nextState.open).to.eq(true);
     });
   });
 });

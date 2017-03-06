@@ -96,7 +96,7 @@ const DatepickerState = {
   },
 
   dateCleared(state) {
-    return { ...state,  date: '' }
+    return { ...state, date: '' };
   },
 
   setCurrentDate(state, currentDate) {

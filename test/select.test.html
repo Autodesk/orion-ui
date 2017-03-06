@@ -32,16 +32,19 @@ limitations under the License.
     </template>
   </test-fixture>
 
+  <test-fixture id="searchable">
+    <template>
+      <div>
+        <orion-select></orion-select>
+      </div>
+    </template>
+  </test-fixture>
+
   <script>
     function applyProps(el, props) {
       Object.keys(props).forEach((name) => {
         el[name] = props[name];
       });
-    }
-
-    function flushQueue(done) {
-      (new RenderQueue()).flush();
-      if (done) { setTimeout(() => { done() }, 50); };
     }
 
     describe('<orion-select>', () => {
@@ -63,7 +66,7 @@ limitations under the License.
       });
 
       context('after clicking', () => {
-        beforeEach((done) => {
+        beforeEach(() => {
           button.dispatchEvent(new Event('mouseenter'));
           button.dispatchEvent(new Event('mousedown'));
           button.dispatchEvent(new Event('mouseup'));
@@ -77,7 +80,7 @@ limitations under the License.
         });
 
         context('and clicking an option', () => {
-          beforeEach((done) => {
+          beforeEach(() => {
             menu = select.querySelector('orion-list');
             const option = menu.querySelectorAll('orion-select-option')[1];
             option.dispatchEvent(new Event('mouseenter'));
@@ -96,7 +99,7 @@ limitations under the License.
         });
 
         context('and clicking away', () => {
-          beforeEach((done) => {
+          beforeEach(() => {
             button.dispatchEvent(new Event('blur'));
             (new RenderQueue()).clearQueue();
           });
@@ -109,7 +112,7 @@ limitations under the License.
       });
 
       context('after focusing the button', () => {
-        beforeEach((done) => {
+        beforeEach(() => {
           button.dispatchEvent(new Event('focus'));
           (new RenderQueue()).clearQueue();
         });
@@ -121,7 +124,7 @@ limitations under the License.
         context('pressing an arrow key', () => {
           var menu;
 
-          beforeEach((done) => {
+          beforeEach(() => {
             select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 }));
             (new RenderQueue()).clearQueue();
           });
@@ -135,7 +138,7 @@ limitations under the License.
           context('then pressing enter', () => {
             var initialIndex;
 
-            beforeEach((done) => {
+            beforeEach(() => {
               initialIndex = select.state.selectedIndex;
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40 })); // Focus next option
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13 }));
@@ -154,7 +157,7 @@ limitations under the License.
           context('then pressing escape', () => {
             var initialIndex;
 
-            beforeEach((done) => {
+            beforeEach(() => {
               initialIndex = select.state.selectedIndex;
               select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
               (new RenderQueue()).clearQueue();
@@ -205,6 +208,42 @@ limitations under the License.
         it('does not show the menu', () => {
           expect(select.querySelector('orion-list')).to.be.null;
         });
+      });
+    });
+
+    describe('<orion-select>', () => {
+      var select, input, menu, wrapper;
+
+      beforeEach(() => {
+        wrapper = fixture('searchable');
+        select = wrapper.querySelector('orion-select');
+        select.searchable = true;
+
+        input = select.querySelector('input');
+
+
+        select.addEventListener('change', (event) => {
+          applyProps(select, event.detail.state);
+        });
+
+        select.options = [
+          { label: 'Killer Bees', value: 1, key: 1 },
+          { label: 'Aardvarks', value: 2, key: 2 },
+        ]
+      });
+
+      context('after entering a filter', () => {
+        beforeEach(() => {
+          input.value = 'K';
+          input.dispatchEvent(new Event('input'));
+          (new RenderQueue()).clearQueue();
+        });
+
+        it('shows the right options', () => {
+          menu = select.querySelector('orion-list');
+          expect(menu.innerText).to.have.string('Killer Bees');
+          expect(menu.innerText).not.to.have.string('Aardvarks');
+        })
       });
     });
 

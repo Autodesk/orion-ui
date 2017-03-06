@@ -75,4 +75,16 @@ describe('Utils.scrollIntoView', () => {
       expect(element.parentElement.scrollTop).to.eq(110);
     });
   });
+
+  context('when the element has no parent', () => {
+    it('does not raise an error', () => {
+      function scrollOrphan() {
+        element = {
+          parentElement: null,
+        };
+        scrollIntoView(element);
+      }
+      expect(scrollOrphan).not.to.throw(Error);
+    });
+  });
 });

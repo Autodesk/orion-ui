@@ -18,15 +18,21 @@ limitations under the License.
 import React from 'react';
 import { boolean, text } from '@kadira/storybook-addon-knobs';
 
+import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 module.exports = function someSearchResults() {
   const props = {
     searchable: boolean('Searchable', true),
-
+    open: boolean('Open', true),
     // query text makes the select open
-    query: text('Query', 'one'),
+    filter: text('Filter', 'one'),
   };
+
+  const options = [
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 },
+  ];
 
   const react = `
 import React from 'react';
@@ -36,12 +42,12 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 class App extends React.Component {
 render() {
   const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
   return (
-    <Select options={options} searchable={${props.searchable}} query="${props.query}" />
+    <Select options={options} searchable={${props.searchable}} filter="${props.filter}" />
   )
 }
 }
@@ -56,13 +62,12 @@ angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
   app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { value: 'one', label: 'One', key: 1 },
+    { value: 'two', label: 'Two', key: 2 }
   ];
 
-  app.open = ${props.open};
   app.searchable = ${props.searchable};
-  app.query = "${props.query}";
+  app.filter = "${props.filter}";
 }]);
 
 // app.html
@@ -70,13 +75,18 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" searchable="{{app.searchable}}" query="{{app.query}}" />
+  <orion-select options="{{app.options}}" searchable="{{app.searchable}}" filter="{{app.filter}}" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>TODO</span>
+      <Select
+        options={options}
+        searchable={props.searchable}
+        filter={props.filter}
+        open={props.open}
+      />
     </WithSource>
   );
 };

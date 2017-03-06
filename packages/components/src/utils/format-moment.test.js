@@ -33,7 +33,8 @@ describe('Utils.formatMoment', () => {
 
   context('with date alone', () => {
     it('uses the default format', () => {
-      expect(formatMoment(date)).to.eq('2017-04-01T00:00:00-07:00');
+      const formattedDateWithoutZone = formatMoment(date).split('T')[0];
+      expect(formattedDateWithoutZone).to.eq('2017-04-01');
     });
   });
 

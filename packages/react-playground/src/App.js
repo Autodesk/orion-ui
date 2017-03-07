@@ -21,8 +21,6 @@ import logo from './logo.svg';
 import moment from 'moment';
 import './App.css';
 
-import moment from 'moment'
-
 class App extends React.Component {
   constructor(props) {
     super(props);

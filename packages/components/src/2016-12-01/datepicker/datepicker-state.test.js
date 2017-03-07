@@ -365,7 +365,7 @@ describe('DatepickerState', () => {
   });
 
   describe('selectFocusDate', () => {
-    const focusDate = moment().add(1, 'month');
+    let focusDate = moment().add(1, 'month');
     let nextState;
 
     beforeEach(() => {
@@ -374,6 +374,17 @@ describe('DatepickerState', () => {
 
     it('sets the date to the focusDate', () => {
       expect(nextState.date.isSame(focusDate, 'date')).to.be.true;
+    });
+
+    context('without a focusDate', () => {
+      beforeEach(() => {
+        focusDate = null;
+        nextState = DatepickerState.selectFocusDate({ focusDate });
+      });
+
+      it('does not set date', () => {
+        expect(nextState.date).to.be.undefined;
+      });
     });
   });
 });

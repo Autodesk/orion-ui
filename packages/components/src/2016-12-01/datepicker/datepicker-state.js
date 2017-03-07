@@ -140,6 +140,7 @@ const DatepickerState = {
   },
 
   selectFocusDate(state) {
+    if (!moment(state.focusDate).isValid()) { return state }
     return { ...state, date: moment(state.focusDate) };
   },
 };

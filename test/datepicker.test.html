@@ -38,10 +38,6 @@ limitations under the License.
       });
     }
 
-    function flushQueue(done) {
-      (new RenderQueue()).clearQueue();
-    }
-
     function isVisible(el) {
       return el.display !== 'none';
     }
@@ -67,7 +63,7 @@ limitations under the License.
     let wrapper, datepicker, input, calendar, calendarHeader, today;
 
     describe('<orion-datepicker>', () => {
-      beforeEach((done) => {
+      beforeEach(() => {
         today = moment('2015-01-15');
         datepicker = fixture('datepicker');
         input = datepicker.querySelector('input');
@@ -77,9 +73,9 @@ limitations under the License.
           applyProps(datepicker, event.detail.state);
         });
 
-        applyProps(datepicker, { currentDate: today });
+        applyProps(datepicker, { currentDate: today, isEnabled: () => true });
 
-        flushQueue(done);
+        (new RenderQueue()).clearQueue();
       });
 
       it('has a visible input', () => {
@@ -95,9 +91,9 @@ limitations under the License.
       });
 
       context('when focused', () => {
-        beforeEach((done) => {
+        beforeEach(() => {
           input.dispatchEvent(new Event('focus'));
-          flushQueue(done);
+          (new RenderQueue()).clearQueue();
         });
 
         it('the calendar is visible', () => {
@@ -114,9 +110,9 @@ limitations under the License.
 
         describe('navigating days with keyboard', () => {
           context('by pressing right arrow key', () => {
-            beforeEach((done) => {
+            beforeEach(() => {
               pressKey(input, 'ArrowRight', 39);
-              flushQueue(done);
+              (new RenderQueue()).clearQueue();
             });
 
             it('is focused on the next day', () => {
@@ -125,9 +121,9 @@ limitations under the License.
             });
 
             context('and pressing right arrow key', () => {
-              beforeEach((done) => {
+              beforeEach(() => {
                 pressKey(input, 'ArrowLeft', 37);
-                flushQueue(done);
+                (new RenderQueue()).clearQueue();
               });
 
               it('is focused back on today', () => {
@@ -139,9 +135,9 @@ limitations under the License.
 
         describe('navigating weeks with keyboard', () => {
           context('by pressing down arrow key', () => {
-            beforeEach((done) => {
+            beforeEach(() => {
               pressKey(input, 'ArrowDown', 40);
-              flushQueue(done);
+              (new RenderQueue()).clearQueue();
             });
 
             it('is focused on a week from today', () => {
@@ -150,9 +146,9 @@ limitations under the License.
             });
 
             context('and pressing up arrow key', () => {
-              beforeEach((done) => {
+              beforeEach(() => {
                 pressKey(input, 'ArrowUp', 38);
-                flushQueue(done);
+                (new RenderQueue()).clearQueue();
               });
 
               it('is focused back on today', () => {
@@ -164,9 +160,9 @@ limitations under the License.
 
         describe('navigating months with keyboard', () => {
           context('by pressing shift + right arrow key', () => {
-            beforeEach((done) => {
+            beforeEach(() => {
               pressKey(input, 'ArrowRight', 39, true);
-              flushQueue(done);
+              (new RenderQueue()).clearQueue();
             });
 
             it('is focused on a month from today', () => {
@@ -177,36 +173,38 @@ limitations under the License.
             it('displays the next month', () => {
               expect(displayedMonth(calendar)).to.equal('February 2015');
             });
+          });
 
-            context('and pressing shift + left arrow key', () => {
-              beforeEach((done) => {
-                pressKey(input, 'ArrowLeft', 37, true);
-                flushQueue(done);
-              });
+          context('and pressing shift + left arrow key', () => {
+            beforeEach(() => {
+              pressKey(input, 'ArrowLeft', 37, true);
+              (new RenderQueue()).clearQueue();
+            });
 
-              it('is focused back on today', () => {
-                expect(focusedDay(calendar).isSame(today, 'date')).to.be.true;
-              });
+            it('is focused back on today', () => {
+              const prevMonth = moment(today).subtract(1, 'month');
+              expect(calendar.state.focusDate.format()).to.eq(prevMonth.format())
+              expect(focusedDay(calendar).isSame(prevMonth, 'date')).to.be.true;
+            });
 
-              it('displays the current month', () => {
-                expect(displayedMonth(calendar)).to.equal('January 2015');
-              });
+            it('displays the current month', () => {
+              expect(displayedMonth(calendar)).to.equal('December 2014');
             });
           });
 
           context('navigating from last day of the month', () => {
             let lastDayOfMonth;
 
-            beforeEach((done) => {
+            beforeEach(() => {
               lastDayOfMonth = moment('2015-01-31');
               applyProps(datepicker, { focusDate: lastDayOfMonth });
-              flushQueue(done);
+              (new RenderQueue()).clearQueue();
             });
 
             context('and pressing right arrow key', () => {
-              beforeEach((done) => {
+              beforeEach(() => {
                 pressKey(input, 'ArrowRight', 39);
-                flushQueue(done);
+                (new RenderQueue()).clearQueue();
               });
 
               it('is focused on the next day', () => {
@@ -219,9 +217,9 @@ limitations under the License.
               });
 
               context('and pressing right arrow key', () => {
-                beforeEach((done) => {
+                beforeEach(() => {
                   pressKey(input, 'ArrowLeft', 37);
-                  flushQueue(done);
+                  (new RenderQueue()).clearQueue();
                 });
 
                 it('is focused back on today', () => {
@@ -240,11 +238,11 @@ limitations under the License.
           let hoveredDay;
           let divToHover;
 
-          beforeEach((done) => {
+          beforeEach(() => {
             hoveredDay = moment('2015-01-20');
             divToHover = calendar.querySelectorAll('orion-calendar-day')[23]; // 2015-01-20
             divToHover.dispatchEvent(new Event('mouseenter'));
-            flushQueue(done);
+            (new RenderQueue()).clearQueue();
           });
 
           it('is focused on the hovered day', () => {
@@ -256,12 +254,12 @@ limitations under the License.
           context('clicks on the next month nav item', () => {
             let nextMonth;
 
-            beforeEach((done) => {
+            beforeEach(() => {
               calendarHeader = calendar.querySelector('orion-calendar-header');
               nextMonth = moment('2015-02-15');
               const nextMonthDiv = calendarHeader.lastChild;
               nextMonthDiv.dispatchEvent(new Event('mousedown'));
-              flushQueue(done);
+              (new RenderQueue()).clearQueue();
             });
 
             it('is focused on a month from today', () => {
@@ -273,10 +271,10 @@ limitations under the License.
             });
 
             context('clicks on the previous month nav item', () => {
-              beforeEach((done) => {
+              beforeEach(() => {
                 const prevMonthDiv = calendarHeader.firstChild;
                 prevMonthDiv.dispatchEvent(new Event('mousedown'));
-                flushQueue(done);
+                (new RenderQueue()).clearQueue();
               });
 
               it('is focused back on today', () => {
@@ -293,16 +291,16 @@ limitations under the License.
         describe('selecting days with the keyboard', () => {
           let focusDate;
 
-          beforeEach((done) => {
+          beforeEach(() => {
             focusDate = moment('2015-01-20');
             applyProps(datepicker, { focusDate });
-            flushQueue(done);
+            (new RenderQueue()).clearQueue();
           });
 
           context('by pressing the enter key', () => {
-            beforeEach((done) => {
+            beforeEach(() => {
               pressKey(input, 'Enter', 13);
-              flushQueue(done);
+              (new RenderQueue()).clearQueue();
             });
 
             it('sets the date to the focused day', () => {
@@ -313,11 +311,8 @@ limitations under the License.
               expect(input.value).to.equal('01-20-2015');
             });
 
-            it('hides the calendar', (done) => {
-              setTimeout(() => {
-                expect(isVisible(calendar)).to.be.false;
-                done();
-              }, 100);
+            it('hides the calendar', () => {
+              expect(isVisible(calendar)).to.be.false;
             });
           });
         });
@@ -326,12 +321,12 @@ limitations under the License.
           let clickedDay;
           let divToClick;
 
-          beforeEach((done) => {
+          beforeEach(() => {
             clickedDay = moment('2015-01-20');
             divToClick = calendar.querySelectorAll('orion-calendar-day')[23]; // 2015-01-20
-            input.dispatchEvent(new Event('blur'));
             divToClick.dispatchEvent(new Event('mousedown'));
-            flushQueue(done);
+            (new RenderQueue()).clearQueue();
+            debugger
           });
 
           it('sets the date to the focused day', () => {
@@ -342,53 +337,41 @@ limitations under the License.
             expect(input.value).to.equal('01-20-2015');
           });
 
-          it('hides the calendar', (done) => {
-            setTimeout(() => {
-              expect(isVisible(calendar)).to.be.false;
-              done();
-            }, 100);
+          it('hides the calendar', () => {
+            expect(isVisible(calendar)).to.be.false;
           });
         });
 
         context('and clicking away', () => {
-          beforeEach((done) => {
+          beforeEach(() => {
             input.dispatchEvent(new Event('blur'));
-            flushQueue(done);
+            (new RenderQueue()).clearQueue();
           });
 
-          it('hides the calendar', (done) => {
-            setTimeout(() => {
-              expect(isVisible(calendar)).to.be.false;
-              done();
-            }, 200);
+          it('hides the calendar', () => {
+            expect(isVisible(calendar)).to.be.false;
           });
         });
 
         context('and pressing "Tab"', () => {
-          beforeEach((done) => {
+          beforeEach(() => {
             pressKey(input, 'Tab', 9);
-            flushQueue(done);
+            (new RenderQueue()).clearQueue();
           });
 
-          it('hides the calendar', (done) => {
-            setTimeout(() => {
-              expect(isVisible(calendar)).to.be.false;
-              done();
-            }, 100);
+          it('hides the calendar', () => {
+            expect(isVisible(calendar)).to.be.false;
           });
         });
 
         context('and pressing "Escape"', () => {
-          beforeEach((done) => {
+          beforeEach(() => {
             pressKey(input, 'Escape', 27);
-            flushQueue(done);
+            (new RenderQueue()).clearQueue();
           });
 
-          it('hides the calendar', (done) => {
-            setTimeout(() => {
-              expect(isVisible(calendar)).to.be.false;
-              done();
-            }, 100);
+          it('hides the calendar', () => {
+            expect(isVisible(calendar)).to.be.false;
           });
         });
       });

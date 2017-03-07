@@ -25,6 +25,11 @@ const Registry = require('../utils/private-registry');
 const applyProps = require('../utils/apply-props');
 const eventKey = require('../utils/event-key');
 const formatMoment = require('../utils/format-moment');
+const injectStyleTag = require('../utils/inject-style-tag');
+
+function ensureEdgeHacks() {
+  injectStyleTag('datepicker-edge-hacks', '[data-orion-id=datepicker-input]::-ms-clear { display: none; }');
+}
 
 class Datepicker extends Element {
   constructor() {
@@ -44,6 +49,7 @@ class Datepicker extends Element {
   }
 
   connectedCallback() {
+    ensureEdgeHacks();
     this._ensureInput();
     this._ensureCalendar();
     this._addListeners();
@@ -250,6 +256,7 @@ class Datepicker extends Element {
 
     if (this.dateInput === null) {
       this.dateInput = document.createElement('input');
+      this.dateInput.setAttribute('data-orion-id', 'datepicker-input');
       this.appendChild(this.dateInput);
       applyProps(this.dateInput, {
         type: 'text',

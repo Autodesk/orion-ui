@@ -77,12 +77,39 @@ class App extends Component {
                 Ready for production!
               </li>
             </ol>
-            <GetStarted framework={selectedFramework} className="fx-g2"/>
+            <GetStarted framework={selectedFramework} className="fx-g2" />
           </div>
         </div>
         <div>
           <h2 className="f2">Features & Benefits</h2>
           <FeaturesBenefits />
+        </div>
+        <div>
+          <h2 className="f2">Sample Apps</h2>
+          <table className="f6 w-100 mw8 center" cellspacing="0">
+            <thead>
+              <tr>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Name</th>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Description</th>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Website</th>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Source</th>
+              </tr>
+            </thead>
+            <tbody className="lh-copy">
+              <tr>
+                <td className="pv3 pr3 bb b--black-20">React Minimal</td>
+                <td className="pv3 pr3 bb b--black-20">Simple integration using <a href="https://github.com/facebookincubator/create-react-app">create-react-app</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-minimal.gomix.me">view site</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://gomix.com/#!/project/orion-react-minimal">view source</a></td>
+              </tr>
+              <tr>
+                <td className="pv3 pr3 bb b--black-20">Angular Minimal</td>
+                <td className="pv3 pr3 bb b--black-20">Simple integration example</td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-minimal.gomix.me">view site</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://gomix.com/#!/project/orion-angular-minimal2">view source</a></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     );

@@ -14,15 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+const InputState = {
+  getInitialState(state = {}) {
+    return {
+      clearable: false,
+      value: undefined,
+      placeholder: undefined,
+      ...state,
+    };
+  },
 
-function applyAttrs(el, props) {
-  Object.keys(props).forEach((name) => {
-    if (props[name]) {
-      el.setAttribute(name, props[name]);
-    } else {
-      el.removeAttribute(name);
-    }
-  });
-}
+  clear(state) {
+    return {
+      ...state,
+      value: undefined,
+    };
+  },
 
-module.exports = applyAttrs;
+  updateValue(state, value) {
+    return {
+      ...state,
+      value,
+    };
+  },
+};
+
+module.exports = InputState;

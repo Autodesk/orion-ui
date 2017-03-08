@@ -17,8 +17,8 @@ limitations under the License.
 require('../../vendor/es5-custom-element-shim.js');
 const Registry = require('../utils/private-registry.js');
 const applyProps = require('../utils/apply-props.js');
-const applyAttrs = require('../utils/apply-attrs.js');
 const Element = require('./element');
+const InputState = require('./input-state');
 
 class Input extends Element {
   constructor() {
@@ -29,11 +29,14 @@ class Input extends Element {
       background: 'blue',
     });
 
-    this._dispatchChangeEvent = this._dispatchChangeEvent.bind(this);
+    ['_dispatchChangeEvent', '_dispatchClearEvent'].forEach((handler) => {
+      this[handler] = this[handler].bind(this);
+    });
   }
 
   connectedCallback() {
     this._ensureInput();
+    this._ensureClear();
     this._addListeners();
   }
 
@@ -46,8 +49,21 @@ class Input extends Element {
     this._queueRender();
   }
 
+  get value() {
+    return this.state.value || '';
+  }
+
   set placeholder(val) {
     this.state.placeholder = val;
+    this._queueRender();
+  }
+
+  get placeholder() {
+    return this.state.placeholder || '';
+  }
+
+  set clearable(val) {
+    this.state.clearable = val;
     this._queueRender();
   }
 
@@ -59,20 +75,46 @@ class Input extends Element {
     this.appendChild(this.input);
   }
 
+  _ensureClear() {
+    this.clear = this.querySelector('[data-orion-id=select-clear]');
+    if (this.clear) { return; }
+
+    this.clear = document.createElement('orion-button');
+    this.clear.setAttribute('data-orion-id', 'select-clear');
+    applyProps(this.clear, {
+      textContent: '✕',
+      size: 'small',
+    });
+  }
+
   _addListeners() {
     this.input.addEventListener('change', this._dispatchChangeEvent);
+    this.clear.addEventListener('click', this._dispatchClearEvent);
   }
 
   _removeListeners() {
     this.input.removeEventListener('change', this._dispatchChangeEvent);
+
+    if (this.clear) {
+      this.clear.removeEventListener('click', this._dispatchClearEvent);
+    }
+  }
+
+  _dispatchClearEvent() {
+    event.stopPropagation();
+    const nextState = InputState.clear(this.state);
+
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        type: 'change',
+        state: nextState,
+      },
+    }));
   }
 
   _dispatchChangeEvent(event) {
     event.stopPropagation();
-    const nextState = {
-      ...this.state,
-      value: event.target.value,
-    };
+    const nextState = InputState.updateValue(this.state, event.target.value);
 
     this.dispatchEvent(new CustomEvent('change', {
       detail: {
@@ -83,10 +125,16 @@ class Input extends Element {
   }
 
   render() {
-    applyAttrs(this.input, {
-      value: this.state.value,
-      placeholder: this.state.placeholder,
+    applyProps(this.input, {
+      value: this.value,
+      placeholder: this.placeholder,
     });
+
+    if (this.state.clearable && this.state.value) {
+      this.insertBefore(this.clear, this.menu);
+    } else {
+      this.clear.remove();
+    }
   }
 }
 

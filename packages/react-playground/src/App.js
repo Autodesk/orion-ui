@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import '../vendor/custom-elements-polyfill';
-import { Button, Select, Datepicker } from '@orion-ui/react/lib/2016-12-01';
+import { Button, Select, Datepicker, Input } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
 import moment from 'moment';
@@ -112,7 +112,7 @@ class App extends React.Component {
   }
 
   setDisplayFormat(event) {
-    this.setState({ displayFormat: event.target.value });
+    this.setState({ displayFormat: event.detail.state.value });
   }
 
   render() {
@@ -130,7 +130,7 @@ class App extends React.Component {
         </div>
         <div style={{ margin: '40px' }}>
           <h3>Button</h3>
-          <input />
+          <Input />
           <Select clearable searchable disabled={this.state.disabled} options={this.state.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <button onClick={this.toggleDisabledOption}>Toggle disabled option</button>
@@ -141,7 +141,7 @@ class App extends React.Component {
         <div style={{ margin: '40px' }}>
           <h3>Date Picker</h3>
           <div style={{ margin: '40px' }}>
-            <input value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
+            <Input value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
             <Select options={this.locales} selectedIndex={this.state.localeIndex} onChange={this.setLocale}/>
           </div>
           {this.state.isEnabled &&

@@ -14,9 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const Button = require('./button');
-const Datepicker = require('./datepicker');
-const Input = require('./input');
-const Select = require('./select');
 
-module.exports = { Button, Datepicker, Input, Select };
+function applyAttrs(el, props) {
+  Object.keys(props).forEach((name) => {
+    if (props[name]) {
+      el.setAttribute(name, props[name]);
+    } else {
+      el.removeAttribute(name);
+    }
+  });
+}
+
+module.exports = applyAttrs;

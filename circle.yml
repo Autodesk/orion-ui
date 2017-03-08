@@ -2,6 +2,8 @@ machine:
   node:
     version: 7.5.0
 dependencies:
+  pre:
+    - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
   post:
     - bower install
     - NODE_ENV=production lerna bootstrap
@@ -30,6 +32,7 @@ deployment:
       - npm run copy-package-builds
       - npm run set-marketing-to-root
       - npm run deploy-master
+      - lerna publish --canary --yes
   snapshot:
     branch: /.*/
     commands:

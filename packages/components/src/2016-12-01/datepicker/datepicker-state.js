@@ -83,12 +83,17 @@ const DatepickerState = {
 
   selectDate(state, date) {
     if (state.isEnabled === undefined) {
-      return { ...state, date: moment(date), focusDate: moment(date) };
+      return { ...state, date: moment(date), focusDate: moment(date), focus: false };
     }
 
     const nextEnabledDate = this._findEnabledDate(state, date);
     if (nextEnabledDate) {
-      return { ...state, date: moment(nextEnabledDate), focusDate: moment(nextEnabledDate) };
+      return {
+        ...state,
+        date: moment(nextEnabledDate),
+        focusDate: moment(nextEnabledDate),
+        focus: false,
+      };
     }
 
     return state;
@@ -140,6 +145,7 @@ const DatepickerState = {
   },
 
   selectFocusDate(state) {
+    if (!moment(state.focusDate).isValid()) { return state; }
     return { ...state, date: moment(state.focusDate) };
   },
 };

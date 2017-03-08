@@ -191,9 +191,9 @@ class Datepicker extends Element {
   _handleKeydown(event) {
     if (event.shiftKey) {
       this._handleShiftKeydown(event);
+    } else {
+      this._handleRegularKeydown(event);
     }
-
-    this._handleRegularKeydown(event);
   }
 
   _focus() {
@@ -201,8 +201,7 @@ class Datepicker extends Element {
   }
 
   _blur() {
-    // Delay hiding of calendar to allow click events on days
-    setTimeout(() => { this._dispatchStateChange('leaveFocused'); }, 150);
+    this._dispatchStateChange('leaveFocused');
   }
 
   _handleDateSelected(event) {

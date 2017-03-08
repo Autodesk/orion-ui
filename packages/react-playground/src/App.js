@@ -29,7 +29,6 @@ class App extends React.Component {
       isEnabled: false,
       selectedIndex: undefined,
       localeIndex: 0,
-      date: moment(),
       displayFormat: 'Do MMMM, YYYY',
 
       buttonSizes: [
@@ -146,11 +145,11 @@ class App extends React.Component {
             <Select options={this.locales} selectedIndex={this.state.localeIndex} onChange={this.setLocale}/>
           </div>
           {this.state.isEnabled &&
-            <Datepicker isEnabled={this.isEnabled} i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
+            <Datepicker isEnabled={this.isEnabled} i18n={this.state.i18n} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
           }
 
           {!this.state.isEnabled &&
-            <Datepicker i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
+            <Datepicker i18n={this.state.i18n} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
           }
           <label>Custom isEnabled: <input type="checkbox" value={this.state.isEnabled} onChange={this.handleIsEnabled} /></label>
         </div>

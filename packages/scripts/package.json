@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "orion ui build tools",
   "main": "index.js",
+  "private": true,
   "bin": {
     "orion": "node orion.js"
   },

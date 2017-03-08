@@ -1,6 +1,6 @@
 {
   "name": "@orion-ui/react",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "orion ui react components",
   "main": "lib/index.js",
   "scripts": {
@@ -13,8 +13,8 @@
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "dependencies": {
-    "@orion-ui/components": "^1.0.0",
-    "@orion-ui/style": "^1.0.0",
+    "@orion-ui/components": "^1.0.3",
+    "@orion-ui/style": "^1.0.3",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   },

@@ -1,13 +1,13 @@
 {
   "name": "react-playground",
-  "version": "0.1.0",
+  "version": "1.0.3",
   "private": true,
   "homepage": ".",
   "devDependencies": {
     "react-scripts": "0.8.2"
   },
   "dependencies": {
-    "@orion-ui/react": "^1.0.0",
+    "@orion-ui/react": "^1.0.3",
     "moment": "^2.17.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"

@@ -1,6 +1,6 @@
 {
   "name": "marketing",
-  "version": "0.1.0",
+  "version": "1.0.3",
   "private": true,
   "homepage": ".",
   "devDependencies": {
@@ -9,7 +9,7 @@
     "tachyons": "^4.6.1"
   },
   "dependencies": {
-    "@orion-ui/react": "^1.0.0",
+    "@orion-ui/react": "^1.0.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },

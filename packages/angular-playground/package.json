@@ -1,6 +1,6 @@
 {
   "name": "angular-playground",
-  "version": "0.1.0",
+  "version": "1.0.3",
   "private": true,
   "main": "lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "dependencies": {
-    "@orion-ui/angular": "^1.0.0",
+    "@orion-ui/angular": "^1.0.3",
     "angular": "^1.5.9",
     "node-static": "^0.7.9"
   },

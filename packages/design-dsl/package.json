@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Exploring a JSON based design language",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "compile": "tsc",
     "hello-primitives": "node lib/hello-primitives.js",

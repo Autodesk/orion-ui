@@ -14,10 +14,13 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@orion-ui/components": "^1.0.3",
-    "@orion-ui/style": "^1.0.3",
+    "@orion-ui/style": "^1.0.3"
+  },
+  "peerDependencies": {
     "angular": "^1.5.9"
   },
   "devDependencies": {
+    "angular": "^1.5.9",
     "@orion-ui/eslint-config-orion": "^1.0.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",

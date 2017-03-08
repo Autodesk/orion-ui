@@ -32,7 +32,7 @@ deployment:
       - npm run copy-package-builds
       - npm run set-marketing-to-root
       - npm run deploy-master
-      - lerna publish --canary --yes
+      - lerna publish --canary --yes --exact
   snapshot:
     branch: /.*/
     commands:

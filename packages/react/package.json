@@ -14,11 +14,15 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@orion-ui/components": "^1.0.3",
-    "@orion-ui/style": "^1.0.3",
+    "@orion-ui/style": "^1.0.3"
+  },
+  "peerDependencies": {
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   },
   "devDependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
     "@orion-ui/eslint-config-orion": "^1.0.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.1",

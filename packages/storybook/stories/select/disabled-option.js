@@ -16,7 +16,7 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean } from '@kadira/storybook-addon-knobs';
+import { boolean, select } from '@kadira/storybook-addon-knobs';
 
 import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
@@ -25,10 +25,29 @@ export default function disabledOption() {
   const props = {
     open: boolean('Open', true),
   };
+
   const options = [
-    { value: 'one', label: 'One', key: 1, disabled: true },
+    { value: 'one', label: 'One', key: 1 },
     { value: 'two', label: 'Two', key: 2 },
   ];
+
+  const selections = options.reduce((acc, memo) => {
+    acc[memo.value] = memo.label;
+    return acc;
+  }, {});
+
+  selections.nothing = 'Nothing Disabled';
+  const defaultValue = options[0].value;
+
+  const disabledItemValue = select('Disabled Option', selections, defaultValue);
+
+  options.forEach((item) => {
+    if (item.value === disabledItemValue) {
+      item.disabled = true;
+    } else {
+      item.disabled = false;
+    }
+  });
 
   const react = `
 import React from 'react';
@@ -37,10 +56,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = [
-    { value: 'one', label: 'One', key: 1, disabled: true },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
+  const options = ${JSON.stringify(options, null, 2)}
 
   return <Select options={options} open={${props.open}} />;
 }
@@ -54,11 +70,7 @@ import 'angular';
 angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
-  app.options = [
-    { value: 'one', label: 'One', key: 1, disabled: true },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
-
+  app.options = ${JSON.stringify(options, null, 2)}
   app.open = ${props.open};
 }]);
 

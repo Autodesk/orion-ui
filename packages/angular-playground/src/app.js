@@ -19,8 +19,6 @@ import '../vendor/custom-elements-polyfill';
 import '@orion-ui/angular/lib/2016-12-01';
 import moment from 'moment';
 
-import moment from 'moment';
-
 angular
   .module('app', ['orion'])
   .controller('Controller', ['$scope', function ($scope) {

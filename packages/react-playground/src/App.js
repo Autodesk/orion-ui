@@ -131,7 +131,7 @@ class App extends React.Component {
         <div style={{ margin: '40px' }}>
           <h3>Button</h3>
           <input />
-          <Select searchable disabled={this.state.disabled} options={this.state.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
+          <Select clearable searchable disabled={this.state.disabled} options={this.state.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <button onClick={this.toggleDisabledOption}>Toggle disabled option</button>
         </div>

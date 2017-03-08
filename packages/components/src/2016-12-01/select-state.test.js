@@ -405,4 +405,21 @@ describe('SelectState', () => {
       expect(nextState.open).to.eq(true);
     });
   });
+
+  describe('clearSelection', () => {
+    let nextState;
+
+    beforeEach(() => {
+      const state = {
+        selectedIndex: 1,
+        selectedKey: 'a',
+      };
+      nextState = SelectState.clearSelection(state);
+    });
+
+    it('clears the selectedKey and selectedIndex', () => {
+      expect(nextState.selectedIndex).to.eq(-1);
+      expect(nextState.selectedKey).to.be.undefined;
+    });
+  });
 });

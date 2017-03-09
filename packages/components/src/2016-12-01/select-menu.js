@@ -89,8 +89,8 @@ class SelectMenu extends Element {
     applyProps(this.list, {
       itemTagname: 'orion-select-option',
       container: 'column',
-      'overflow-y': 'auto',
     });
+
     this.list.style.maxHeight = `${this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE}px`;
   }
 
@@ -131,6 +131,14 @@ class SelectMenu extends Element {
 
   render() {
     this._ensureList();
+
+    const currentListHeight = this.OPTION_HEIGHT * this.state.options.length;
+    const maxListHeight = this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE;
+    const scrollValue = currentListHeight > maxListHeight ? 'scroll' : 'hidden';
+
+    applyProps(this.list, {
+      'overflow-y': scrollValue,
+    });
 
     if (this.state.open) {
       const options = this.state.options.map((option) => {

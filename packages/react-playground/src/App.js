@@ -40,7 +40,7 @@ class App extends React.Component {
       ]
     };
 
-    ['setDisplayFormat', 'setLocale', 'setSelectedIndex', 'handleClick', 'toggleDisabled', 'isEnabled', 'handleIsEnabled'].forEach((fn) => {
+    ['setDate', 'setDisplayFormat', 'setLocale', 'setSelectedIndex', 'handleClick', 'toggleDisabled', 'isEnabled', 'handleIsEnabled'].forEach((fn) => {
       this[fn] = this[fn].bind(this);
     });
 
@@ -79,6 +79,10 @@ class App extends React.Component {
 
   setSelectedIndex(event) {
     this.setState({ selectedIndex: event.detail.state.selectedIndex });
+  }
+
+  setDate(event) {
+    this.setState({ date: event.detail.state.date });
   }
 
   handleIsEnabled(event) {
@@ -130,7 +134,6 @@ class App extends React.Component {
         </div>
         <div style={{ margin: '40px' }}>
           <h3>Button</h3>
-          <Input />
           <Select clearable searchable disabled={this.state.disabled} options={this.state.buttonSizes} selectedIndex={this.state.selectedIndex} onChange={this.setSelectedIndex}/>
           <button onClick={this.toggleDisabled}>Toggle disabled</button>
           <button onClick={this.toggleDisabledOption}>Toggle disabled option</button>
@@ -141,15 +144,15 @@ class App extends React.Component {
         <div style={{ margin: '40px' }}>
           <h3>Date Picker</h3>
           <div style={{ margin: '40px' }}>
-            <Input value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
+            <Input clearable value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
             <Select options={this.locales} selectedIndex={this.state.localeIndex} onChange={this.setLocale}/>
           </div>
           {this.state.isEnabled &&
-            <Datepicker isEnabled={this.isEnabled} i18n={this.state.i18n} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
+            <Datepicker clearable isEnabled={this.isEnabled} i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY" onChange={this.setDate} />
           }
 
           {!this.state.isEnabled &&
-            <Datepicker i18n={this.state.i18n} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY"></Datepicker>
+            <Datepicker clearable i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY" onChange={this.setDate} />
           }
           <label>Custom isEnabled: <input type="checkbox" value={this.state.isEnabled} onChange={this.handleIsEnabled} /></label>
         </div>

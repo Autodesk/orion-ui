@@ -15,20 +15,33 @@ limitations under the License.
 
 */
 const css = `
-  .ovy-a {
-    overflow-y: auto;
+  .ovy-h {
+    overflow-y: hidden;
+    overflow-x: hidden;
+  }
+
+  .ovy-s {
+    overflow-y: scroll;
+    overflow-x: hidden
   }
 `;
 
-const attributes = [
-  'overflow-y',
-];
+
+const attrMap = {
+  'overflow-y': {
+    scroll: 'ovy-s',
+    hidden: 'ovy-h',
+  },
+};
+
+const attributes = Object.keys(attrMap);
 
 function attributeChangedCallback(attrName, value) {
-  if (value === 'auto') {
-    return 'ovy-a';
+  const styleClass = attrMap[attrName][value];
+  if (typeof styleClass === 'undefined') {
+    throw new Error(`Unknown style for ${attrName}="${value}"`);
   }
-  return '';
+  return styleClass;
 }
 
 module.exports = {

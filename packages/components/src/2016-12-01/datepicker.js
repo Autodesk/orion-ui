@@ -168,6 +168,12 @@ class Datepicker extends Element {
         this._dispatchStateChange('leaveFocused');
         break;
       case 'Escape':
+        if (this.state.focus) {
+          this._dispatchStateChange('leaveFocused');
+        } else {
+          this._dispatchStateChange('dateCleared');
+        }
+        break;
       case 'Tab':
         this._dispatchStateChange('leaveFocused');
         break;

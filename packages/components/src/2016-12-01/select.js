@@ -230,7 +230,11 @@ class Select extends Element {
   _handleKeydown(event) {
     switch (eventKey(event)) {
       case 'Escape':
-        this._dispatchStateChange('deactivated');
+        if (this.state.open) {
+          this._dispatchStateChange('deactivated');
+        } else {
+          this._dispatchStateChange('clearSelection');
+        }
         break;
       case 'ArrowUp':
         event.preventDefault();

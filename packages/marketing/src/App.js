@@ -53,7 +53,7 @@ class App extends Component {
         <Nav />
         <div className="pv5">
           <h1 className="f1">Orion</h1>
-          <p>A resusable, HIG compliant, UI component library for Autodesk applications based on web standards and open source best pracices.</p>
+          <p>A resusable, HIG compliant, UI component library for Autodesk applications based on web standards and open source best practices.</p>
         </div>
         <div className="pv3 center w-20">
           <Anchor href={constants.storybookPath}>See All Components</Anchor>

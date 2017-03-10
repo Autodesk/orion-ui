@@ -267,12 +267,23 @@ limitations under the License.
 
       context('clicking the clear button', () => {
         beforeEach(() => {
+          expect(select.innerText).to.have.string('Killer Bees');
+          clearButton.dispatchEvent(new Event('click'));
         });
 
         it('clears the value', () => {
-          expect(select.innerText).to.have.string('Killer Bees');
-          clearButton.dispatchEvent(new Event('click'));
           (new RenderQueue()).clearQueue();
+          expect(select.innerText).not.to.have.string('Killer Bees');
+        })
+      });
+
+      context('pressing escape', () => {
+        beforeEach(() => {
+          select.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+          (new RenderQueue()).clearQueue();
+        });
+
+        it('clears the value', () => {
           expect(select.innerText).not.to.have.string('Killer Bees');
         })
       });

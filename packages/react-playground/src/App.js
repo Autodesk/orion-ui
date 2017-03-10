@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import '../vendor/custom-elements-polyfill';
-import { Button, Select, Datepicker, Input } from '@orion-ui/react/lib/2016-12-01';
+import { Button, Select, Datepicker } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
 import moment from 'moment';
@@ -144,7 +144,7 @@ class App extends React.Component {
         <div style={{ margin: '40px' }}>
           <h3>Date Picker</h3>
           <div style={{ margin: '40px' }}>
-            <Input clearable value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
+            <input clearable value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
             <Select options={this.locales} selectedIndex={this.state.localeIndex} onChange={this.setLocale}/>
           </div>
           {this.state.isEnabled &&

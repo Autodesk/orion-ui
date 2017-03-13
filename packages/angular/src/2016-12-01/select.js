@@ -17,13 +17,15 @@ limitations under the License.
 require('@orion-ui/components/lib/2016-12-01/select');
 const applyProps = require('@orion-ui/components/lib/utils/apply-props');
 
-const configurable = ['clearable', 'disabled', 'focusedIndex', 'open', 'options', 'searchable', 'selectedIndex'];
+const configurable = ['clearable', 'filter', 'disabled', 'hasFocus', 'focusedKey', 'open', 'options', 'searchable', 'selectedIndex'];
 
 const SelectComponent = {
   bindings: {
     clearable: '<',
-    focusedIndex: '<',
+    filter: '<',
+    focusedKey: '<',
     disabled: '<',
+    hasFocus: '<',
     open: '<',
     options: '<',
     onChange: '&',

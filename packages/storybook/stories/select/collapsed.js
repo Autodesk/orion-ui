@@ -59,16 +59,15 @@ angular.module('app', [])
     { value: 'one', label: 'One', key: 1 },
     { value: 'two', label: 'Two', key: 2 }
   ];
-
   app.open = ${props.open};
-}]);
+});
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="sizes" open="false"></orion-select>
+  <orion-select options="app.sizes" open="app.open"></orion-select>
 </body>
 </html>`;
 

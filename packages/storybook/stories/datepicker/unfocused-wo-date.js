@@ -23,7 +23,6 @@ import { WithSource } from '../../addons/source-addon';
 export default function unfocusedWoDate() {
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
@@ -52,7 +51,7 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" />
+    <orion-datepicker date="app.date" focus="app.focus" />
   </body>
 </html>`;
 

@@ -16,61 +16,65 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean } from '@kadira/storybook-addon-knobs';
+import { boolean, text } from '@kadira/storybook-addon-knobs';
 
-import { Select } from '../../../react/lib/2016-12-01';
+import { Button } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function focus() {
+  const buttonText = text('Text', 'Hello, button!');
   const props = {
     hasFocus: boolean('Has focus', true),
-    options: [
-      { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 },
-    ],
   };
 
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import { Button } from '../../../react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = ${JSON.stringify(props.options, null, 2)};
-
   return (
-    <Select options={options} hasFocus={${props.hasFocus}} />
+    <Button hasFocus={${props.hasFocus}}>
+      ${buttonText}
+    </Button>
   )
 }
-}
-
 ReactDOM.render(React.createElement(App), document.body);`;
 
   const angular = `
-// app controller
-import 'angular';
-import '@orion-ui/angular/lib/2016-12-01';
+  // ------------------------------
+  // controller.js
 
-angular
-  .module('app', ['orion'])
+  import 'angular';
+  import '@orion-ui/angular/lib/2016-12-01';
+
+  angular.module('app', ['orion']) // include orion module
   .controller('AppController', function () {
-    $scope.hasFocus = ${props.hasFocus};
-    $scope.options = ${JSON.stringify(props.options, null, 2)};
+    var app = this;
+
+    app.label = '${buttonText}';
+    app.hasFocus = ${props.hasFocus};
   });
 
-// app.html
+  // ------------------------------
+  // index.html
 
-<!doctype html>
-<html lang="en" ng-app="app">
-<body ng-controller="Controller as ctrl">
-  <orion-select options="options" has-focus="hasFocus"></orion-select>
-</body>
-</html>`;
+  <!doctype html>
+  <html>
+  <body ng-app="app">
+    <div ng-controller="DemoController as app">
+      <orion-button hasFocus="app.button.hasFocus">
+        {{ app.label }}
+      </orion-button>
+    </div>
+  </body>
+  </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select {...props} />
+      <Button {...props}>
+        {buttonText}
+      </Button>
     </WithSource>
   );
 }

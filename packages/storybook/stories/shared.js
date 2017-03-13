@@ -14,20 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+module.exports = {
+  colorOptions: {
+    '': '',
+    black: 'Black',
+    white: 'White',
+    blue: 'Blue',
+  },
+  filterEmptyProps: (props) => {
+    const newProps = {};
 
-import { storiesOf } from '@kadira/storybook';
+    Object.entries(props).forEach(([key, value]) => {
+      if (props[key] !== '') {
+        newProps[key] = value;
+      } else {
+        newProps[key] = undefined;
+      }
+    });
 
-import withText from './button/with-text';
-import disabled from './button/disabled';
-import hover from './button/hover';
-import small from './button/small';
-import large from './button/large';
-import focus from './button/focus';
-
-storiesOf('Button', module)
-  .add('with text', withText)
-  .add('disabled', disabled)
-  .add('hover', hover)
-  .add('small', small)
-  .add('large', large)
-  .add('focus', focus);
+    return newProps;
+  },
+  sizeOptions: {
+    large: 'Large',
+    '': 'Regular',
+    small: 'Small',
+  },
+};

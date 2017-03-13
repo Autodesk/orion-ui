@@ -59,22 +59,23 @@ import '@orion-ui/angular/lib/2016-12-01';
 
 angular
   .module('app', ['orion'])
-  .controller('Controller', ['$scope', function ($scope) {
-    $scope.selectedIndex = 1;
-    $scope.clearable = ${props.clearable};
-    $scope.sizes = [
+  .controller('AppController', function () {
+    var app = this;
+    app.selectedIndex = 1;
+    app.clearable = ${props.clearable};
+    app.sizes = [
       { label: 'One', value: 'one', key: 1 },
       { label: 'Two', value: 'two', key: 2 },
       { label: 'Three', value: 'three', key: 3 },
     ];
-  }]);
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-<body ng-controller="Controller as ctrl">
-  <orion-select clearable="clearable" selected-index="selectedIndex" options="sizes"></orion-select>
+<body ng-controller="AppController as app">
+  <orion-select clearable="app.clearable" selected-index="app.selectedIndex" options="app.sizes"></orion-select>
 </body>
 </html>`;
 

@@ -22,32 +22,15 @@ import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function disabledOption() {
-  const props = {
-    open: boolean('Open', true),
-  };
-
   const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
+    { value: 'one', label: 'One', key: 1, disabled: boolean('Option 1 disabled', true) },
+    { value: 'two', label: 'Two', key: 2, disabled: boolean('Option 2 disabled', false) },
   ];
 
-  const selections = options.reduce((acc, memo) => {
-    acc[memo.value] = memo.label;
-    return acc;
-  }, {});
-
-  selections.nothing = 'Nothing Disabled';
-  const defaultValue = options[0].value;
-
-  const disabledItemValue = select('Disabled Option', selections, defaultValue);
-
-  options.forEach((item) => {
-    if (item.value === disabledItemValue) {
-      item.disabled = true;
-    } else {
-      item.disabled = false;
-    }
-  });
+  const props = {
+    open: boolean('Open', true),
+    options,
+  };
 
   const react = `
 import React from 'react';
@@ -56,7 +39,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = ${JSON.stringify(options, null, 2)}
+  const options = ${JSON.stringify(props.options, null, 2)}
 
   return <Select options={options} open={${props.open}} />;
 }
@@ -66,20 +49,25 @@ ReactDOM.render(React.createElement(App), document.body);`;
   const angular = `
 // app controller
 import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = ${JSON.stringify(options, null, 2)}
-  app.open = ${props.open};
-}]);
+angular
+  .module('app', ['orion'])
+  .controller('Controller', ['$scope', function ($scope) {
+    $scope.open = true;
+    $scope.sizes = [
+      { label: 'One', value: 'one', key: 1, disabled: true },
+      { label: 'Two', value: 'two', key: 2, disabled: false },
+      { label: 'Three', value: 'three', key: 3 },
+    ];
+  }]);
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-<body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="{{app.open}}" />
+<body ng-controller="Controller as ctrl">
+  <orion-select options="sizes" open="open"></orion-select>
 </body>
 </html>`;
 

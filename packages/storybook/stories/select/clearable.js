@@ -18,11 +18,18 @@ limitations under the License.
 import React from 'react';
 import { boolean } from '@kadira/storybook-addon-knobs';
 
+import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function clearable() {
   const props = {
     clearable: boolean('Clearable', true),
+    options: [
+      { label: 'One', value: 'one', key: 1 },
+      { label: 'Two', value: 'two', key: 2 },
+      { label: 'Three', value: 'three', key: 3 },
+    ],
+    selectedIndex: 1,
   };
 
   const react = `
@@ -33,8 +40,9 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 class App extends React.Component {
 render() {
   const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
+    { label: 'One', value: 'one', key: 1 },
+    { label: 'Two', value: 'two', key: 2 },
+    { label: 'Three', value: 'three', key: 3 },
   ];
 
   return (
@@ -47,31 +55,32 @@ ReactDOM.render(React.createElement(App), document.body);`;
   const angular = `
 // app controller
 import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
-  ];
-
-  app.selectedIndex = 1;
-  app.clearable = ${props.clearable};
-}]);
+angular
+  .module('app', ['orion'])
+  .controller('Controller', ['$scope', function ($scope) {
+    $scope.selectedIndex = 1;
+    $scope.clearable = ${props.clearable};
+    $scope.sizes = [
+      { label: 'One', value: 'one', key: 1 },
+      { label: 'Two', value: 'two', key: 2 },
+      { label: 'Three', value: 'three', key: 3 },
+    ];
+  }]);
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-<body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" selectedIndex="{{app.selectedIndex}}" clearable="{{app.clearable}}" />
+<body ng-controller="Controller as ctrl">
+  <orion-select clearable="clearable" selected-index="selectedIndex" options="sizes"></orion-select>
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>TODO</span>
+      <Select {...props} />
     </WithSource>
   );
 }

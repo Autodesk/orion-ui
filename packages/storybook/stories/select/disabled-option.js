@@ -68,7 +68,7 @@ angular
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} open={props.open} />
+      <Select {...props} />
     </WithSource>
   );
 }

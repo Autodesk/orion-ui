@@ -82,3 +82,10 @@ gemini.suite('some-search-results', (suite) => {
     .setCaptureElements(".example")
     .capture('some-search-results-select')
 });
+
+gemini.suite('select', (suite) => {
+  suite
+    .setUrl('iframe.html?selectedKind=Select&selectedStory=clearable')
+    .setCaptureElements(".example")
+    .capture('clearable')
+});

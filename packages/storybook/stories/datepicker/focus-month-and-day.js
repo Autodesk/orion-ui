@@ -24,14 +24,15 @@ import { WithSource } from '../../addons/source-addon';
 
 export default function focusMonthAndDay() {
   const props = {
-    focusDate: text('Focus Date', '2015-01-02'),
+    focusDate: moment(text('Focus Date', '2015-01-02')),
     focus: boolean('Focus', true),
+    currentDate: moment('2014-12-01'),
   };
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
@@ -48,7 +49,7 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
@@ -64,19 +65,13 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" focusDate="{{app.focusDate}}" />
+    <orion-datepicker date="app.date" focus="app.focus" focusDate="app.focusDate" />
   </body>
 </html>`;
 
-  const staticDate = moment('2014-12-01');
-
   return (
     <WithSource react={react} angular={angular}>
-      <Datepicker
-        focusDate={moment(props.focusDate)}
-        focus={props.focus}
-        currentDate={staticDate}
-      />
+      <Datepicker {...props} />
     </WithSource>
   );
 }

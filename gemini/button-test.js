@@ -37,7 +37,7 @@ gemini.suite('disabled-button', (suite) => {
 
 gemini.suite('hover-state-for-button', (suite) => {
   suite
-    .setUrl('iframe.html?selectedKind=Button&selectedStory=hover%20state')
+    .setUrl('iframe.html?selectedKind=Button&selectedStory=hover')
     .setCaptureElements(".example")
     .before(function(actions, find) {
       this.button = find('orion-button');
@@ -49,7 +49,7 @@ gemini.suite('hover-state-for-button', (suite) => {
 
 gemini.suite('small-button', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Button&selectedStory=small%20button')
+    .setUrl('/iframe.html?selectedKind=Button&selectedStory=small')
     .setCaptureElements(".example")
     .before(function(actions, find) {
       this.button = find('orion-button');
@@ -59,7 +59,7 @@ gemini.suite('small-button', (suite) => {
 
 gemini.suite('large-button', (suite) => {
   suite
-    .setUrl('/iframe.html?selectedKind=Button&selectedStory=large%20button')
+    .setUrl('/iframe.html?selectedKind=Button&selectedStory=large')
     .setCaptureElements(".example")
     .before(function(actions, find) {
       this.button = find('orion-button');
@@ -69,7 +69,7 @@ gemini.suite('large-button', (suite) => {
 
 gemini.suite('focus-button', (suite) => {
   suite
-    .setUrl('iframe.html?selectedKind=Button&selectedStory=focus%20button')
+    .setUrl('iframe.html?selectedKind=Button&selectedStory=focus')
     .setCaptureElements(".example")
     .before(function(actions, find) {
       this.button = find('orion-button');

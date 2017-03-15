@@ -24,24 +24,30 @@ import { WithSource } from '../../addons/source-addon';
 
 export default function customDateFormatting() {
   const props = {
-    locale: select('Locale', ['zh-cn', 'en'], 'zh-cn'),
-    displayFormat: text('Display Format', 'ddd, hA'),
-    monthFormat: text('Month Format', 'YYYY[年]MMMM'),
-    focus: true,
     currentDate: moment('2014-12-01'),
+    displayFormat: text('Display Format', 'ddd, hA'),
+    focus: true,
     focusDate: moment('2014-12-01'),
+    locale: select('Locale', ['zh-cn', 'en'], 'zh-cn'),
+    monthFormat: text('Month Format', 'YYYY[年]MMMM'),
   };
 
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
         const date = moment();
-        return <Datepicker locale={${props.locale}} date={date} focus={true} displayFormat="${props.displayFormat}" monthFormat="${props.monthFormat}" />;
+        return (
+          <Datepicker
+            date={date}
+            displayFormat="${props.displayFormat}"
+            focus={true}
+            locale={${props.locale}}
+            monthFormat="${props.monthFormat}" />
+        );
     }
 }
 
@@ -51,18 +57,17 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
+import 'moment/locale/zh-cn.js';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {
-
     var app = this;
     app.date = moment();
-
-    app.locale('${props.locale}');
-    app.displayFormat = ${props.displayFormat};
-    app.monthFormat = ${props.monthFormat};
+    app.displayFormat = '${props.displayFormat}';
+    app.locale = '${props.locale}';
+    app.monthFormat = '${props.monthFormat}';
   });
 
 // app.html
@@ -70,7 +75,13 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker locale="{{app.locale}}" date="{{app.date}}" displayFormat="{{app.displayFormat}}" monthFormat="{{app.monthFormat}}" />
+    <orion-datepicker
+      date="app.date"
+      display-format="app.displayFormat"
+      focus="true"
+      locale="app.locale"
+      month-format="app.monthFormat"
+    />
   </body>
 </html>`;
 

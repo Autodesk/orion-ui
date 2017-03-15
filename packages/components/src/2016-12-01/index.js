@@ -15,8 +15,8 @@ limitations under the License.
 
 */
 const Button = require('./button');
+const Datepicker = require('./datepicker');
 const Inline = require('./inline');
 const Select = require('./select');
-const Datepicker = require('./datepicker');
 
-module.exports = { Button, Inline, Select, Datepicker };
+module.exports = { Button, Datepicker, Inline, Select };

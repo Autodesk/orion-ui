@@ -63,3 +63,10 @@ gemini.suite('datepicker-custom-placeholder-text', (suite) => {
     .setCaptureElements(".example")
     .capture('datepicker-custom-placeholder-text')
 });
+
+gemini.suite('datepicker-clearable', (suite) => {
+  suite
+    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=clearable')
+    .setCaptureElements(".example")
+    .capture('datepicker-clearable')
+});

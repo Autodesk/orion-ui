@@ -28,8 +28,7 @@ export default function disabled() {
 
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
@@ -45,7 +44,7 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
@@ -60,7 +59,7 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" disabled="{{app.disabled}}" />
+    <orion-datepicker date="app.date" disabled="app.disabled" />
   </body>
 </html>`;
 

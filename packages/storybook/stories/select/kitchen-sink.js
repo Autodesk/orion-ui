@@ -19,11 +19,12 @@ import React from 'react';
 import { boolean, select, text } from '@kadira/storybook-addon-knobs';
 
 import { WithSource } from '../../addons/source-addon';
+import { Select } from '../../../react/lib/2016-12-01';
 
 export default function kitchenSink() {
   const props = {
     open: boolean('Open', false),
-    disabled: boolean('Disabled', true),
+    disabled: boolean('Disabled', false),
     focusIndex: select('Focus Index', {
       undefined: 'undefined',
       0: '0',
@@ -35,9 +36,13 @@ export default function kitchenSink() {
       0: '0',
       1: '1',
     }, 'undefined'),
-    searchable: boolean('Searchable', false),
-    query: text('Query', 'Hello World'),
+    searchable: boolean('Searchable', true),
+    filter: text('Filter', 'One'),
     clearable: boolean('Clearable', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+    ],
   };
 
   const react = `
@@ -61,7 +66,7 @@ render() {
       focus={${props.focus}}
       selectedIndex={${props.selectedIndex}}
       searchable={${props.searchable}}
-      query="${props.query}"
+      filter="${props.filter}"
       clearable={${props.clearable}} />
   )
 }
@@ -88,7 +93,7 @@ angular.module('app', [Select.moduleName])
   app.focus = ${props.focus};
   app.selectedIndex = ${props.selectedIndex};
   app.searchable = ${props.searchable};
-  app.query = "${props.query}"
+  app.filter = "${props.filter}"
   app.clearable = ${props.clearable};
 }]);
 
@@ -105,14 +110,14 @@ angular.module('app', [Select.moduleName])
     focus="{{app.focus}}"
     selectedIndex="{{app.selectedIndex}}"
     searchable="{{app.searchable}}"
-    query="{{app.query}}"
+    filter="{{app.filter}}"
     clearable="{{app.clearable}}" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Select {...props} />
     </WithSource>
   );
 }

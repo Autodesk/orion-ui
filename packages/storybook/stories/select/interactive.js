@@ -21,10 +21,12 @@ import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function interactive() {
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-  ];
+  const props = {
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+    ],
+  };
 
   const react = `
 import React from 'react';
@@ -49,10 +51,7 @@ class App extends React.Component {
   }
 
   render() {
-    const options = [
-      { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 }
-    ];
+    const options = ${JSON.stringify(props.options, null, 2)};
 
     return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
   }
@@ -67,17 +66,14 @@ import {Select} from '@orion-ui/angular/lib/2016-12-01';
 angular.module('app', [Select.moduleName])
 .controller('AppController', function() {
   var app = this;
-  app.options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
+  app.options = ${JSON.stringify(props.options, null, 2)};
 
   app.onChange = (event) => {
     if (event.detail.type === 'optionSelected') {
       // do something
     }
   }
-}]);
+});
 
 // app.html
 
@@ -85,14 +81,14 @@ angular.module('app', [Select.moduleName])
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
   <orion-select
-    options="{{app.options}}"
-    on-change="app.onChange(selectState)" />
+    options="app.options"
+    on-change="app.onChange" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} />
+      <Select {...props} />
     </WithSource>
   );
 }

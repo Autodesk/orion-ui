@@ -19,7 +19,7 @@ require('@orion-ui/components/lib/2016-12-01/button');
 
 const colorValidator = new ColorValidator();
 const sizeValidator = new SizeValidator();
-const configurable = ['color', 'background', 'size', 'disabled'];
+const configurable = ['background', 'color', 'disabled', 'hover', 'size'];
 
 const validations = {
   color: colorValidator,
@@ -32,8 +32,9 @@ const ButtonComponent = {
   bindings: {
     background: '<',
     color: '<',
-    size: '<',
     disabled: '<',
+    hover: '<',
+    size: '<',
   },
 
   controller: function controller($element, $log) { // eslint-disable object-shorthand

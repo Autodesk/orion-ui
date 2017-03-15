@@ -16,21 +16,26 @@ limitations under the License.
 
 */
 import React from 'react';
-
-// import { Datepicker } from '../../../react/lib/2016-12-01';
+import moment from 'moment';
+import { boolean } from '@kadira/storybook-addon-knobs';
+import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function clearable() {
+  const props = {
+    clearable: boolean('Clearable', true),
+    date: moment('2017-01-01'),
+  };
+
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
         const date = moment();
-        return <Datepicker date={date} focus={false} clearable={true} />;
+        return <Datepicker date={date} clearable={${props.clearable}} />;
     }
 }
 
@@ -40,15 +45,14 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();
-    app.focus = false;
-    app.clearable = true;
+    app.clearable = ${props.clearable};
   });
 
 // app.html
@@ -56,14 +60,14 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" clearable="{{app.clearable}} />
+    <orion-datepicker date="app.date" clearable="app.clearable />
   </body>
 </html>
         `;
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker {...props} />
     </WithSource>
   );
 }

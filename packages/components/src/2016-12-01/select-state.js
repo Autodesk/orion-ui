@@ -190,6 +190,14 @@ const SelectState = {
     const filteredOptions = options.filter(option => option.label.match(optionFilter));
     return filteredOptions;
   },
+
+  clearSelection(state) {
+    return {
+      ...state,
+      selectedIndex: -1,
+      selectedKey: undefined,
+    };
+  },
 };
 
 module.exports = SelectState;

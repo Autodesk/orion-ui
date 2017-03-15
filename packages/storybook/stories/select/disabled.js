@@ -24,12 +24,11 @@ import { WithSource } from '../../addons/source-addon';
 export default function disabled() {
   const props = {
     disabled: boolean('Disabled', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+    ],
   };
-
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-  ];
 
   const react = `
 import React from 'react';
@@ -38,10 +37,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
-  ];
+  const options = ${JSON.stringify(props.options, null, 2)};
 
   return (
     <Select options={options} disabled={${props.disabled}} />
@@ -53,30 +49,28 @@ ReactDOM.render(React.createElement(App), document.body);`;
   const angular = `
 // app controller
 import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = [
-    { value: 'one', label: 'One' },
-    { value: 'two', label: 'Two' }
-  ];
-
-  app.disabled = ${props.disabled};
-}]);
+angular
+  .module('app', ['orion'])
+  .controller('AppController', function () {
+    var app = this;
+    app.disabled = ${props.disabled};
+    app.sizes = ${JSON.stringify(props.options, null, 2)};
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" disabled="{{app.disabled}}" />
+  <orion-select options="app.sizes" disabled="app.disabled"></orion-select>
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} open={props.open} disabled={props.disabled} />
+      <Select {...props} />
     </WithSource>
   );
 }

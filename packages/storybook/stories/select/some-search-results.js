@@ -23,16 +23,14 @@ import { WithSource } from '../../addons/source-addon';
 
 module.exports = function someSearchResults() {
   const props = {
-    searchable: boolean('Searchable', true),
-    open: boolean('Open', true),
-    // query text makes the select open
     filter: text('Filter', 'one'),
+    open: boolean('Open', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+    ],
+    searchable: boolean('Searchable', true),
   };
-
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-  ];
 
   const react = `
 import React from 'react';
@@ -41,10 +39,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
+  const options = ${JSON.stringify(props.options, null, 2)};
 
   return (
     <Select options={options} searchable={${props.searchable}} filter="${props.filter}" />
@@ -60,33 +55,24 @@ import 'angular';
 
 angular.module('app', [])
 .controller('AppController', function() {
-  var app = this;
-  app.options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
-
+  const app = this;
+  app.options = ${JSON.stringify(props.options, null, 2)};
   app.searchable = ${props.searchable};
   app.filter = "${props.filter}";
-}]);
+});
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" searchable="{{app.searchable}}" filter="{{app.filter}}" />
+  <orion-select options="app.options" searchable="app.searchable" filter="app.filter" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select
-        options={options}
-        searchable={props.searchable}
-        filter={props.filter}
-        open={props.open}
-      />
+      <Select {...props} />
     </WithSource>
   );
 };

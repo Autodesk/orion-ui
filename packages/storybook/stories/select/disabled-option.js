@@ -54,7 +54,7 @@ angular
   .controller('AppController', function () {
     var app = this;
     app.open = true;
-    app.sizes = ${JSON.stringify(props.options, null, 2)};
+    app.options = ${JSON.stringify(props.options, null, 2)};
   });
 
 // app.html
@@ -62,7 +62,7 @@ angular
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="app.sizes" open="app.open"></orion-select>
+  <orion-select options="app.options" open="app.open"></orion-select>
 </body>
 </html>`;
 

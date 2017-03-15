@@ -61,8 +61,8 @@ angular
 
 <!doctype html>
 <html lang="en" ng-app="app">
-<body ng-controller="Controller as ctrl">
-  <orion-select options="options" open="open"></orion-select>
+<body ng-controller="AppController as app">
+  <orion-select options="app.options" open="app.open"></orion-select>
 </body>
 </html>`;
 

@@ -49,7 +49,7 @@ ReactDOM.render(<Button>Hello, world!</Button>, document.body);
 <!doctype html>
 <html>
 <body ng-app="app">
-<div ng-controller="DemoController as ctrl">
+<div ng-controller="AppController as ctrl">
   <orion-button
     background="ctrl.button.background"
     color="ctrl.button.color"
@@ -67,7 +67,7 @@ import '@orion-ui/angular/lib/2016-12-01';
 
 angular
 .module('app', ['orion']) // include orion module
-.controller('DemoController', function() {
+.controller('AppController', function() {
   var ctrl = this;
 
   ctrl.button = {

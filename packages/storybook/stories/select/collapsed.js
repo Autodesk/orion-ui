@@ -51,23 +51,22 @@ ReactDOM.render(React.createElement(App), document.body);`;
   const angular = `
 // app controller
 import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
-  app.open = ${props.open};
-});
+angular
+  .module('app', ['orion'])
+  .controller('AppController', function () {
+    var app = this;
+    app.open = ${props.open};
+    app.options = ${JSON.stringify(props.options, null, 2)};
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="app.sizes" open="app.open"></orion-select>
+  <orion-select options="app.options" open="app.open"></orion-select>
 </body>
 </html>`;
 

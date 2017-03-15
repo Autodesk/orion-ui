@@ -54,7 +54,7 @@ angular.module('app', ['orion']) // include orion module
     var app = this;
 
     app.label = '${buttonText}';
-    app.size = ${props.size};
+    app.size = '${props.size}';
   });
 
 // ------------------------------

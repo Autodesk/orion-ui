@@ -62,8 +62,8 @@ ReactDOM.render(React.createElement(App), document.body);`;
   <!doctype html>
   <html>
   <body ng-app="app">
-    <div ng-controller="DemoController as app">
-      <orion-button hasFocus="app.button.hasFocus">
+    <div ng-controller="AppController as app">
+      <orion-button has-focus="app.button.hasFocus">
         {{ app.label }}
       </orion-button>
     </div>

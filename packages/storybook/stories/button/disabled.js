@@ -62,7 +62,7 @@ ReactDOM.render(React.createElement(App), document.body);`;
   <!doctype html>
   <html>
   <body ng-app="app">
-    <div ng-controller="DemoController as app">
+    <div ng-controller="AppController as app">
       <orion-button disabled="app.button.disabled">
         {{ app.label }}
       </orion-button>

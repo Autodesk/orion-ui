@@ -33,7 +33,8 @@ module.exports = function FeaturesBenefits() {
     },
     {
       title: 'Atoms',
-      body: 'Instead of allowing arbitrary values our components take Atoms. This ensures consistency with the Autodesk Interface guidelines.',
+      body: `Instead of allowing arbitrary values our components take Atoms.
+             This ensures visual consistency across all components.`,
     },
     {
       title: 'Flexible',

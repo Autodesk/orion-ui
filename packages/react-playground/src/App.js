@@ -126,6 +126,20 @@ class App extends React.Component {
       selectedSize = selectedOption.value;
     }
 
+    const props = {
+      clearable: true,
+      i18n: this.state.i18n,
+      date: this.state.date,
+      locale: this.state.locale,
+      displayFormat: this.state.displayFormat,
+      monthFormat: "MMMM YYYY",
+      onChange: this.setDate
+    }
+
+    if (this.state.isEnabled) {
+      props.isEnabled = this.isEnabled;
+    }
+
     return (
       <div className="App">
         <div className="App-header">
@@ -147,13 +161,7 @@ class App extends React.Component {
             <input clearable value={this.state.displayFormat} onChange={this.setDisplayFormat} placeholder="Display format"/>
             <Select options={this.locales} selectedIndex={this.state.localeIndex} onChange={this.setLocale}/>
           </div>
-          {this.state.isEnabled &&
-            <Datepicker clearable isEnabled={this.isEnabled} i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY" onChange={this.setDate} />
-          }
-
-          {!this.state.isEnabled &&
-            <Datepicker clearable i18n={this.state.i18n} date={this.state.date} locale={this.state.locale} displayFormat={this.state.displayFormat} monthFormat="MMMM YYYY" onChange={this.setDate} />
-          }
+          <Datepicker {...props} ></Datepicker>
           <label>Custom isEnabled: <input type="checkbox" value={this.state.isEnabled} onChange={this.handleIsEnabled} /></label>
         </div>
       </div>

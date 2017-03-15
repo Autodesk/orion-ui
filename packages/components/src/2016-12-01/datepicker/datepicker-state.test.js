@@ -258,6 +258,21 @@ describe('DatepickerState', () => {
     it('sets focusDate to the previous day', () => {
       expect(nextState.focusDate.isSame(focusDate.subtract(1, 'day'), 'date')).to.be.true;
     });
+
+    context('when previous day is disabled', () => {
+      const focusedDate = moment().add(1, 'month');
+      const disabledDate = moment(focusedDate).subtract(1, 'day');
+      const nextAvailabledate = moment(focusedDate).subtract(2, 'days');
+
+      beforeEach(() => {
+        const state = { isEnabled: (date) => { return !(date.isSame(disabledDate, 'day')); } };
+        nextState = DatepickerState.setFocusDate(state, disabledDate, 'previous');
+      });
+
+      it('focuses on next available previous day', () => {
+        expect(nextState.focusDate.isSame(nextAvailabledate, 'date')).to.be.true;
+      });
+    });
   });
 
   describe('focusNextWeek', () => {

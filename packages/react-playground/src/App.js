@@ -92,17 +92,27 @@ class App extends React.Component {
   isEnabled(date) {
     const now = moment();
     const twoWeeksFromNow = moment().add(2, 'weeks');
+    const twoDaysFromNow = moment().add(2, 'days');
+    const oneDayFromNow = moment().add(1, 'day');
 
-    if (date.isBefore(now)) {
+    if (date.isBefore(now, 'day')) {
+      return false;
+    }
+
+    if (date.isSame(twoDaysFromNow, 'day')) {
+      return false;
+    }
+
+    if (date.isSame(oneDayFromNow, 'day')) {
       return false;
     }
 
     if (date.isAfter(twoWeeksFromNow)) {
       return false;
     }
-
     return true;
-  }
+ } 
+
 
   setLocale(event) {
     const selectedOption = this.locales[event.detail.state.selectedIndex];

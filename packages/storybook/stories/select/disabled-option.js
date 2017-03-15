@@ -16,7 +16,7 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean, select } from '@kadira/storybook-addon-knobs';
+import { boolean } from '@kadira/storybook-addon-knobs';
 
 import { Select } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
@@ -24,30 +24,11 @@ import { WithSource } from '../../addons/source-addon';
 export default function disabledOption() {
   const props = {
     open: boolean('Open', true),
+    options: [
+      { value: 'one', label: 'One', key: 1, disabled: boolean('Option 1 disabled', true) },
+      { value: 'two', label: 'Two', key: 2, disabled: boolean('Option 2 disabled', false) },
+    ],
   };
-
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-  ];
-
-  const selections = options.reduce((acc, memo) => {
-    acc[memo.value] = memo.label;
-    return acc;
-  }, {});
-
-  selections.nothing = 'Nothing Disabled';
-  const defaultValue = options[0].value;
-
-  const disabledItemValue = select('Disabled Option', selections, defaultValue);
-
-  options.forEach((item) => {
-    if (item.value === disabledItemValue) {
-      item.disabled = true;
-    } else {
-      item.disabled = false;
-    }
-  });
 
   const react = `
 import React from 'react';
@@ -56,7 +37,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = ${JSON.stringify(options, null, 2)}
+  const options = ${JSON.stringify(props.options, null, 2)};
 
   return <Select options={options} open={${props.open}} />;
 }
@@ -66,26 +47,28 @@ ReactDOM.render(React.createElement(App), document.body);`;
   const angular = `
 // app controller
 import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = ${JSON.stringify(options, null, 2)}
-  app.open = ${props.open};
-}]);
+angular
+  .module('app', ['orion'])
+  .controller('AppController', function () {
+    var app = this;
+    app.open = true;
+    app.sizes = ${JSON.stringify(props.options, null, 2)};
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="{{app.open}}" />
+  <orion-select options="app.sizes" open="app.open"></orion-select>
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} open={props.open} />
+      <Select {...props} />
     </WithSource>
   );
 }

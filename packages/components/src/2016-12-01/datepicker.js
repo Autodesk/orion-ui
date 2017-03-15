@@ -43,7 +43,7 @@ class Datepicker extends Element {
       position: 'relative',
     });
 
-    ['_handleKeydown', '_focus', '_blur'].forEach((handler) => {
+    ['_handleKeydown', '_focus', '_blur', '_clearDate'].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -51,6 +51,7 @@ class Datepicker extends Element {
   connectedCallback() {
     ensureEdgeHacks();
     this._ensureInput();
+    this._ensureClear();
     this._ensureCalendar();
     this._addListeners();
     this._queueRender();
@@ -85,6 +86,11 @@ class Datepicker extends Element {
 
   set date(val) {
     this.state.date = val;
+    this._queueRender();
+  }
+
+  set clearable(val) {
+    this.state.clearable = val;
     this._queueRender();
   }
 
@@ -162,6 +168,12 @@ class Datepicker extends Element {
         this._dispatchStateChange('leaveFocused');
         break;
       case 'Escape':
+        if (this.state.focus) {
+          this._dispatchStateChange('leaveFocused');
+        } else {
+          this._dispatchStateChange('dateCleared');
+        }
+        break;
       case 'Tab':
         this._dispatchStateChange('leaveFocused');
         break;
@@ -220,6 +232,10 @@ class Datepicker extends Element {
     this._dispatchStateChange('focusNextMonth');
   }
 
+  _clearDate() {
+    this._dispatchStateChange('dateCleared');
+  }
+
   _dispatchStateChange(eventType, arg) {
     const nextState = DatepickerState[eventType](this.state, arg);
     this.dispatchEvent(new CustomEvent('change', {
@@ -234,6 +250,7 @@ class Datepicker extends Element {
     this.dateInput.addEventListener('keydown', this._handleKeydown);
     this.dateInput.addEventListener('focus', this._focus);
     this.dateInput.addEventListener('blur', this._blur);
+    this.clear.addEventListener('click', this._clearDate);
     this.addEventListener('selectDate', this._handleDateSelected);
     this.addEventListener('hoverDate', this._handleHoverDate);
     this.addEventListener('nextMonth', this._handleNextMonth);
@@ -244,6 +261,7 @@ class Datepicker extends Element {
     this.dateInput.removeEventListener('keydown', this._handleKeydown);
     this.dateInput.removeEventListener('focus', this._focus);
     this.dateInput.removeEventListener('blur', this._blur);
+    this.clear.removeEventListener('click', this._clearDate);
     this.removeEventListener('selectDate', this._handleDateSelected);
     this.removeEventListener('hoverDate', this._handleHoverDate);
     this.removeEventListener('nextMonth', this._handleNextMonth);
@@ -261,6 +279,18 @@ class Datepicker extends Element {
         type: 'text',
       });
     }
+  }
+
+  _ensureClear() {
+    this.clear = this.querySelector('[data-orion-id=datepicker-clear]');
+    if (this.clear) { return; }
+
+    this.clear = document.createElement('orion-button');
+    this.clear.setAttribute('data-orion-id', 'select-clear');
+    applyProps(this.clear, {
+      textContent: '✕',
+      size: 'small',
+    });
   }
 
   _ensureCalendar() {
@@ -289,6 +319,12 @@ class Datepicker extends Element {
       isEnabled: this.isEnabled,
       locale: this.state.locale,
     });
+
+    if (this.state.clearable && this.state.date) {
+      this.insertBefore(this.clear, this.calendar);
+    } else {
+      this.clear.remove();
+    }
 
     super.render();
   }

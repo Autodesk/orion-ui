@@ -326,7 +326,6 @@ limitations under the License.
             divToClick = calendar.querySelectorAll('orion-calendar-day')[23]; // 2015-01-20
             divToClick.dispatchEvent(new Event('mousedown'));
             (new RenderQueue()).clearQueue();
-            debugger
           });
 
           it('sets the date to the focused day', () => {
@@ -339,6 +338,17 @@ limitations under the License.
 
           it('hides the calendar', () => {
             expect(isVisible(calendar)).to.be.false;
+          });
+
+          context('and then pressing escape', () => {
+            beforeEach(() => {
+              pressKey(input, 'Escape', 27);
+              (new RenderQueue()).clearQueue();
+            });
+
+            it('clears the date', () => {
+              expect(input.value).to.eq('');
+            })
           });
         });
 

@@ -44,6 +44,7 @@ class Select extends Element {
     [
       '_setFilter', '_resetButtonListeners', '_listenForMouseUp', '_setFocusedOption',
       '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate',
+      '_clearSelection',
     ].forEach((handler) => {
       this[handler] = this[handler].bind(this);
     });
@@ -108,6 +109,11 @@ class Select extends Element {
     this._queueRender();
   }
 
+  set clearable(val) {
+    this.state.clearable = val;
+    this._queueRender();
+  }
+
   set hasFocus(val) {
     this.state.hasFocus = val;
     this._queueRender();
@@ -146,9 +152,22 @@ class Select extends Element {
     }
   }
 
+  _ensureClear() {
+    this.clear = this.querySelector('[data-orion-id=select-clear]');
+    if (this.clear) { return; }
+
+    this.clear = document.createElement('orion-button');
+    this.clear.setAttribute('data-orion-id', 'select-clear');
+    applyProps(this.clear, {
+      textContent: '✕',
+      size: 'small',
+    });
+  }
+
   _addListeners() {
     this._ensureMenu();
     this._ensureButton();
+    this._ensureClear();
 
     this.addEventListener('keydown', this._handleKeydown);
     this.addEventListener('optionSelected', this._setSelectedOption);
@@ -159,6 +178,8 @@ class Select extends Element {
     this.button.addEventListener('blur', this._blur);
     this.button.addEventListener('input', this._setFilter);
     this.button.addEventListener('change', blockInputChangeEvent);
+
+    this.clear.addEventListener('click', this._clearSelection);
 
     this.menu.addEventListener('closed', this._deactivate);
   }
@@ -174,6 +195,10 @@ class Select extends Element {
       this.button.removeEventListener('blur', this._blur);
       this.button.removeEventListener('input', this._setFilter);
       this.button.removeEventListener('change', blockInputChangeEvent);
+    }
+
+    if (this.clear) {
+      this.clear.removeEventListener('click', this._clearSelection);
     }
 
     if (this.menu) {
@@ -205,7 +230,11 @@ class Select extends Element {
   _handleKeydown(event) {
     switch (eventKey(event)) {
       case 'Escape':
-        this._dispatchStateChange('deactivated');
+        if (this.state.open) {
+          this._dispatchStateChange('deactivated');
+        } else {
+          this._dispatchStateChange('clearSelection');
+        }
         break;
       case 'ArrowUp':
         event.preventDefault();
@@ -221,6 +250,10 @@ class Select extends Element {
         break;
       default:
     }
+  }
+
+  _clearSelection() {
+    this._dispatchStateChange('clearSelection');
   }
 
   _setSelectedOption(event) {
@@ -301,6 +334,12 @@ class Select extends Element {
       hasFocus: (this.state.hasFocus && !this.state.open),
       disabled: this.state.disabled,
     });
+
+    if (this.state.clearable && this.state.selectedKey) {
+      this.insertBefore(this.clear, this.menu);
+    } else {
+      this.clear.remove();
+    }
 
     super.render();
   }

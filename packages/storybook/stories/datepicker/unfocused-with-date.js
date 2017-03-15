@@ -22,10 +22,14 @@ import { Datepicker } from '../../../react/lib/2016-12-01';
 import { WithSource } from '../../addons/source-addon';
 
 export default function unfocusedWithDate() {
+  const props = {
+    currentDate: moment('2015-01-14'),
+    date: moment('2015-01-14'),
+  };
+
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
@@ -41,7 +45,7 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
@@ -56,15 +60,13 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" focus="{{app.focus}}" />
+    <orion-datepicker date="app.date" focus="app.focus" />
   </body>
 </html>`;
 
-  const staticDate = moment().set({ year: 2015, month: 0, date: 14 });
-
   return (
     <WithSource react={react} angular={angular}>
-      <Datepicker date={staticDate} currentDate={staticDate} />
+      <Datepicker {...props} />
     </WithSource>
   );
 }

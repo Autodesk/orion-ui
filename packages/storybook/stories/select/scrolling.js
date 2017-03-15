@@ -30,17 +30,17 @@ module.exports = function optionFocus() {
       step: 1,
     }),
     open: boolean('Open', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+      { value: 'three', label: 'Three', key: 3 },
+      { value: 'four', label: 'Four', key: 4 },
+      { value: 'five', label: 'Five', key: 5 },
+      { value: 'six', label: 'Six', key: 6 },
+      { value: 'seven', label: 'Seven', key: 7 },
+      { value: 'eight', label: 'Eight', key: 8 },
+    ],
   };
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-    { value: 'two', label: 'Three', key: 3 },
-    { value: 'two', label: 'Four', key: 4 },
-    { value: 'two', label: 'Five', key: 5 },
-    { value: 'two', label: 'Six', key: 6 },
-    { value: 'two', label: 'Seven', key: 7 },
-    { value: 'two', label: 'Eight', key: 8 },
-  ];
 
   const react = `
 import React from 'react';
@@ -49,16 +49,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-    { value: 'two', label: 'Three', key: 3 },
-    { value: 'two', label: 'Four', key: 4 },
-    { value: 'two', label: 'Five', key: 5 },
-    { value: 'two', label: 'Six', key: 6 },
-    { value: 'two', label: 'Seven', key: 7 },
-    { value: 'two', label: 'Eight', key: 8 },
-  ];
+  const options = ${JSON.stringify(props.options, null, 2)};
 
   return (
     <Select options={options} open={true} focusedKey={${props.focusedKey}} />
@@ -75,17 +66,7 @@ import 'angular';
 angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
-  app.options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-    { value: 'two', label: 'Three', key: 3 },
-    { value: 'two', label: 'Four', key: 4 },
-    { value: 'two', label: 'Five', key: 5 },
-    { value: 'two', label: 'Six', key: 6 },
-    { value: 'two', label: 'Seven', key: 7 },
-    { value: 'two', label: 'Eight', key: 8 },
-  ];
-
+  app.options = ${JSON.stringify(props.options, null, 2)};
   app.focusedKey = ${props.focusedKey};
 }]);
 
@@ -94,13 +75,13 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="true" focusedKey="{{app.focusedKey}}" />
+  <orion-select options="app.options" open="app.true" focused-key="app.focusedKey" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} focusedKey={props.focusedKey} open={props.open} />
+      <Select {...props} />
     </WithSource>
   );
 };

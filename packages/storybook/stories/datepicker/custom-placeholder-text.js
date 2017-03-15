@@ -24,17 +24,15 @@ import { WithSource } from '../../addons/source-addon';
 export default function customPlaceholderText() {
   const props = {
     placeholder: text('Placeholder', '__ / __ / ____'),
-    date: null,
   };
 
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
-        return <Datepicker date={null} placeholder="${props.placeholder}" />;
+        return <Datepicker placeholder="${props.placeholder}" />;
     }
 }
 
@@ -44,13 +42,12 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
-    app.date = null;
     app.placeholder = "${props.placeholder}";
   });
 
@@ -59,7 +56,7 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="{{app.date}}" placeholder="{{app.placeholder}}" />
+    <orion-datepicker placeholder="app.placeholder" />
   </body>
 </html>`;
 

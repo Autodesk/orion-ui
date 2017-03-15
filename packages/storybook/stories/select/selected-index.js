@@ -24,6 +24,10 @@ import { WithSource } from '../../addons/source-addon';
 export default function selectedIndex() {
   const props = {
     open: boolean('Open', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+    ],
     selectedIndex: number('Selected Index', 1, {
       range: true,
       min: 0,
@@ -31,10 +35,6 @@ export default function selectedIndex() {
       step: 1,
     }),
   };
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 },
-  ];
 
   const react = `
 import React from 'react';
@@ -43,10 +43,7 @@ import {Select} from '@orion-ui/react/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
+  const options = ${JSON.stringify(props.options, null, 2)};
 
   return (
     <Select options={options} open={${props.open}} selectedIndex={${props.selectedIndex}} />
@@ -62,11 +59,7 @@ import 'angular';
 angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
-  app.options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
-
+  app.options = ${JSON.stringify(props.options, null, 2)};
   app.open = ${props.open};
   app.selectedIndex = ${props.selectedIndex};
 }]);
@@ -76,13 +69,13 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="{{app.options}}" open="{{app.open}}" selected-index="{{app.selectedIndex}}" />
+  <orion-select options="app.options" open="app.open" selected-index="app.selectedIndex" />
 </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select options={options} selectedIndex={props.selectedIndex} open={props.open} />
+      <Select {...props} />
     </WithSource>
   );
 }

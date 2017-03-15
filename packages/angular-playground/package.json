@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rm -rf build && npm run bundle && mkdir build && cp lib/app.js build && cp src/index.html build",
     "bundle": "NODE_ENV=development mkdir -p lib && NODE_ENV=development browserify src/app.js -o lib/app.js -t [ babelify --presets [ es2015 ] ]",
-    "start": "NODE_ENV=development npm run bundle && node ./server.js"
+    "start": "NODE_ENV=development npm run bundle && node ./server.js",
+    "compile-start": "(cd ../.. && npm run compile && npm run compile) && npm start"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

@@ -15,58 +15,22 @@ limitations under the License.
 
 */
 
-gemini.suite('datepicker-unfocused-no-date', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%2Fo%20date')
-    .setCaptureElements(".example")
-    .capture('datepicker-unfocused-no-date')
-});
+function capture(name, url) {
+  gemini.suite(`datepicker-${name}`, (suite) => {
+    suite
+      .setUrl(url)
+      .setCaptureElements(".example")
+      .capture(name);
+  });
+}
 
-gemini.suite('datepicker-unfocused-with-date', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%20date')
-    .setCaptureElements(".example")
-    .capture('datepicker-unfocused-with-date')
-});
-
-gemini.suite('datepicker-focused', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=focus')
-    .setCaptureElements(".example")
-    .capture('datepicker-focused')
-});
-
-gemini.suite('datepicker-focused-month-day', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=focus%20month%20%26%20day')
-    .setCaptureElements(".example")
-    .capture('datepicker-focused-month-day')
-});
-
-gemini.suite('datepicker-custom-disabled-dates', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=custom%20disabled%20dates')
-    .setCaptureElements(".example")
-    .capture('datepicker-custom-disabled-dates')
-});
-
-gemini.suite('datepicker-custom-date-formatting', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=custom%20date%20formatting')
-    .setCaptureElements(".example")
-    .capture('datepicker-custom-date-formatting')
-});
-
-gemini.suite('datepicker-custom-placeholder-text', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=custom%20placeholder%20text')
-    .setCaptureElements(".example")
-    .capture('datepicker-custom-placeholder-text')
-});
-
-gemini.suite('datepicker-clearable', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Datepicker&selectedStory=clearable')
-    .setCaptureElements(".example")
-    .capture('datepicker-clearable')
+gemini.suite('datepicker', (suite) => {
+  capture('unfocused-no-date', '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%2Fo%20date');
+  capture('unfocused-with-date', '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%20date');
+  capture('focus', '/iframe.html?selectedKind=Datepicker&selectedStory=focus');
+  capture('focus-month-day', '/iframe.html?selectedKind=Datepicker&selectedStory=focus%20month%20%26%20day');
+  capture('custom-disabled-dates', '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20disabled%20dates');
+  capture('custom-date-formatting', '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20date%20formatting');
+  capture('custom-placeholder-text', '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20placeholder%20text');
+  capture('clearable', '/iframe.html?selectedKind=Datepicker&selectedStory=clearable');
 });

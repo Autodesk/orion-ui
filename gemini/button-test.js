@@ -15,64 +15,20 @@ limitations under the License.
 
 */
 
-gemini.suite('default-button', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Button&selectedStory=with%20text')
-    .setCaptureElements(".example")
-    .before(function(actions, find) {
-      this.button = find('orion-button');
-    })
-    .capture('default')
-});
+function capture(name, url) {
+  gemini.suite(`button-${name}`, (suite) => {
+    suite
+      .setUrl(url)
+      .setCaptureElements(".example")
+      .capture(name);
+  });
+}
 
-gemini.suite('disabled-button', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Button&selectedStory=disabled')
-    .setCaptureElements(".example")
-    .before(function(actions, find) {
-      this.button = find('orion-button');
-    })
-    .capture('default')
-});
-
-gemini.suite('hover-state-for-button', (suite) => {
-  suite
-    .setUrl('iframe.html?selectedKind=Button&selectedStory=hover')
-    .setCaptureElements(".example")
-    .before(function(actions, find) {
-      this.button = find('orion-button');
-    })
-    .capture('default')
-});
-
-
-
-gemini.suite('small-button', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Button&selectedStory=small')
-    .setCaptureElements(".example")
-    .before(function(actions, find) {
-      this.button = find('orion-button');
-    })
-    .capture('default')
-});
-
-gemini.suite('large-button', (suite) => {
-  suite
-    .setUrl('/iframe.html?selectedKind=Button&selectedStory=large')
-    .setCaptureElements(".example")
-    .before(function(actions, find) {
-      this.button = find('orion-button');
-    })
-    .capture('default')
-});
-
-gemini.suite('focus-button', (suite) => {
-  suite
-    .setUrl('iframe.html?selectedKind=Button&selectedStory=focus')
-    .setCaptureElements(".example")
-    .before(function(actions, find) {
-      this.button = find('orion-button');
-    })
-    .capture('default')
+gemini.suite('button', (suite) => {
+  capture('default', '/iframe.html?selectedKind=Button&selectedStory=with%20text')
+  capture('disabled', '/iframe.html?selectedKind=Button&selectedStory=disabled');
+  capture('hover', 'iframe.html?selectedKind=Button&selectedStory=hover');
+  capture('small', '/iframe.html?selectedKind=Button&selectedStory=small');
+  capture('large', '/iframe.html?selectedKind=Button&selectedStory=large');
+  capture('focus', 'iframe.html?selectedKind=Button&selectedStory=focus');
 });

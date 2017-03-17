@@ -99,14 +99,20 @@ class App extends Component {
               <tr>
                 <td className="pv3 pr3 bb b--black-20">React Minimal</td>
                 <td className="pv3 pr3 bb b--black-20">Simple integration using <a href="https://github.com/facebookincubator/create-react-app">create-react-app</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-minimal.gomix.me">view site</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://gomix.com/#!/project/orion-react-minimal">view source</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-minimal.glitch.me">view site</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-react-minimal">view source</a></td>
               </tr>
               <tr>
                 <td className="pv3 pr3 bb b--black-20">Angular Minimal</td>
                 <td className="pv3 pr3 bb b--black-20">Simple integration example</td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-minimal.gomix.me">view site</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://gomix.com/#!/project/orion-angular-minimal2">view source</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-angular-minimal2.glitch.me/">view site</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/project/orion-angular-minimal2">view source</a></td>
+              </tr>
+              <tr>
+                <td className="pv3 pr3 bb b--black-20">Weather</td>
+                <td className="pv3 pr3 bb b--black-20">An app using Orion components and an external API</td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-weather.glitch.me">view site</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-weather">view source</a></td>
               </tr>
             </tbody>
           </table>

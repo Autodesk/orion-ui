@@ -114,6 +114,12 @@ class App extends Component {
                 <td className="pv3 pr3 bb b--black-20"><a href="https://orion-weather.glitch.me">view site</a></td>
                 <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-weather">view source</a></td>
               </tr>
+              <tr>
+                <td className="pv3 pr3 bb b--black-20">React/Redux</td>
+                <td className="pv3 pr3 bb b--black-20">An app using Redux to show time travel debugging</td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-redux.glitch.me/">view site</a></td>
+                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-react-redux">view source</a></td>
+              </tr>
             </tbody>
           </table>
         </div>

@@ -26,3 +26,10 @@ browsers:
       version: '14.14393'
       platform: 'Windows 10'
       name: 'gemini visual regression tests'
+  safari:
+    desiredCapabilities:
+      browserName: 'Safari'
+      version: '10'
+      platform: 'OS X 10.12'
+      name: 'gemini visual regression tests'
+      seleniumVersion: '3.0.1'

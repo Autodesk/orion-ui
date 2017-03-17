@@ -110,7 +110,7 @@ class App extends Component {
               </tr>
               <tr>
                 <td className="pv3 pr3 bb b--black-20">Weather</td>
-                <td className="pv3 pr3 bb b--black-20">An app using Orion components and </td>
+                <td className="pv3 pr3 bb b--black-20">An app using Orion components and an external API</td>
                 <td className="pv3 pr3 bb b--black-20"><a href="https://orion-weather.glitch.me">view site</a></td>
                 <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-weather">view source</a></td>
               </tr>

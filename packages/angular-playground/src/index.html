@@ -28,8 +28,8 @@ limitations under the License.
   <body ng-app="app">
     <h1>Angular Playground</h1>
     <hr />
-    <div ng-controller="Controller as ctrl">
-      <orion-select searchable="clearable" clearable="clearable" options="sizes" on-change="ctrl.setSelectedIndex(event)"></orion-select>
+    <div ng-controller="AppController as app">
+      <orion-select on-change="app.setSelectedIndex(event)" selected-index="selectedIndex" searchable="true" clearable="true" options="app.sizes"></orion-select>
     </div>
   </body>
 </html>

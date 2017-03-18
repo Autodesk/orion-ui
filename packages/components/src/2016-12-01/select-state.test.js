@@ -128,7 +128,7 @@ describe('SelectState', () => {
     });
 
     it('sets value to the selected option', () => {
-      expect(nextState.selectedKey).to.eq('b');
+      expect(nextState.selectedIndex).to.eq(1);
     });
 
     it('closes the menu', () => {
@@ -145,7 +145,7 @@ describe('SelectState', () => {
       });
 
       it('does not change the selectedKey', () => {
-        expect(nextState.selectedKey).to.eq('a');
+        expect(nextState.selectedIndex).to.eq(0);
       });
     });
   });
@@ -419,7 +419,6 @@ describe('SelectState', () => {
 
     it('clears the selectedKey and selectedIndex', () => {
       expect(nextState.selectedIndex).to.eq(-1);
-      expect(nextState.selectedKey).to.be.undefined;
     });
   });
 });

@@ -84,14 +84,18 @@ class Select extends Element {
     this.state.selectedIndex = index;
     const option = this.state.options[index];
     if (option) {
-      this.selectedKey = option.key;
+      this.state.selectedKey = option.key;
     } else {
-      this.selectedKey = undefined;
+      this.state.selectedKey = undefined;
     }
+    this._queueRender();
   }
 
   set selectedKey(newValue) {
+    const selectedOption = this.state.options.find(option => option.key === newValue);
+    const selectedIndex = this.state.options.indexOf(selectedOption);
     this.state.selectedKey = newValue;
+    this.state.selectedIndex = selectedIndex;
     this._queueRender();
   }
 

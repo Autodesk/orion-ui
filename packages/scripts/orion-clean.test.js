@@ -23,7 +23,9 @@ require('shelljs/global');
 
 describe('orion-clean', () => {
   const packageBuildPath = path.join(knownPaths.packages, 'test', 'build');
-  before(() => {
+  before(function testWithTimeout() {
+    this.timeout(10000);
+
     mkdir('-p', knownPaths.build);
     mkdir('-p', packageBuildPath);
 

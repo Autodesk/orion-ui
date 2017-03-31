@@ -38,7 +38,7 @@ program
  */
 function runUnitSpecs() {
   const mochaPath = path.join(knownPaths.root, 'node_modules', '.bin', 'mocha');
-  const { code, stdout, stderr } = exec(`nyc ${mochaPath} --colors --compilers js:babel-core/register './packages/!(react-playground)/{,!(node_modules|lib|build)/**/}*.test.js'`);
+  const { code, stdout, stderr } = exec(`nyc ${mochaPath} --colors --compilers js:babel-core/register './packages/!(react-playground|hig-integration-prototype)/{,!(node_modules|lib|build)/**/}*.test.js'`);
 
   console.log('================================================================================');
   if (code === 0) {

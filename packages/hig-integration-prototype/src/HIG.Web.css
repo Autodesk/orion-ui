@@ -1,0 +1,7 @@
+.hig-sidebar {
+  display: none;
+}
+
+.hig-sidebar.hig-sidebar--open {
+  display: block;
+}

@@ -3,8 +3,8 @@ npm-debug.log
 node_modules
 build
 lib
-/bower_components
-/coverage
-/gemini-report
+bower_components
+coverage
+gemini-report
 .idea/*
-/.nyc_output
+.nyc_output

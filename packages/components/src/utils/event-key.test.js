@@ -1,3 +1,5 @@
+/* eslint-env jest */
+/* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -14,15 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const eventKey = require('./event-key');
-const chai = require('chai');
-
-const expect = chai.expect;
+import { expect } from 'chai';
+import eventKey from './event-key';
 
 describe('Utils.eventKey', () => {
   let event;
 
-  context('with a keyCode', () => {
+  describe('with a keyCode', () => {
     beforeEach(() => {
       event = { keyCode: 37 };
     });
@@ -32,7 +32,7 @@ describe('Utils.eventKey', () => {
     });
   });
 
-  context('with a standards-compliant key', () => {
+  describe('with a standards-compliant key', () => {
     beforeEach(() => {
       event = { key: 'ArrowLeft' };
     });
@@ -42,7 +42,7 @@ describe('Utils.eventKey', () => {
     });
   });
 
-  context('with a key from Edge', () => {
+  describe('with a key from Edge', () => {
     beforeEach(() => {
       event = { key: 'Left' };
     });
@@ -52,7 +52,7 @@ describe('Utils.eventKey', () => {
     });
   });
 
-  context('with an unsupported key', () => {
+  describe('with an unsupported key', () => {
     beforeEach(() => {
       event = { keyCode: 100 };
     });

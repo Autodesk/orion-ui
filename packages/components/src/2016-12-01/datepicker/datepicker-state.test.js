@@ -18,8 +18,9 @@ limitations under the License.
 */
 
 import moment from 'moment';
+import { expect } from 'chai';
 
-const DatepickerState = require('./datepicker-state');
+import DatepickerState from './datepicker-state';
 
 describe('DatepickerState', () => {
   describe('getInitialState', () => {

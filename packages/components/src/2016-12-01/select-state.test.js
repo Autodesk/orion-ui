@@ -16,7 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const SelectState = require('./select-state.js');
+import { expect } from 'chai';
+
+import SelectState from './select-state';
 
 describe('SelectState', () => {
   const options = [
@@ -60,7 +62,7 @@ describe('SelectState', () => {
     describe('with a selectedKey', () => {
       let state;
       let nextState;
-      before(() => {
+      beforeAll(() => {
         state = {
           selectedKey: 'b',
           options,
@@ -114,7 +116,7 @@ describe('SelectState', () => {
   describe('optionSelected', () => {
     let state;
     let nextState;
-    before(() => {
+    beforeAll(() => {
       state = {
         open: true,
         options,
@@ -137,7 +139,7 @@ describe('SelectState', () => {
     });
 
     describe('with an non-existant option key', () => {
-      before(() => {
+      beforeAll(() => {
         nextState = SelectState.optionSelected(state, undefined);
       });
 
@@ -149,7 +151,7 @@ describe('SelectState', () => {
 
   describe('deactivated', () => {
     let nextState;
-    before(() => {
+    beforeAll(() => {
       nextState = SelectState.deactivated({ open: true, focusedKey: 'b', filter: 'foo' });
     });
 
@@ -199,7 +201,7 @@ describe('SelectState', () => {
     });
 
     describe('when closed', () => {
-      before(() => {
+      beforeAll(() => {
         nextState = SelectState.focusPrevious({
           open: false,
           options,
@@ -283,7 +285,7 @@ describe('SelectState', () => {
     });
 
     describe('when closed', () => {
-      before(() => {
+      beforeAll(() => {
         nextState = SelectState.focusNext({
           open: false,
           focusedKey: undefined,

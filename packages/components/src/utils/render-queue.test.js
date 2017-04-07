@@ -1,3 +1,4 @@
+/* eslint-env jest */
 /* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
@@ -15,18 +16,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const replaceRaf = require('raf-stub').replaceRaf;
+import chai, { expect } from 'chai';
 
-replaceRaf();
-
-const RenderQueue = require('./render-queue');
-const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 
 chai.use(sinonChai);
 
-const expect = chai.expect;
+const replaceRaf = require('raf-stub').replaceRaf;
+
+replaceRaf();
+
+const RenderQueue = require('./render-queue');
 
 describe('Utils.RenderQueue', () => {
   let renderQueue;
@@ -40,7 +41,7 @@ describe('Utils.RenderQueue', () => {
   });
 
   describe('#add', () => {
-    context('called 3 times', () => {
+    describe('called 3 times', () => {
       let element;
 
       beforeEach(() => {
@@ -50,7 +51,7 @@ describe('Utils.RenderQueue', () => {
         renderQueue.add(element);
       });
 
-      context('after the next animation frame', () => {
+      describe('after the next animation frame', () => {
         beforeEach(() => {
           requestAnimationFrame.step();
         });
@@ -60,7 +61,7 @@ describe('Utils.RenderQueue', () => {
         });
       });
 
-      context('after two frames', () => {
+      describe('after two frames', () => {
         beforeEach(() => {
           requestAnimationFrame.step(2);
         });
@@ -71,7 +72,7 @@ describe('Utils.RenderQueue', () => {
       });
     });
 
-    context('when a render triggers another render', () => {
+    describe('when a render triggers another render', () => {
       let parentElement;
       let childElement;
       let childRender;
@@ -91,7 +92,7 @@ describe('Utils.RenderQueue', () => {
       });
     });
 
-    context('with 3 different elements', () => {
+    describe('with 3 different elements', () => {
       const element1 = { render: sinon.spy() };
       const element2 = { render: sinon.spy() };
       const element3 = { render: sinon.spy() };

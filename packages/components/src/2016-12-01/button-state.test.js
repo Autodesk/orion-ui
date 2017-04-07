@@ -16,7 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const ButtonState = require('./button-state.js');
+import { expect } from 'chai';
+import ButtonState from './button-state';
 
 describe('ButtonState', () => {
   describe('getInitialState', () => {

@@ -1,3 +1,4 @@
+/* eslint-env jest */
 /* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
@@ -15,10 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const chai = require('chai');
-
-const expect = chai.expect;
-
 const SelectState = require('./select-state.js');
 
 describe('SelectState', () => {
@@ -34,7 +31,7 @@ describe('SelectState', () => {
       expect(initialState.open).to.be.false;
     });
 
-    context('with a state', () => {
+    describe('with a state', () => {
       it('extends default state with passed state', () => {
         const initialState = SelectState.getInitialState({ open: true });
         expect(initialState.open).to.be.true;
@@ -48,7 +45,7 @@ describe('SelectState', () => {
       expect(result.open).to.be.true;
     });
 
-    context('without a selectedKey', () => {
+    describe('without a selectedKey', () => {
       it('focuses on the first selectable option', () => {
         const opts = [
           { label: 'Red', value: '#F00', key: 'a', disabled: true },
@@ -60,7 +57,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('with a selectedKey', () => {
+    describe('with a selectedKey', () => {
       let state;
       let nextState;
       before(() => {
@@ -81,7 +78,7 @@ describe('SelectState', () => {
     let state;
     let nextState;
 
-    context('with a valid option', () => {
+    describe('with a valid option', () => {
       beforeEach(() => {
         state = {
           open: true,
@@ -95,7 +92,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('with a disabled option', () => {
+    describe('with a disabled option', () => {
       beforeEach(() => {
         state = {
           open: true,
@@ -139,7 +136,7 @@ describe('SelectState', () => {
       expect(nextState.filter).to.eq(undefined);
     });
 
-    context('with an non-existant option key', () => {
+    describe('with an non-existant option key', () => {
       before(() => {
         nextState = SelectState.optionSelected(state, undefined);
       });
@@ -171,7 +168,7 @@ describe('SelectState', () => {
 
   describe('focusPrevious', () => {
     let nextState;
-    context('when open', () => {
+    describe('when open', () => {
       beforeEach(() => {
         const state = {
           open: true,
@@ -186,7 +183,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('when first option has focus', () => {
+    describe('when first option has focus', () => {
       beforeEach(() => {
         const state = {
           open: true,
@@ -201,7 +198,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('when closed', () => {
+    describe('when closed', () => {
       before(() => {
         nextState = SelectState.focusPrevious({
           open: false,
@@ -218,7 +215,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('with a disabled option', () => {
+    describe('with a disabled option', () => {
       beforeEach(() => {
         const state = {
           open: true,
@@ -240,7 +237,7 @@ describe('SelectState', () => {
 
   describe('focusNext', () => {
     let nextState;
-    context('when open', () => {
+    describe('when open', () => {
       beforeEach(() => {
         const state = {
           open: true,
@@ -255,7 +252,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('when closed', () => {
+    describe('when closed', () => {
       beforeEach(() => {
         const state = {
           open: false,
@@ -270,7 +267,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('when last option has focus', () => {
+    describe('when last option has focus', () => {
       beforeEach(() => {
         const state = {
           open: true,
@@ -285,7 +282,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('when closed', () => {
+    describe('when closed', () => {
       before(() => {
         nextState = SelectState.focusNext({
           open: false,
@@ -303,7 +300,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('with a disabled option', () => {
+    describe('with a disabled option', () => {
       beforeEach(() => {
         const state = {
           open: true,
@@ -350,7 +347,7 @@ describe('SelectState', () => {
   describe('filteredOptions', () => {
     let filteredOptions;
 
-    context('matching one option', () => {
+    describe('matching one option', () => {
       beforeEach(() => {
         filteredOptions = SelectState.filteredOptions({ options, filter: 'gr' });
       });
@@ -361,7 +358,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('matching no options', () => {
+    describe('matching no options', () => {
       beforeEach(() => {
         filteredOptions = SelectState.filteredOptions({ options, filter: 'growlith' });
       });
@@ -371,7 +368,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('with empty string', () => {
+    describe('with empty string', () => {
       beforeEach(() => {
         filteredOptions = SelectState.filteredOptions({ options, filter: '' });
       });
@@ -381,7 +378,7 @@ describe('SelectState', () => {
       });
     });
 
-    context('with undefined', () => {
+    describe('with undefined', () => {
       beforeEach(() => {
         filteredOptions = SelectState.filteredOptions({ options, filter: undefined });
       });

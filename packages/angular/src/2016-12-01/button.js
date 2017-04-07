@@ -37,7 +37,7 @@ const ButtonComponent = {
     size: '<',
   },
 
-  controller: function controller($element, $log) { // eslint-disable object-shorthand
+  controller: ['$element', '$log', function controller($element, $log) { // eslint-disable object-shorthand
     const elementReady = window.customElements.whenDefined('orion-button');
 
     this.$onChanges = changesObj => elementReady.then(() => {
@@ -66,7 +66,7 @@ const ButtonComponent = {
         }
       });
     });
-  },
+  }],
 };
 
 module.exports = ButtonComponent;

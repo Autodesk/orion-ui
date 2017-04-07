@@ -45,7 +45,7 @@ const DatepickerComponent = {
     placeholder: '<',
   },
 
-  controller: function controller($element, $log) { // eslint-disable object-shorthand
+  controller: ['$element', '$log', function controller($element, $log) { // eslint-disable object-shorthand
     const elementReady = window.customElements.whenDefined('orion-datepicker');
 
     this.$onInit = () => elementReady.then(() => {
@@ -76,7 +76,7 @@ const DatepickerComponent = {
         }
       });
     });
-  },
+  }],
 };
 
 module.exports = DatepickerComponent;

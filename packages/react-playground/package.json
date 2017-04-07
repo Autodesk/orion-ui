@@ -2,7 +2,9 @@
   "name": "react-playground",
   "version": "1.0.3",
   "private": true,
+  "author": "Autodesk Inc.",
   "homepage": ".",
+  "license": "Apache-2.0",
   "devDependencies": {
     "react-scripts": "0.8.2"
   },

@@ -4,11 +4,10 @@
   "description": "orion ui angular components",
   "main": "lib/index.js",
   "scripts": {
-    "start": "orion-scripts start",
+    "lib": "NODE_ENV=production npm run build",
+    "build": "babel src --out-dir lib --copy-file",
+    "start": "NODE_ENV=development npm run build -- --watch",
     "lint": "eslint ."
-  },
-  "orion": {
-    "compile": true
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
@@ -20,6 +19,7 @@
     "angular": "^1.5.9"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
     "angular": "^1.5.9",
     "@orion-ui/eslint-config-orion": "^1.0.0",
     "eslint": "^3.11.1",

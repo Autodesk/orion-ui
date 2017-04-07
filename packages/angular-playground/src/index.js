@@ -14,21 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import './vendor/custom-elements-polyfill';
+import './index.css';
 
-const PORT = 8080;
+import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-var static = require('node-static');
+window.angular
+  .module('app', ['orion'])
+  .controller('Controller', function () {
+    const app = this;
 
-var fileServer = new static.Server('./lib', { cache: 0 });
-
-require('http').createServer(function (request, response) {
-    request.addListener('end', function () {
-        fileServer.serve(request, response, function(e, res) {
-          if (e && (e.status === 404)) {
-            fileServer.serveFile('../src/index.html', 200, {}, request, response);
-          }
-        });
-    }).resume();
-}).listen(PORT);
-
-console.log(`Angular Playground now available at http://localhost:${PORT}`);
+    app.options = [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 },
+      { value: 'three', label: 'Three', key: 3 }
+    ];
+  });

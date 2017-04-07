@@ -1,3 +1,4 @@
+/* eslint-env jest */
 /* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
@@ -15,10 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const chai = require('chai');
-
-const expect = chai.expect;
-
 const ButtonState = require('./button-state.js');
 
 describe('ButtonState', () => {
@@ -30,7 +27,7 @@ describe('ButtonState', () => {
       expect(initialState.hover).to.be.false;
     });
 
-    context('with a state', () => {
+    describe('with a state', () => {
       it('extends default state with passed state', () => {
         const initialState = ButtonState.getInitialState({ disabled: true });
         expect(initialState.disabled).to.be.true;

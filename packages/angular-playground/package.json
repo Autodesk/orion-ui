@@ -2,23 +2,21 @@
   "name": "angular-playground",
   "version": "1.0.3",
   "private": true,
-  "main": "lib/index.js",
-  "scripts": {
-    "build": "rm -rf build && npm run bundle && mkdir build && cp lib/app.js build && cp src/index.html build",
-    "bundle": "NODE_ENV=development mkdir -p lib && NODE_ENV=development browserify src/app.js -o lib/app.js -t [ babelify --presets [ es2015 ] ]",
-    "start": "NODE_ENV=development npm run bundle && node ./server.js",
-    "compile-start": "(cd ../.. && npm run compile && npm run compile) && npm start"
-  },
   "author": "Autodesk Inc.",
+  "homepage": ".",
   "license": "Apache-2.0",
+  "devDependencies": {
+    "react-scripts": "^0.9.5"
+  },
   "dependencies": {
     "@orion-ui/angular": "^1.0.3",
     "angular": "^1.5.9",
-    "node-static": "^0.7.9"
+    "moment": "^2.17.1"
   },
-  "devDependencies": {
-    "babel-preset-es2015": "^6.24.0",
-    "babelify": "^7.3.0",
-    "browserify": "^14.0.0"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }

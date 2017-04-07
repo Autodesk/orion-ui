@@ -33,7 +33,7 @@ const SelectComponent = {
     selectedIndex: '<',
   },
 
-  controller: function controller($element, $log) { // eslint-disable object-shorthand
+  controller: ['$element', '$log', function controller($element, $log) { // eslint-disable object-shorthand
     const elementReady = window.customElements.whenDefined('orion-select');
 
     this.$onInit = () => elementReady.then(() => {
@@ -64,7 +64,7 @@ const SelectComponent = {
         }
       });
     });
-  },
+  }],
 };
 
 module.exports = SelectComponent;

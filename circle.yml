@@ -10,20 +10,17 @@ dependencies:
   cache_directories:
     - "node_modules"
     - "packages/components/node_modules"
+    - "packages/components/bower_components"
     - "packages/eslint-config-orion/node_modules"
     - "packages/react-playground/node_modules"
     - "packages/scripts/node_modules"
-    - "packages/storybook/node_modules"
     - "packages/style/node_modules"
-    - "bower_components"
 test:
   pre:
-    - npm run compile
-    - cd packages/storybook && npm start:
+    - cd packages/react && npm start:
         background: true
   override:
     - npm run test-ci
-    - npm run gemini
 deployment:
   production:
     branch: master

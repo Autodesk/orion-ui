@@ -59,12 +59,11 @@ const SelectState = {
     if (nextSelectedKey === undefined) { nextSelectedKey = state.selectedKey; }
 
     const option = state.options.find(o => o.key === nextSelectedKey);
-    let selectedIndex;
+    let selectedIndex = -1;
     if (option) { selectedIndex = state.options.indexOf(option); }
 
     return {
       ...state,
-      selectedKey: nextSelectedKey,
       selectedIndex,
       filter: undefined,
       open: false,
@@ -195,7 +194,6 @@ const SelectState = {
     return {
       ...state,
       selectedIndex: -1,
-      selectedKey: undefined,
     };
   },
 };

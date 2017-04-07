@@ -21,11 +21,9 @@ import moment from 'moment';
 
 angular
   .module('app', ['orion'])
-  .controller('Controller', ['$scope', function ($scope) {
-    var that = this;
-
-    $scope.clearable = true;
-    $scope.sizes = [
+  .controller('AppController', ['$scope', function ($scope) {
+    var app = this;
+    app.sizes = [
       { label: 'X-small', value: 'x-small', key: 0, disabled: true },
       { label: 'Small', value: 'small', key: 1 },
       { label: 'Medium', value: 'medium', key: 2 },
@@ -36,5 +34,4 @@ angular
     this.setSelectedIndex = (event) => {
       $scope.selectedIndex = event.detail.state.selectedIndex;
     }
-
   }]);

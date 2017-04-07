@@ -4,11 +4,17 @@
   "description": "orion ui components",
   "main": "lib/index.js",
   "scripts": {
-    "start": "orion-scripts start",
-    "lint": "eslint ."
-  },
-  "orion": {
-    "compile": true
+    "prepublish": "bower install",
+    "build": "NODE_ENV=development babel src --out-dir lib --copy-file",
+    "watch": "npm run build -- --watch",
+    "coverage": "NODE_ENV=development nyc mocha --colors --recursive --compilers js:babel-core/register \"src/**/*.test.js\"",
+    "report-coverage": "node scripts/report-coverage.js",
+    "test": "NODE_ENV=development mocha --colors --recursive --compilers js:babel-core/register \"src/**/*.test.js\"",
+    "browserify": "node scripts/browserify.js",
+    "wct": "wct",
+    "wct-sauce": "wct --plugin sauce --skip-plugin local",
+    "lint": "eslint .",
+    "test-ci": "node scripts/test-ci.js"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
@@ -20,17 +26,26 @@
     "moment": "^2.17.1"
   },
   "devDependencies": {
-    "@orion-ui/scripts": "^1.0.0",
-    "@orion-ui/eslint-config-orion": "^1.0.0",
+    "codacy-coverage": "^2.0.0",
+    "babel-cli": "^6.18.0",
+    "babelify": "^7.3.0",
+    "bower": "^1.8.0",
+    "browserify": "^13.3.0",
     "chai": "^3.5.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.8.0",
+    "gemini": "^4.14.3",
+    "gemini-sauce": "^1.0.0",
+    "mocha": "^3.2.0",
     "moment": "^2.17.1",
+    "nyc": "^10.1.2",
     "raf-stub": "^2.0.0",
     "sinon": "^1.17.7",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "web-component-tester": "4.2.2",
+    "web-component-tester-istanbul": "^0.10.0"
   }
 }

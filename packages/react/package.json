@@ -4,11 +4,11 @@
   "description": "orion ui react components",
   "main": "lib/index.js",
   "scripts": {
-    "start": "orion-scripts start",
+    "build": "NODE_ENV=development babel src --out-dir lib --copy-file",
+    "watch": "npm run build -- --watch",
+    "start": "start-storybook -p 9001 -c .storybook",
+    "storybook": "build-storybook -c .storybook -o build",
     "lint": "eslint ."
-  },
-  "orion": {
-    "compile": true
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
@@ -21,9 +21,11 @@
     "react-dom": "^15.4.1"
   },
   "devDependencies": {
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
+    "@kadira/storybook": "^2.34.0",
+    "@kadira/storybook-addon-knobs": "^1.7.1",
+    "@kadira/storybook-addons": "^1.6.1",
     "@orion-ui/eslint-config-orion": "^1.0.0",
+    "babel-cli": "^6.18.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.1",
     "enzyme": "^2.6.0",
@@ -33,6 +35,9 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.8.0",
     "jsdom-global": "2.1.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-syntax-highlighter": "^5.1.3",
     "sinon": "^1.17.6"
   }
 }

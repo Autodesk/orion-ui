@@ -23,7 +23,7 @@ module.exports = {
   },
   "rules": {
     "arrow-body-style": "off",
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js"]}],
+    "import/no-extraneous-dependencies": "off",
     "no-console": "off",
     "no-param-reassign": "off",
     "no-underscore-dangle": ["error", { "allowAfterThis": true, "allowAfterSuper": true }],

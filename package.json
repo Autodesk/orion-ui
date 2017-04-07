@@ -16,11 +16,10 @@
     "gemini": "SAUCE_CONNECT_VERSION=4.4.5 gemini test gemini/*",
     "gemini-report": "gemini test gemini/* --reporter html --reporter flat",
     "gemini-update": "gemini update gemini/*",
-    "prepublish": "bower install",
     "set-marketing-to-root": "node ./packages/scripts/orion.js set-package-to-root -p marketing",
     "specs-ci": "node ./packages/scripts/orion.js specs --sauce --report",
     "specs": "node ./packages/scripts/orion.js specs",
-    "test-ci": "npm run compile && lerna run lint && npm run specs-ci && npm run ensure-copyright",
+    "test-ci": "lerna run test-ci",
     "test": "npm run compile && lerna run lint && npm run specs && npm run ensure-copyright"
   },
   "repository": {
@@ -36,17 +35,12 @@
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-react-app": "^2.0.1",
-    "babelify": "^7.3.0",
-    "bower": "^1.8.0",
-    "browserify": "^13.3.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.1",
     "codacy-coverage": "^2.0.0",
     "enzyme": "^2.6.0",
     "es6-promise": "^4.0.5",
     "eslint": "^3.11.1",
-    "gemini": "^4.14.3",
-    "gemini-sauce": "^1.0.0",
     "jsdom": "9.8.3",
     "jsdom-global": "2.1.0",
     "lerna": "2.0.0-beta.38",
@@ -56,8 +50,6 @@
     "react-addons-test-utils": "^15.4.1",
     "raf-stub": "^2.0.0",
     "react-dom": "^15.4.1",
-    "sinon-chai": "^2.8.0",
-    "web-component-tester": "4.2.2",
-    "web-component-tester-istanbul": "^0.10.0"
+    "sinon-chai": "^2.8.0"
   }
 }

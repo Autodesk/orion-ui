@@ -34,6 +34,7 @@ class App extends Component {
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleItemRemove = this.handleItemRemove.bind(this);
+    this.handleMenuToggle = this.handleMenuToggle.bind(this);
   }
 
   handleClick() {
@@ -61,15 +62,19 @@ class App extends Component {
     this.setState({ items: newItems });
   }
 
+  handleMenuToggle() {
+    this.setState({ menuOpen: !this.state.menuOpen });
+  }
+
   render() {
     return (
-      <div>
-        <button onClick={this.handleClick}>Toggle Menu</button>
+      <div style={{ height: '100%', width: '100%' }}>
+        {/*<button onClick={this.handleClick}>Toggle Menu</button>
         <button onClick={this.handleAddItem}>Add Item</button>
-        <button onClick={this.handleItemRemove}>Remove Last Item</button>
-
+        <button onClick={this.handleItemRemove}>Remove Last Item</button>*/}
         <OrionHIG>
           <Menu>
+            <Menu.Top onToggle={this.handleMenuToggle} />
             <Sidebar open={this.state.menuOpen}>
               <Sidebar.Group small>
                 {this.state.items.map(item => {
@@ -83,11 +88,9 @@ class App extends Component {
               </Sidebar.Group>
             </Sidebar>
 
-            {/*<Menu.Slot>
-              <div>
-                TODO
-              </div>
-            </Menu.Slot>*/}
+            <Menu.Slot>
+              Hello Main App Content!
+            </Menu.Slot>
           </Menu>
         </OrionHIG>
       </div>

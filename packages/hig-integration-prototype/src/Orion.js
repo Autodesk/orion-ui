@@ -62,6 +62,44 @@ export const Menu = higify({
   }
 });
 
+Menu.Top = higify({
+  displayName: 'Menu.Top',
+
+  parentContext: {
+    type: 'Menu',
+    shape: PropTypes.shape({
+      addTop: PropTypes.func.isRequired
+    })
+  },
+
+  create(props, { parent }) {
+    return parent.addTop({
+      onToggle: props.onToggle
+    });
+  },
+
+  update(instance, props) {
+    instance.setOnToggle(props.onToggle);
+  }
+});
+
+Menu.Slot = higify({
+  displayName: 'Menu.Slot',
+
+  type: 'slot',
+
+  parentContext: {
+    type: 'Menu',
+    shape: PropTypes.shape({
+      addSlot: PropTypes.func.isRequired
+    })
+  },
+
+  create(props, { parent }) {
+    return parent.addSlot();
+  }
+})
+
 export const Sidebar = higify({
   displayName: 'Sidebar',
 

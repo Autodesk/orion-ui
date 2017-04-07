@@ -17,7 +17,7 @@ limitations under the License.
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
-export default function higify({ displayName, childContext, parentContext, createContext, mountContext, create, update }) {
+export default function higify({ displayName, childContext, parentContext, createContext, type, mountContext, create, update }) {
   const Adapter = class extends React.Component {
     constructor(props, context) {
       super(props);
@@ -32,7 +32,6 @@ export default function higify({ displayName, childContext, parentContext, creat
     componentDidMount() {
       this._el = ReactDOM.findDOMNode(this);
       this._mount = this._el.parentNode;
-      ReactDOM.unmountComponentAtNode(this._el);
 
       this._anchor = document.createComment('anchor');
 
@@ -45,6 +44,17 @@ export default function higify({ displayName, childContext, parentContext, creat
       if (mountContext) {
         mountContext(this.instance, this._mount, this._anchor);
       }
+
+      this.renderSlot();
+    }
+
+    renderSlot() {
+      if (type !== 'slot') {
+        return;
+      }
+
+      const element = React.isValidElement(this.props.children) ? this.props.children : <div>{this.props.children}</div>;
+      ReactDOM.unstable_renderSubtreeIntoContainer(this, element, this.instance.getSlotNode());
     }
 
     componentWillUnmount() {
@@ -53,7 +63,12 @@ export default function higify({ displayName, childContext, parentContext, creat
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-      update(this.instance, nextProps);
+      this.renderSlot();
+
+      if (update) {
+        update(this.instance, nextProps);
+
+      }
     }
 
     render() {

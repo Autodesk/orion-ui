@@ -15,6 +15,7 @@ limitations under the License.
 
 */
 import './HIG.Web.css';
+import 'ionicons/css/ionicons.min.css';
 
 class Item {
   constructor(props, mountNode) {
@@ -90,13 +91,13 @@ class Group {
 }
 
 class Sidebar {
-  constructor(props, mountNode) {
+  constructor(props, mountNode, anchorNode) {
     this._el = document.createElement('div');
     this._el.classList.add('hig-sidebar');
 
     this.setOpen(props.open);
 
-    mountNode.appendChild(this._el);
+    mountNode.insertBefore(this._el, anchorNode);
   }
 
   setOpen(open) {
@@ -116,18 +117,111 @@ class Sidebar {
   }
 }
 
+class Top {
+  constructor(props, mountNode, anchorNode) {
+    this._el = document.createElement('div');
+    this._el.classList.add('hig-menu-top');
+
+    this._el.innerHTML = `
+      <i class="hig-menu-top-toggle ion ion-navicon"></i>
+    `;
+
+    this._toggleButton = this._el.querySelector('.ion-navicon');
+
+    this.setOnToggle(props.onToggle);
+
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  setOnToggle(listener) {
+    if (!listener) {
+      return;
+    }
+
+    if (this._toggleListener === listener) {
+      return;
+    } else {
+      this._toggleButton.removeEventListener('click', this._toggleListener)
+    }
+
+    this._toggleListener = listener;
+    this._toggleButton.addEventListener('click', this._toggleListener);
+  }
+
+
+  teardown() {
+    this._el.parentNode.removeChild(this._el);
+  }
+}
+
+class Slot {
+  constructor(props, mountNode, anchorNode) {
+    this._el = document.createElement('div');
+    this._el.classList.add('hig-slot');
+
+    if (props.className) {
+      this._el.classList.add(props.className);
+    }
+
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  getSlotNode() {
+    return this._el;
+  }
+
+  teardown() {
+    this._el.parentNode.removeChild(this._el);
+  }
+}
+
 class Menu {
   constructor(props, mountNode) {
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu');
 
+    /**
+     * Basic Structure:
+     * - sidebar
+     * - content
+     *   - top
+     *   - slot
+     */
+
+    this._sidebarAnchor = document.createComment('sidebar-anchor');
+
+    this._content = document.createElement('div');
+    this._content.classList.add('hig-menu-content');
+
+    this._topAnchor = document.createComment('top-anchor');
+    this._slotAnchor = document.createComment('slot-anchor');
+
+    this._el.appendChild(this._sidebarAnchor);
+    this._el.appendChild(this._content);
+
+    this._content.appendChild(this._topAnchor);
+    this._content.appendChild(this._slotAnchor);
+
     mountNode.appendChild(this._el);
   }
 
   addSidebar(props) {
-    return new Sidebar(props, this._el);
+    return new Sidebar(props, this._el, this._sidebarAnchor);
+  }
+
+  addTop(props) {
+    return new Top(props, this._content, this._topAnchor);
+  }
+
+  addSlot() {
+    return new Slot({ className: 'hig-menu-slot' }, this._content, this._slotAnchor);
+  }
+
+  teardown() {
+    this._el.parentNode.removeChild(this._el);
   }
 }
+
 
 export default class HIG {
   constructor(mountNode, anchorNode) {

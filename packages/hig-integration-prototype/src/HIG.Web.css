@@ -1,7 +1,39 @@
+.hig-context {
+  width: 100%;
+  height: 100%;
+}
+
+.hig-menu {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.hig-menu-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .hig-sidebar {
   display: none;
+  background: green;
 }
 
 .hig-sidebar.hig-sidebar--open {
   display: block;
+}
+
+.hig-menu-top-toggle {
+  cursor: pointer;
+}
+
+.hig-menu-top {
+  background: yellow;
+}
+
+.hig-menu-slot {
+  background: purple;
+  flex-grow: 1;
 }

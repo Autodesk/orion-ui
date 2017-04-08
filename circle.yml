@@ -4,9 +4,9 @@ machine:
 dependencies:
   pre:
     - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
+    - unset NODE_ENV
   post:
-    - bower install
-    - NODE_ENV=production lerna bootstrap
+    - ./node_modules/.bin/lerna bootstrap
   cache_directories:
     - "node_modules"
     - "packages/components/node_modules"

@@ -4,14 +4,15 @@
   "description": "orion ui styles",
   "main": "lib/index.js",
   "scripts": {
+    "lib": "babel src --out-dir lib --copy-file",
+    "build": "NODE_ENV=production npm run lib",
+    "start": "NODE_ENV=development npm run lib -- --watch",
     "lint": "eslint ."
-  },
-  "orion": {
-    "compile": true
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "devDependencies": {
+    "babel-cli": "^6.18.0",
     "@orion-ui/eslint-config-orion": "^1.0.0",
     "chai": "^3.5.0",
     "eslint": "^3.11.1",

@@ -17,7 +17,8 @@
     "set-marketing-to-root": "node ./scripts/set-package-to-root.js -p marketing",
     "test-ci": "lerna run test-ci",
     "test": "lerna run lint && npm run specs && npm run ensure-copyright",
-    "start": "lerna run start --no-sort --stream --concurrency 50"
+    "start": "lerna run start --no-sort --stream --concurrency 50",
+    "start-playground": "node scripts/start-playground.js"
   },
   "repository": {
     "type": "git",

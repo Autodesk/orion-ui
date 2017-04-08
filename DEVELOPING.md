@@ -28,8 +28,7 @@ If you have any questions, feel free to ask on the issue or join us on [Slack](h
 
 1. Install [NodeJS](https://nodejs.org).
 2. In the repo directory, run `npm i` command to install the required npm packages.
-3. Run `npm i -g lerna@^2.0.0-beta` to install [Lerna](https://lernajs.io).
-4. Run `npm run compile` - to compile all packages appropriately and put them in
+4. Run `npm run build` - to build all packages appropriately and put them in
 their respective `lib` directories
 5. Run `lerna bootstrap` to cross-link and install dependencies for each package.
 
@@ -38,7 +37,8 @@ their respective `lib` directories
 | Command          | Description                |
 | ---------------- | -------------------------  |
 | `npm start` | starts all all packages with a start command. Useful for working on the whole project |
-| `npm run build` | builds production build
+| `npm run start-playground` | starts a specific playground specified by argument. Example: `npm run start-playground -- react-playground` |
+| `npm run build` | builds production build |
 
 ### Manual testing
 

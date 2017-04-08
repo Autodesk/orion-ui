@@ -37,7 +37,7 @@ their respective `lib` directories
 | Command          | Description                |
 | ---------------- | -------------------------  |
 | `npm start` | starts all all packages with a start command. Useful for working on the whole project |
-| `npm run start-playground` | starts a specific playground specified by argument. Example: `npm run start-playground -- react-playground` |
+| `npm run start-playground` | starts the specified playground and all it's dependencies. Example: `npm run start-playground -- react-playground` |
 | `npm run build` | builds production build |
 
 ### Manual testing

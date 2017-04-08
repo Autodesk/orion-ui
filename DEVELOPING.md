@@ -37,8 +37,8 @@ their respective `lib` directories
 
 | Command          | Description                |
 | ---------------- | -------------------------  |
-| `lerna run test` | runs tests in each package |
-
+| `npm start` | starts all all packages with a start command. Useful for working on the whole project |
+| `npm run build` | builds production build
 
 ### Manual testing
 

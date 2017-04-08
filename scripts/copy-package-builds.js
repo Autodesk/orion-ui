@@ -1,4 +1,4 @@
-#!/usr/bin/env Node
+#!/usr/bin/env node
 /* eslint-env shelljs */
 /**
 Copyright 2016 Autodesk,Inc.
@@ -16,11 +16,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+
+require('shelljs/global');
+
 const constants = require('./modules/constants');
 const knownPaths = require('./modules/known-paths');
 const path = require('path');
-
-require('shelljs/global');
 
 /**
  * Returns true or false depending on if the provided directoryName has a build
@@ -32,30 +33,41 @@ function hasBuildDirectory(directoryName) {
 }
 
 /**
+ * Copies directoryName/build to root/build/directoryName
+ */
+function copyToRootBuild(directoryName) {
+  console.log(`- copying build from ${directoryName} to the root build`);
+  const source = path.join(knownPaths.packages, directoryName, constants.buildDirName);
+  const destination = path.join(knownPaths.build, directoryName);
+  cp('-R', source, destination);
+}
+
+/**
  * Main program
  *
- * - remove all package builds
- * - remove top level build dir
+ * - creates build directory if needed
+ * - copies all build directories found in packages into the root and renames
+ *   them to the package name
+ * - outputs the number of package builds found to the console
  */
+
+// Make sure we have a build directory
+mkdir('-p', knownPaths.build);
+
 function countTrues(count, bool) {
   const newCount = (bool) ? count + 1 : count;
 
   return newCount;
 }
 
-const cleanCount = ls(knownPaths.packages).map((directory) => {
+// For each package, check for a build directory and if found, copy it into the
+// root build directory
+const buildCount = ls(knownPaths.packages).map((directory) => {
   if (hasBuildDirectory(directory)) {
-    console.log(`- cleaning build ${directory}`);
-    rm('-r', path.join(knownPaths.packages, directory, constants.buildDirName));
+    copyToRootBuild(directory);
     return true;
   }
-
   return false;
 }).reduce(countTrues, 0);
 
-console.log(`${cleanCount} builds cleaned`);
-
-if (test('-e', knownPaths.build)) {
-  rm('-r', knownPaths.build);
-  console.log('Root build cleaned');
-}
+console.log(`${buildCount} builds copied to root`);

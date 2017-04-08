@@ -6,10 +6,11 @@ const path = require('path');
 cd(path.join(__dirname, '..'));
 
 const codes = [
-  'npm run coverage',
   'npm run browserify',
   'npm run wct-sauce',
-  'npm run report-coverage',
+  'node scripts/remap-wct-coverage.js',
+  'npm run jest-coverage',
+  'node scripts/report-coverage.js',
 ].map((command) => {
   return exec(command).code;
 });

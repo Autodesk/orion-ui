@@ -15,9 +15,7 @@
     "react-dom": "^15.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "CI=true react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "BROWSER=none PORT=3004 react-scripts start",
+    "build": "react-scripts build"
   }
 }

@@ -6,6 +6,7 @@
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "jest": {
+    "coverageDirectory": "coverage/jest",
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/lib/"
@@ -17,13 +18,14 @@
   },
   "scripts": {
     "prepublish": "bower install",
-    "lib": "NODE_ENV=production npm run build",
-    "build": "babel src --out-dir lib --copy-file",
-    "start": "NODE_ENV=development npm run build -- --watch",
-    "test": "jest --watch",
+    "lib": "babel src --out-dir lib --copy-file",
+    "build": "NODE_ENV=production npm run lib",
+    "start": "NODE_ENV=development npm run lib -- --watch",
+    "jest-coverage": "jest --coverage",
+    "jest": "jest --watch",
     "browserify": "node scripts/browserify.js",
     "wct": "wct",
-    "wct-sauce": "wct --plugin sauce --skip-plugin local",
+    "wct-sauce": "wct --plugin sauce --skip-plugin local && node script/recmap-wct-coverage.js",
     "lint": "eslint .",
     "test-ci": "node scripts/test-ci.js"
   },
@@ -49,11 +51,14 @@
     "eslint-plugin-react": "^6.8.0",
     "gemini": "^4.14.3",
     "gemini-sauce": "^1.0.0",
+    "istanbul-combine": "^0.3.0",
+    "istanbul-merge": "^1.1.1",
     "jest": "^19.0.2",
     "mocha": "^3.2.0",
     "moment": "^2.17.1",
     "nyc": "^10.1.2",
     "raf-stub": "^2.0.0",
+    "remap-istanbul": "^0.9.5",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.9.0",
     "web-component-tester": "4.2.2",

@@ -1,9 +1,28 @@
 {
   "verbose": false,
-  "suites": ["test/runner.html"],
+  "suites": [
+    "test/runner.html"
+  ],
   "plugins": {
     "local": {
-      "browsers": ["chrome"]
+      "browsers": [
+        "chrome"
+      ]
+    },
+    "istanbul": {
+      "disabled": false,
+      "dir": "coverage/wct",
+      "reporters": [
+        "text-summary",
+        "lcov",
+        "json"
+      ],
+      "include": [
+        "**/*.js"
+      ],
+      "exclude": [
+        "**/bower_components/**"
+      ]
     },
     "sauce": {
       "disabled": true,

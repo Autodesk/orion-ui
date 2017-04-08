@@ -14,9 +14,7 @@
     "moment": "^2.17.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "BROWSER=none PORT=3001 react-scripts start",
+    "build": "react-scripts build"
   }
 }

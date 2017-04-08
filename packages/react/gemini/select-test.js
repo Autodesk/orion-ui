@@ -19,12 +19,12 @@ function capture(name, url) {
   gemini.suite(`select-${name}`, (suite) => {
     suite
       .setUrl(url)
-      .setCaptureElements(".example")
+      .setCaptureElements('.example')
       .capture(name);
   });
 }
 
-gemini.suite('select', (suite) => {
+gemini.suite('select', () => {
   capture('collapsed', 'iframe.html?selectedKind=Select&selectedStory=collapsed');
   capture('expanded', 'iframe.html?selectedKind=Select&selectedStory=expanded');
   capture('option-focus', 'iframe.html?selectedKind=Select&selectedStory=option%20focus');

@@ -17,7 +17,7 @@ limitations under the License.
 const path = require('path');
 const constants = require('./constants');
 
-const root = path.join(__dirname, '..', '..', '..');
+const root = path.join(__dirname, '..', '..');
 const build = path.join(root, constants.buildDirName);
 const packages = path.join(root, constants.packageDirName);
 const scripts = path.join(packages, constants.scriptsPackageDirName);

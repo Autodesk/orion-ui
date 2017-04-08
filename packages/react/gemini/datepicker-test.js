@@ -19,12 +19,12 @@ function capture(name, url) {
   gemini.suite(`datepicker-${name}`, (suite) => {
     suite
       .setUrl(url)
-      .setCaptureElements(".example")
+      .setCaptureElements('.example')
       .capture(name);
   });
 }
 
-gemini.suite('datepicker', (suite) => {
+gemini.suite('datepicker', () => {
   capture('unfocused-no-date', '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%2Fo%20date');
   capture('unfocused-with-date', '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%20date');
   capture('focus', '/iframe.html?selectedKind=Datepicker&selectedStory=focus');

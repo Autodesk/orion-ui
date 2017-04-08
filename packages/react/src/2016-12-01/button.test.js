@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('jsdom-global/register');
-
 const React = require('react');
 const { mount } = require('enzyme');
 const chai = require('chai');

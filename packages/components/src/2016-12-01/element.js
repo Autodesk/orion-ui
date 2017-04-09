@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
-require('../../vendor/object-entries-shim.js');
 require('../utils/inject-styles.js');
 const RenderQueue = require('../utils/render-queue.js');
 const Registry = require('../utils/private-registry.js');
@@ -81,7 +79,8 @@ class Element extends HTMLElement {
       }
     }
 
-    Object.entries(this.viewState).forEach(([name, value]) => {
+    Object.keys(this.viewState).forEach((name) => {
+      const value = this.viewState[name];
       styles.forEach(style => appendClassName(style, name, value));
     });
 

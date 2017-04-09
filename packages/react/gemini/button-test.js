@@ -25,7 +25,7 @@ function capture(name, url) {
 }
 
 gemini.suite('button', () => {
-  capture('default', '/iframe.html?selectedKind=Button&selectedStory=with%20text')
+  capture('default', '/iframe.html?selectedKind=Button&selectedStory=with%20text');
   capture('disabled', '/iframe.html?selectedKind=Button&selectedStory=disabled');
   capture('hover', 'iframe.html?selectedKind=Button&selectedStory=hover');
   capture('small', '/iframe.html?selectedKind=Button&selectedStory=small');

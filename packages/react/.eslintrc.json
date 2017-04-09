@@ -1,6 +1,0 @@
-{
-  "extends": "@orion-ui/eslint-config-orion",
-  "globals": {
-    "gemini": true
-  }
-}

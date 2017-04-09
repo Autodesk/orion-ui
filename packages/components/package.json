@@ -24,26 +24,27 @@
     "jest-coverage": "jest --coverage",
     "jest": "jest --watch",
     "browserify": "node scripts/browserify.js",
+    "debug-wct": "polyserve .",
     "wct": "wct",
     "wct-sauce": "wct --plugin sauce --skip-plugin local && node script/recmap-wct-coverage.js",
-    "lint": "eslint .",
-    "test-ci": "node scripts/test-ci.js"
+    "test-ci": "node scripts/test-ci.js",
+    "test": "npm run jest-coverage && npm run browserify && npm run wct"
   },
   "dependencies": {
-    "@orion-ui/style": "^1.0.3",
-    "object.entries": "^1.0.4"
+    "@orion-ui/style": "^1.0.3"
   },
   "peerDependencies": {
     "moment": "^2.17.1"
   },
   "devDependencies": {
+    "@skatejs/web-components": "^1.0.0",
     "babel-cli": "^6.18.0",
     "bower": "^1.8.0",
     "browserify": "^13.3.0",
     "codacy-coverage": "^2.0.0",
-    "eslint": "^3.11.1",
     "jest": "^19.0.2",
     "moment": "^2.17.1",
+    "polyserve": "^0.16.0",
     "remap-istanbul": "^0.9.5",
     "web-component-tester": "4.2.2"
   }

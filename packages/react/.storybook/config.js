@@ -1,4 +1,4 @@
-import '../vendor/custom-elements-polyfill';
+import '@skatejs/web-components';
 
 import { configure, addDecorator } from '@kadira/storybook';
 import { withKnobs } from '@kadira/storybook-addon-knobs';

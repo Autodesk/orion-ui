@@ -18,7 +18,6 @@ limitations under the License.
 
 import moment from 'moment';
 
-require('../../../vendor/es5-custom-element-shim');
 require('./calendar-header');
 require('./calendar-day');
 

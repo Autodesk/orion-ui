@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
 const Element = require('./element');
 const applyProps = require('../utils/apply-props');
 const clearChildren = require('../utils/clear-children.js');

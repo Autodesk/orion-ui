@@ -14,5 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+
+// eslint-disable-next-line
+require('@skatejs/web-components');
 require('../src/2016-12-01/index.js');
 window.RenderQueue = require('../src/utils/render-queue');

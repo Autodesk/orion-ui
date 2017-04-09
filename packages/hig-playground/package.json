@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "BROWSER=none PORT=3002 react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "test": "echo 'No tests configured'"
   }
 }

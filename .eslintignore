@@ -1,10 +1,9 @@
-.idea/*
-.nyc_output
 bower_components
 build
 coverage
 gemini-report
-lerna-debug.log
 lib
 node_modules
-npm-debug.log
+packages/*-playground
+packages/design-dsl
+vendor

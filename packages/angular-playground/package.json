@@ -6,6 +6,7 @@
   "homepage": ".",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@skatejs/web-components": "^1.0.0",
     "react-scripts": "^0.9.5"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
   },
   "scripts": {
     "start": "BROWSER=none PORT=3001 react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "test": "echo 'No tests configured'"
   }
 }

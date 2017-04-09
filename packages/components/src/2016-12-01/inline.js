@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
 const Registry = require('../utils/private-registry.js');
 const Element = require('./element');
 

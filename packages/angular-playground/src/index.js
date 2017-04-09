@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import './vendor/custom-elements-polyfill';
+import '@skatejs/web-components';
 import './index.css';
 
 import 'angular';

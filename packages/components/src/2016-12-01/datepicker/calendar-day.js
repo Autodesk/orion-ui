@@ -16,8 +16,6 @@ limitations under the License.
 
 */
 
-require('../../../vendor/es5-custom-element-shim');
-
 const Element = require('../element');
 const Registry = require('../../utils/private-registry');
 const applyProps = require('../../utils/apply-props');

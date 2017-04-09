@@ -15,9 +15,8 @@ limitations under the License.
 
 */
 
-import '../vendor/custom-elements-polyfill';
-
-import 'tachyons';
+import '@skatejs/web-components';
+import 'tachyons/css/tachyons.css';
 import { Select } from '@orion-ui/react/lib/2016-12-01';
 import React, { Component } from 'react';
 

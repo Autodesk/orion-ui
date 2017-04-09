@@ -15,8 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim');
-
 require('./datepicker/datepicker-calendar');
 
 const Element = require('./element');

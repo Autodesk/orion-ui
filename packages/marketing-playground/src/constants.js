@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 export const values = {
-  storybookPath: './storybook/index.html'
+  storybookPath: './react/index.html'
 }
 
 export default values;

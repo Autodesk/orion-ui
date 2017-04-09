@@ -26,8 +26,8 @@ const codes = [
   'npm run wct-sauce',
   'node scripts/remap-wct-coverage.js',
   'npm run jest-coverage',
-  'node scripts/report-coverage.js',
-].map((command) => {
+  'node scripts/report-coverage.js'
+].map(command => {
   return exec(command).code;
 });
 

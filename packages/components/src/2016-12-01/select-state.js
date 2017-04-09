@@ -18,7 +18,7 @@ const SelectState = {
   getInitialState(state) {
     return {
       open: false,
-      ...state,
+      ...state
     };
   },
 
@@ -38,7 +38,7 @@ const SelectState = {
     return {
       ...state,
       focusedKey,
-      open: true,
+      open: true
     };
   },
 
@@ -50,24 +50,28 @@ const SelectState = {
 
     return {
       ...state,
-      focusedKey,
+      focusedKey
     };
   },
 
   optionSelected(state, selectedKey) {
     let nextSelectedKey = selectedKey;
-    if (nextSelectedKey === undefined) { nextSelectedKey = state.selectedKey; }
+    if (nextSelectedKey === undefined) {
+      nextSelectedKey = state.selectedKey;
+    }
 
     const option = state.options.find(o => o.key === nextSelectedKey);
     let selectedIndex;
-    if (option) { selectedIndex = state.options.indexOf(option); }
+    if (option) {
+      selectedIndex = state.options.indexOf(option);
+    }
 
     return {
       ...state,
       selectedKey: nextSelectedKey,
       selectedIndex,
       filter: undefined,
-      open: false,
+      open: false
     };
   },
 
@@ -76,19 +80,21 @@ const SelectState = {
       ...state,
       open: false,
       focusedKey: undefined,
-      filter: undefined,
+      filter: undefined
     };
   },
 
   focusPrevious(state) {
-    if (!state.open) { return this.activated(state); }
+    if (!state.open) {
+      return this.activated(state);
+    }
 
     const filteredOptions = this.filteredOptions(state);
 
     if (state.focusedKey === undefined) {
       return {
         ...state,
-        focusedKey: this._firstFocusableKey(filteredOptions),
+        focusedKey: this._firstFocusableKey(filteredOptions)
       };
     }
 
@@ -97,26 +103,30 @@ const SelectState = {
       filteredOptions,
       (index, options) => {
         index -= 1;
-        if (index < 0) { index = options.length - 1; }
+        if (index < 0) {
+          index = options.length - 1;
+        }
         return index;
-      },
+      }
     );
 
     return {
       ...state,
-      focusedKey,
+      focusedKey
     };
   },
 
   focusNext(state) {
-    if (!state.open) { return this.activated(state); }
+    if (!state.open) {
+      return this.activated(state);
+    }
 
     const filteredOptions = this.filteredOptions(state);
 
     if (state.focusedKey === undefined) {
       return {
         ...state,
-        focusedKey: this._firstFocusableKey(filteredOptions),
+        focusedKey: this._firstFocusableKey(filteredOptions)
       };
     }
 
@@ -129,39 +139,47 @@ const SelectState = {
           index = 0;
         }
         return index;
-      },
+      }
     );
 
     return {
       ...state,
-      focusedKey,
+      focusedKey
     };
   },
 
   _nextFocusableKey(initialKey, options, step) {
-    if (options.length === 0) { return undefined; }
+    if (options.length === 0) {
+      return undefined;
+    }
     const initialOption = options.find(o => o.key === initialKey);
     let index = options.indexOf(initialOption);
     for (let i = 0; i < options.length; i += 1) {
       index = step(index, options);
       const option = options[index];
-      if (!option.disabled) { return option.key; }
+      if (!option.disabled) {
+        return option.key;
+      }
     }
     return options[0].key;
   },
 
   _firstFocusableKey(options) {
-    if (options === undefined) { options = []; }
+    if (options === undefined) {
+      options = [];
+    }
     const firstfocusableOption = options.find(option => !option.disabled);
     let key;
-    if (firstfocusableOption) { key = firstfocusableOption.key; }
+    if (firstfocusableOption) {
+      key = firstfocusableOption.key;
+    }
     return key;
   },
 
   focus(state) {
     return {
       ...state,
-      hasFocus: true,
+      hasFocus: true
     };
   },
 
@@ -170,7 +188,7 @@ const SelectState = {
       ...state,
       hasFocus: false,
       open: false,
-      filter: undefined,
+      filter: undefined
     };
   },
 
@@ -178,16 +196,19 @@ const SelectState = {
     return {
       ...state,
       open: true,
-      filter,
+      filter
     };
   },
 
   filteredOptions(state) {
     const filter = state.filter || '';
     let options = state.options;
-    if (options === undefined) { options = []; }
+    if (options === undefined) {
+      options = [];
+    }
     const optionFilter = new RegExp(`^${filter}`, 'i');
-    const filteredOptions = options.filter(option => option.label.match(optionFilter));
+    const filteredOptions = options.filter(option =>
+      option.label.match(optionFilter));
     return filteredOptions;
   },
 
@@ -195,9 +216,9 @@ const SelectState = {
     return {
       ...state,
       selectedIndex: -1,
-      selectedKey: undefined,
+      selectedKey: undefined
     };
-  },
+  }
 };
 
 module.exports = SelectState;

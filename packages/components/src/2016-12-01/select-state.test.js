@@ -24,7 +24,7 @@ describe('SelectState', () => {
   const options = [
     { label: 'Red', value: '#F00', key: 'a' },
     { label: 'Green', value: '#0F0', key: 'b' },
-    { label: 'Blue', value: '#00F', key: 'c' },
+    { label: 'Blue', value: '#00F', key: 'c' }
   ];
 
   describe('getInitialState', () => {
@@ -52,7 +52,7 @@ describe('SelectState', () => {
         const opts = [
           { label: 'Red', value: '#F00', key: 'a', disabled: true },
           { label: 'Green', value: '#0F0', key: 'b' },
-          { label: 'Blue', value: '#00F', key: 'c' },
+          { label: 'Blue', value: '#00F', key: 'c' }
         ];
         const result = SelectState.activated({ options: opts });
         expect(result.focusedKey).to.eq('b');
@@ -65,7 +65,7 @@ describe('SelectState', () => {
       beforeAll(() => {
         state = {
           selectedKey: 'b',
-          options,
+          options
         };
         nextState = SelectState.activated(state);
       });
@@ -84,7 +84,7 @@ describe('SelectState', () => {
       beforeEach(() => {
         state = {
           open: true,
-          options,
+          options
         };
         nextState = SelectState.optionFocused(state, 'b');
       });
@@ -101,8 +101,8 @@ describe('SelectState', () => {
           options: [
             { label: 'Red', value: '#F00', key: 'a' },
             { label: 'Green', value: '#0F0', key: 'b', disabled: true },
-            { label: 'Blue', value: '#00F', key: 'c' },
-          ],
+            { label: 'Blue', value: '#00F', key: 'c' }
+          ]
         };
         nextState = SelectState.optionFocused(state, 'b');
       });
@@ -121,7 +121,7 @@ describe('SelectState', () => {
         open: true,
         options,
         selectedKey: 'a',
-        filter: 'foo',
+        filter: 'foo'
       };
       nextState = SelectState.optionSelected(state, 'b');
     });
@@ -152,7 +152,11 @@ describe('SelectState', () => {
   describe('deactivated', () => {
     let nextState;
     beforeAll(() => {
-      nextState = SelectState.deactivated({ open: true, focusedKey: 'b', filter: 'foo' });
+      nextState = SelectState.deactivated({
+        open: true,
+        focusedKey: 'b',
+        filter: 'foo'
+      });
     });
 
     it('sets open to false', () => {
@@ -175,7 +179,7 @@ describe('SelectState', () => {
         const state = {
           open: true,
           focusedKey: 'b',
-          options,
+          options
         };
         nextState = SelectState.focusPrevious(state);
       });
@@ -190,7 +194,7 @@ describe('SelectState', () => {
         const state = {
           open: true,
           focusedKey: 'a',
-          options,
+          options
         };
         nextState = SelectState.focusPrevious(state);
       });
@@ -204,7 +208,7 @@ describe('SelectState', () => {
       beforeAll(() => {
         nextState = SelectState.focusPrevious({
           open: false,
-          options,
+          options
         });
       });
 
@@ -225,8 +229,8 @@ describe('SelectState', () => {
           options: [
             { label: 'Red', value: '#F00', key: 'a' },
             { label: 'Green', value: '#0F0', key: 'b', disabled: true },
-            { label: 'Blue', value: '#00F', key: 'c' },
-          ],
+            { label: 'Blue', value: '#00F', key: 'c' }
+          ]
         };
         nextState = SelectState.focusPrevious(state);
       });
@@ -244,7 +248,7 @@ describe('SelectState', () => {
         const state = {
           open: true,
           focusedKey: 'b',
-          options,
+          options
         };
         nextState = SelectState.focusNext(state);
       });
@@ -259,7 +263,7 @@ describe('SelectState', () => {
         const state = {
           open: false,
           focusedKey: 'b',
-          options,
+          options
         };
         nextState = SelectState.focusNext(state);
       });
@@ -274,7 +278,7 @@ describe('SelectState', () => {
         const state = {
           open: true,
           focusedKey: 'c',
-          options,
+          options
         };
         nextState = SelectState.focusNext(state);
       });
@@ -289,7 +293,7 @@ describe('SelectState', () => {
         nextState = SelectState.focusNext({
           open: false,
           focusedKey: undefined,
-          options,
+          options
         });
       });
 
@@ -310,8 +314,8 @@ describe('SelectState', () => {
           options: [
             { label: 'Red', value: '#F00', key: 'a', disabled: true },
             { label: 'Green', value: '#0F0', key: 'b' },
-            { label: 'Blue', value: '#00F', key: 'c' },
-          ],
+            { label: 'Blue', value: '#00F', key: 'c' }
+          ]
         };
         nextState = SelectState.focusNext(state);
       });
@@ -351,7 +355,10 @@ describe('SelectState', () => {
 
     describe('matching one option', () => {
       beforeEach(() => {
-        filteredOptions = SelectState.filteredOptions({ options, filter: 'gr' });
+        filteredOptions = SelectState.filteredOptions({
+          options,
+          filter: 'gr'
+        });
       });
 
       it('sets filteredOptions to the matching option', () => {
@@ -362,7 +369,10 @@ describe('SelectState', () => {
 
     describe('matching no options', () => {
       beforeEach(() => {
-        filteredOptions = SelectState.filteredOptions({ options, filter: 'growlith' });
+        filteredOptions = SelectState.filteredOptions({
+          options,
+          filter: 'growlith'
+        });
       });
 
       it('sets filteredOptions to an empty array', () => {
@@ -382,7 +392,10 @@ describe('SelectState', () => {
 
     describe('with undefined', () => {
       beforeEach(() => {
-        filteredOptions = SelectState.filteredOptions({ options, filter: undefined });
+        filteredOptions = SelectState.filteredOptions({
+          options,
+          filter: undefined
+        });
       });
 
       it('sets filteredOptions to all options', () => {
@@ -411,7 +424,7 @@ describe('SelectState', () => {
     beforeEach(() => {
       const state = {
         selectedIndex: 1,
-        selectedKey: 'a',
+        selectedKey: 'a'
       };
       nextState = SelectState.clearSelection(state);
     });

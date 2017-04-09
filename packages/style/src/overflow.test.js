@@ -24,11 +24,13 @@ describe('Overflow', () => {
     context('with a valid value', () => {
       [
         { value: 'scroll', result: 'ovy-s' },
-        { value: 'hidden', result: 'ovy-h' },
+        { value: 'hidden', result: 'ovy-h' }
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(Overflow.attributeChangedCallback('overflow-y', value)).to.eq(result);
+            expect(
+              Overflow.attributeChangedCallback('overflow-y', value)
+            ).to.eq(result);
           });
         });
       });

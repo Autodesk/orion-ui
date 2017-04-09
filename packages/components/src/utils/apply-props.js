@@ -61,7 +61,7 @@ function syncEvent(el, eventName, newEventHandler) {
  * el.addEventListener('change', myFunction)
  */
 function applyProps(el, props) {
-  Object.keys(props).forEach((name) => {
+  Object.keys(props).forEach(name => {
     if (name === 'children') {
       return;
     }

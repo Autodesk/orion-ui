@@ -30,8 +30,8 @@ describe('Utils.scrollIntoView', () => {
         offsetHeight: 10,
         parentElement: {
           scrollTop: 0,
-          clientHeight: 100,
-        },
+          clientHeight: 100
+        }
       };
     });
 
@@ -48,8 +48,8 @@ describe('Utils.scrollIntoView', () => {
         offsetHeight: 10,
         parentElement: {
           scrollTop: 50,
-          clientHeight: 100,
-        },
+          clientHeight: 100
+        }
       };
     });
 
@@ -66,8 +66,8 @@ describe('Utils.scrollIntoView', () => {
         offsetHeight: 10,
         parentElement: {
           scrollTop: 110,
-          clientHeight: 100,
-        },
+          clientHeight: 100
+        }
       };
     });
 
@@ -81,7 +81,7 @@ describe('Utils.scrollIntoView', () => {
     it('does not raise an error', () => {
       function scrollOrphan() {
         element = {
-          parentElement: null,
+          parentElement: null
         };
         scrollIntoView(element);
       }

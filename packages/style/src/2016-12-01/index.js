@@ -43,5 +43,5 @@ module.exports = {
   Skins,
   Spacing,
   Typography,
-  UserSelect,
+  UserSelect
 };

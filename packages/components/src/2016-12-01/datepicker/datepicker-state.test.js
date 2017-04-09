@@ -45,7 +45,10 @@ describe('DatepickerState', () => {
 
     describe('with a state', () => {
       it('extends default state with passed state', () => {
-        const initialState = DatepickerState.getInitialState({ disabled: true, i18n: { previousMonth: 'Prev' } });
+        const initialState = DatepickerState.getInitialState({
+          disabled: true,
+          i18n: { previousMonth: 'Prev' }
+        });
         expect(initialState.disabled).to.be.true;
         expect(initialState.i18n.previousMonth).to.equal('Prev');
         expect(initialState.focus).to.be.false;
@@ -104,7 +107,10 @@ describe('DatepickerState', () => {
       beforeEach(() => {
         today = moment();
         todayStr = today.toISOString();
-        nextState = DatepickerState.enterFocused({ currentDate: today, focusDate: null });
+        nextState = DatepickerState.enterFocused({
+          currentDate: today,
+          focusDate: null
+        });
       });
 
       it('sets the focusDate to today', () => {
@@ -118,7 +124,10 @@ describe('DatepickerState', () => {
 
       beforeEach(() => {
         selectedDate = moment().set({ year: 2020 });
-        nextState = DatepickerState.enterFocused({ date: selectedDate, focusDate: null });
+        nextState = DatepickerState.enterFocused({
+          date: selectedDate,
+          focusDate: null
+        });
       });
 
       it('sets the focusDate to the selected date', () => {
@@ -163,7 +172,9 @@ describe('DatepickerState', () => {
 
       beforeEach(() => {
         nextEnabledDate = moment(selectedDate).add(1, 'day');
-        const isEnabled = (date) => { return date !== selectedDate; };
+        const isEnabled = date => {
+          return date !== selectedDate;
+        };
         nextState = DatepickerState.selectDate({ isEnabled }, selectedDate);
       });
 
@@ -177,7 +188,7 @@ describe('DatepickerState', () => {
 
       describe('with no enabled future dates in the next 31 days', () => {
         beforeEach(() => {
-          const isEnabled = (date) => {
+          const isEnabled = date => {
             const thirtyOneDaysAway = moment(selectedDate).add(31, 'days');
             return moment(date).isAfter(thirtyOneDaysAway);
           };
@@ -196,7 +207,9 @@ describe('DatepickerState', () => {
 
     describe('for an enabled date', () => {
       beforeEach(() => {
-        const isEnabled = () => { return true; };
+        const isEnabled = () => {
+          return true;
+        };
         nextState = DatepickerState.selectDate({ isEnabled }, selectedDate);
       });
 
@@ -219,7 +232,7 @@ describe('DatepickerState', () => {
       setDate = moment().set({
         year: 2015,
         month: 0,
-        date: 10,
+        date: 10
       });
       state = { currentDate: moment() };
       nextState = DatepickerState.setCurrentDate(state, setDate);
@@ -241,7 +254,9 @@ describe('DatepickerState', () => {
     });
 
     it('sets focusDate to the next day', () => {
-      expect(nextState.focusDate.isSame(focusDate.add(1, 'day'), 'date')).to.be.true;
+      expect(
+        nextState.focusDate.isSame(focusDate.add(1, 'day'), 'date')
+      ).to.be.true;
     });
   });
 
@@ -254,7 +269,9 @@ describe('DatepickerState', () => {
     });
 
     it('sets focusDate to the previous day', () => {
-      expect(nextState.focusDate.isSame(focusDate.subtract(1, 'day'), 'date')).to.be.true;
+      expect(
+        nextState.focusDate.isSame(focusDate.subtract(1, 'day'), 'date')
+      ).to.be.true;
     });
 
     describe('when previous day is disabled', () => {
@@ -263,12 +280,22 @@ describe('DatepickerState', () => {
       const nextAvailabledate = moment(focusedDate).subtract(2, 'days');
 
       beforeEach(() => {
-        const state = { isEnabled: (date) => { return !(date.isSame(disabledDate, 'day')); } };
-        nextState = DatepickerState.setFocusDate(state, disabledDate, 'previous');
+        const state = {
+          isEnabled: date => {
+            return !date.isSame(disabledDate, 'day');
+          }
+        };
+        nextState = DatepickerState.setFocusDate(
+          state,
+          disabledDate,
+          'previous'
+        );
       });
 
       it('focuses on next available previous day', () => {
-        expect(nextState.focusDate.isSame(nextAvailabledate, 'date')).to.be.true;
+        expect(
+          nextState.focusDate.isSame(nextAvailabledate, 'date')
+        ).to.be.true;
       });
     });
   });
@@ -282,7 +309,9 @@ describe('DatepickerState', () => {
     });
 
     it('sets focusDate to the next week', () => {
-      expect(nextState.focusDate.isSame(focusDate.add(1, 'week'), 'date')).to.be.true;
+      expect(
+        nextState.focusDate.isSame(focusDate.add(1, 'week'), 'date')
+      ).to.be.true;
     });
   });
 
@@ -295,7 +324,9 @@ describe('DatepickerState', () => {
     });
 
     it('sets focusDate to the previous week', () => {
-      expect(nextState.focusDate.isSame(focusDate.subtract(1, 'week'), 'date')).to.be.true;
+      expect(
+        nextState.focusDate.isSame(focusDate.subtract(1, 'week'), 'date')
+      ).to.be.true;
     });
   });
 
@@ -308,7 +339,9 @@ describe('DatepickerState', () => {
     });
 
     it('sets focusDate to the next month', () => {
-      expect(nextState.focusDate.isSame(focusDate.add(1, 'month'), 'date')).to.be.true;
+      expect(
+        nextState.focusDate.isSame(focusDate.add(1, 'month'), 'date')
+      ).to.be.true;
     });
   });
 
@@ -321,7 +354,9 @@ describe('DatepickerState', () => {
     });
 
     it('sets focusDate to the next month', () => {
-      expect(nextState.focusDate.isSame(focusDate.subtract(1, 'month'), 'date')).to.be.true;
+      expect(
+        nextState.focusDate.isSame(focusDate.subtract(1, 'month'), 'date')
+      ).to.be.true;
     });
   });
 
@@ -341,7 +376,9 @@ describe('DatepickerState', () => {
 
     describe('with an enabled date', () => {
       beforeEach(() => {
-        const isEnabled = () => { return true; };
+        const isEnabled = () => {
+          return true;
+        };
         nextState = DatepickerState.setFocusDate({ isEnabled }, focusDate);
       });
 
@@ -352,7 +389,11 @@ describe('DatepickerState', () => {
 
     describe('with a disabled date', () => {
       beforeEach(() => {
-        const state = { isEnabled: (date) => { return date !== focusDate; } };
+        const state = {
+          isEnabled: date => {
+            return date !== focusDate;
+          }
+        };
         nextState = DatepickerState.setFocusDate(state, focusDate);
       });
 
@@ -363,7 +404,7 @@ describe('DatepickerState', () => {
 
       describe('with no enabled future dates in the next 31 days', () => {
         beforeEach(() => {
-          const isEnabled = (date) => {
+          const isEnabled = date => {
             const thirtyOneDaysAway = moment(focusDate).add(31, 'days');
             return moment(date).isAfter(thirtyOneDaysAway);
           };

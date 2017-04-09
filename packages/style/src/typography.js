@@ -36,11 +36,11 @@ const attrMap = {
   'text-align': {
     left: 'ta-l',
     center: 'ta-c',
-    right: 'ta-r',
+    right: 'ta-r'
   },
   'white-space': {
-    nowrap: 'ws-nw',
-  },
+    nowrap: 'ws-nw'
+  }
 };
 
 const attributes = Object.keys(attrMap);
@@ -57,5 +57,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

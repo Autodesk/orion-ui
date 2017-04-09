@@ -30,13 +30,13 @@ describe('GithubUploadNotification', () => {
         this.authenticate = sinon.stub();
 
         this.repos = {
-          createStatus: sinon.stub(),
+          createStatus: sinon.stub()
         };
       }
     }
 
     GithubUploadNotification = proxyquire('./github-upload-notification', {
-      github: FakeGithub,
+      github: FakeGithub
     });
   });
 
@@ -61,7 +61,7 @@ describe('GithubUploadNotification', () => {
       const props = {
         state: 'my-state',
         description: 'my-description',
-        targetUrl: 'my-target-url',
+        targetUrl: 'my-target-url'
       };
 
       beforeEach(() => {
@@ -100,7 +100,9 @@ describe('GithubUploadNotification', () => {
         actualPromise = github.createStatus();
         actualAuth = fakeGithubInstance.authenticate.getCall(0).args[0];
         actualStatus = fakeGithubInstance.repos.createStatus.getCall(0).args[0];
-        actualCallback = fakeGithubInstance.repos.createStatus.getCall(0).args[1];
+        actualCallback = fakeGithubInstance.repos.createStatus.getCall(0).args[
+          1
+        ];
       });
 
       it('authenticates with oauth type', () => {
@@ -140,7 +142,7 @@ describe('GithubUploadNotification', () => {
       });
 
       it('resolves the returned promise', () => {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           actualPromise.then(() => {
             resolve();
           });
@@ -155,12 +157,14 @@ describe('GithubUploadNotification', () => {
         const github = new GithubUploadNotification('token', 'sha');
 
         const actualPromise = github.createStatus();
-        const actualCallback = fakeGithubInstance.repos.createStatus.getCall(0).args[1];
+        const actualCallback = fakeGithubInstance.repos.createStatus.getCall(
+          0
+        ).args[1];
 
         const fakeError = sinon.stub();
 
-        return new Promise((resolve) => {
-          actualPromise.catch((err) => {
+        return new Promise(resolve => {
+          actualPromise.catch(err => {
             expect(err).to.equal(fakeError);
             resolve();
           });
@@ -179,10 +183,12 @@ describe('GithubUploadNotification', () => {
 
       github.startDeploy();
 
-      expect(github.createStatus.calledWith({
-        state: 'pending',
-        description: 'deploying',
-      })).to.equal(true);
+      expect(
+        github.createStatus.calledWith({
+          state: 'pending',
+          description: 'deploying'
+        })
+      ).to.equal(true);
     });
   });
 
@@ -196,11 +202,13 @@ describe('GithubUploadNotification', () => {
 
       github.finishDeploy(exampleUrl);
 
-      expect(github.createStatus.calledWith({
-        state: 'success',
-        description: 'deployed',
-        targetUrl: exampleUrl,
-      })).to.equal(true);
+      expect(
+        github.createStatus.calledWith({
+          state: 'success',
+          description: 'deployed',
+          targetUrl: exampleUrl
+        })
+      ).to.equal(true);
     });
   });
 });

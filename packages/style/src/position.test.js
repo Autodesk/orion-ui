@@ -26,11 +26,13 @@ describe('Position', () => {
         { value: 'absolute', result: 'pos-abs' },
         { value: 'relative', result: 'pos-rel' },
         { value: 'static', result: 'pos-sta' },
-        { value: 'cover', result: 'pos-cov' },
+        { value: 'cover', result: 'pos-cov' }
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(Position.attributeChangedCallback('position', value)).to.eq(result);
+            expect(Position.attributeChangedCallback('position', value)).to.eq(
+              result
+            );
           });
         });
       });

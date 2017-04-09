@@ -24,7 +24,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 export default function focus() {
   const buttonText = text('Text', 'Hello, button!');
   const props = {
-    hasFocus: boolean('Has focus', true),
+    hasFocus: boolean('Has focus', true)
   };
 
   const react = `

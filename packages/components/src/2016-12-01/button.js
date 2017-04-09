@@ -26,7 +26,7 @@ class Button extends Element {
 
     this.defaults = {
       background: 'black',
-      color: 'white',
+      color: 'white'
     };
 
     this.state = ButtonState.getInitialState();
@@ -38,10 +38,10 @@ class Button extends Element {
       'padding-vertical': 2,
       'reset-focus-style': true,
       userSelect: false,
-      ...this.defaults,
+      ...this.defaults
     });
 
-    ['_focus', '_blur'].forEach((fn) => {
+    ['_focus', '_blur'].forEach(fn => {
       this[fn] = this[fn].bind(this);
     });
   }
@@ -57,30 +57,38 @@ class Button extends Element {
 
   _addListeners() {
     this.addEventListener('mouseenter', () => {
-      if (this.state.disabled) { return; }
+      if (this.state.disabled) {
+        return;
+      }
       let nextState = ButtonState.enterHover(this.state);
       nextState = { hover: nextState.hover, disabled: nextState.disabled };
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: {
-          type: 'mouseenter',
-          state: nextState,
-        },
-      }));
+      this.dispatchEvent(
+        new CustomEvent('change', {
+          detail: {
+            type: 'mouseenter',
+            state: nextState
+          }
+        })
+      );
     });
 
     this.addEventListener('mouseleave', () => {
-      if (this.state.disabled) { return; }
+      if (this.state.disabled) {
+        return;
+      }
       let nextState = ButtonState.leaveHover(this.state);
       nextState = { hover: nextState.hover, disabled: nextState.disabled };
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: {
-          type: 'mouseleave',
-          state: nextState,
-        },
-      }));
+      this.dispatchEvent(
+        new CustomEvent('change', {
+          detail: {
+            type: 'mouseleave',
+            state: nextState
+          }
+        })
+      );
     });
 
-    this.addEventListener('click', (event) => {
+    this.addEventListener('click', event => {
       if (this.state.disabled) {
         event.stopImmediatePropagation();
       }
@@ -156,22 +164,26 @@ class Button extends Element {
 
   _focus() {
     const nextState = ButtonState.focus(this.state);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: {
-        type: 'focus',
-        state: nextState,
-      },
-    }));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: {
+          type: 'focus',
+          state: nextState
+        }
+      })
+    );
   }
 
   _blur() {
     const nextState = ButtonState.blur(this.state);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: {
-        type: 'blur',
-        state: nextState,
-      },
-    }));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: {
+          type: 'blur',
+          state: nextState
+        }
+      })
+    );
   }
 
   render() {

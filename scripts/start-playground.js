@@ -29,8 +29,7 @@ program
   .parse(process.argv);
 
 function getPlaygrounds() {
-  return ls(knownPaths.packages)
-    .filter(pkg => pkg.match(/playground/));
+  return ls(knownPaths.packages).filter(pkg => pkg.match(/playground/));
 }
 
 function isValidPlayground(name) {
@@ -60,7 +59,9 @@ function startPlayground(name) {
 
     // Verify we are in root
     cd(path.join(__dirname, '..'));
-    exec(`./node_modules/.bin/lerna run start --scope ${name} --include-filtered-dependencies --no-sort --stream`);
+    exec(
+      `./node_modules/.bin/lerna run start --scope ${name} --include-filtered-dependencies --no-sort --stream`
+    );
   }
 }
 

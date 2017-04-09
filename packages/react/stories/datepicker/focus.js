@@ -26,7 +26,7 @@ export default function focus() {
   const props = {
     focus: boolean('Focus', true),
     currentDate: moment('2015-01-14'),
-    focusDate: moment('2015-01-14'),
+    focusDate: moment('2015-01-14')
   };
 
   const react = `

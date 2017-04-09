@@ -29,7 +29,7 @@ describe('<OrionButton />', () => {
   it('passes props to button web component', () => {
     const props = {
       background: 'white',
-      color: 'black',
+      color: 'black'
     };
     const wrapper = mount(<OrionButton {...props} />);
 

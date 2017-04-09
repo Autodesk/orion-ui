@@ -81,7 +81,11 @@ describe('Utils.RenderQueue', () => {
         childRender = sinon.spy();
 
         childElement = { render: childRender };
-        parentElement = { render: () => { renderQueue.add(childElement); } };
+        parentElement = {
+          render: () => {
+            renderQueue.add(childElement);
+          }
+        };
 
         renderQueue.add(parentElement);
       });
@@ -134,7 +138,11 @@ describe('Utils.RenderQueue', () => {
       childRender = sinon.spy();
 
       childElement = { render: childRender };
-      parentElement = { render: () => { renderQueue.add(childElement); } };
+      parentElement = {
+        render: () => {
+          renderQueue.add(childElement);
+        }
+      };
 
       renderQueue.add(parentElement);
     });

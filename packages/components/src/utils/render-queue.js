@@ -31,7 +31,9 @@ class RenderQueue {
 
   add(element) {
     this.queue.add(element);
-    if (this._renderQueued) { return; }
+    if (this._renderQueued) {
+      return;
+    }
 
     this._renderQueued = true;
     requestAnimationFrame(this.clearQueue);
@@ -42,7 +44,7 @@ class RenderQueue {
     this.queue.clear();
     this._renderQueued = false;
 
-    elements.forEach((element) => {
+    elements.forEach(element => {
       element.render(); // eslint-disable-line no-underscore-dangle
     });
   }

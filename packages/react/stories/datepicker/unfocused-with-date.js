@@ -24,7 +24,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 export default function unfocusedWithDate() {
   const props = {
     currentDate: moment('2015-01-14'),
-    date: moment('2015-01-14'),
+    date: moment('2015-01-14')
   };
 
   const react = `

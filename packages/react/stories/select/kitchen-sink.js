@@ -25,24 +25,32 @@ export default function kitchenSink() {
   const props = {
     open: boolean('Open', false),
     disabled: boolean('Disabled', false),
-    focusIndex: select('Focus Index', {
-      undefined: 'undefined',
-      0: '0',
-      1: '1',
-    }, 'undefined'),
+    focusIndex: select(
+      'Focus Index',
+      {
+        undefined: 'undefined',
+        0: '0',
+        1: '1'
+      },
+      'undefined'
+    ),
     focus: boolean('Focus', true),
-    selectedIndex: select('Selected Index', {
-      undefined: 'undefined',
-      0: '0',
-      1: '1',
-    }, 'undefined'),
+    selectedIndex: select(
+      'Selected Index',
+      {
+        undefined: 'undefined',
+        0: '0',
+        1: '1'
+      },
+      'undefined'
+    ),
     searchable: boolean('Searchable', true),
     filter: text('Filter', 'One'),
     clearable: boolean('Clearable', true),
     options: [
       { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 },
-    ],
+      { value: 'two', label: 'Two', key: 2 }
+    ]
   };
 
   const react = `

@@ -39,7 +39,7 @@ export default function customDisabledDates() {
   };
 
   const props = {
-    focus: boolean('Focus', true),
+    focus: boolean('Focus', true)
   };
 
   const react = `

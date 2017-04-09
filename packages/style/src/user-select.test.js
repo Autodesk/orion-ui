@@ -23,7 +23,9 @@ describe('UserSelect', () => {
   describe('attributeChangedCallback', () => {
     context('with false', () => {
       it('returns class user-select', () => {
-        expect(UserSelect.attributeChangedCallback('userSelect', false)).to.eq('user-select');
+        expect(UserSelect.attributeChangedCallback('userSelect', false)).to.eq(
+          'user-select'
+        );
       });
     });
   });

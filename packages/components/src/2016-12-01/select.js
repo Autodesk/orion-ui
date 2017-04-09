@@ -41,10 +41,18 @@ class Select extends Element {
     this.position = 'relative';
 
     [
-      '_setFilter', '_resetButtonListeners', '_listenForMouseUp', '_setFocusedOption',
-      '_setSelectedOption', '_handleKeydown', '_toggle', '_focus', '_blur', '_deactivate',
-      '_clearSelection',
-    ].forEach((handler) => {
+      '_setFilter',
+      '_resetButtonListeners',
+      '_listenForMouseUp',
+      '_setFocusedOption',
+      '_setSelectedOption',
+      '_handleKeydown',
+      '_toggle',
+      '_focus',
+      '_blur',
+      '_deactivate',
+      '_clearSelection'
+    ].forEach(handler => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -95,7 +103,9 @@ class Select extends Element {
   }
 
   set searchable(newValue) {
-    if (newValue === this.state.searchable) { return; }
+    if (newValue === this.state.searchable) {
+      return;
+    }
 
     this.state.searchable = newValue;
     this._removeListeners();
@@ -137,12 +147,12 @@ class Select extends Element {
         this.button = document.createElement('input');
 
         applyProps(this.button, {
-          placeholder: 'Select',
+          placeholder: 'Select'
         });
       } else {
         this.button = document.createElement('orion-button');
         applyProps(this.button, {
-          textContent: 'Select',
+          textContent: 'Select'
         });
       }
 
@@ -153,13 +163,15 @@ class Select extends Element {
 
   _ensureClear() {
     this.clear = this.querySelector('[data-orion-id=select-clear]');
-    if (this.clear) { return; }
+    if (this.clear) {
+      return;
+    }
 
     this.clear = document.createElement('orion-button');
     this.clear.setAttribute('data-orion-id', 'select-clear');
     applyProps(this.clear, {
       textContent: '✕',
-      size: 'small',
+      size: 'small'
     });
   }
 
@@ -217,7 +229,9 @@ class Select extends Element {
   }
 
   _toggle() {
-    if (this.state.disabled) { return; }
+    if (this.state.disabled) {
+      return;
+    }
     this.button.focus();
     this._dispatchStateChange('toggleOpen');
   }
@@ -257,18 +271,25 @@ class Select extends Element {
 
   _setSelectedOption(event) {
     event.preventDefault();
-    const nextState = SelectState.optionSelected(this.state, event.detail.selectedKey);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: { type: 'optionSelected', state: nextState },
-    }));
+    const nextState = SelectState.optionSelected(
+      this.state,
+      event.detail.selectedKey
+    );
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: { type: 'optionSelected', state: nextState }
+      })
+    );
   }
 
   _setFocusedOption(event) {
     const focusedKey = event.detail.focusedKey;
     const nextState = SelectState.optionFocused(this.state, focusedKey);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: { type: 'optionFocused', state: nextState },
-    }));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: { type: 'optionFocused', state: nextState }
+      })
+    );
   }
 
   _focus() {
@@ -289,12 +310,14 @@ class Select extends Element {
 
   _dispatchStateChange(eventType, arg) {
     const nextState = SelectState[eventType](this.state, arg);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: {
-        type: eventType,
-        state: nextState,
-      },
-    }));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: {
+          type: eventType,
+          state: nextState
+        }
+      })
+    );
   }
 
   _setFilter(event) {
@@ -307,7 +330,7 @@ class Select extends Element {
     this._ensureMenu();
 
     applyProps(this.style, {
-      zIndex: this.Z_INDEX,
+      zIndex: this.Z_INDEX
     });
 
     applyProps(this.menu, {
@@ -316,12 +339,13 @@ class Select extends Element {
       top: `${this.offsetTop + this.BUTTON_HEIGHT}px`,
       left: `${this.offsetLeft}px`,
       focusedKey: this.state.focusedKey,
-      selectedKey: this.state.selectedKey,
+      selectedKey: this.state.selectedKey
     });
 
-
     let label = 'Select';
-    const selectedOption = this.state.options.find(o => o.key === this.state.selectedKey);
+    const selectedOption = this.state.options.find(
+      o => o.key === this.state.selectedKey
+    );
     if (selectedOption !== undefined) {
       label = selectedOption.label;
     }
@@ -330,8 +354,8 @@ class Select extends Element {
       textContent: label,
       placeholder: label,
       value: this.state.filter || null,
-      hasFocus: (this.state.hasFocus && !this.state.open),
-      disabled: this.state.disabled,
+      hasFocus: this.state.hasFocus && !this.state.open,
+      disabled: this.state.disabled
     });
 
     if (this.state.clearable && this.state.selectedKey) {

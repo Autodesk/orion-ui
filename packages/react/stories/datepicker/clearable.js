@@ -25,7 +25,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 export default function clearable() {
   const props = {
     clearable: boolean('Clearable', true),
-    date: moment('2017-01-01'),
+    date: moment('2017-01-01')
   };
 
   const react = `

@@ -28,8 +28,10 @@ const path = require('path');
  * directory inside it
  */
 function hasBuildDirectory(directoryName) {
-  return test('-e',
-    path.join(knownPaths.packages, directoryName, constants.buildDirName));
+  return test(
+    '-e',
+    path.join(knownPaths.packages, directoryName, constants.buildDirName)
+  );
 }
 
 /**
@@ -37,7 +39,11 @@ function hasBuildDirectory(directoryName) {
  */
 function copyToRootBuild(directoryName) {
   console.log(`- copying build from ${directoryName} to the root build`);
-  const source = path.join(knownPaths.packages, directoryName, constants.buildDirName);
+  const source = path.join(
+    knownPaths.packages,
+    directoryName,
+    constants.buildDirName
+  );
   const destination = path.join(knownPaths.build, directoryName);
   cp('-R', source, destination);
 }
@@ -55,19 +61,21 @@ function copyToRootBuild(directoryName) {
 mkdir('-p', knownPaths.build);
 
 function countTrues(count, bool) {
-  const newCount = (bool) ? count + 1 : count;
+  const newCount = bool ? count + 1 : count;
 
   return newCount;
 }
 
 // For each package, check for a build directory and if found, copy it into the
 // root build directory
-const buildCount = ls(knownPaths.packages).map((directory) => {
-  if (hasBuildDirectory(directory)) {
-    copyToRootBuild(directory);
-    return true;
-  }
-  return false;
-}).reduce(countTrues, 0);
+const buildCount = ls(knownPaths.packages)
+  .map(directory => {
+    if (hasBuildDirectory(directory)) {
+      copyToRootBuild(directory);
+      return true;
+    }
+    return false;
+  })
+  .reduce(countTrues, 0);
 
 console.log(`${buildCount} builds copied to root`);

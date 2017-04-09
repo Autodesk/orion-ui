@@ -19,9 +19,9 @@ module.exports = {
     '': '',
     black: 'Black',
     white: 'White',
-    blue: 'Blue',
+    blue: 'Blue'
   },
-  filterEmptyProps: (props) => {
+  filterEmptyProps: props => {
     const newProps = {};
 
     Object.entries(props).forEach(([key, value]) => {
@@ -37,6 +37,6 @@ module.exports = {
   sizeOptions: {
     large: 'Large',
     '': 'Regular',
-    small: 'Small',
-  },
+    small: 'Small'
+  }
 };

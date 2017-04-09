@@ -17,7 +17,17 @@ limitations under the License.
 require('@orion-ui/components/lib/2016-12-01/select');
 const applyProps = require('@orion-ui/components/lib/utils/apply-props');
 
-const configurable = ['clearable', 'filter', 'disabled', 'hasFocus', 'focusedKey', 'open', 'options', 'searchable', 'selectedIndex'];
+const configurable = [
+  'clearable',
+  'filter',
+  'disabled',
+  'hasFocus',
+  'focusedKey',
+  'open',
+  'options',
+  'searchable',
+  'selectedIndex'
+];
 
 const SelectComponent = {
   bindings: {
@@ -30,41 +40,48 @@ const SelectComponent = {
     options: '<',
     onChange: '&',
     searchable: '<',
-    selectedIndex: '<',
+    selectedIndex: '<'
   },
 
-  controller: ['$element', '$log', function controller($element, $log) { // eslint-disable object-shorthand
-    const elementReady = window.customElements.whenDefined('orion-select');
+  controller: [
+    '$element',
+    '$log',
+    function controller($element, $log) {
+      // eslint-disable object-shorthand
+      const elementReady = window.customElements.whenDefined('orion-select');
 
-    this.$onInit = () => elementReady.then(() => {
-      $element[0].addEventListener('change', (event) => {
-        applyProps($element[0], event.detail.state);
-        this.onChange({ event });
-      });
-    });
+      this.$onInit = () =>
+        elementReady.then(() => {
+          $element[0].addEventListener('change', event => {
+            applyProps($element[0], event.detail.state);
+            this.onChange({ event });
+          });
+        });
 
-    this.$onChanges = changesObj => elementReady.then(() => {
-      const el = $element[0];
-      const props = Object.keys(changesObj);
-      props.forEach((prop) => {
-        try {
-          if (!configurable.includes(prop)) {
-            return;
-          }
+      this.$onChanges = changesObj =>
+        elementReady.then(() => {
+          const el = $element[0];
+          const props = Object.keys(changesObj);
+          props.forEach(prop => {
+            try {
+              if (!configurable.includes(prop)) {
+                return;
+              }
 
-          if (changesObj[prop].currentValue === undefined) {
-            return;
-          }
+              if (changesObj[prop].currentValue === undefined) {
+                return;
+              }
 
-          const newVal = changesObj[prop].currentValue;
+              const newVal = changesObj[prop].currentValue;
 
-          el[prop] = newVal;
-        } catch (e) {
-          $log.error(e);
-        }
-      });
-    });
-  }],
+              el[prop] = newVal;
+            } catch (e) {
+              $log.error(e);
+            }
+          });
+        });
+    }
+  ]
 };
 
 module.exports = SelectComponent;

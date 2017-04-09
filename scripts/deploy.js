@@ -45,7 +45,7 @@ const localDir = knownPaths.build;
 // To the cdn.web-platform.io
 const s3Params = {
   Bucket: deployConfig.Bucket,
-  Prefix: deployConfig.SnapshotPrefix(program.buildId),
+  Prefix: deployConfig.SnapshotPrefix(program.buildId)
 };
 
 const client = s3.createClient();
@@ -55,12 +55,13 @@ const notice = new GithubUploadNotification(program.ghToken, program.ghSha);
 
 const creatingStatus = notice.startDeploy();
 
-uploader.on('error', (err) => {
+uploader.on('error', err => {
   console.error(err);
   process.exit(1);
 });
 
-uploader.on('fileUploadEnd', localFilePath => console.log(`> ${localFilePath}`));
+uploader.on('fileUploadEnd', localFilePath =>
+  console.log(`> ${localFilePath}`));
 
 uploader.on('end', () => {
   const targetUrl = `https://${s3Params.Bucket}/${s3Params.Prefix}/index.html`;

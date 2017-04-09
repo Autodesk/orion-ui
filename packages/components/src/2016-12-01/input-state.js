@@ -20,23 +20,23 @@ const InputState = {
       clearable: false,
       value: undefined,
       placeholder: undefined,
-      ...state,
+      ...state
     };
   },
 
   clear(state) {
     return {
       ...state,
-      value: undefined,
+      value: undefined
     };
   },
 
   updateValue(state, value) {
     return {
       ...state,
-      value,
+      value
     };
-  },
+  }
 };
 
 module.exports = InputState;

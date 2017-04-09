@@ -24,7 +24,7 @@ const configurable = ['background', 'color', 'disabled', 'hover', 'size'];
 const validations = {
   color: colorValidator,
   background: colorValidator,
-  size: sizeValidator,
+  size: sizeValidator
 };
 
 // Use ng-click
@@ -34,39 +34,45 @@ const ButtonComponent = {
     color: '<',
     disabled: '<',
     hover: '<',
-    size: '<',
+    size: '<'
   },
 
-  controller: ['$element', '$log', function controller($element, $log) { // eslint-disable object-shorthand
-    const elementReady = window.customElements.whenDefined('orion-button');
+  controller: [
+    '$element',
+    '$log',
+    function controller($element, $log) {
+      // eslint-disable object-shorthand
+      const elementReady = window.customElements.whenDefined('orion-button');
 
-    this.$onChanges = changesObj => elementReady.then(() => {
-      const el = $element[0];
-      const props = Object.keys(changesObj);
-      props.forEach((prop) => {
-        try {
-          if (!configurable.includes(prop)) {
-            return;
-          }
+      this.$onChanges = changesObj =>
+        elementReady.then(() => {
+          const el = $element[0];
+          const props = Object.keys(changesObj);
+          props.forEach(prop => {
+            try {
+              if (!configurable.includes(prop)) {
+                return;
+              }
 
-          if (changesObj[prop].currentValue === undefined) {
-            return;
-          }
+              if (changesObj[prop].currentValue === undefined) {
+                return;
+              }
 
-          const newVal = changesObj[prop].currentValue;
+              const newVal = changesObj[prop].currentValue;
 
-          if (validations[prop]) {
-            const validator = validations[prop];
-            validator.valid(newVal);
-          }
+              if (validations[prop]) {
+                const validator = validations[prop];
+                validator.valid(newVal);
+              }
 
-          el[prop] = newVal;
-        } catch (e) {
-          $log.error(e);
-        }
-      });
-    });
-  }],
+              el[prop] = newVal;
+            } catch (e) {
+              $log.error(e);
+            }
+          });
+        });
+    }
+  ]
 };
 
 module.exports = ButtonComponent;

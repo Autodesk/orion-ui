@@ -27,7 +27,7 @@ module.exports = function optionFocus() {
       range: true,
       min: 1,
       max: 8,
-      step: 1,
+      step: 1
     }),
     open: boolean('Open', true),
     options: [
@@ -38,8 +38,8 @@ module.exports = function optionFocus() {
       { value: 'five', label: 'Five', key: 5 },
       { value: 'six', label: 'Six', key: 6 },
       { value: 'seven', label: 'Seven', key: 7 },
-      { value: 'eight', label: 'Eight', key: 8 },
-    ],
+      { value: 'eight', label: 'Eight', key: 8 }
+    ]
   };
 
   const react = `

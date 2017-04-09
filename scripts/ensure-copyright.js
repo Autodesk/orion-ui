@@ -25,11 +25,16 @@ const glob = require('glob');
 
 require('shelljs/global');
 
-const LICENCE = fs.readFileSync(path.join(knownPaths.root, 'LICENSE')).toString();
+const LICENCE = fs
+  .readFileSync(path.join(knownPaths.root, 'LICENSE'))
+  .toString();
 
 program
   .description('ensures each file has a copyright notice')
-  .option('--dir <dir>', 'Directory within which to ensure copyright notices are present')
+  .option(
+    '--dir <dir>',
+    'Directory within which to ensure copyright notices are present'
+  )
   .option('--fix', 'Specify the packages to build defaulting to all')
   .parse(process.argv);
 
@@ -54,29 +59,30 @@ function hasCopyrightNotice(file) {
 }
 
 function ensureCopyright(dir) {
-  const files = glob.sync(
-    path.join(dir, '**/*.{js,ts}'),
-    {
-      ignore: [
-        '**/build/**',
-        '**/lib/**',
-        '**/*.d.ts',
-        '**/node_modules/**',
-        '**/bower_components/**',
-        '**/coverage/**',
-        '**/examples/**',
-        '**/vendor/**',
-        'gemini-report/**',
-      ],
-    });
-  const result = files.reduce((memo, file) => {
-    if (hasCopyrightNotice(file)) {
-      memo.pass.push(file);
-    } else {
-      memo.fail.push(file);
-    }
-    return memo;
-  }, { pass: [], fail: [] });
+  const files = glob.sync(path.join(dir, '**/*.{js,ts}'), {
+    ignore: [
+      '**/build/**',
+      '**/lib/**',
+      '**/*.d.ts',
+      '**/node_modules/**',
+      '**/bower_components/**',
+      '**/coverage/**',
+      '**/examples/**',
+      '**/vendor/**',
+      'gemini-report/**'
+    ]
+  });
+  const result = files.reduce(
+    (memo, file) => {
+      if (hasCopyrightNotice(file)) {
+        memo.pass.push(file);
+      } else {
+        memo.fail.push(file);
+      }
+      return memo;
+    },
+    { pass: [], fail: [] }
+  );
   reportResult(result);
 }
 

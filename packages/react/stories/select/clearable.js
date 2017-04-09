@@ -27,9 +27,9 @@ export default function clearable() {
     options: [
       { label: 'One', value: 'one', key: 1 },
       { label: 'Two', value: 'two', key: 2 },
-      { label: 'Three', value: 'three', key: 3 },
+      { label: 'Three', value: 'three', key: 3 }
     ],
-    selectedIndex: 1,
+    selectedIndex: 1
   };
 
   const react = `

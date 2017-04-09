@@ -23,7 +23,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 
 export default function customPlaceholderText() {
   const props = {
-    placeholder: text('Placeholder', '__ / __ / ____'),
+    placeholder: text('Placeholder', '__ / __ / ____')
   };
 
   const react = `

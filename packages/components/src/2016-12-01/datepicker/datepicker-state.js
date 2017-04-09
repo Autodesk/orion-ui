@@ -37,12 +37,12 @@ const DatepickerState = {
       i18n: {
         previousMonth: 'Previous Month',
         nextMonth: 'Next Month',
-        clearDate: 'Clear Date',
+        clearDate: 'Clear Date'
       },
       isEnabled: function isEnabled(date) {
         return date.isSameOrAfter(this.currentDate, 'date');
       },
-      ...state,
+      ...state
     };
 
     return initialState;
@@ -94,7 +94,12 @@ const DatepickerState = {
 
   selectDate(state, date) {
     if (state.isEnabled === undefined) {
-      return { ...state, date: moment(date), focusDate: moment(date), focus: false };
+      return {
+        ...state,
+        date: moment(date),
+        focusDate: moment(date),
+        focus: false
+      };
     }
 
     const nextEnabledDate = this._findEnabledDate(state, date);
@@ -103,7 +108,7 @@ const DatepickerState = {
         ...state,
         date: moment(nextEnabledDate),
         focusDate: moment(nextEnabledDate),
-        focus: false,
+        focus: false
       };
     }
 
@@ -119,19 +124,35 @@ const DatepickerState = {
   },
 
   focusNextDay(state) {
-    return this.setFocusDate(state, moment(state.focusDate).add(1, 'day'), 'next');
+    return this.setFocusDate(
+      state,
+      moment(state.focusDate).add(1, 'day'),
+      'next'
+    );
   },
 
   focusPreviousDay(state) {
-    return this.setFocusDate(state, moment(state.focusDate).subtract(1, 'day'), 'previous');
+    return this.setFocusDate(
+      state,
+      moment(state.focusDate).subtract(1, 'day'),
+      'previous'
+    );
   },
 
   focusNextWeek(state) {
-    return this.setFocusDate(state, moment(state.focusDate).add(1, 'week'), 'next');
+    return this.setFocusDate(
+      state,
+      moment(state.focusDate).add(1, 'week'),
+      'next'
+    );
   },
 
   focusPreviousWeek(state) {
-    return this.setFocusDate(state, moment(state.focusDate).subtract(1, 'week'), 'previous');
+    return this.setFocusDate(
+      state,
+      moment(state.focusDate).subtract(1, 'week'),
+      'previous'
+    );
   },
 
   setFocusDate(state, date, direction = 'next') {
@@ -148,17 +169,27 @@ const DatepickerState = {
   },
 
   focusNextMonth(state) {
-    return this.setFocusDate(state, moment(state.focusDate).add(1, 'month'), 'next');
+    return this.setFocusDate(
+      state,
+      moment(state.focusDate).add(1, 'month'),
+      'next'
+    );
   },
 
   focusPreviousMonth(state) {
-    return this.setFocusDate(state, moment(state.focusDate).subtract(1, 'month'), 'previous');
+    return this.setFocusDate(
+      state,
+      moment(state.focusDate).subtract(1, 'month'),
+      'previous'
+    );
   },
 
   selectFocusDate(state) {
-    if (!moment(state.focusDate).isValid()) { return state; }
+    if (!moment(state.focusDate).isValid()) {
+      return state;
+    }
     return { ...state, date: moment(state.focusDate) };
-  },
+  }
 };
 
 module.exports = DatepickerState;

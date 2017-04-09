@@ -26,11 +26,13 @@ describe('Hovers', () => {
         { attrName: 'dim', value: true, result: 'dim' },
         { attrName: 'dim', value: false, result: undefined },
         { attrName: 'pointer', value: true, result: 'pointer' },
-        { attrName: 'pointer', value: false, result: undefined },
+        { attrName: 'pointer', value: false, result: undefined }
       ].forEach(({ attrName, value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(Hovers.attributeChangedCallback(attrName, value)).to.eq(result);
+            expect(Hovers.attributeChangedCallback(attrName, value)).to.eq(
+              result
+            );
           });
         });
       });

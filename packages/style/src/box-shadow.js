@@ -23,12 +23,14 @@ const css = `
 const attributes = ['box-shadow'];
 
 function attributeChangedCallback(attrName, value) {
-  if (parseInt(value, 10) === 1) { return 'bsh-1'; }
+  if (parseInt(value, 10) === 1) {
+    return 'bsh-1';
+  }
   return '';
 }
 
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

@@ -26,8 +26,8 @@ export default function focus() {
     hasFocus: boolean('Has focus', true),
     options: [
       { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 },
-    ],
+      { value: 'two', label: 'Two', key: 2 }
+    ]
   };
 
   const react = `

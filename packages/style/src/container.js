@@ -29,8 +29,8 @@ const css = `
 const attrMap = {
   container: {
     column: 'con-col',
-    row: 'con-row',
-  },
+    row: 'con-row'
+  }
 };
 
 const attributes = Object.keys(attrMap);
@@ -47,5 +47,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

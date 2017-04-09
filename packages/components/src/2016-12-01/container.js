@@ -17,8 +17,7 @@ limitations under the License.
 const Registry = require('../utils/private-registry.js');
 const Element = require('./element');
 
-class Container extends Element {
-}
+class Container extends Element {}
 
 Registry.define('orion-container', Container);
 

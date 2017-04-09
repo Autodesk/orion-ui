@@ -24,7 +24,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 export default function hover() {
   const buttonText = text('Text', 'Hello, button!');
   const props = {
-    hover: boolean('Hover', true),
+    hover: boolean('Hover', true)
   };
 
   const react = `

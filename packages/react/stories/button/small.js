@@ -25,7 +25,7 @@ import { sizeOptions } from '../shared';
 export default function small() {
   const buttonText = text('Text', 'Hello, button!');
   const props = {
-    size: select('Size', sizeOptions, 'small'),
+    size: select('Size', sizeOptions, 'small')
   };
 
   const react = `

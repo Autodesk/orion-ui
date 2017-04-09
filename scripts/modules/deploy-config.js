@@ -23,5 +23,5 @@ module.exports = {
   /**
    * Takes a buildId and returns the S3 snapshot prefix
    */
-  SnapshotPrefix: buildId => `orion-ui/orion/snapshot-${buildId}`,
+  SnapshotPrefix: buildId => `orion-ui/orion/snapshot-${buildId}`
 };

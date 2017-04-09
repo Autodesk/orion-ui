@@ -14,7 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, PointerEvents, Position, ResetFocusStyle, Skins, Spacing, Typography, UserSelect } = require('@orion-ui/style/lib/2016-12-01');
+const {
+  BorderRadius,
+  BoxShadow,
+  Container,
+  Display,
+  Hovers,
+  Overflow,
+  PointerEvents,
+  Position,
+  ResetFocusStyle,
+  Skins,
+  Spacing,
+  Typography,
+  UserSelect
+} = require('@orion-ui/style/lib/2016-12-01');
 
 (function injectStyles() {
   if (!document) {
@@ -23,7 +37,9 @@ const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, PointerEv
   }
 
   if (!document.currentScript) {
-    console.error('"document.currentScript" is unavailable. Unable to inject orion styles.');
+    console.error(
+      '"document.currentScript" is unavailable. Unable to inject orion styles.'
+    );
     return;
   }
 
@@ -40,16 +56,16 @@ const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, PointerEv
     Skins,
     Spacing,
     Typography,
-    UserSelect,
+    UserSelect
   ];
 
   let textContent = '';
 
-  styles.forEach((style) => {
+  styles.forEach(style => {
     textContent += style.css;
   });
 
   const element = document.createElement('style');
   element.textContent = textContent;
   document.currentScript.parentNode.appendChild(element);
-}());
+})();

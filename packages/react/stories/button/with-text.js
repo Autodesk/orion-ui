@@ -29,7 +29,7 @@ export default function withText() {
   const props = {
     background: select('Background Color', colorOptions, ''),
     color: select('Color', colorOptions, ''),
-    onClick: action('clicked'),
+    onClick: action('clicked')
   };
 
   const filteredProps = filterEmptyProps(props);

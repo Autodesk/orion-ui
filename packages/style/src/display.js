@@ -43,8 +43,8 @@ const attrMap = {
     block: 'dis-blk',
     flex: 'dis-flx',
     inline: 'dis-inl',
-    'inline-block': 'dis-inb',
-  },
+    'inline-block': 'dis-inb'
+  }
 };
 
 const attributes = Object.keys(attrMap);
@@ -61,5 +61,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

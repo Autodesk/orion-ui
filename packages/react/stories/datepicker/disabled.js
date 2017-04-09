@@ -23,7 +23,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 
 export default function disabled() {
   const props = {
-    disabled: boolean('Disabled', true),
+    disabled: boolean('Disabled', true)
   };
 
   const react = `

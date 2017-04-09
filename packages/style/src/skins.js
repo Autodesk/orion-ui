@@ -36,7 +36,7 @@ const colors = {
   grey1: '#ddd', // 220-ish
   grey0: '#eee', // 240-ish
   transparent: 'transparent',
-  white: '#fff',
+  white: '#fff'
 };
 
 /**
@@ -50,7 +50,10 @@ function buildColors() {
  * Creates a collection of CSS classes setting background colors
  */
 function buildBackgrounds() {
-  return template(colors, color => `.bg-${color} { background-color: ${colors[color]} } `);
+  return template(
+    colors,
+    color => `.bg-${color} { background-color: ${colors[color]} } `
+  );
 }
 
 /**
@@ -60,7 +63,10 @@ function buildBorderWidths() {
   const fullBorderCSS = '.bdr-1 { border-width: 1px; border-style: solid } ';
   const sides = ['top', 'right', 'bottom', 'left'];
   const sidesCSS = sides
-    .map(borderSide => `.bdr-${borderSide}-1 { border-${borderSide}-width: 1px; border-${borderSide}-style: solid } `)
+    .map(
+      borderSide =>
+        `.bdr-${borderSide}-1 { border-${borderSide}-width: 1px; border-${borderSide}-style: solid } `
+    )
     .reduce((acc, memo) => acc + memo);
   return fullBorderCSS + sidesCSS;
 }
@@ -69,7 +75,10 @@ function buildBorderWidths() {
  * Creates a collection of CSS classes setting border colors
  */
 function buildBorderColors() {
-  return template(colors, color => `.bdr-${color} { border-color: ${colors[color]} } `);
+  return template(
+    colors,
+    color => `.bdr-${color} { border-color: ${colors[color]} } `
+  );
 }
 
 const css = `
@@ -80,7 +89,14 @@ const css = `
 `;
 
 const attributes = [
-  'background', 'color', 'border-color', 'border', 'border-top', 'border-bottom', 'border-left', 'border-right',
+  'background',
+  'color',
+  'border-color',
+  'border',
+  'border-top',
+  'border-bottom',
+  'border-left',
+  'border-right'
 ];
 
 function attributeChangedCallback(attrName, value) {
@@ -102,5 +118,5 @@ module.exports = {
   attributes,
   attributeChangedCallback,
   colors,
-  css,
+  css
 };

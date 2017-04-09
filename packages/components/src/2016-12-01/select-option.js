@@ -26,7 +26,7 @@ class SelectOption extends Element {
 
     applyProps(this, {
       display: 'block',
-      'text-align': 'left',
+      'text-align': 'left'
     });
   }
 
@@ -71,19 +71,21 @@ class SelectOption extends Element {
   }
 
   _ensureButton() {
-    if (this.button !== undefined) { return; }
+    if (this.button !== undefined) {
+      return;
+    }
 
     this.button = document.createElement('orion-button');
     applyProps(this.button, {
       display: 'block',
       'border-radius': '0',
-      size: 'small',
+      size: 'small'
     });
 
     this.checkMarkEl = document.createElement('orion-element');
     applyProps(this.checkMarkEl, {
       display: 'inline-block',
-      'text-align': 'center',
+      'text-align': 'center'
     });
     this.checkMarkEl.style.width = '18px';
     this.labelEl = document.createElement('orion-element');
@@ -99,11 +101,15 @@ class SelectOption extends Element {
     this.addEventListener('mousedown', this._handleMouseDown);
     this.addEventListener('mouseleave', this._resetListeners);
 
-    if (this.state.hasFocus) { return; }
-    this.dispatchEvent(new CustomEvent('optionFocused', {
-      detail: { focusedKey: this.state.key },
-      bubbles: true,
-    }));
+    if (this.state.hasFocus) {
+      return;
+    }
+    this.dispatchEvent(
+      new CustomEvent('optionFocused', {
+        detail: { focusedKey: this.state.key },
+        bubbles: true
+      })
+    );
   }
 
   _handleMouseDown(event) {
@@ -116,10 +122,12 @@ class SelectOption extends Element {
       event.preventDefault();
       return;
     }
-    this.dispatchEvent(new CustomEvent('optionSelected', {
-      detail: { selectedKey: this.state.key },
-      bubbles: true,
-    }));
+    this.dispatchEvent(
+      new CustomEvent('optionSelected', {
+        detail: { selectedKey: this.state.key },
+        bubbles: true
+      })
+    );
   }
 
   _resetListeners() {
@@ -147,7 +155,7 @@ class SelectOption extends Element {
 
       applyProps(this.button, {
         ...styles,
-        disabled: this.state.disabled,
+        disabled: this.state.disabled
       });
       this.labelEl.textContent = this.state.label;
     }

@@ -27,11 +27,13 @@ describe('Typography', () => {
           { attr: 'text-align', value: 'left', result: 'ta-l' },
           { attr: 'text-align', value: 'center', result: 'ta-c' },
           { attr: 'text-align', value: 'right', result: 'ta-r' },
-          { attr: 'white-space', value: 'nowrap', result: 'ws-nw' },
+          { attr: 'white-space', value: 'nowrap', result: 'ws-nw' }
         ].forEach(({ attr, value, result }) => {
           context(`with ${value}`, () => {
             it(`returns class ${result}`, () => {
-              expect(Typography.attributeChangedCallback(attr, value)).to.eq(result);
+              expect(Typography.attributeChangedCallback(attr, value)).to.eq(
+                result
+              );
             });
           });
         });

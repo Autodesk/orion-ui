@@ -47,5 +47,5 @@ module.exports = {
   /**
    * Top level code coverage directory
    */
-  coverage,
+  coverage
 };

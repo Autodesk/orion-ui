@@ -16,17 +16,20 @@ limitations under the License.
 */
 
 function capture(name, url) {
-  gemini.suite(`button-${name}`, (suite) => {
-    suite
-      .setUrl(url)
-      .setCaptureElements('.example')
-      .capture(name);
+  gemini.suite(`button-${name}`, suite => {
+    suite.setUrl(url).setCaptureElements('.example').capture(name);
   });
 }
 
 gemini.suite('button', () => {
-  capture('default', '/iframe.html?selectedKind=Button&selectedStory=with%20text');
-  capture('disabled', '/iframe.html?selectedKind=Button&selectedStory=disabled');
+  capture(
+    'default',
+    '/iframe.html?selectedKind=Button&selectedStory=with%20text'
+  );
+  capture(
+    'disabled',
+    '/iframe.html?selectedKind=Button&selectedStory=disabled'
+  );
   capture('hover', 'iframe.html?selectedKind=Button&selectedStory=hover');
   capture('small', '/iframe.html?selectedKind=Button&selectedStory=small');
   capture('large', '/iframe.html?selectedKind=Button&selectedStory=large');

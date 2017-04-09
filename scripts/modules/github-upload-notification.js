@@ -71,10 +71,10 @@ class GithubUploadNotification {
         description,
         sha: this.sha,
         state,
-        target_url: targetUrl,
+        target_url: targetUrl
       };
 
-      this.github.repos.createStatus(status, (err) => {
+      this.github.repos.createStatus(status, err => {
         if (err) return reject(err);
         return resolve();
       });
@@ -87,7 +87,7 @@ class GithubUploadNotification {
   startDeploy() {
     return this.createStatus({
       state: 'pending',
-      description: 'deploying',
+      description: 'deploying'
     });
   }
 
@@ -100,7 +100,7 @@ class GithubUploadNotification {
     return this.createStatus({
       state: 'success',
       description: 'deployed',
-      targetUrl,
+      targetUrl
     });
   }
 }

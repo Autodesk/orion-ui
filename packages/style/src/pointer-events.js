@@ -27,8 +27,8 @@ const css = `
 const attrMap = {
   pointerEvents: {
     initial: 'pe-initial',
-    none: 'pe-none',
-  },
+    none: 'pe-none'
+  }
 };
 
 const attributes = Object.keys(attrMap);
@@ -44,5 +44,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

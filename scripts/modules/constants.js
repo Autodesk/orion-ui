@@ -33,5 +33,5 @@ module.exports = {
   /**
    * Where we store coverage reports
    */
-  coverageDirName: 'coverage',
+  coverageDirName: 'coverage'
 };

@@ -30,8 +30,8 @@ export default function i18n() {
     i18n: object('Phrases', {
       previousMonth: '前一个月',
       nextMonth: '下个月',
-      clearDate: '清除日期',
-    }),
+      clearDate: '清除日期'
+    })
   };
 
   const react = `

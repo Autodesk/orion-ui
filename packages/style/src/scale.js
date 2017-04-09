@@ -15,6 +15,12 @@ limitations under the License.
 
 */
 module.exports = [
-  0, '.25rem', '.5rem', '1rem',
-  '2rem', '4rem', '8rem', '16rem',
+  0,
+  '.25rem',
+  '.5rem',
+  '1rem',
+  '2rem',
+  '4rem',
+  '8rem',
+  '16rem'
 ];

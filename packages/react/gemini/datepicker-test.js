@@ -16,21 +16,39 @@ limitations under the License.
 */
 
 function capture(name, url) {
-  gemini.suite(`datepicker-${name}`, (suite) => {
-    suite
-      .setUrl(url)
-      .setCaptureElements('.example')
-      .capture(name);
+  gemini.suite(`datepicker-${name}`, suite => {
+    suite.setUrl(url).setCaptureElements('.example').capture(name);
   });
 }
 
 gemini.suite('datepicker', () => {
-  capture('unfocused-no-date', '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%2Fo%20date');
-  capture('unfocused-with-date', '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%20date');
+  capture(
+    'unfocused-no-date',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%2Fo%20date'
+  );
+  capture(
+    'unfocused-with-date',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=unfocused%20w%20date'
+  );
   capture('focus', '/iframe.html?selectedKind=Datepicker&selectedStory=focus');
-  capture('focus-month-day', '/iframe.html?selectedKind=Datepicker&selectedStory=focus%20month%20%26%20day');
-  capture('custom-disabled-dates', '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20disabled%20dates');
-  capture('custom-date-formatting', '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20date%20formatting');
-  capture('custom-placeholder-text', '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20placeholder%20text');
-  capture('clearable', '/iframe.html?selectedKind=Datepicker&selectedStory=clearable');
+  capture(
+    'focus-month-day',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=focus%20month%20%26%20day'
+  );
+  capture(
+    'custom-disabled-dates',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20disabled%20dates'
+  );
+  capture(
+    'custom-date-formatting',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20date%20formatting'
+  );
+  capture(
+    'custom-placeholder-text',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=custom%20placeholder%20text'
+  );
+  capture(
+    'clearable',
+    '/iframe.html?selectedKind=Datepicker&selectedStory=clearable'
+  );
 });

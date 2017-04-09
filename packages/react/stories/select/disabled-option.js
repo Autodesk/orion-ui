@@ -25,9 +25,19 @@ export default function disabledOption() {
   const props = {
     open: boolean('Open', true),
     options: [
-      { value: 'one', label: 'One', key: 1, disabled: boolean('Option 1 disabled', true) },
-      { value: 'two', label: 'Two', key: 2, disabled: boolean('Option 2 disabled', false) },
-    ],
+      {
+        value: 'one',
+        label: 'One',
+        key: 1,
+        disabled: boolean('Option 1 disabled', true)
+      },
+      {
+        value: 'two',
+        label: 'Two',
+        key: 2,
+        disabled: boolean('Option 2 disabled', false)
+      }
+    ]
   };
 
   const react = `

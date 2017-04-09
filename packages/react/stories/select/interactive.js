@@ -24,8 +24,8 @@ export default function interactive() {
   const props = {
     options: [
       { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 },
-    ],
+      { value: 'two', label: 'Two', key: 2 }
+    ]
   };
 
   const react = `

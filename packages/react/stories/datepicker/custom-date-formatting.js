@@ -29,7 +29,7 @@ export default function customDateFormatting() {
     focus: true,
     focusDate: moment('2014-12-01'),
     locale: select('Locale', ['zh-cn', 'en'], 'zh-cn'),
-    monthFormat: text('Month Format', 'YYYY[年]MMMM'),
+    monthFormat: text('Month Format', 'YYYY[年]MMMM')
   };
 
   const react = `

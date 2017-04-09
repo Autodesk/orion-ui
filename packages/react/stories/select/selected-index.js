@@ -26,14 +26,14 @@ export default function selectedIndex() {
     open: boolean('Open', true),
     options: [
       { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 },
+      { value: 'two', label: 'Two', key: 2 }
     ],
     selectedIndex: number('Selected Index', 1, {
       range: true,
       min: 0,
       max: 1,
-      step: 1,
-    }),
+      step: 1
+    })
   };
 
   const react = `

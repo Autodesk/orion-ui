@@ -4,9 +4,10 @@ machine:
 dependencies:
   pre:
     - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
+  override:
     - unset NODE_ENV
-  post:
-    - ./node_modules/.bin/lerna bootstrap
+    - npm install
+    - npm run bootstrap
   cache_directories:
     - "node_modules"
     - "packages/components/node_modules"

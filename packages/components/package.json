@@ -26,7 +26,7 @@
     "browserify": "node scripts/browserify.js",
     "debug-wct": "polyserve .",
     "wct": "wct",
-    "wct-sauce": "wct --plugin sauce --skip-plugin local && node script/recmap-wct-coverage.js",
+    "wct-sauce": "wct --plugin sauce --skip-plugin local",
     "test-ci": "node scripts/test-ci.js",
     "test": "npm run jest-coverage && npm run browserify && npm run wct"
   },

@@ -12,7 +12,6 @@ dependencies:
     - "node_modules"
     - "packages/components/node_modules"
     - "packages/components/bower_components"
-    - "packages/eslint-config-orion/node_modules"
     - "packages/react-playground/node_modules"
     - "packages/scripts/node_modules"
     - "packages/style/node_modules"

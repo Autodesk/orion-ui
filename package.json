@@ -5,15 +5,14 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
+    "bootstrap": "lerna bootstrap --hoist",
     "build": "lerna run build && npm run copy-package-builds && npm run set-marketing-to-root",
+    "lint": "lerna run lint",
     "copy-package-builds": "node ./scripts/copy-package-builds.js",
     "deploy-master": "npm run deploy -- --build-id=master",
     "deploy-snapshot": "npm run deploy -- --build-id $CIRCLE_BUILD_NUM",
     "deploy": "node ./scripts/deploy.js --gh-token $GITHUB_TOKEN --gh-sha $CIRCLE_SHA1",
     "ensure-copyright": "node ./scripts/ensure-copyright.js --dir ./",
-    "gemini": "SAUCE_CONNECT_VERSION=4.4.5 gemini test gemini/*",
-    "gemini-report": "gemini test gemini/* --reporter html --reporter flat",
-    "gemini-update": "gemini update gemini/*",
     "set-marketing-to-root": "node ./scripts/set-package-to-root.js -p marketing",
     "test-ci": "lerna run test-ci",
     "test": "lerna run lint && npm run specs && npm run ensure-copyright",
@@ -31,6 +30,8 @@
   },
   "homepage": "https://github.com/orion-ui/orion#readme",
   "devDependencies": {
+    "@kadira/storybook-addon-knobs": "^1.7.1",
+    "@kadira/storybook-addons": "^1.6.1",
     "commander": "^2.9.0",
     "github": "^8.0.0",
     "glob": "^7.1.1",
@@ -38,6 +39,8 @@
     "shelljs": "^0.7.5",
     "aws-sdk": "^2.7.11",
     "babel-cli": "^6.18.0",
+    "babel-jest": "^19.0.0",
+    "babelify": "^7.3.0",
     "babel-preset-react-app": "^2.0.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
@@ -55,9 +58,11 @@
     "nock": "^9.0.2",
     "nyc": "^10.1.2",
     "react": "^15.4.1",
+    "react-dom": "^15.4.2",
     "react-addons-test-utils": "^15.4.1",
+    "react-test-renderer": "^15.4.2",
     "raf-stub": "^2.0.0",
-    "react-dom": "^15.4.1",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "web-component-tester-istanbul": "^0.10.0"
   }
 }

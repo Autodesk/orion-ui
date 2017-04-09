@@ -38,30 +38,13 @@
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
-    "babel-jest": "^19.0.0",
-    "babelify": "^7.3.0",
     "bower": "^1.8.0",
     "browserify": "^13.3.0",
-    "chai": "^3.5.0",
     "codacy-coverage": "^2.0.0",
     "eslint": "^3.11.1",
-    "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.8.0",
-    "gemini": "^4.14.3",
-    "gemini-sauce": "^1.0.0",
-    "istanbul-combine": "^0.3.0",
-    "istanbul-merge": "^1.1.1",
     "jest": "^19.0.2",
-    "mocha": "^3.2.0",
     "moment": "^2.17.1",
-    "nyc": "^10.1.2",
-    "raf-stub": "^2.0.0",
     "remap-istanbul": "^0.9.5",
-    "sinon": "^1.17.7",
-    "sinon-chai": "^2.9.0",
-    "web-component-tester": "4.2.2",
-    "web-component-tester-istanbul": "^0.10.0"
+    "web-component-tester": "4.2.2"
   }
 }

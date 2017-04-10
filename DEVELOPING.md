@@ -30,7 +30,7 @@ If you have any questions, feel free to ask on the issue or join us on [Slack](h
 2. In the repo directory, run `npm i` command to install the required npm packages.
 4. Run `npm run build` - to build all packages appropriately and put them in
 their respective `lib` directories
-5. Run `lerna bootstrap` to cross-link and install dependencies for each package.
+5. Run `npm run bootstrap` to cross-link and install dependencies for each package.
 
 ### Build & Test
 

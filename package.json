@@ -52,7 +52,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.8.0",
-    "github": "^8.0.0",
+    "github": "^9.2.0",
     "glob": "^7.1.1",
     "jsdom": "9.8.3",
     "jsdom-global": "2.1.0",

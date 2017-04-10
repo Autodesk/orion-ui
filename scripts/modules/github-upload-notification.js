@@ -66,8 +66,8 @@ class GithubUploadNotification {
 
       const status = {
         context: 'deployment',
-        repo: 'orion',
-        owner: 'orion-ui',
+        repo: 'orion-ui',
+        owner: 'Autodesk',
         description,
         sha: this.sha,
         state,

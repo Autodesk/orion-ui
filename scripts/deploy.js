@@ -66,9 +66,15 @@ uploader.on('fileUploadEnd', localFilePath =>
 uploader.on('end', () => {
   const targetUrl = `https://${s3Params.Bucket}/${s3Params.Prefix}/index.html`;
 
-  creatingStatus.then(() => {
-    notice.finishDeploy(targetUrl).then(() => {
+  creatingStatus
+    .then(() => {
+      return notice.finishDeploy(targetUrl);
+    })
+    .then(() => {
       console.log(`Uploaded to ${targetUrl}`);
+    })
+    .catch(e => {
+      console.error(e);
+      process.exit(1);
     });
-  });
 });

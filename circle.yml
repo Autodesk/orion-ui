@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 7.5.0
+    version: 7.8.0
 dependencies:
   pre:
     - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login

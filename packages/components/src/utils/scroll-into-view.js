@@ -16,7 +16,9 @@ limitations under the License.
 */
 module.exports = function scrollIntoView(element) {
   const parent = element.parentElement;
-  if (parent === null) { return; }
+  if (parent === null) {
+    return;
+  }
 
   const showChildAtTop = element.offsetTop;
   const isChildAboveScrollView = parent.scrollTop > element.offsetTop;
@@ -25,7 +27,9 @@ module.exports = function scrollIntoView(element) {
     return;
   }
 
-  const showChildAtBottom = (element.offsetTop - parent.clientHeight) + element.offsetHeight;
+  const showChildAtBottom = element.offsetTop -
+    parent.clientHeight +
+    element.offsetHeight;
   const isChildBelowScrollView = parent.scrollTop < showChildAtBottom;
   if (isChildBelowScrollView) {
     parent.scrollTop = showChildAtBottom;

@@ -37,9 +37,7 @@ const css = `
   }
 `;
 
-const attributes = [
-  'dim', 'pointer', 'notallowed',
-];
+const attributes = ['dim', 'pointer', 'notallowed'];
 
 function attributeChangedCallback(attrName, value) {
   return value ? attrName : undefined;
@@ -48,5 +46,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

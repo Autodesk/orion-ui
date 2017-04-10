@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import '../vendor/custom-elements-polyfill';
+import '@skatejs/web-components';
 import { Button, Select, Datepicker } from '@orion-ui/react/lib/2016-12-01';
 import React from 'react';
 import logo from './logo.svg';
@@ -111,7 +111,7 @@ class App extends React.Component {
       return false;
     }
     return true;
- } 
+ }
 
 
   setLocale(event) {

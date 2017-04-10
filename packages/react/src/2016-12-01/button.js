@@ -1,4 +1,3 @@
-
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -53,7 +52,15 @@ class Button extends React.Component {
   }
 
   render() {
-    return <orion-button ref={(el) => { this._el = el; }} >{this.props.children}</orion-button>;
+    return (
+      <orion-button
+        ref={el => {
+          this._el = el;
+        }}
+      >
+        {this.props.children}
+      </orion-button>
+    );
   }
 }
 
@@ -66,7 +73,7 @@ Button.propTypes = {
   background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   disabled: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
-  size: PropTypes.oneOf(sizes), // eslint-disable-line react/no-unused-prop-types
+  size: PropTypes.oneOf(sizes) // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Button;

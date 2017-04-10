@@ -26,11 +26,13 @@ describe('Display', () => {
         { value: 'block', result: 'dis-blk' },
         { value: 'flex', result: 'dis-flx' },
         { value: 'inline', result: 'dis-inl' },
-        { value: 'inline-block', result: 'dis-inb' },
+        { value: 'inline-block', result: 'dis-inb' }
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(Display.attributeChangedCallback('display', value)).to.eq(result);
+            expect(Display.attributeChangedCallback('display', value)).to.eq(
+              result
+            );
           });
         });
       });

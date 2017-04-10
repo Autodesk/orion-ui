@@ -24,11 +24,13 @@ describe('PointerEvents', () => {
     context('with a valid value', () => {
       [
         { value: 'initial', result: 'pe-initial' },
-        { value: 'none', result: 'pe-none' },
+        { value: 'none', result: 'pe-none' }
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(PointerEvents.attributeChangedCallback('pointerEvents', value)).to.eq(result);
+            expect(
+              PointerEvents.attributeChangedCallback('pointerEvents', value)
+            ).to.eq(result);
           });
         });
       });

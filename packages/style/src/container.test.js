@@ -24,11 +24,13 @@ describe('Container', () => {
     context('with a valid value', () => {
       [
         { value: 'column', result: 'con-col' },
-        { value: 'row', result: 'con-row' },
+        { value: 'row', result: 'con-row' }
       ].forEach(({ value, result }) => {
         context(`with ${value}`, () => {
           it(`returns class ${result}`, () => {
-            expect(Container.attributeChangedCallback('container', value)).to.eq(result);
+            expect(
+              Container.attributeChangedCallback('container', value)
+            ).to.eq(result);
           });
         });
       });

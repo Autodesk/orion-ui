@@ -15,8 +15,6 @@ limitations under the License.
 
 */
 
-require('../../../vendor/es5-custom-element-shim');
-
 const Element = require('../element');
 const Registry = require('../../utils/private-registry');
 const applyProps = require('../../utils/apply-props');
@@ -28,7 +26,7 @@ class CalendarHeader extends Element {
 
     applyProps(this, {
       display: 'flex',
-      'padding-bottom': 2,
+      'padding-bottom': 2
     });
   }
 
@@ -69,29 +67,35 @@ class CalendarHeader extends Element {
   }
 
   _ensurePrev() {
-    if (this.prevDiv !== undefined) { return; }
+    if (this.prevDiv !== undefined) {
+      return;
+    }
     this.prevDiv = document.createElement('orion-element');
     applyProps(this.prevDiv, {
       innerHTML: '&larr;',
       color: 'black',
-      pointer: true,
+      pointer: true
     });
     this.appendChild(this.prevDiv);
   }
 
   _ensureMonth() {
-    if (this.monthDiv !== undefined) { return; }
+    if (this.monthDiv !== undefined) {
+      return;
+    }
     this.monthDiv = document.createElement('div');
     this.appendChild(this.monthDiv);
   }
 
   _ensureNext() {
-    if (this.nextDiv !== undefined) { return; }
+    if (this.nextDiv !== undefined) {
+      return;
+    }
     this.nextDiv = document.createElement('orion-element');
     applyProps(this.nextDiv, {
       innerHTML: '&rarr;',
       color: 'black',
-      pointer: true,
+      pointer: true
     });
     this.appendChild(this.nextDiv);
   }
@@ -111,11 +115,21 @@ class CalendarHeader extends Element {
     this._ensureMonth();
     this._ensureNext();
 
-    this.prevDiv.setAttribute('title', this.state.i18n ? this.state.i18n.previousMonth : '');
-    this.nextDiv.setAttribute('title', this.state.i18n ? this.state.i18n.nextMonth : '');
+    this.prevDiv.setAttribute(
+      'title',
+      this.state.i18n ? this.state.i18n.previousMonth : ''
+    );
+    this.nextDiv.setAttribute(
+      'title',
+      this.state.i18n ? this.state.i18n.nextMonth : ''
+    );
 
     applyProps(this.monthDiv, {
-      textContent: formatMoment(this.state.focusDate, this.state.monthFormat, this.state.locale),
+      textContent: formatMoment(
+        this.state.focusDate,
+        this.state.monthFormat,
+        this.state.locale
+      )
     });
 
     super.render();

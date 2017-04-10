@@ -35,11 +35,19 @@ class Datepicker extends React.Component {
   }
 
   updateState(event) {
-    this.componentWillReceiveProps(Object.assign({}, event.detail.state, this.props));
+    this.componentWillReceiveProps(
+      Object.assign({}, event.detail.state, this.props)
+    );
   }
 
   render() {
-    return <orion-datepicker ref={(el) => { this._el = el; }} />;
+    return (
+      <orion-datepicker
+        ref={el => {
+          this._el = el;
+        }}
+      />
+    );
   }
 }
 

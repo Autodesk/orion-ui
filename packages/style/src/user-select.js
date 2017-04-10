@@ -23,9 +23,7 @@ const css = `
   }
 `;
 
-const attributes = [
-  'userSelect',
-];
+const attributes = ['userSelect'];
 
 function attributeChangedCallback(attrName, value) {
   if (!value) {
@@ -37,5 +35,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

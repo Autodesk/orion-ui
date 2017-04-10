@@ -16,7 +16,9 @@ limitations under the License.
 */
 module.exports = function injectStyleTag(id, style) {
   let scriptTag = document.body.querySelector(`[data-orion-id=${id}]`);
-  if (scriptTag) { return; }
+  if (scriptTag) {
+    return;
+  }
 
   scriptTag = document.createElement('style');
   scriptTag.textContent = style;

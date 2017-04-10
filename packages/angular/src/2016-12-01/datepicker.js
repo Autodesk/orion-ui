@@ -27,7 +27,7 @@ const configurable = [
   'isEnabled',
   'locale',
   'monthFormat',
-  'placeholder',
+  'placeholder'
 ];
 
 const DatepickerComponent = {
@@ -42,41 +42,50 @@ const DatepickerComponent = {
     isEnabled: '<',
     locale: '<',
     monthFormat: '<',
-    placeholder: '<',
+    placeholder: '<'
   },
 
-  controller: function controller($element, $log) { // eslint-disable object-shorthand
-    const elementReady = window.customElements.whenDefined('orion-datepicker');
+  controller: [
+    '$element',
+    '$log',
+    function controller($element, $log) {
+      // eslint-disable object-shorthand
+      const elementReady = window.customElements.whenDefined(
+        'orion-datepicker'
+      );
 
-    this.$onInit = () => elementReady.then(() => {
-      $element[0].addEventListener('change', (event) => {
-        applyProps($element[0], event.detail.state);
-        this.onChange({ event });
-      });
-    });
+      this.$onInit = () =>
+        elementReady.then(() => {
+          $element[0].addEventListener('change', event => {
+            applyProps($element[0], event.detail.state);
+            this.onChange({ event });
+          });
+        });
 
-    this.$onChanges = changesObj => elementReady.then(() => {
-      const el = $element[0];
-      const props = Object.keys(changesObj);
-      props.forEach((prop) => {
-        try {
-          if (!configurable.includes(prop)) {
-            return;
-          }
+      this.$onChanges = changesObj =>
+        elementReady.then(() => {
+          const el = $element[0];
+          const props = Object.keys(changesObj);
+          props.forEach(prop => {
+            try {
+              if (!configurable.includes(prop)) {
+                return;
+              }
 
-          if (changesObj[prop].currentValue === undefined) {
-            return;
-          }
+              if (changesObj[prop].currentValue === undefined) {
+                return;
+              }
 
-          const newVal = changesObj[prop].currentValue;
+              const newVal = changesObj[prop].currentValue;
 
-          el[prop] = newVal;
-        } catch (e) {
-          $log.error(e);
-        }
-      });
-    });
-  },
+              el[prop] = newVal;
+            } catch (e) {
+              $log.error(e);
+            }
+          });
+        });
+    }
+  ]
 };
 
 module.exports = DatepickerComponent;

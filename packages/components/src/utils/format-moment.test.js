@@ -1,3 +1,5 @@
+/* eslint-env jest */
+/* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -14,37 +16,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import { expect } from 'chai';
+
 const formatMoment = require('./format-moment');
 const moment = require('moment');
-const chai = require('chai');
-
-const expect = chai.expect;
 
 describe('Utils.formatMoment', () => {
   const date = moment('2017-04-01');
   const format = 'MMMM Do, YYYY';
   const locale = 'zh-cn';
 
-  context('without a date', () => {
+  describe('without a date', () => {
     it('returns empty string', () => {
       expect(formatMoment()).to.eq('');
     });
   });
 
-  context('with date alone', () => {
+  describe('with date alone', () => {
     it('uses the default format', () => {
       const formattedDateWithoutZone = formatMoment(date).split('T')[0];
       expect(formattedDateWithoutZone).to.eq('2017-04-01');
     });
   });
 
-  context('with date and format', () => {
+  describe('with date and format', () => {
     it('uses the format', () => {
       expect(formatMoment(date, format)).to.eq('April 1st, 2017');
     });
   });
 
-  context('with date, format, and locale', () => {
+  describe('with date, format, and locale', () => {
     it('uses the locale', () => {
       expect(formatMoment(date, format, locale)).to.eq('四月 1日, 2017');
     });

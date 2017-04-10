@@ -16,8 +16,6 @@ limitations under the License.
 
 */
 
-require('../../../vendor/es5-custom-element-shim');
-
 const Element = require('../element');
 const Registry = require('../../utils/private-registry');
 const applyProps = require('../../utils/apply-props');
@@ -31,10 +29,15 @@ class CalendarDay extends Element {
       'border-color': 'grey2',
       background: 'transparent',
       pointer: true,
-      notallowed: false,
+      notallowed: false
     };
 
-    this.disabledDayStyle = { ...baseStyle, color: 'grey4', pointer: false, notallowed: true };
+    this.disabledDayStyle = {
+      ...baseStyle,
+      color: 'grey4',
+      pointer: false,
+      notallowed: true
+    };
     this.currentDayStyle = { ...baseStyle, color: 'black', pointer: true };
     this.enabledDayStyle = { ...baseStyle, color: 'black' };
     this.focusedDayStyle = { background: 'blue', color: 'white' };
@@ -63,7 +66,9 @@ class CalendarDay extends Element {
   }
 
   isCurrentDay() {
-    if (!this.state.date || !this.state.currentDate) { return false; }
+    if (!this.state.date || !this.state.currentDate) {
+      return false;
+    }
     return this.state.date.isSame(this.state.currentDate, 'day');
   }
 
@@ -93,19 +98,23 @@ class CalendarDay extends Element {
 
   _emitDateSelected() {
     if (this.kind !== 'disabled' && this.isInMonth()) {
-      this.dispatchEvent(new CustomEvent('selectDate', {
-        detail: { selectedDate: this.state.date },
-        bubbles: true,
-      }));
+      this.dispatchEvent(
+        new CustomEvent('selectDate', {
+          detail: { selectedDate: this.state.date },
+          bubbles: true
+        })
+      );
     }
   }
 
   _emitHover() {
     if (this.kind !== 'disabled' && this.isInMonth()) {
-      this.dispatchEvent(new CustomEvent('hoverDate', {
-        detail: { hoveredDate: this.state.date },
-        bubbles: true,
-      }));
+      this.dispatchEvent(
+        new CustomEvent('hoverDate', {
+          detail: { hoveredDate: this.state.date },
+          bubbles: true
+        })
+      );
     }
   }
 

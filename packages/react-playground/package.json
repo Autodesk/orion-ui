@@ -2,20 +2,22 @@
   "name": "react-playground",
   "version": "1.0.3",
   "private": true,
+  "author": "Autodesk Inc.",
   "homepage": ".",
+  "license": "Apache-2.0",
   "devDependencies": {
-    "react-scripts": "0.8.2"
+    "react-scripts": "0.9.5"
   },
   "dependencies": {
     "@orion-ui/react": "^1.0.3",
+    "@skatejs/web-components": "^1.0.0",
     "moment": "^2.17.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER=none PORT=3004 react-scripts start",
     "build": "react-scripts build",
-    "test": "CI=true react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "echo 'No tests configured'"
   }
 }

@@ -14,14 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
 const Element = require('./element');
 const applyProps = require('../utils/apply-props');
 const clearChildren = require('../utils/clear-children.js');
 const Registry = require('../utils/private-registry.js');
 
 function hashFromItems(items) {
-  return items.reduce((memo, item) => { return memo + item.key; }, '');
+  return items.reduce(
+    (memo, item) => {
+      return memo + item.key;
+    },
+    ''
+  );
 }
 
 class List extends Element {
@@ -57,7 +61,7 @@ class List extends Element {
       clearChildren(this);
     }
 
-    this.items.forEach((item) => {
+    this.items.forEach(item => {
       let itemEl = this.querySelector(`[data-key="${item.key}"]`);
       if (itemEl === null) {
         itemEl = document.createElement(this.state.itemTagname);

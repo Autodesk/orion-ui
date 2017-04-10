@@ -3,34 +3,49 @@
   "version": "1.0.3",
   "description": "orion ui components",
   "main": "lib/index.js",
-  "scripts": {
-    "start": "orion-scripts start",
-    "lint": "eslint ."
-  },
-  "orion": {
-    "compile": true
-  },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
+  "jest": {
+    "coverageDirectory": "coverage/jest",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/lib/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js"
+    ]
+  },
+  "scripts": {
+    "prepublish": "bower install",
+    "lib": "babel src --out-dir lib --copy-file",
+    "build": "NODE_ENV=production npm run lib",
+    "start": "NODE_ENV=development npm run lib -- --watch",
+    "jest-coverage": "jest --coverage",
+    "jest": "jest --watch",
+    "browserify": "node scripts/browserify.js",
+    "debug-wct": "polyserve .",
+    "wct": "wct",
+    "wct-sauce": "wct --plugin sauce --skip-plugin local",
+    "test-ci": "node scripts/test-ci.js",
+    "test": "npm run jest-coverage && npm run browserify && npm run wct"
+  },
   "dependencies": {
-    "@orion-ui/style": "^1.0.3",
-    "object.entries": "^1.0.4"
+    "@orion-ui/style": "^1.0.3"
   },
   "peerDependencies": {
     "moment": "^2.17.1"
   },
   "devDependencies": {
-    "@orion-ui/scripts": "^1.0.0",
-    "@orion-ui/eslint-config-orion": "^1.0.0",
-    "chai": "^3.5.0",
-    "eslint": "^3.11.1",
-    "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.8.0",
+    "@skatejs/web-components": "^1.0.0",
+    "babel-cli": "^6.18.0",
+    "bower": "^1.8.0",
+    "browserify": "^13.3.0",
+    "codacy-coverage": "^2.0.0",
+    "jest": "^19.0.2",
     "moment": "^2.17.1",
-    "raf-stub": "^2.0.0",
-    "sinon": "^1.17.7",
-    "sinon-chai": "^2.8.0"
+    "polyserve": "^0.16.0",
+    "remap-istanbul": "^0.9.5",
+    "web-component-tester": "4.2.2"
   }
 }

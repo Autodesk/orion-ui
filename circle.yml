@@ -1,42 +1,36 @@
 machine:
   node:
-    version: 7.5.0
+    version: 7.8.0
 dependencies:
   pre:
     - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
-  post:
-    - bower install
-    - NODE_ENV=production lerna bootstrap
+  override:
+    - unset NODE_ENV
+    - npm install
+    - npm run bootstrap
   cache_directories:
     - "node_modules"
     - "packages/components/node_modules"
-    - "packages/eslint-config-orion/node_modules"
+    - "packages/components/bower_components"
     - "packages/react-playground/node_modules"
     - "packages/scripts/node_modules"
-    - "packages/storybook/node_modules"
     - "packages/style/node_modules"
-    - "bower_components"
 test:
   pre:
-    - npm run compile
-    - cd packages/storybook && npm start:
+    - npm run test-lib
+    - cd packages/react && npm run start-storybook:
         background: true
   override:
     - npm run test-ci
-    - npm run gemini
 deployment:
   production:
     branch: master
     commands:
       - npm run build
-      - npm run copy-package-builds
-      - npm run set-marketing-to-root
       - npm run deploy-master
       - lerna publish --canary --yes --exact
   snapshot:
     branch: /.*/
     commands:
       - npm run build
-      - npm run copy-package-builds
-      - npm run set-marketing-to-root
       - npm run deploy-snapshot

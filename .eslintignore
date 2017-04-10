@@ -1,0 +1,9 @@
+bower_components
+build
+coverage
+gemini-report
+lib
+node_modules
+packages/*-playground
+packages/design-dsl
+vendor

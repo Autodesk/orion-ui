@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
 require('./list');
 require('./select-option');
 
@@ -34,10 +33,10 @@ class SelectMenu extends Element {
       position: 'absolute',
       display: 'block',
       'box-shadow': 1,
-      'white-space': 'nowrap',
+      'white-space': 'nowrap'
     });
 
-    ['_cloneEvent', '_close'].forEach((handler) => {
+    ['_cloneEvent', '_close'].forEach(handler => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -82,20 +81,24 @@ class SelectMenu extends Element {
   }
 
   _ensureList() {
-    if (this.list !== undefined) { return; }
+    if (this.list !== undefined) {
+      return;
+    }
 
     this.list = document.createElement('orion-list');
 
     applyProps(this.list, {
       itemTagname: 'orion-select-option',
-      container: 'column',
+      container: 'column'
     });
 
     this.list.style.maxHeight = `${this.OPTION_HEIGHT * this.MAX_OPTIONS_VISIBLE}px`;
   }
 
   _removeList() {
-    if (this.list !== undefined) { this.list.remove(); }
+    if (this.list !== undefined) {
+      this.list.remove();
+    }
   }
 
   _cloneEvent(event) {
@@ -107,8 +110,12 @@ class SelectMenu extends Element {
   }
 
   _ensureNoResultsMessage() {
-    let noResultsMessage = this.querySelector('[data-orion-id=no-results-message]');
-    if (noResultsMessage !== null) { return; }
+    let noResultsMessage = this.querySelector(
+      '[data-orion-id=no-results-message]'
+    );
+    if (noResultsMessage !== null) {
+      return;
+    }
 
     noResultsMessage = document.createElement('orion-element');
     noResultsMessage.textContent = 'No results found';
@@ -117,15 +124,19 @@ class SelectMenu extends Element {
       'padding-horizontal': 3,
       'padding-vertical': 2,
       background: 'white',
-      display: 'block',
+      display: 'block'
     });
 
     this.appendChild(noResultsMessage);
   }
 
   _removeNoResultsMessage() {
-    const noResultsMessage = this.querySelector('[data-orion-id=no-results-message]');
-    if (noResultsMessage === null) { return; }
+    const noResultsMessage = this.querySelector(
+      '[data-orion-id=no-results-message]'
+    );
+    if (noResultsMessage === null) {
+      return;
+    }
     noResultsMessage.remove();
   }
 
@@ -137,22 +148,22 @@ class SelectMenu extends Element {
     const scrollValue = currentListHeight > maxListHeight ? 'scroll' : 'hidden';
 
     applyProps(this.list, {
-      'overflow-y': scrollValue,
+      'overflow-y': scrollValue
     });
 
     if (this.state.open) {
-      const options = this.state.options.map((option) => {
-        option.hasFocus = (option.key === this.state.focusedKey);
-        option.isSelected = (option.key === this.state.selectedKey);
+      const options = this.state.options.map(option => {
+        option.hasFocus = option.key === this.state.focusedKey;
+        option.isSelected = option.key === this.state.selectedKey;
         return option;
       });
 
       applyProps(this.list, {
-        items: options,
+        items: options
       });
 
       applyProps(this.list.style, {
-        minWidth: this.MENU_MIN_WIDTH,
+        minWidth: this.MENU_MIN_WIDTH
       });
 
       if (!this.contains(this.list)) {

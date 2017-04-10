@@ -23,7 +23,9 @@ describe('Box Shadow', () => {
   describe('attributeChangedCallback', () => {
     context('with 1', () => {
       it('returns class bsh-1', () => {
-        expect(BoxShadow.attributeChangedCallback('box-shadow', 1)).to.eq('bsh-1');
+        expect(BoxShadow.attributeChangedCallback('box-shadow', 1)).to.eq(
+          'bsh-1'
+        );
       });
     });
   });

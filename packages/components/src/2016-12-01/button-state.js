@@ -20,7 +20,7 @@ const ButtonState = {
       disabled: false,
       hasFocus: false,
       hover: false,
-      ...state,
+      ...state
     };
   },
 
@@ -43,7 +43,7 @@ const ButtonState = {
   },
   blur(state) {
     return { ...state, hasFocus: false };
-  },
+  }
 };
 
 module.exports = ButtonState;

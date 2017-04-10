@@ -20,9 +20,7 @@ const css = `
   }
 `;
 
-const attributes = [
-  'reset-focus-style',
-];
+const attributes = ['reset-focus-style'];
 
 function attributeChangedCallback(attrName, value) {
   if (value) {
@@ -34,5 +32,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

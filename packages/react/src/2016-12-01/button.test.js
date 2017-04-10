@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('jsdom-global/register');
-
 const React = require('react');
 const { mount } = require('enzyme');
 const chai = require('chai');
@@ -31,7 +29,7 @@ describe('<OrionButton />', () => {
   it('passes props to button web component', () => {
     const props = {
       background: 'white',
-      color: 'black',
+      color: 'black'
     };
     const wrapper = mount(<OrionButton {...props} />);
 

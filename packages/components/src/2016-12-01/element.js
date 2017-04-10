@@ -14,12 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim.js');
-require('../../vendor/object-entries-shim.js');
 require('../utils/inject-styles.js');
 const RenderQueue = require('../utils/render-queue.js');
 const Registry = require('../utils/private-registry.js');
-const { BorderRadius, BoxShadow, Container, Display, Hovers, Overflow, PointerEvents, Position, ResetFocusStyle, Skins, Spacing, Typography, UserSelect } = require('@orion-ui/style/lib/2016-12-01');
+const {
+  BorderRadius,
+  BoxShadow,
+  Container,
+  Display,
+  Hovers,
+  Overflow,
+  PointerEvents,
+  Position,
+  ResetFocusStyle,
+  Skins,
+  Spacing,
+  Typography,
+  UserSelect
+} = require('@orion-ui/style/lib/2016-12-01');
 
 const styles = [
   BorderRadius,
@@ -34,7 +46,7 @@ const styles = [
   Skins,
   Spacing,
   Typography,
-  UserSelect,
+  UserSelect
 ];
 
 class Element extends HTMLElement {
@@ -46,7 +58,7 @@ class Element extends HTMLElement {
   }
 
   _queueRender() {
-    (new RenderQueue()).add(this);
+    new RenderQueue().add(this);
   }
 
   // _ensureElements([
@@ -55,7 +67,9 @@ class Element extends HTMLElement {
   // ]);
   _ensureElements(propertyArray) {
     propertyArray.forEach(([propertyName, tagName]) => {
-      if (this[propertyName] !== undefined) { return; }
+      if (this[propertyName] !== undefined) {
+        return;
+      }
       this[propertyName] = document.createElement(tagName);
       this.appendChild(this[propertyName]);
     });
@@ -81,7 +95,8 @@ class Element extends HTMLElement {
       }
     }
 
-    Object.entries(this.viewState).forEach(([name, value]) => {
+    Object.keys(this.viewState).forEach(name => {
+      const value = this.viewState[name];
       styles.forEach(style => appendClassName(style, name, value));
     });
 
@@ -94,17 +109,19 @@ const styleProps = styles
   .map(style => style.attributes)
   .reduce((acc, memo) => acc.concat(memo));
 
-styleProps.forEach((attr) => {
+styleProps.forEach(attr => {
   Object.defineProperty(Element.prototype, attr, {
     get() {
       return this.viewState[attr];
     },
     set(newValue) {
-      if (this.viewState[attr] === newValue) { return; }
+      if (this.viewState[attr] === newValue) {
+        return;
+      }
 
       this.viewState[attr] = newValue;
       this._queueRender();
-    },
+    }
   });
 });
 

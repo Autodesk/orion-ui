@@ -25,11 +25,15 @@ module.exports = {
   define: (tagName, constructorFn) => {
     if (registry.get(tagName)) {
       if (registry.get(tagName) !== constructorFn) {
-        throw new Error(`${tagName} already registered to a different constructor function`);
+        throw new Error(
+          `${tagName} already registered to a different constructor function`
+        );
       }
     } else {
-      if (!window.customElements) { return; }
+      if (!window.customElements) {
+        return;
+      }
       window.customElements.define(tagName, constructorFn);
     }
-  },
+  }
 };

@@ -30,26 +30,32 @@ const selectors = {
   mb: ['margin-bottom'],
   mt: ['margin-top'],
   mv: ['margin-top', 'margin-bottom'],
-  mh: ['margin-left', 'margin-right'],
+  mh: ['margin-left', 'margin-right']
 };
 
 const concat = (acc, memo) => acc + memo;
 
 function buildSelectors() {
-  return Object.keys(selectors).map((selectorPrefix) => {
-    const cssProperties = selectors[selectorPrefix];
+  return Object.keys(selectors)
+    .map(selectorPrefix => {
+      const cssProperties = selectors[selectorPrefix];
 
-    return scale.map((scaleValue, scaleIndex) => {
-      return `
+      return scale
+        .map((scaleValue, scaleIndex) => {
+          return `
         .${selectorPrefix}${scaleIndex} {
-          ${cssProperties.map((cssProperty) => {
-            return `
+          ${cssProperties
+            .map(cssProperty => {
+              return `
               ${cssProperty}: ${scaleValue};
             `;
-          }).reduce(concat)}
+            })
+            .reduce(concat)}
         }`;
-    }).reduce(concat);
-  }).reduce(concat);
+        })
+        .reduce(concat);
+    })
+    .reduce(concat);
 }
 
 const css = `
@@ -60,7 +66,7 @@ const attributes = [
   'padding-horizontal',
   'padding-vertical',
   'padding-bottom',
-  'padding-left',
+  'padding-left'
 ];
 
 function attributeChangedCallback(attrName, value) {
@@ -81,5 +87,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   attributes,
   attributeChangedCallback,
-  css,
+  css
 };

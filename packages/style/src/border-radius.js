@@ -20,15 +20,12 @@ const css = `
   .br-pill { border-radius: 9999px; }
 `;
 
-const attributes = [
-  'border-radius',
-];
-
+const attributes = ['border-radius'];
 
 const scale = {
   0: 'br0',
   2: 'br2',
-  pill: 'br-pill',
+  pill: 'br-pill'
 };
 
 function attributeChangedCallback(attrName, value) {
@@ -38,5 +35,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

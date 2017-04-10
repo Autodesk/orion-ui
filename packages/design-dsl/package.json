@@ -8,7 +8,8 @@
     "compile": "tsc",
     "hello-primitives": "node lib/hello-primitives.js",
     "hello-toolbar": "node lib/hello-toolbar.js",
-    "hello-panel": "node lib/hello-panel.js"
+    "hello-panel": "node lib/hello-panel.js",
+    "test": "echo 'No tests configured'"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
@@ -19,11 +20,8 @@
     "@types/mocha": "^2.2.39",
     "@types/node": "^6.0.52",
     "@types/shelljs": "^0.6.0",
-    "chai": "^3.5.0",
-    "commander": "^2.9.0",
     "intl": "^1.2.5",
     "mocha": "^3.2.0",
-    "shelljs": "^0.7.6",
     "typescript": "^2.1.4"
   },
   "dependencies": {

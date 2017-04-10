@@ -21,11 +21,15 @@ const concat = (acc, memo) => acc + memo;
 function buildPositions() {
   const dimensions = ['top', 'right', 'bottom', 'left'];
 
-  return dimensions.map((dimension) => {
-    return scale.map((scaleValue, scaleIndex) => {
-      return `.pos-${dimension}-${scaleIndex} { ${dimension}: ${scaleValue} } `;
-    }).reduce(concat);
-  }).reduce(concat);
+  return dimensions
+    .map(dimension => {
+      return scale
+        .map((scaleValue, scaleIndex) => {
+          return `.pos-${dimension}-${scaleIndex} { ${dimension}: ${scaleValue} } `;
+        })
+        .reduce(concat);
+    })
+    .reduce(concat);
 }
 
 const css = `
@@ -52,9 +56,7 @@ const css = `
   ${buildPositions()}
 `;
 
-const attributes = [
-  'position', 'top', 'right', 'bottom', 'left',
-];
+const attributes = ['position', 'top', 'right', 'bottom', 'left'];
 
 function attributeChangedCallback(attrName, value) {
   // Absolute positioning dimensions
@@ -80,5 +82,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

@@ -18,7 +18,6 @@ limitations under the License.
 
 import moment from 'moment';
 
-require('../../../vendor/es5-custom-element-shim');
 require('./calendar-header');
 require('./calendar-day');
 
@@ -40,20 +39,16 @@ class DatepickerCalendar extends Element {
       border: 1,
       background: 'white',
       'border-color': 'black',
-      'box-shadow': 1,
+      'box-shadow': 1
     });
   }
 
   ensureElements() {
-    this._ensureElements([
-      ['header', 'orion-calendar-header'],
-    ]);
+    this._ensureElements([['header', 'orion-calendar-header']]);
 
     this._ensureWeeksHeader();
 
-    this._ensureElements([
-      ['weeks', 'orion-element'],
-    ]);
+    this._ensureElements([['weeks', 'orion-element']]);
 
     this._ensureWeeks();
   }
@@ -100,7 +95,9 @@ class DatepickerCalendar extends Element {
 
   _ensureWeeksHeader() {
     this.weeksHeader = this.querySelector('[data-orion-id=weeks-header]');
-    if (this.weeksHeader !== null) { return; }
+    if (this.weeksHeader !== null) {
+      return;
+    }
 
     this.weeksHeader = document.createElement('orion-element');
     this.weeksHeader.setAttribute('data-orion-id', 'weeks-header');
@@ -108,7 +105,7 @@ class DatepickerCalendar extends Element {
     applyProps(this.weeksHeader, {
       display: 'flex',
       border: 1,
-      'border-color': 'grey2',
+      'border-color': 'grey2'
     });
 
     let lastCreatedHeaderCell = null;
@@ -119,7 +116,7 @@ class DatepickerCalendar extends Element {
       applyProps(div, {
         'border-right': 1,
         'border-color': 'grey2',
-        background: 'grey1',
+        background: 'grey1'
       });
       div.style.width = '14%';
       div.style.paddingLeft = '4px';
@@ -132,23 +129,25 @@ class DatepickerCalendar extends Element {
     });
 
     applyProps(lastCreatedHeaderCell, {
-      'border-right': 0,
+      'border-right': 0
     });
 
     this.appendChild(this.weeksHeader);
   }
 
   _ensureWeeks() {
-    if (this.weeks.childNodes.length > 0) { return; }
+    if (this.weeks.childNodes.length > 0) {
+      return;
+    }
 
     applyProps(this.weeks, {
       'border-left': 1,
       'border-color': 'grey3',
-      display: 'block',
+      display: 'block'
     });
 
     this.state.rows = [...Array(7)].map((_, weekIdx) => {
-      const even = (weekIdx % 2 === 0);
+      const even = weekIdx % 2 === 0;
       return this._ensureWeek(even);
     });
   }
@@ -159,7 +158,7 @@ class DatepickerCalendar extends Element {
     applyProps(week, {
       'border-bottom': 1,
       'border-color': 'grey2',
-      background: even ? 'grey0' : 'white',
+      background: even ? 'grey0' : 'white'
     });
 
     [...Array(7)].forEach(() => {
@@ -173,7 +172,9 @@ class DatepickerCalendar extends Element {
   }
 
   _renderWeeks() {
-    if (!this.state.focusDate || !this.state.currentDate) { return; }
+    if (!this.state.focusDate || !this.state.currentDate) {
+      return;
+    }
 
     const focusDate = this.state.focusDate;
     const currentDate = this.state.currentDate;
@@ -185,14 +186,25 @@ class DatepickerCalendar extends Element {
     let firstDayOfWeek = moment(startDayOfCalendar);
 
     [...Array(7)].forEach((_, dayIdx) => {
-      const dayOfWeek = formatMoment(moment().weekday(dayIdx), 'dd', this.state.locale);
+      const dayOfWeek = formatMoment(
+        moment().weekday(dayIdx),
+        'dd',
+        this.state.locale
+      );
       const headerDay = this.weeksHeader.childNodes[dayIdx];
       headerDay.textContent = dayOfWeek;
     });
 
     [...Array(7)].forEach((_, weekIdx) => {
-      const shouldRender = firstDayOfWeek.isSame(focusDate, 'month') || weekIdx === 0;
-      this._renderWeek(weekIdx, currentDate, focusDate, firstDayOfWeek, shouldRender);
+      const shouldRender = firstDayOfWeek.isSame(focusDate, 'month') ||
+        weekIdx === 0;
+      this._renderWeek(
+        weekIdx,
+        currentDate,
+        focusDate,
+        firstDayOfWeek,
+        shouldRender
+      );
       firstDayOfWeek = firstDayOfWeek.add(1, 'week');
     });
   }
@@ -213,7 +225,7 @@ class DatepickerCalendar extends Element {
         isEnabled: this.isEnabled,
         date,
         focusDate,
-        currentDate,
+        currentDate
       });
     });
   }
@@ -225,7 +237,7 @@ class DatepickerCalendar extends Element {
       locale: this.state.locale,
       monthFormat: this.state.monthFormat,
       focusDate: this.state.focusDate,
-      i18n: this.state.i18n,
+      i18n: this.state.i18n
     });
 
     this._renderWeeks();

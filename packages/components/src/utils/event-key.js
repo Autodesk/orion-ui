@@ -22,7 +22,7 @@ const valueSets = [
   { key: 'ArrowUp', values: [38, 'ArrowUp', 'Up'] },
   { key: 'ArrowRight', values: [39, 'ArrowRight', 'Right'] },
   { key: 'ArrowDown', values: [40, 'ArrowDown', 'Down'] },
-  { key: 'Backspace', values: [8, 'Backspace'] },
+  { key: 'Backspace', values: [8, 'Backspace'] }
 ];
 
 function match(valueSet, keyCode, key) {
@@ -30,10 +30,12 @@ function match(valueSet, keyCode, key) {
 }
 
 module.exports = function eventKey(event) {
-  const matchingSet = valueSets.find((valueSet) => {
+  const matchingSet = valueSets.find(valueSet => {
     return match(valueSet, event.key, event.keyCode);
   });
 
-  if (matchingSet === undefined) { return null; }
+  if (matchingSet === undefined) {
+    return null;
+  }
   return matchingSet.key;
 };

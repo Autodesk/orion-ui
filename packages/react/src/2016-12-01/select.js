@@ -1,4 +1,3 @@
-
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -39,26 +38,37 @@ class Select extends React.Component {
   }
 
   updateState(event) {
-    this.componentWillReceiveProps(Object.assign({}, event.detail.state, this.props));
+    this.componentWillReceiveProps(
+      Object.assign({}, event.detail.state, this.props)
+    );
   }
 
   render() {
-    return <orion-select ref={(el) => { this._el = el; }} />;
+    return (
+      <orion-select
+        ref={el => {
+          this._el = el;
+        }}
+      />
+    );
   }
 }
 
 const colors = Object.keys(Skins.colors);
 
 Select.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.shape({  // eslint-disable-line react/no-unused-prop-types
-    value: PropTypes.string,
-    label: PropTypes.string,
-  })).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      // eslint-disable-line react/no-unused-prop-types
+      value: PropTypes.string,
+      label: PropTypes.string
+    })
+  ).isRequired,
   open: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
   onChange: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
   background: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
   color: PropTypes.oneOf(colors), // eslint-disable-line react/no-unused-prop-types
-  selectedIndex: PropTypes.number,  // eslint-disable-line react/no-unused-prop-types
+  selectedIndex: PropTypes.number // eslint-disable-line react/no-unused-prop-types
 };
 
 module.exports = Select;

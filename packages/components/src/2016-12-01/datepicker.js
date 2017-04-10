@@ -15,8 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-require('../../vendor/es5-custom-element-shim');
-
 require('./datepicker/datepicker-calendar');
 
 const Element = require('./element');
@@ -28,7 +26,10 @@ const formatMoment = require('../utils/format-moment');
 const injectStyleTag = require('../utils/inject-style-tag');
 
 function ensureEdgeHacks() {
-  injectStyleTag('datepicker-edge-hacks', '[data-orion-id=datepicker-input]::-ms-clear { display: none; }');
+  injectStyleTag(
+    'datepicker-edge-hacks',
+    '[data-orion-id=datepicker-input]::-ms-clear { display: none; }'
+  );
 }
 
 class Datepicker extends Element {
@@ -40,10 +41,10 @@ class Datepicker extends Element {
       color: 'black',
       background: 'white',
       display: 'inline-block',
-      position: 'relative',
+      position: 'relative'
     });
 
-    ['_handleKeydown', '_focus', '_blur', '_clearDate'].forEach((handler) => {
+    ['_handleKeydown', '_focus', '_blur', '_clearDate'].forEach(handler => {
       this[handler] = this[handler].bind(this);
     });
   }
@@ -123,7 +124,11 @@ class Datepicker extends Element {
   }
 
   get formattedDate() {
-    return formatMoment(this.state.date, this.state.displayFormat, this.state.locale);
+    return formatMoment(
+      this.state.date,
+      this.state.displayFormat,
+      this.state.locale
+    );
   }
 
   set displayFormat(val) {
@@ -238,12 +243,14 @@ class Datepicker extends Element {
 
   _dispatchStateChange(eventType, arg) {
     const nextState = DatepickerState[eventType](this.state, arg);
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: {
-        type: eventType,
-        state: nextState,
-      },
-    }));
+    this.dispatchEvent(
+      new CustomEvent('change', {
+        detail: {
+          type: eventType,
+          state: nextState
+        }
+      })
+    );
   }
 
   _addListeners() {
@@ -276,20 +283,22 @@ class Datepicker extends Element {
       this.dateInput.setAttribute('data-orion-id', 'datepicker-input');
       this.appendChild(this.dateInput);
       applyProps(this.dateInput, {
-        type: 'text',
+        type: 'text'
       });
     }
   }
 
   _ensureClear() {
     this.clear = this.querySelector('[data-orion-id=datepicker-clear]');
-    if (this.clear) { return; }
+    if (this.clear) {
+      return;
+    }
 
     this.clear = document.createElement('orion-button');
     this.clear.setAttribute('data-orion-id', 'select-clear');
     applyProps(this.clear, {
       textContent: '✕',
-      size: 'small',
+      size: 'small'
     });
   }
 
@@ -308,7 +317,10 @@ class Datepicker extends Element {
     this._ensureInput();
     this._ensureCalendar();
 
-    applyProps(this.dateInput, { value: this.formattedDate, placeholder: this.state.placeholder });
+    applyProps(this.dateInput, {
+      value: this.formattedDate,
+      placeholder: this.state.placeholder
+    });
 
     applyProps(this.calendar, {
       display: this.state.focus ? 'block' : 'none',
@@ -317,7 +329,7 @@ class Datepicker extends Element {
       currentDate: this.currentDate,
       i18n: this.state.i18n,
       isEnabled: this.isEnabled,
-      locale: this.state.locale,
+      locale: this.state.locale
     });
 
     if (this.state.clearable && this.state.date) {

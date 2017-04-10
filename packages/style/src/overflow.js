@@ -26,12 +26,11 @@ const css = `
   }
 `;
 
-
 const attrMap = {
   'overflow-y': {
     scroll: 'ovy-s',
-    hidden: 'ovy-h',
-  },
+    hidden: 'ovy-h'
+  }
 };
 
 const attributes = Object.keys(attrMap);
@@ -47,5 +46,5 @@ function attributeChangedCallback(attrName, value) {
 module.exports = {
   css,
   attributes,
-  attributeChangedCallback,
+  attributeChangedCallback
 };

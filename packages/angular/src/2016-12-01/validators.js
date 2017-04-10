@@ -29,7 +29,7 @@ function ValidationException(message) {
 }
 
 function InclusionValidator(name, validValues) {
-  this.valid = (val) => {
+  this.valid = val => {
     if (validValues.includes(val)) {
       return true;
     }

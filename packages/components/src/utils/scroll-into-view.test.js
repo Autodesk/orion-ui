@@ -1,3 +1,5 @@
+/* eslint-env jest */
+/* eslint-disable no-unused-expressions */
 /**
 Copyright 2016 Autodesk,Inc.
 
@@ -14,23 +16,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-const scrollIntoView = require('./scroll-into-view.js');
-const chai = require('chai');
+import { expect } from 'chai';
 
-const expect = chai.expect;
+const scrollIntoView = require('./scroll-into-view.js');
 
 describe('Utils.scrollIntoView', () => {
   let element;
 
-  context('when the child is fully in view', () => {
+  describe('when the child is fully in view', () => {
     beforeEach(() => {
       element = {
         offsetTop: 10,
         offsetHeight: 10,
         parentElement: {
           scrollTop: 0,
-          clientHeight: 100,
-        },
+          clientHeight: 100
+        }
       };
     });
 
@@ -40,15 +41,15 @@ describe('Utils.scrollIntoView', () => {
     });
   });
 
-  context('when the child is above the scroll view', () => {
+  describe('when the child is above the scroll view', () => {
     beforeEach(() => {
       element = {
         offsetTop: 10,
         offsetHeight: 10,
         parentElement: {
           scrollTop: 50,
-          clientHeight: 100,
-        },
+          clientHeight: 100
+        }
       };
     });
 
@@ -58,15 +59,15 @@ describe('Utils.scrollIntoView', () => {
     });
   });
 
-  context('when the child is below the scroll view', () => {
+  describe('when the child is below the scroll view', () => {
     beforeEach(() => {
       element = {
         offsetTop: 120,
         offsetHeight: 10,
         parentElement: {
           scrollTop: 110,
-          clientHeight: 100,
-        },
+          clientHeight: 100
+        }
       };
     });
 
@@ -76,11 +77,11 @@ describe('Utils.scrollIntoView', () => {
     });
   });
 
-  context('when the element has no parent', () => {
+  describe('when the element has no parent', () => {
     it('does not raise an error', () => {
       function scrollOrphan() {
         element = {
-          parentElement: null,
+          parentElement: null
         };
         scrollIntoView(element);
       }

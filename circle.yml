@@ -28,7 +28,7 @@ deployment:
     commands:
       - npm run build
       - npm run deploy-master
-      - lerna publish --canary --yes --exact
+      - npm run publish-canary
   snapshot:
     branch: /.*/
     commands:

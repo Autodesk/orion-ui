@@ -19,7 +19,8 @@
     "test-ci": "npm run ensure-copyright && npm run lint && lerna run test-ci --stream",
     "test": "npm run ensure-copyright && npm run lint && lerna run test --stream",
     "start": "lerna run start --no-sort --stream --concurrency 50",
-    "start-playground": "node scripts/start-playground.js"
+    "start-playground": "node scripts/start-playground.js",
+    "publish-canary": "lerna publish --canary --yes --exact"
   },
   "repository": {
     "type": "git",

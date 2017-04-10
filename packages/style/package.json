@@ -2,16 +2,11 @@
   "name": "@orion-ui/style",
   "version": "1.0.3",
   "description": "orion ui styles",
-  "main": "lib/index.js",
+  "main": "build/index.js",
   "scripts": {
-    "lib": "babel src --out-dir lib --copy-file",
-    "build": "NODE_ENV=production npm run lib",
-    "start": "NODE_ENV=development npm run lib -- --watch",
     "test": "echo 'No tests configured'"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "babel-cli": "^6.18.0"
-  }
+  "devDependencies": {}
 }

@@ -2,14 +2,14 @@
   "name": "@orion-ui/components",
   "version": "1.0.3",
   "description": "orion ui components",
-  "main": "lib/index.js",
+  "main": "build/index.js",
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",
   "jest": {
     "coverageDirectory": "coverage/jest",
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/lib/"
+      "/build/"
     ],
     "collectCoverageFrom": [
       "src/**/*.js",
@@ -18,9 +18,6 @@
   },
   "scripts": {
     "prepublish": "bower install",
-    "lib": "babel src --out-dir lib --copy-file",
-    "build": "NODE_ENV=production npm run lib",
-    "start": "NODE_ENV=development npm run lib -- --watch",
     "jest-coverage": "jest --coverage",
     "jest": "jest --watch",
     "browserify": "node scripts/browserify.js",
@@ -38,7 +35,6 @@
   },
   "devDependencies": {
     "@skatejs/web-components": "^1.0.0",
-    "babel-cli": "^6.18.0",
     "bower": "^1.8.0",
     "browserify": "^13.3.0",
     "codacy-coverage": "^2.0.0",

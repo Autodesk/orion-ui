@@ -17,79 +17,46 @@ limitations under the License.
 import React, { Component } from 'react';
 import './App.css';
 import { OrionHIG, Menu, Sidebar } from './Orion';
+import WelcomeMessage from './containers/WelcomeMessage';
+import { connect } from 'react-redux';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      menuOpen: false,
-      lastItemId: 3,
-      items: [
-        { id: 1, label: 'Item 1' },
-        { id: 2, label: 'Item 2' }
-      ]
-    }
+  handleItemClick = item => {
+    this.props.dispatch({ type: 'SELECT_ITEM', item });
+  };
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleAddItem = this.handleAddItem.bind(this);
-    this.handleItemClick = this.handleItemClick.bind(this);
-    this.handleItemRemove = this.handleItemRemove.bind(this);
-    this.handleMenuToggle = this.handleMenuToggle.bind(this);
-  }
-
-  handleClick() {
-    this.setState({ menuOpen: !this.state.menuOpen });
-  }
-
-  handleAddItem() {
-    const nextId = this.state.lastItemId + 1;
-    const newItem = { id: nextId, label: `Item ${nextId}` };
-    this.setState({ items: [...this.state.items, newItem], lastItemId: nextId });
-  }
-
-  handleItemClick(item) {
-    const i = this.state.items.indexOf(item);
-    const oldItems = [...this.state.items];
-    oldItems[i].label = new Date().toString();
-    this.setState({ items: oldItems });
-  }
-
-  handleItemRemove() {
-    const newItems = [...this.state.items];
-
-    newItems.splice(this.state.items.length - 1, 1);
-
-    this.setState({ items: newItems });
-  }
-
-  handleMenuToggle() {
-    this.setState({ menuOpen: !this.state.menuOpen });
-  }
+  handleMenuToggle = () => {
+    this.props.dispatch({ type: 'TOGGLE_MENU' });
+  };
 
   render() {
     return (
       <div style={{ height: '100%', width: '100%' }}>
-        {/*<button onClick={this.handleClick}>Toggle Menu</button>
-        <button onClick={this.handleAddItem}>Add Item</button>
-        <button onClick={this.handleItemRemove}>Remove Last Item</button>*/}
         <OrionHIG>
           <Menu>
             <Menu.Top onToggle={this.handleMenuToggle} />
-            <Sidebar open={this.state.menuOpen}>
+
+            <Sidebar open={this.props.menuOpen}>
               <Sidebar.Group small>
-                {this.state.items.map(item => {
-                  return <Sidebar.Item key={item.id} onClick={() => this.handleItemClick(item)}>{item.label}</Sidebar.Item>
-                }
-                )}
+                {this.props.items.map(item => {
+                  const props = {
+                    key: item.id,
+                    onClick: () => this.handleItemClick(item),
+                    selected: this.props.selectedItem === item
+                  };
+                  return <Sidebar.Item {...props}>{item.label}</Sidebar.Item>;
+                })}
               </Sidebar.Group>
 
               <Sidebar.Group>
-                <Sidebar.Item>Item 3</Sidebar.Item>
+                <Sidebar.Item onClick={() => alert('do something unique!')}>
+                  Other Group Item
+                </Sidebar.Item>
               </Sidebar.Group>
             </Sidebar>
 
             <Menu.Slot>
-              Hello Main App Content!
+              <WelcomeMessage />
             </Menu.Slot>
           </Menu>
         </OrionHIG>
@@ -98,4 +65,12 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    menuOpen: state.menuOpen,
+    items: state.items,
+    selectedItem: state.selectedItem
+  };
+};
+
+export default connect(mapStateToProps)(App);

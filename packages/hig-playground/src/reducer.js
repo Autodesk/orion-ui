@@ -14,22 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import App from './App';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import reducer from './reducer';
+const initialState = {
+  menuOpen: false,
+  welcomeMessage: 'Hello Main App Content!',
+  items: [{ id: 1, label: 'Item 1' }, { id: 2, label: 'Item 2' }],
+  lastItemId: 3,
+  selectedItem: null
+};
 
-const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-);
+export default function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'SELECT_ITEM':
+      return {
+        ...state,
+        selectedItem: action.item
+      };
+    case 'TOGGLE_MENU':
+      return {
+        ...state,
+        menuOpen: !state.menuOpen
+      };
+    default:
+      return state;
+  }
+}

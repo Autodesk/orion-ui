@@ -14,22 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import App from './App';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import reducer from './reducer';
+import { connect } from 'react-redux';
 
-const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+export class WelcomeMessage extends React.Component {
+  render() {
+    if (this.props.selectedItem) {
+      return <div>{this.props.selectedItem.label} is selected</div>;
+    } else {
+      return <div>{this.props.welcomeMessage}</div>;
+    }
+  }
+}
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-);
+const mapStateToProps = state => {
+  return {
+    welcomeMessage: state.welcomeMessage,
+    selectedItem: state.selectedItem
+  };
+};
+
+export default connect(mapStateToProps)(WelcomeMessage);

@@ -6,4 +6,5 @@ lib
 node_modules
 packages/*-playground
 packages/design-dsl
+packages/hig.web
 vendor

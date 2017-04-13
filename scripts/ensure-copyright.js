@@ -69,6 +69,7 @@ function ensureCopyright(dir) {
       '**/coverage/**',
       '**/examples/**',
       '**/vendor/**',
+      'packages/hig.web/**',
       'gemini-report/**'
     ]
   });

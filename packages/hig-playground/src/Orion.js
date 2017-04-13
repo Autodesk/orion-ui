@@ -20,7 +20,7 @@ import HIG from './HIG.Web';
 import higify from './higify';
 
 export const OrionHIG = higify({
-  displayName: 'HIG',
+  displayName: 'OrionHIG',
 
   childContext: PropTypes.shape({
     addMenu: PropTypes.func.isRequired
@@ -54,7 +54,11 @@ export const Menu = higify({
   }),
 
   create(props, { parent }) {
-    return parent.addMenu({});
+    if (!parent.addMenu) {
+      console.error('Menu must be inside HIG');
+    } else {
+      return parent.addMenu({});
+    }
   },
 
   update(instance, props) {
@@ -73,9 +77,13 @@ Menu.Top = higify({
   },
 
   create(props, { parent }) {
-    return parent.addTop({
-      onToggle: props.onToggle
-    });
+    if (!parent.addSlot) {
+      console.error('Menu.Top must be inside a Menu');
+    } else {
+      return parent.addTop({
+        onToggle: props.onToggle
+      });
+    }
   },
 
   update(instance, props) {
@@ -96,9 +104,13 @@ Menu.Slot = higify({
   },
 
   create(props, { parent }) {
-    return parent.addSlot();
+    if (!parent.addSlot) {
+      console.error('Menu.Slot must be inside a Menu');
+    } else {
+      return parent.addSlot();
+    }
   }
-})
+});
 
 export const Sidebar = higify({
   displayName: 'Sidebar',
@@ -115,9 +127,13 @@ export const Sidebar = higify({
   }),
 
   create(props, { parent }) {
-    return parent.addSidebar({
-      open: props.open
-    });
+    if (!parent.addSidebar) {
+      console.error('Sidebar must be inside a Menu');
+    } else {
+      return parent.addSidebar({
+        open: props.open
+      });
+    }
   },
 
   update(instance, props) {
@@ -140,17 +156,21 @@ Sidebar.Group = higify({
   }),
 
   create(props, { parent }) {
-    let size = '';
-
-    if (props.small) {
-      size = 'small';
+    if (!parent.addGroup) {
+      console.error('Sidebar.Group must be inside a Sidebar');
     } else {
-      size = 'large';
-    }
+      let size = '';
 
-    return parent.addGroup({
-      size: size
-    });
+      if (props.small) {
+        size = 'small';
+      } else {
+        size = 'large';
+      }
+
+      return parent.addGroup({
+        size: size
+      });
+    }
   },
 
   update(instance, props) {
@@ -162,9 +182,9 @@ Sidebar.Group = higify({
       size = 'large';
     }
 
-    instance.setSize(size)
+    instance.setSize(size);
   }
-})
+});
 
 Sidebar.Item = higify({
   displayName: 'Sidebar.Item',
@@ -177,14 +197,19 @@ Sidebar.Item = higify({
   },
 
   create(props, { parent }) {
-    return parent.addGroupItem({
-      title: props.children,
-      onClick: props.onClick
-    });
+    if (!parent.addGroupItem) {
+      console.error('Sidebar.Item must be inside a Sidebar.Group');
+    } else {
+      return parent.addGroupItem({
+        title: props.children,
+        onClick: props.onClick
+      });
+    }
   },
 
   update(instance, props) {
     instance.setTitle(props.children);
     instance.setOnClick(props.onClick);
+    instance.setSelected(props.selected);
   }
 });

@@ -16,7 +16,3 @@ src/
 
 - Automate the creation of the HIG heirarchy and Stateless React components via interface.json
 - Add a demonstration where Orion wraps a Stateless React component and makes it stateful (instead of the application having to control state exclusively)
-- Add a Slot demonstration
-- Verify that context can flow from outside the OrionHIG context into a slot
-- Verify that components can't be used out of order (show a nice error message if that happens)
-- Verify that standard DOM elements can't be used inside the OrionHIG context except for in a Slot

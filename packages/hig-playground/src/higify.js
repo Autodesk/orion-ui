@@ -17,8 +17,21 @@ limitations under the License.
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
-export default function higify({ displayName, childContext, parentContext, createContext, type, mountContext, create, update }) {
+export default function higify(
+  {
+    displayName,
+    childContext,
+    parentContext,
+    createContext,
+    type,
+    mountContext,
+    create,
+    update
+  }
+) {
   const Adapter = class extends React.Component {
+    static HIG_COMPONENT = true;
+
     constructor(props, context) {
       super(props);
 
@@ -53,25 +66,41 @@ export default function higify({ displayName, childContext, parentContext, creat
         return;
       }
 
-      const element = React.isValidElement(this.props.children) ? this.props.children : <div>{this.props.children}</div>;
-      ReactDOM.unstable_renderSubtreeIntoContainer(this, element, this.instance.getSlotNode());
+      const element = React.isValidElement(this.props.children)
+        ? this.props.children
+        : <div>{this.props.children}</div>;
+      ReactDOM.unstable_renderSubtreeIntoContainer(
+        this,
+        element,
+        this.instance.getSlotNode()
+      );
     }
 
     componentWillUnmount() {
       this._mount.replaceChild(this._el, this._anchor);
-      this.instance.teardown();
+
+      if (this.instance) {
+        this.instance.teardown();
+      }
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
       this.renderSlot();
 
-      if (update) {
+      if (update && this.instance) {
         update(this.instance, nextProps);
-
       }
     }
 
     render() {
+      React.Children.forEach(this.props.children, child => {
+        if (child.type && !child.type.HIG_COMPONENT && type !== 'slot') {
+          console.error(
+            `HIG unapproved! ${displayName} can not render DOM elements directly. Tried to render ${child.type}.`
+          );
+        }
+      });
+
       return <hig-component>{this.props.children}</hig-component>;
     }
 
@@ -81,7 +110,7 @@ export default function higify({ displayName, childContext, parentContext, creat
         parent: this.instance
       };
     }
-  }
+  };
 
   Adapter.displayName = displayName;
 

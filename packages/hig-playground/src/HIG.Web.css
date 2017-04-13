@@ -16,6 +16,10 @@
   flex-direction: column;
 }
 
+.hig-menu-content .hig-slot {
+  padding: 10px;
+}
+
 .hig-sidebar {
   display: none;
   background: green;
@@ -27,13 +31,36 @@
 
 .hig-menu-top-toggle {
   cursor: pointer;
+  font-size: 32px;
 }
 
 .hig-menu-top {
   background: yellow;
+  padding: 10px;
 }
 
 .hig-menu-slot {
   background: purple;
   flex-grow: 1;
+}
+
+.hig-group {
+  padding: 10px;
+}
+
+.hig-group-item {
+  border: none;
+  display: block;
+  background: red;
+  font-size: 16px;
+  width: 100%;
+  text-align: left;
+}
+
+.hig-group-item:focus {
+  outline: solid 1px blue;
+}
+
+.hig-group-item--selected {
+  font-weight: bold;
 }

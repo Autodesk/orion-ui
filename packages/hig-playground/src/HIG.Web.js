@@ -19,27 +19,22 @@ import 'ionicons/css/ionicons.min.css';
 
 class Item {
   constructor(props, mountNode) {
-    this._el1 = document.createElement('div');
-    this._el1.classList.add('group-item-top');
-    mountNode.appendChild(this._el1);
+    this._el = document.createElement('button');
+    this._el.classList.add('hig-group-item');
+    mountNode.appendChild(this._el);
 
     this.setTitle(props.title);
     this.setOnClick(props.onClick);
-
-    this._el2 = document.createElement('div');
-    this._el2.classList.add('group-item-bottom');
-
-    mountNode.appendChild(this._el2);
+    this.setSelected(props.selected);
   }
 
   teardown() {
-    this._el1.removeEventListener('click', this._clickListener);
-    this._el1.parentNode.removeChild(this._el1);
-    this._el2.parentNode.removeChild(this._el2);
+    this._el.removeEventListener('click', this._clickListener);
+    this._el.parentNode.removeChild(this._el);
   }
 
   setTitle(title) {
-    this._el1.innerHTML = title;
+    this._el.innerHTML = title;
   }
 
   setOnClick(listener) {
@@ -50,11 +45,19 @@ class Item {
     if (this._clickListener === listener) {
       return;
     } else {
-      this._el1.removeEventListener('click', this._clickListener)
+      this._el.removeEventListener('click', this._clickListener);
     }
 
     this._clickListener = listener;
-    this._el1.addEventListener('click', this._clickListener);
+    this._el.addEventListener('click', this._clickListener);
+  }
+
+  setSelected(selected) {
+    if (selected) {
+      this._el.classList.add('hig-group-item--selected');
+    } else {
+      this._el.classList.remove('hig-group-item--selected');
+    }
   }
 }
 
@@ -141,13 +144,12 @@ class Top {
     if (this._toggleListener === listener) {
       return;
     } else {
-      this._toggleButton.removeEventListener('click', this._toggleListener)
+      this._toggleButton.removeEventListener('click', this._toggleListener);
     }
 
     this._toggleListener = listener;
     this._toggleButton.addEventListener('click', this._toggleListener);
   }
-
 
   teardown() {
     this._el.parentNode.removeChild(this._el);
@@ -214,14 +216,17 @@ class Menu {
   }
 
   addSlot() {
-    return new Slot({ className: 'hig-menu-slot' }, this._content, this._slotAnchor);
+    return new Slot(
+      { className: 'hig-menu-slot' },
+      this._content,
+      this._slotAnchor
+    );
   }
 
   teardown() {
     this._el.parentNode.removeChild(this._el);
   }
 }
-
 
 export default class HIG {
   constructor(mountNode, anchorNode) {

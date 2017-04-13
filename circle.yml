@@ -17,7 +17,7 @@ dependencies:
     - "packages/style/node_modules"
 test:
   pre:
-    - npm run test-lib
+    - npm run build-lib
     - cd packages/react && npm run start-storybook:
         background: true
   override:

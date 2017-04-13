@@ -17,10 +17,25 @@ limitations under the License.
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { Button } from '../../orion/hig-react';
+
 export class WelcomeMessage extends React.Component {
+  handleDeselect = event => {
+    event.preventDefault();
+
+    this.props.dispatch({ type: 'DESELECT_ITEM' });
+  };
   render() {
     if (this.props.selectedItem) {
-      return <div>{this.props.selectedItem.label} is selected</div>;
+      return (
+        <div>
+          {this.props.selectedItem.label} is selected<div
+            style={{ paddingTop: 10 }}
+          >
+            <Button title="Deselect" onClick={this.handleDeselect} />
+          </div>
+        </div>
+      );
     } else {
       return <div>{this.props.welcomeMessage}</div>;
     }

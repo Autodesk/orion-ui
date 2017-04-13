@@ -29,6 +29,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         selectedItem: action.item
       };
+    case 'DESELECT_ITEM':
+      return {
+        ...state,
+        selectedItem: null
+      };
     case 'TOGGLE_MENU':
       return {
         ...state,

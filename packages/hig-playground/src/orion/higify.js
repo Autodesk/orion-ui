@@ -36,7 +36,7 @@ export default function higify(
       super(props);
 
       if (createContext) {
-        this.instance = createContext();
+        this.instance = createContext(props);
       } else {
         this.instance = create(props, context);
       }
@@ -58,17 +58,17 @@ export default function higify(
         mountContext(this.instance, this._mount, this._anchor);
       }
 
-      this.renderSlot();
+      this.renderSlot(this.props);
     }
 
-    renderSlot() {
+    renderSlot(props) {
       if (type !== 'slot') {
         return;
       }
 
-      const element = React.isValidElement(this.props.children)
-        ? this.props.children
-        : <div>{this.props.children}</div>;
+      const element = React.isValidElement(props.children)
+        ? props.children
+        : <div>{props.children}</div>;
       ReactDOM.unstable_renderSubtreeIntoContainer(
         this,
         element,
@@ -84,17 +84,19 @@ export default function higify(
       }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-      this.renderSlot();
+    componentWillReceiveProps(nextProps) {
+      this.renderSlot(nextProps);
 
       if (update && this.instance) {
-        update(this.instance, nextProps);
+        update(this.instance, nextProps, this.props);
       }
     }
 
     render() {
       React.Children.forEach(this.props.children, child => {
-        if (child.type && !child.type.HIG_COMPONENT && type !== 'slot') {
+        if (
+          child && child.type && !child.type.HIG_COMPONENT && type !== 'slot'
+        ) {
           console.error(
             `HIG unapproved! ${displayName} can not render DOM elements directly. Tried to render ${child.type}.`
           );

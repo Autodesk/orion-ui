@@ -1,8 +1,3 @@
-.hig-context {
-  width: 100%;
-  height: 100%;
-}
-
 .hig-menu {
   width: 100%;
   height: 100%;
@@ -31,7 +26,14 @@
 
 .hig-menu-top-toggle {
   cursor: pointer;
+  background: none;
+  border: none;
   font-size: 32px;
+  padding: 0;
+}
+
+.hig-menu-top-toggle:focus {
+  outline: solid 1px blue;
 }
 
 .hig-menu-top {
@@ -46,6 +48,11 @@
 
 .hig-group {
   padding: 10px;
+}
+
+.hig-group--small .hig-group-item {
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .hig-group-item {

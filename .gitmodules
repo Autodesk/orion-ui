@@ -1,0 +1,3 @@
+[submodule "packages/hig.web"]
+	path = packages/hig.web
+	url = git@github.com:camwest/hig.web.git

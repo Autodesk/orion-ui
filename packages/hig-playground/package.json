@@ -10,13 +10,14 @@
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-redux": "^5.0.4",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "hig.web": "^1.0.0"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
   },
   "scripts": {
-    "start": "BROWSER=none PORT=3002 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo 'No tests configured'"
   }

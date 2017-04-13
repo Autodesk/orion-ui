@@ -14,51 +14,80 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import 'hig.web/dist/hig.css';
+import { Button as HIGButton } from 'hig.web';
+
 import { PropTypes } from 'react';
 
-import HIG from './HIG.Web';
+import { Menu as HIGMenu } from '../hig.web';
 import higify from './higify';
 
-export const OrionHIG = higify({
-  displayName: 'OrionHIG',
+class ButtonWrapper {
+  constructor(props) {
+    this.props = props;
+  }
 
-  childContext: PropTypes.shape({
-    addMenu: PropTypes.func.isRequired
-  }),
+  mount(mountNode, anchorNode) {
+    this._hig = new HIGButton(mountNode);
 
-  createContext() {
-    return new HIG();
+    // I need to be able to use insertBefore instead of just appendChild
+    mountNode.insertBefore(this._hig.el, anchorNode);
+
+    this.applyProps(this.props);
+  }
+
+  teardown() {
+    this._hig.el.parentNode.removeChild(this._hig.el);
+  }
+
+  applyProps(props, prevProps = {}) {
+    if (props.title) {
+      this._hig.setTitle(props.title);
+    }
+
+    if (props.link) {
+      this._hig.setLink(props.link);
+    }
+
+    if (prevProps.onClick && props.onClick) {
+      console.warn('memory leak!');
+    }
+
+    if (props.onClick) {
+      this._hig.addHigEventListener('click', props.onClick);
+    }
+  }
+}
+
+export const Button = higify({
+  displayName: 'HIG.Button',
+
+  createContext(props) {
+    return new ButtonWrapper(props);
   },
 
-  mountContext(instance, mountPoint, anchorPoint) {
-    instance.mount(mountPoint, anchorPoint);
+  mountContext(instance, mountNode, anchorNode) {
+    instance.mount(mountNode, anchorNode);
   },
 
-  update(instance, props) {
-    // nothing to update
+  update(instance, props, prevProps) {
+    instance.applyProps(props, prevProps);
   }
 });
 
 export const Menu = higify({
-  displayName: 'Menu',
-
-  parentContext: {
-    type: 'HIG',
-    shape: PropTypes.shape({
-      addMenu: PropTypes.func.isRequired
-    })
-  },
+  displayName: 'HIG.Menu',
 
   childContext: PropTypes.shape({
     addSidebar: PropTypes.func.isRequired
   }),
 
-  create(props, { parent }) {
-    if (!parent.addMenu) {
-      console.error('Menu must be inside HIG');
-    } else {
-      return parent.addMenu({});
-    }
+  createContext(props) {
+    return new HIGMenu(props);
+  },
+
+  mountContext(instance, mountNode, anchorNode) {
+    instance.mount(mountNode, anchorNode);
   },
 
   update(instance, props) {
@@ -67,10 +96,10 @@ export const Menu = higify({
 });
 
 Menu.Top = higify({
-  displayName: 'Menu.Top',
+  displayName: 'HIG.Menu.Top',
 
   parentContext: {
-    type: 'Menu',
+    type: 'HIG.Menu',
     shape: PropTypes.shape({
       addTop: PropTypes.func.isRequired
     })
@@ -91,13 +120,12 @@ Menu.Top = higify({
   }
 });
 
-Menu.Slot = higify({
-  displayName: 'Menu.Slot',
+export const Slot = higify({
+  displayName: 'HIG.Slot',
 
   type: 'slot',
 
   parentContext: {
-    type: 'Menu',
     shape: PropTypes.shape({
       addSlot: PropTypes.func.isRequired
     })
@@ -105,18 +133,20 @@ Menu.Slot = higify({
 
   create(props, { parent }) {
     if (!parent.addSlot) {
-      console.error('Menu.Slot must be inside a Menu');
+      console.error(
+        'HIG.Slot must be inside a slottable component (example: Menu)'
+      );
     } else {
       return parent.addSlot();
     }
   }
 });
 
-export const Sidebar = higify({
-  displayName: 'Sidebar',
+Menu.Sidebar = higify({
+  displayName: 'HIG.Menu.Sidebar',
 
   parentContext: {
-    type: 'Menu',
+    type: 'HIG.Menu',
     shape: PropTypes.shape({
       addSidebar: PropTypes.func.isRequired
     })
@@ -141,11 +171,11 @@ export const Sidebar = higify({
   }
 });
 
-Sidebar.Group = higify({
-  displayName: 'Sidebar.Group',
+Menu.Sidebar.Group = higify({
+  displayName: 'HIG.Menu.Sidebar.Group',
 
   parentContext: {
-    type: 'Sidebar',
+    type: 'HIG.Menu.Sidebar',
     shape: PropTypes.shape({
       addGroup: PropTypes.func.isRequired
     })
@@ -186,11 +216,11 @@ Sidebar.Group = higify({
   }
 });
 
-Sidebar.Item = higify({
-  displayName: 'Sidebar.Item',
+Menu.Sidebar.Item = higify({
+  displayName: 'HIG.Menu.Sidebar.Item',
 
   parentContext: {
-    type: 'Sidebar.Group',
+    type: 'HIG.Menu.Sidebar.Group',
     shape: PropTypes.shape({
       addGroupItem: PropTypes.func.isRequired
     })
@@ -202,7 +232,8 @@ Sidebar.Item = higify({
     } else {
       return parent.addGroupItem({
         title: props.children,
-        onClick: props.onClick
+        onClick: props.onClick,
+        selected: props.selected
       });
     }
   },

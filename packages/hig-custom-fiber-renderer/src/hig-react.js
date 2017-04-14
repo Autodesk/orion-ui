@@ -77,15 +77,15 @@ class HIGContext {
 
   transition(type) {
     // find the hig instance. Create a new HIGContext
-    const matchChild = this.children.find(child => {
-      debugger;
-    });
+    // const matchChild = this.children.find(child => {
+    //   debugger;
+    // });
 
-    if (!matchChild) {
-      throw new Error(`could not transition to ${type}`);
-    }
+    // if (!matchChild) {
+    //   throw new Error(`could not transition to ${type}`);
+    // }
 
-    return new HIGContext(instance, this);
+    // return new HIGContext(instance, this);
   }
 }
 

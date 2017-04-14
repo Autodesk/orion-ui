@@ -16,7 +16,7 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HIG, { Button, Menu, Slot } from './hig-react';
+import HIG, { Menu, Slot } from './hig-react';
 
 class App extends React.Component {
   constructor() {

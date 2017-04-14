@@ -16,7 +16,7 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HIG from './hig-react';
+import HIG, { Button, Menu, Slot } from './hig-react';
 
 class App extends React.Component {
   constructor() {
@@ -31,13 +31,17 @@ class App extends React.Component {
     });
   };
 
+  //   <hig-button onClick={() => alert('clicked HIG button')}>
+  //   {this.state.buttonLabel}
+  // </hig-button>
+
   render() {
     return (
       <div>
         <HIG>
-          <HIG.Button onClick={() => alert('clicked HIG button')}>
-            {this.state.buttonLabel}
-          </HIG.Button>
+          <Menu>
+            <Slot>Hello world</Slot>
+          </Menu>
         </HIG>
         <input
           type="text"

@@ -23,7 +23,10 @@ connectToDevTools({
 
 import React, { Component } from 'react';
 import ReactFiberReconciler from 'react-dom/lib/ReactFiberReconciler';
-import { unstable_renderSubtreeIntoContainer, unmountComponentAtNode } from 'react-dom';
+import {
+  unstable_renderSubtreeIntoContainer,
+  unmountComponentAtNode
+} from 'react-dom';
 
 import HIGWeb from './hig-web';
 
@@ -74,7 +77,7 @@ class HIGContext {
 
   transition(type) {
     // find the hig instance. Create a new HIGContext
-    const matchChild = this.children.find((child) => {
+    const matchChild = this.children.find(child => {
       debugger;
     });
 
@@ -100,9 +103,7 @@ function applyButtonProps(instance, props, prevProps = {}) {
   }
 }
 
-function applyMenuProps(instance, props, prevProps = {}) {
-
-}
+function applyMenuProps(instance, props, prevProps = {}) {}
 
 const HIGRenderer = ReactFiberReconciler({
   useSyncScheduling: true,
@@ -210,7 +211,7 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   // turn on event handlers (in react-dom)
-  resetAfterCommit() { },
+  resetAfterCommit() {},
 
   scheduleAnimationCallback(fn) {
     debugger;
@@ -255,7 +256,6 @@ export default class HIG extends Component {
 export const Button = types.BUTTON;
 export const Menu = types.MENU;
 
-
 export class Slot extends Component {
   componentDidMount() {
     this._renderSlot();
@@ -266,7 +266,11 @@ export class Slot extends Component {
     const children = this.props.children;
     const containerNode = this._higRef;
 
-    unstable_renderSubtreeIntoContainer(parentComponent, children, containerNode);
+    unstable_renderSubtreeIntoContainer(
+      parentComponent,
+      children,
+      containerNode
+    );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -278,6 +282,8 @@ export class Slot extends Component {
   }
 
   render() {
-    return <hig-slot ref={ref => this._higRef = ref}>{this.props.children}</hig-slot>
+    return (
+      <hig-slot ref={ref => this._higRef = ref}>{this.props.children}</hig-slot>
+    );
   }
 }

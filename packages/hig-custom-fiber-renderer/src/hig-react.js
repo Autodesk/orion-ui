@@ -80,11 +80,9 @@ class HIGContext {
     // const matchChild = this.children.find(child => {
     //   debugger;
     // });
-
     // if (!matchChild) {
     //   throw new Error(`could not transition to ${type}`);
     // }
-
     // return new HIGContext(instance, this);
   }
 }

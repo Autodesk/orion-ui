@@ -16,11 +16,12 @@ limitations under the License.
 */
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
-import reducer from './reducer';
+import App from './consumer/App';
+import reducer from './consumer/reducer';
 
 const store = createStore(
   reducer,

@@ -5,7 +5,7 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
     "build": "lerna run build && npm run copy-package-builds && npm run set-marketing-to-root",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
@@ -20,7 +20,8 @@
     "test": "npm run ensure-copyright && npm run lint && lerna run test --stream",
     "start": "lerna run start --no-sort --stream --concurrency 50",
     "start-playground": "node scripts/start-playground.js",
-    "publish-canary": "lerna publish --canary --yes --exact"
+    "publish-canary": "lerna publish --canary --yes --exact",
+    "postinstall": "git submodule init && git submodule update --remote"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "url": "https://github.com/orion-ui/orion/issues"
   },
   "homepage": "https://github.com/orion-ui/orion#readme",
+  "dependencies": {},
   "devDependencies": {
     "@kadira/storybook-addon-knobs": "^1.7.1",
     "@kadira/storybook-addons": "^1.6.1",

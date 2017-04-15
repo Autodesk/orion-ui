@@ -126,10 +126,10 @@ class Top {
     this._el.classList.add('hig-menu-top');
 
     this._el.innerHTML = `
-      <i class="hig-menu-top-toggle ion ion-navicon"></i>
+      <button class="hig-menu-top-toggle"><i class="ion ion-navicon"></i></button>
     `;
 
-    this._toggleButton = this._el.querySelector('.ion-navicon');
+    this._toggleButton = this._el.querySelector('.hig-menu-top-toggle');
 
     this.setOnToggle(props.onToggle);
 
@@ -177,8 +177,8 @@ class Slot {
   }
 }
 
-class Menu {
-  constructor(props, mountNode) {
+export class Menu {
+  constructor(props) {
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu');
 
@@ -203,8 +203,10 @@ class Menu {
 
     this._content.appendChild(this._topAnchor);
     this._content.appendChild(this._slotAnchor);
+  }
 
-    mountNode.appendChild(this._el);
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
   }
 
   addSidebar(props) {
@@ -221,25 +223,6 @@ class Menu {
       this._content,
       this._slotAnchor
     );
-  }
-
-  teardown() {
-    this._el.parentNode.removeChild(this._el);
-  }
-}
-
-export default class HIG {
-  constructor(mountNode, anchorNode) {
-    this._el = document.createElement('div');
-    this._el.classList.add('hig-context');
-  }
-
-  mount(mountNode, anchorNode) {
-    mountNode.insertBefore(this._el, anchorNode);
-  }
-
-  addMenu(props) {
-    return new Menu(props, this._el);
   }
 
   teardown() {

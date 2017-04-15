@@ -17,17 +17,16 @@ limitations under the License.
 import { connectToDevTools } from 'react-devtools-core';
 
 connectToDevTools({
-  isAppActive() {
-    // Don't steal the DevTools from currently active app.
-    return true;
-  },
   host: 'localhost',
-  // default port? port: ,
-  resolveRNStyle: null // TODO maybe: require('flattenStyle')
+  port: 3000
 });
 
 import React, { Component } from 'react';
 import ReactFiberReconciler from 'react-dom/lib/ReactFiberReconciler';
+import {
+  unstable_renderSubtreeIntoContainer,
+  unmountComponentAtNode
+} from 'react-dom';
 
 import HIGWeb from './hig-web';
 
@@ -36,8 +35,57 @@ import HIGWeb from './hig-web';
  */
 
 const types = {
-  BUTTON: 'Button'
+  BUTTON: 'hig-button',
+  MENU: 'hig-menu',
+  BASE_SLOT: 'hig-slot'
 };
+
+class HIGContext {
+  constructor(hig, parent) {
+    this.parent = parent;
+    this.hig = hig;
+    this.children = [];
+  }
+
+  createInstance(type, props) {
+    switch (type) {
+      case types.BUTTON: {
+        const instance = this.hig.addButton();
+        instance._applyProps = applyButtonProps;
+        instance._applyProps(instance, props);
+
+        // Store instance for later child creation
+        this.children.push([type, instance]);
+
+        return instance;
+      }
+
+      case types.MENU: {
+        const instance = this.hig.addMenu();
+        instance._applyProps = applyMenuProps;
+        instance._applyProps(instance, props);
+
+        // Store instance for later child creation
+        this.children.push([type, instance]);
+
+        return instance;
+      }
+      default:
+        throw new Error('unknown type');
+    }
+  }
+
+  transition(type) {
+    // find the hig instance. Create a new HIGContext
+    // const matchChild = this.children.find(child => {
+    //   debugger;
+    // });
+    // if (!matchChild) {
+    //   throw new Error(`could not transition to ${type}`);
+    // }
+    // return new HIGContext(instance, this);
+  }
+}
 
 function applyButtonProps(instance, props, prevProps = {}) {
   if (props.children) {
@@ -53,6 +101,8 @@ function applyButtonProps(instance, props, prevProps = {}) {
   }
 }
 
+function applyMenuProps(instance, props, prevProps = {}) {}
+
 const HIGRenderer = ReactFiberReconciler({
   useSyncScheduling: true,
 
@@ -63,15 +113,7 @@ const HIGRenderer = ReactFiberReconciler({
     hostContext,
     internalInstanceHandle
   ) {
-    switch (type) {
-      case types.BUTTON:
-        const instance = hostContext.addButton();
-        instance._applyProps = applyButtonProps;
-        instance._applyProps(instance, props);
-        return instance;
-      default:
-        throw new Error('unknown type');
-    }
+    return hostContext.createInstance(type, props);
   },
 
   appendInitialChild(parentInstance, child) {
@@ -127,11 +169,11 @@ const HIGRenderer = ReactFiberReconciler({
 
   // create context to provide to children
   getRootHostContext(rootContainerInstance) {
-    return rootContainerInstance;
+    return new HIGContext(rootContainerInstance);
   },
 
   getChildHostContext(parentHostContext, type) {
-    return parentHostContext;
+    return parentHostContext.transition(type);
   },
 
   // turn off event handlers (in react-dom)
@@ -209,4 +251,37 @@ export default class HIG extends Component {
   }
 }
 
-HIG.Button = types.BUTTON;
+export const Button = types.BUTTON;
+export const Menu = types.MENU;
+
+export class Slot extends Component {
+  componentDidMount() {
+    this._renderSlot();
+  }
+
+  _renderSlot() {
+    const parentComponent = this;
+    const children = this.props.children;
+    const containerNode = this._higRef;
+
+    unstable_renderSubtreeIntoContainer(
+      parentComponent,
+      children,
+      containerNode
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this._renderSlot();
+  }
+
+  componentWillUnmount() {
+    unmountComponentAtNode(this._higRef);
+  }
+
+  render() {
+    return (
+      <hig-slot ref={ref => this._higRef = ref}>{this.props.children}</hig-slot>
+    );
+  }
+}

@@ -15,11 +15,11 @@ limitations under the License.
 
 */
 class Button {
-  constructor(mountNode) {
+  constructor(mountNode, anchorNode) {
     this._mountNode = mountNode;
     this._el = document.createElement('button');
     this._el.classList.add('hig-button');
-    this._mountNode.appendChild(this._el);
+    this._mountNode.insertBefore(this._el, anchorNode);
   }
   setLabel(label) {
     this._el.textContent = label;
@@ -34,17 +34,26 @@ class Button {
   }
 }
 
+class Menu {
+  constructor(mountNode, anchorNode) {
+    this._mountNode = mountNode;
+    this._el = document.createElement('button');
+    this._el.classList.add('hig-menu');
+    this._mountNode.insertBefore(this._el, anchorNode);
+  }
+}
+
 export default class HIG {
   constructor(mountNode) {
     this._mountNode = mountNode;
   }
 
   addMenu(props) {
-    // return new Menu(props, this._el);
+    return new Menu(this._mountNode, null);
   }
 
   addButton() {
-    return new Button(this._mountNode);
+    return new Button(this._mountNode, null);
   }
 
   // teardown() {

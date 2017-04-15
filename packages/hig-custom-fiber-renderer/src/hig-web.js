@@ -14,49 +14,71 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-class Button {
-  constructor(mountNode, anchorNode) {
-    this._mountNode = mountNode;
+export class Button {
+  constructor(props) {
     this._el = document.createElement('button');
     this._el.classList.add('hig-button');
-    this._mountNode.insertBefore(this._el, anchorNode);
+
+    this.setLabel(props.label);
+    this.setOnClick(props.onClick);
   }
+
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
   setLabel(label) {
     this._el.textContent = label;
   }
 
   setOnClick(listener) {
+    if (this._clickListener) {
+      this._el.removeEventListener('click', listener);
+    }
+
     this._el.addEventListener('click', listener);
-
-    return {
-      dispose: () => this._el.removeEventListener('click', listener)
-    };
+    this._clickListener = listener;
   }
 }
 
-class Menu {
-  constructor(mountNode, anchorNode) {
-    this._mountNode = mountNode;
-    this._el = document.createElement('button');
+export class Slot {
+  constructor(props) {
+    this._el = document.createElement('div');
+    this._el.classList.add('hig-slot');
+
+    if (props.className) {
+      this._el.classList.add(props.className);
+    }
+  }
+
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  getDOMNode() {
+    return this._el;
+  }
+}
+
+export class Menu {
+  constructor(props) {
+    this._el = document.createElement('div');
     this._el.classList.add('hig-menu');
-    this._mountNode.insertBefore(this._el, anchorNode);
-  }
-}
-
-export default class HIG {
-  constructor(mountNode) {
-    this._mountNode = mountNode;
   }
 
-  addMenu(props) {
-    return new Menu(this._mountNode, null);
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
   }
 
-  addButton() {
-    return new Button(this._mountNode, null);
+  _appendSlot(instance, anchorNode) {
+    instance.mount(this._el, null);
   }
 
-  // teardown() {
-  //   this._el.parentNode.removeChild(this._el);
-  // }
+  appendChild(instance) {
+    if (instance instanceof Slot) {
+      this._appendSlot(instance);
+    } else {
+      throw new Error('unknown element type');
+    }
+  }
 }

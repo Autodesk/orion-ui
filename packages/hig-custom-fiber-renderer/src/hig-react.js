@@ -28,7 +28,7 @@ import {
   unmountComponentAtNode
 } from 'react-dom';
 
-import HIGWeb from './hig-web';
+import * as HIGWeb from './hig-web';
 
 /**
  * HIG Fiber Renderer
@@ -40,69 +40,6 @@ const types = {
   BASE_SLOT: 'hig-slot'
 };
 
-class HIGContext {
-  constructor(hig, parent) {
-    this.parent = parent;
-    this.hig = hig;
-    this.children = [];
-  }
-
-  createInstance(type, props) {
-    switch (type) {
-      case types.BUTTON: {
-        const instance = this.hig.addButton();
-        instance._applyProps = applyButtonProps;
-        instance._applyProps(instance, props);
-
-        // Store instance for later child creation
-        this.children.push([type, instance]);
-
-        return instance;
-      }
-
-      case types.MENU: {
-        const instance = this.hig.addMenu();
-        instance._applyProps = applyMenuProps;
-        instance._applyProps(instance, props);
-
-        // Store instance for later child creation
-        this.children.push([type, instance]);
-
-        return instance;
-      }
-      default:
-        throw new Error('unknown type');
-    }
-  }
-
-  transition(type) {
-    // find the hig instance. Create a new HIGContext
-    // const matchChild = this.children.find(child => {
-    //   debugger;
-    // });
-    // if (!matchChild) {
-    //   throw new Error(`could not transition to ${type}`);
-    // }
-    // return new HIGContext(instance, this);
-  }
-}
-
-function applyButtonProps(instance, props, prevProps = {}) {
-  if (props.children) {
-    instance.setLabel(props.children);
-  }
-
-  if (prevProps.onClick) {
-    instance._onClick.dispose();
-  }
-
-  if (props.onClick) {
-    instance._onClick = instance.setOnClick(props.onClick);
-  }
-}
-
-function applyMenuProps(instance, props, prevProps = {}) {}
-
 const HIGRenderer = ReactFiberReconciler({
   useSyncScheduling: true,
 
@@ -113,20 +50,46 @@ const HIGRenderer = ReactFiberReconciler({
     hostContext,
     internalInstanceHandle
   ) {
-    return hostContext.createInstance(type, props);
+    switch (type) {
+      case types.BASE_SLOT: {
+        return new HIGWeb.Slot(props);
+      }
+      case types.MENU: {
+        return new HIGWeb.Menu(props);
+      }
+      case types.BUTTON: {
+        return new HIGWeb.Button(props);
+      }
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
+  },
+
+  getPublicInstance(instance) {
+    debugger;
+    if (instance.getDOMNode) {
+      return instance.getDOMNode();
+    } else {
+      console.error('no DOM node available');
+    }
   },
 
   appendInitialChild(parentInstance, child) {
     debugger;
-    // do append
+    parentInstance.appendChild(child);
   },
 
   finalizeInitialChildren(newElement, type, props, rootContainerInstance) {
+    debugger;
     return false;
   },
 
   appendChild(parentInstance, child) {
-    console.log('appendChild');
+    if (parentInstance instanceof HTMLElement) {
+      child.mount(parentInstance, null);
+    } else {
+      parentInstance.appendChild(child);
+    }
   },
 
   insertBefore(parentInstance, child, beforeChild) {
@@ -159,7 +122,6 @@ const HIGRenderer = ReactFiberReconciler({
     internalInstanceHandle
   ) {
     debugger;
-    // return TextElement
   },
 
   commitTextUpdate(textElement, oldText, newText) {
@@ -169,21 +131,21 @@ const HIGRenderer = ReactFiberReconciler({
 
   // create context to provide to children
   getRootHostContext(rootContainerInstance) {
-    return new HIGContext(rootContainerInstance);
+    return rootContainerInstance;
   },
 
   getChildHostContext(parentHostContext, type) {
-    return parentHostContext.transition(type);
+    return parentHostContext;
   },
 
   // turn off event handlers (in react-dom)
   prepareForCommit() {
+    debugger;
     // no-op
   },
 
   commitMount(instance, type, newProps, internalInstanceHandle) {
     debugger;
-    // ReactDOM uses this to focus any input elements it just created
   },
 
   prepareUpdate(
@@ -194,7 +156,8 @@ const HIGRenderer = ReactFiberReconciler({
     rootContainerInstance,
     hostContext
   ) {
-    return true;
+    debugger;
+    return false;
   },
 
   commitUpdate(
@@ -205,6 +168,7 @@ const HIGRenderer = ReactFiberReconciler({
     newProps,
     internalInstanceHandle
   ) {
+    debugger;
     instance._applyProps(instance, newProps, oldProps);
   },
 
@@ -226,12 +190,8 @@ const HIGRenderer = ReactFiberReconciler({
  */
 export default class HIG extends Component {
   componentDidMount() {
-    // Create the top level HIGWeb object which can create all other objects
-    // This is the context which knows how to construct everything else
-    this._hig = new HIGWeb(this._higRef);
-
     // Pass the new HIGWeb instance to a custom fiber renderer container
-    this._mountNode = HIGRenderer.createContainer(this._hig);
+    this._mountNode = HIGRenderer.createContainer(this._higRef);
 
     // Update the container with the react children
     // This is equal to ReactDOM.render I think
@@ -256,32 +216,26 @@ export const Menu = types.MENU;
 
 export class Slot extends Component {
   componentDidMount() {
-    this._renderSlot();
+    this.renderSlot(this.props);
   }
 
-  _renderSlot() {
+  renderSlot(props) {
     const parentComponent = this;
-    const children = this.props.children;
-    const containerNode = this._higRef;
+    const element = props.children;
+    const container = this._higRef;
 
-    unstable_renderSubtreeIntoContainer(
-      parentComponent,
-      children,
-      containerNode
-    );
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this._renderSlot();
+    unstable_renderSubtreeIntoContainer(parentComponent, element, container);
   }
 
   componentWillUnmount() {
     unmountComponentAtNode(this._higRef);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.renderSlot(nextProps);
+  }
+
   render() {
-    return (
-      <hig-slot ref={ref => this._higRef = ref}>{this.props.children}</hig-slot>
-    );
+    return <hig-slot ref={ref => this._higRef = ref} />;
   }
 }

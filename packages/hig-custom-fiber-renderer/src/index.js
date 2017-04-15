@@ -16,7 +16,7 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HIG, { Menu, Slot } from './hig-react';
+import HIG, { Menu, Slot, Button } from './hig-react';
 
 class App extends React.Component {
   constructor() {
@@ -39,8 +39,11 @@ class App extends React.Component {
     return (
       <div>
         <HIG>
+          <Button>My button</Button>
           <Menu>
-            <Slot>Hello world</Slot>
+            <Slot>
+              <p>Some DOM Content!</p>
+            </Slot>
           </Menu>
         </HIG>
         <input

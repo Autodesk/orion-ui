@@ -35,10 +35,10 @@ class App extends React.Component {
     return (
       <div>
         <HIG>
-          <Button onClick={() => alert('on click!')}>My button</Button>
+          <Button>{this.state.buttonLabel}</Button>
           <Menu>
             <Slot>
-              <p>Some DOM Content!</p>
+              <p>Some DOM Content! {this.state.buttonLabel}</p>
             </Slot>
           </Menu>
         </HIG>

@@ -17,12 +17,9 @@ limitations under the License.
 export class Button {
   root = true;
 
-  constructor(props) {
+  constructor() {
     this._el = document.createElement('button');
     this._el.classList.add('hig-button');
-
-    this.setLabel(props.label);
-    this.setOnClick(props.onClick);
   }
 
   mount(mountNode, anchorNode) {
@@ -34,12 +31,11 @@ export class Button {
   }
 
   setOnClick(listener) {
-    if (this._clickListener) {
-      this._el.removeEventListener('click', listener);
-    }
-
     this._el.addEventListener('click', listener);
-    this._clickListener = listener;
+
+    return {
+      dispose: () => this._el.removeEventListener('click', listener)
+    };
   }
 }
 

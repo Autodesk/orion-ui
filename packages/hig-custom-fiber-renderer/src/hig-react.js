@@ -42,23 +42,70 @@ const types = {
 
 class ButtonWrapper {
   constructor(props) {
-    const p = this._g(props);
-    this.instance = new HIGWeb.Button(p);
+    this.instance = new HIGWeb.Button();
+
+    if (props.children) {
+      this.instance.setLabel(props.children);
+    }
+
+    if (props.onClick) {
+      this._clickListener = this.instance.setOnClick(props.onClick);
+    }
   }
 
   get root() {
     return this.instance.root;
   }
 
-  _g(props) {
-    return {
-      label: props.children,
-      onClick: props.onClick
-    };
+  mount(mountNode, anchorNode) {
+    this.instance.mount(mountNode, anchorNode);
+  }
+
+  commitUpdate(updatePayload, oldProps, newProps) {
+    for (let i = 0; i < updatePayload.length; i += 2) {
+      const propKey = updatePayload[i];
+      const propValue = updatePayload[i + 1];
+
+      switch (propKey) {
+        case 'children': {
+          this.instance.setLabel(propValue);
+          break;
+        }
+        case 'onClick': {
+          if (this._clickListener) {
+            this._clickListener.dispose();
+          }
+
+          this._clickListner = this.instance.setOnClick(propValue);
+          break;
+        }
+        default: {
+          console.warn(`${propKey} is unknown`);
+        }
+      }
+    }
+  }
+}
+
+class MenuWrapper {
+  constructor(props) {
+    this.instance = new HIGWeb.Menu();
+  }
+
+  get root() {
+    return this.instance.root;
   }
 
   mount(mountNode, anchorNode) {
     this.instance.mount(mountNode, anchorNode);
+  }
+
+  appendChild(instance) {
+    this.instance.appendChild(instance);
+  }
+
+  commitUpdate(updatePayload, oldProps, newProps) {
+    /* no-op */
   }
 }
 
@@ -77,7 +124,7 @@ const HIGRenderer = ReactFiberReconciler({
         return new HIGWeb.Slot(props);
       }
       case types.MENU: {
-        return new HIGWeb.Menu(props);
+        return new MenuWrapper(props);
       }
       case types.BUTTON: {
         return new ButtonWrapper(props);
@@ -88,7 +135,6 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   getPublicInstance(instance) {
-    debugger;
     if (instance.getDOMNode) {
       return instance.getDOMNode();
     } else {
@@ -97,7 +143,6 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   appendInitialChild(parentInstance, child) {
-    debugger;
     parentInstance.appendChild(child);
   },
 
@@ -176,8 +221,51 @@ const HIGRenderer = ReactFiberReconciler({
     rootContainerInstance,
     hostContext
   ) {
-    debugger;
-    return false;
+    // example
+    // const oldProps = { label: 'foo' }
+    // const newProps = { label: 'bar', onClick: 'foo' };
+
+    const updatePayload = [];
+    const mergedProps = {};
+
+    // Fill out the initial props
+    for (const propKey in oldProps) {
+      mergedProps[propKey] = [oldProps[propKey], null];
+    }
+
+    // example
+    // mergedProps =  { label: ['foo', null] }
+
+    // Now overwrite the changes
+    for (const propKey in newProps) {
+      // When prop exists overwrite the value
+      if (mergedProps[propKey] !== undefined) {
+        mergedProps[propKey][1] = newProps[propKey];
+      } else {
+        mergedProps[propKey] = [null, newProps[propKey]];
+      }
+    }
+
+    // example
+    // mergedProps = { label: ['foo', 'bar'], onClick: [null, 'foo']}
+
+    // Compare differences
+    for (const propKey in mergedProps) {
+      const [oldVal, newVal] = mergedProps[propKey];
+
+      if (oldVal !== newVal) {
+        updatePayload.push(propKey, newVal);
+      }
+    }
+
+    // example
+    // updatePayload = ['label', 'bar', 'onClick', 'foo']
+
+    if (updatePayload.length === 0) {
+      return null;
+    } else {
+      return updatePayload;
+    }
   },
 
   commitUpdate(
@@ -188,8 +276,7 @@ const HIGRenderer = ReactFiberReconciler({
     newProps,
     internalInstanceHandle
   ) {
-    debugger;
-    instance._applyProps(instance, newProps, oldProps);
+    instance.commitUpdate(updatePayload, oldProps, newProps);
   },
 
   // turn on event handlers (in react-dom)

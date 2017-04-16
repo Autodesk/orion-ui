@@ -15,6 +15,8 @@ limitations under the License.
 
 */
 export class Button {
+  root = true;
+
   constructor(props) {
     this._el = document.createElement('button');
     this._el.classList.add('hig-button');
@@ -42,6 +44,8 @@ export class Button {
 }
 
 export class Slot {
+  root = false;
+
   constructor(props) {
     this._el = document.createElement('div');
     this._el.classList.add('hig-slot');
@@ -61,6 +65,8 @@ export class Slot {
 }
 
 export class Menu {
+  root = true;
+
   constructor(props) {
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu');

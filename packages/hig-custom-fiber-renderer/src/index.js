@@ -31,15 +31,11 @@ class App extends React.Component {
     });
   };
 
-  //   <hig-button onClick={() => alert('clicked HIG button')}>
-  //   {this.state.buttonLabel}
-  // </hig-button>
-
   render() {
     return (
       <div>
         <HIG>
-          <Button>My button</Button>
+          <Button onClick={() => alert('on click!')}>My button</Button>
           <Menu>
             <Slot>
               <p>Some DOM Content!</p>

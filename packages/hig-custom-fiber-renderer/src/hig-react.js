@@ -40,6 +40,28 @@ const types = {
   BASE_SLOT: 'hig-slot'
 };
 
+class ButtonWrapper {
+  constructor(props) {
+    const p = this._g(props);
+    this.instance = new HIGWeb.Button(p);
+  }
+
+  get root() {
+    return this.instance.root;
+  }
+
+  _g(props) {
+    return {
+      label: props.children,
+      onClick: props.onClick
+    };
+  }
+
+  mount(mountNode, anchorNode) {
+    this.instance.mount(mountNode, anchorNode);
+  }
+}
+
 const HIGRenderer = ReactFiberReconciler({
   useSyncScheduling: true,
 
@@ -58,7 +80,7 @@ const HIGRenderer = ReactFiberReconciler({
         return new HIGWeb.Menu(props);
       }
       case types.BUTTON: {
-        return new HIGWeb.Button(props);
+        return new ButtonWrapper(props);
       }
       default:
         throw new Error(`Unknown type ${type}`);
@@ -80,12 +102,11 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   finalizeInitialChildren(newElement, type, props, rootContainerInstance) {
-    debugger;
     return false;
   },
 
   appendChild(parentInstance, child) {
-    if (parentInstance instanceof HTMLElement) {
+    if (parentInstance instanceof HTMLElement && child.root) {
       child.mount(parentInstance, null);
     } else {
       parentInstance.appendChild(child);
@@ -140,7 +161,6 @@ const HIGRenderer = ReactFiberReconciler({
 
   // turn off event handlers (in react-dom)
   prepareForCommit() {
-    debugger;
     // no-op
   },
 

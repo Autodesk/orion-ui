@@ -16,7 +16,7 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HIG, { Menu, MenuTop, Slot, Button } from './hig-react';
+import HIG, { Slot } from './hig-react';
 
 class App extends React.Component {
   constructor() {
@@ -46,13 +46,16 @@ class App extends React.Component {
     return (
       <div>
         <HIG>
-          <Button>{this.state.buttonLabel}</Button>
-          <Menu>
-            <MenuTop onToggle={actualFn} />
+          <hig-button>{this.state.buttonLabel}</hig-button>
+          <hig-menu>
+            <hig-menu-top onToggle={actualFn} />
+            <hig-sidebar>
+              <hig-sidebar-group small />
+            </hig-sidebar>
             <Slot>
               <p>Some DOM Content! {this.state.buttonLabel}</p>
             </Slot>
-          </Menu>
+          </hig-menu>
         </HIG>
         <input
           type="text"

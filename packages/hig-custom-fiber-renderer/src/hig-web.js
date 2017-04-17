@@ -45,13 +45,9 @@ export class Button {
 export class Slot {
   root = false;
 
-  constructor(props) {
+  constructor() {
     this._el = document.createElement('div');
     this._el.classList.add('hig-slot');
-
-    if (props.className) {
-      this._el.classList.add(props.className);
-    }
   }
 
   mount(mountNode, anchorNode) {
@@ -66,7 +62,7 @@ export class Slot {
 export class Menu {
   root = true;
 
-  constructor(props) {
+  constructor() {
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu');
 
@@ -104,12 +100,16 @@ export class Menu {
   appendTop(instance) {
     instance.mount(this._content, this._topAnchor);
   }
+
+  appendSidebar(instance) {
+    instance.mount(this._el, this._sidebarAnchor);
+  }
 }
 
 export class MenuTop {
   root = false;
 
-  constructor(props) {
+  constructor() {
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu-top');
 
@@ -130,5 +130,56 @@ export class MenuTop {
     return {
       dispose: () => this._toggleButton.removeEventListener('click', listener)
     };
+  }
+}
+
+export class MenuSidebar {
+  root = false;
+
+  constructor() {
+    this._el = document.createElement('div');
+    this._el.classList.add('hig-sidebar');
+  }
+
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  setOpen(open) {
+    if (open) {
+      this._el.classList.add('hig-sidebar--open');
+    } else {
+      this._el.classList.remove('hig-sidebar--open');
+    }
+  }
+
+  appendGroup(instance) {
+    instance.mount(this._el, null);
+  }
+}
+
+export class SidebarGroup {
+  root = false;
+
+  constructor() {
+    this._el = document.createElement('div');
+    this._el.classList.add('hig-sidebar-group');
+  }
+
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  setSize(size) {
+    this._el.classList.remove('hig-group--large');
+    this._el.classList.remove('hig-group--small');
+
+    switch (size) {
+      case 'small':
+        this._el.classList.add('hig-group--small');
+        break;
+      default:
+        this._el.classList.add('hig-group--large');
+    }
   }
 }

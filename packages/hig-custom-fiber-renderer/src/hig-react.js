@@ -37,6 +37,7 @@ import * as HIGWeb from './hig-web';
 const types = {
   BUTTON: 'hig-button',
   MENU: 'hig-menu',
+  MENU_TOP: 'hig-menu-top',
   BASE_SLOT: 'hig-slot'
 };
 
@@ -76,7 +77,46 @@ class ButtonWrapper {
             this._clickListener.dispose();
           }
 
-          this._clickListner = this.instance.setOnClick(propValue);
+          this._clickListener = this.instance.setOnClick(propValue);
+          break;
+        }
+        default: {
+          console.warn(`${propKey} is unknown`);
+        }
+      }
+    }
+  }
+}
+
+class MenuTopWrapper {
+  constructor(props) {
+    this.instance = new HIGWeb.MenuTop();
+
+    if (props.onToggle) {
+      this._toggleListener = this.instance.setOnToggle(props.onToggle);
+    }
+  }
+
+  get root() {
+    return this.instance.root;
+  }
+
+  mount(mountNode, anchorNode) {
+    this.instance.mount(mountNode, anchorNode);
+  }
+
+  commitUpdate(updatePayload, oldProps, newProp) {
+    for (let i = 0; i < updatePayload.length; i += 2) {
+      const propKey = updatePayload[i];
+      const propValue = updatePayload[i + 1];
+
+      switch (propKey) {
+        case 'onToggle': {
+          if (this._toggleListener) {
+            this._toggleListener.dispose();
+          }
+
+          this._toggleListener = this.instance.setOnToggle(propValue);
           break;
         }
         default: {
@@ -101,7 +141,13 @@ class MenuWrapper {
   }
 
   appendChild(instance) {
-    this.instance.appendChild(instance);
+    if (instance instanceof HIGWeb.Slot) {
+      this.instance.appendSlot(instance);
+    } else if (instance instanceof MenuTopWrapper) {
+      this.instance.appendTop(instance);
+    } else {
+      throw new Error('unknown type');
+    }
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
@@ -120,15 +166,14 @@ const HIGRenderer = ReactFiberReconciler({
     internalInstanceHandle
   ) {
     switch (type) {
-      case types.BASE_SLOT: {
+      case types.BASE_SLOT:
         return new HIGWeb.Slot(props);
-      }
-      case types.MENU: {
+      case types.MENU:
         return new MenuWrapper(props);
-      }
-      case types.BUTTON: {
+      case types.MENU_TOP:
+        return new MenuTopWrapper(props);
+      case types.BUTTON:
         return new ButtonWrapper(props);
-      }
       default:
         throw new Error(`Unknown type ${type}`);
     }
@@ -320,6 +365,7 @@ export default class HIG extends Component {
 
 export const Button = types.BUTTON;
 export const Menu = types.MENU;
+export const MenuTop = types.MENU_TOP;
 
 export class Slot extends Component {
   componentDidMount() {

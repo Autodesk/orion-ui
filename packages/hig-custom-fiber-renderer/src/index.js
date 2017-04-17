@@ -31,17 +31,12 @@ class App extends React.Component {
     });
   };
 
-  render() {
-    const fn1 = () => {
-      alert('toggle top 1');
-      this.setState({ fn: true });
-    };
-    const fn2 = () => {
-      alert('toggle top 2');
-      this.setState({ fn: false });
-    };
+  fn1 = () => this.setState({ fn: true });
 
-    const actualFn = this.state.fn ? fn2 : fn1;
+  fn2 = () => this.setState({ fn: false });
+
+  render() {
+    const actualFn = this.state.fn ? this.fn2 : this.fn1;
 
     return (
       <div>
@@ -49,8 +44,17 @@ class App extends React.Component {
           <hig-button>{this.state.buttonLabel}</hig-button>
           <hig-menu>
             <hig-menu-top onToggle={actualFn} />
-            <hig-sidebar>
-              <hig-sidebar-group small />
+            <hig-sidebar open={this.state.fn}>
+              <hig-sidebar-group small>
+                <hig-sidebar-item>Item 1</hig-sidebar-item>
+                <hig-sidebar-item onClick={actualFn}>
+                  {this.state.buttonLabel}
+                </hig-sidebar-item>
+              </hig-sidebar-group>
+
+              <hig-sidebar-group>
+                <hig-sidebar-item>Other Group Item</hig-sidebar-item>
+              </hig-sidebar-group>
             </hig-sidebar>
             <Slot>
               <p>Some DOM Content! {this.state.buttonLabel}</p>

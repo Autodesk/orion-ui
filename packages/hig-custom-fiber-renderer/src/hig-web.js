@@ -133,7 +133,7 @@ export class MenuTop {
   }
 }
 
-export class MenuSidebar {
+export class Sidebar {
   root = false;
 
   constructor() {
@@ -180,6 +180,45 @@ export class SidebarGroup {
         break;
       default:
         this._el.classList.add('hig-group--large');
+    }
+  }
+
+  appendItem(instance) {
+    instance.mount(this._el, null);
+  }
+}
+
+export class SidebarItem {
+  root = false;
+
+  constructor() {
+    this._el = document.createElement('button');
+    this._el.classList.add('hig-group-item');
+  }
+
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  setLabel(label) {
+    console.log(`setLabel ${label}`);
+    this._el.textContent = label;
+  }
+
+  setOnClick(listener) {
+    console.log(`setOnClick`);
+    this._el.addEventListener('click', listener);
+
+    return {
+      dispose: () => this._el.removeEventListener('click', listener)
+    };
+  }
+
+  setSelected(selected) {
+    if (selected) {
+      this._el.classList.add('hig-group-item--selected');
+    } else {
+      this._el.classList.remove('hig-group-item--selected');
     }
   }
 }

@@ -16,12 +16,12 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HIG, { Menu, Slot, Button } from './hig-react';
+import HIG, { Menu, MenuTop, Slot, Button } from './hig-react';
 
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { buttonLabel: 'Hello HIG' };
+    this.state = { buttonLabel: 'Hello HIG', fn: false };
   }
 
   handleChange = event => {
@@ -32,11 +32,23 @@ class App extends React.Component {
   };
 
   render() {
+    const fn1 = () => {
+      alert('toggle top 1');
+      this.setState({ fn: true });
+    };
+    const fn2 = () => {
+      alert('toggle top 2');
+      this.setState({ fn: false });
+    };
+
+    const actualFn = this.state.fn ? fn2 : fn1;
+
     return (
       <div>
         <HIG>
           <Button>{this.state.buttonLabel}</Button>
           <Menu>
+            <MenuTop onToggle={actualFn} />
             <Slot>
               <p>Some DOM Content! {this.state.buttonLabel}</p>
             </Slot>

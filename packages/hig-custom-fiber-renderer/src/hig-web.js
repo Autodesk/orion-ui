@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import './hig-web.css';
+import 'ionicons/css/ionicons.min.css';
+
 export class Button {
   root = true;
 
@@ -66,21 +69,66 @@ export class Menu {
   constructor(props) {
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu');
+
+    /**
+     * Basic Structure:
+     * - sidebar
+     * - content
+     *   - top
+     *   - slot
+     */
+
+    this._sidebarAnchor = document.createComment('sidebar-anchor');
+
+    this._content = document.createElement('div');
+    this._content.classList.add('hig-menu-content');
+
+    this._topAnchor = document.createComment('top-anchor');
+    this._slotAnchor = document.createComment('slot-anchor');
+
+    this._el.appendChild(this._sidebarAnchor);
+    this._el.appendChild(this._content);
+
+    this._content.appendChild(this._topAnchor);
+    this._content.appendChild(this._slotAnchor);
   }
 
   mount(mountNode, anchorNode) {
     mountNode.insertBefore(this._el, anchorNode);
   }
 
-  _appendSlot(instance, anchorNode) {
-    instance.mount(this._el, null);
+  appendSlot(instance) {
+    instance.mount(this._content, this._slotAnchor);
   }
 
-  appendChild(instance) {
-    if (instance instanceof Slot) {
-      this._appendSlot(instance);
-    } else {
-      throw new Error('unknown element type');
-    }
+  appendTop(instance) {
+    instance.mount(this._content, this._topAnchor);
+  }
+}
+
+export class MenuTop {
+  root = false;
+
+  constructor(props) {
+    this._el = document.createElement('div');
+    this._el.classList.add('hig-menu-top');
+
+    this._el.innerHTML = `
+      <button class="hig-menu-top-toggle"><i class="ion ion-navicon"></i></button>
+    `;
+
+    this._toggleButton = this._el.querySelector('.hig-menu-top-toggle');
+  }
+
+  mount(mountNode, anchorNode) {
+    mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  setOnToggle(listener) {
+    this._toggleButton.addEventListener('click', listener);
+
+    return {
+      dispose: () => this._toggleButton.removeEventListener('click', listener)
+    };
   }
 }

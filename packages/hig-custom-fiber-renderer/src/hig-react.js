@@ -34,7 +34,8 @@ import {
   Menu,
   MenuTop,
   Sidebar,
-  SidebarGroup
+  SidebarGroup,
+  SidebarItem
 } from './hig-react-elements';
 
 /**
@@ -47,7 +48,8 @@ const elements = {
   'hig-menu': Menu,
   'hig-menu-top': MenuTop,
   'hig-sidebar': Sidebar,
-  'hig-sidebar-group': SidebarGroup
+  'hig-sidebar-group': SidebarGroup,
+  'hig-sidebar-item': SidebarItem
 };
 
 const HIGRenderer = ReactFiberReconciler({

@@ -72,7 +72,7 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   insertBefore(parentInstance, child, beforeChild) {
-    parentInstance.insertBefore(child, beforeChild);
+    parentInstance.appendChild(child, beforeChild);
   },
 
   removeChild(parentInstance, child) {

@@ -26,9 +26,9 @@ export class Button {
     this._el.classList.add('hig-button');
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('mount Button');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -45,7 +45,7 @@ export class Button {
     this._el.textContent = label;
   }
 
-  setOnClick(listener) {
+  onClick(listener) {
     this._el.addEventListener('click', listener);
 
     return {
@@ -63,9 +63,9 @@ export class Slot {
     this._el.classList.add('hig-slot');
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('Mount slot');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -110,9 +110,9 @@ export class Menu {
     this._content.appendChild(this._slotAnchor);
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('mount Menu');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -156,9 +156,9 @@ export class MenuTop {
     this._toggleButton = this._el.querySelector('.hig-menu-top-toggle');
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('mount Top');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -171,7 +171,7 @@ export class MenuTop {
     return this._el;
   }
 
-  setOnToggle(listener) {
+  onToggle(listener) {
     this._toggleButton.addEventListener('click', listener);
 
     return {
@@ -189,9 +189,9 @@ export class Sidebar {
     this._el.classList.add('hig-sidebar');
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('mount Sidebar');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -231,9 +231,9 @@ export class SidebarGroup {
     this._el.classList.add('hig-sidebar-group');
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('mount SidebarGroup');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -279,9 +279,9 @@ export class SidebarItem {
     this._el.classList.add('hig-group-item');
   }
 
-  mount(mountNode, anchorNode) {
+  mount(mountNode, beforeChild) {
     console.log('mount Item');
-    mountNode.insertBefore(this._el, anchorNode);
+    mountNode.insertBefore(this._el, beforeChild);
   }
 
   unmount() {
@@ -299,7 +299,7 @@ export class SidebarItem {
     this._el.textContent = label;
   }
 
-  setOnClick(listener) {
+  onClick(listener) {
     console.log(`setOnClick`);
     this._el.addEventListener('click', listener);
 

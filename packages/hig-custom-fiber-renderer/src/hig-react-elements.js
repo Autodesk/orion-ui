@@ -1,3 +1,19 @@
+/**
+Copyright 2016 Autodesk,Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
 import * as HIGWeb from './hig-web';
 
 export class Button {
@@ -9,12 +25,12 @@ export class Button {
     }
 
     if (props.onClick) {
-      this._clickListener = this.hig.setOnClick(props.onClick);
+      this._clickListener = this.hig.onClick(props.onClick);
     }
   }
 
-  mount(mountNode, anchorNode) {
-    this.hig.mount(mountNode, anchorNode);
+  mount(mountNode, beforeChild) {
+    this.hig.mount(mountNode, beforeChild);
   }
 
   unmount() {
@@ -39,7 +55,7 @@ export class Button {
             this._clickListener.dispose();
           }
 
-          this._clickListener = this.hig.setOnClick(propValue);
+          this._clickListener = this.hig.onClick(propValue);
           break;
         }
         default: {
@@ -55,7 +71,7 @@ export class MenuTop {
     this.hig = new HIGWeb.MenuTop();
 
     if (props.onToggle) {
-      this._toggleListener = this.hig.setOnToggle(props.onToggle);
+      this._toggleListener = this.hig.onToggle(props.onToggle);
     }
   }
 
@@ -82,7 +98,7 @@ export class MenuTop {
             this._toggleListener.dispose();
           }
 
-          this._toggleListener = this.hig.setOnToggle(propValue);
+          this._toggleListener = this.hig.onToggle(propValue);
           break;
         }
         default: {
@@ -106,7 +122,7 @@ export class SidebarItem {
     }
 
     if (props.onClick) {
-      this._clickListener = this.hig.setOnClick(props.onClick);
+      this._clickListener = this.hig.onClick(props.onClick);
     }
   }
 
@@ -140,7 +156,7 @@ export class SidebarItem {
             this._clickListener.dispose();
           }
 
-          this._clickListener = this.hig.setOnClick(propValue);
+          this._clickListener = this.hig.onClick(propValue);
           break;
         }
         default: {
@@ -174,14 +190,6 @@ export class SidebarGroup {
     } else {
       throw new Error('unknown type');
     }
-  }
-
-  insertBefore(instance, beforeChild) {
-    this.appendChild(instance, beforeChild);
-  }
-
-  removeChild(instance) {
-    instance.remove();
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
@@ -255,10 +263,6 @@ export class Sidebar {
       throw new Error('unknown type');
     }
   }
-
-  insertBefore(instance, beforeChild) {
-    this.appendChild(instance, beforeChild);
-  }
 }
 
 export class Slot {
@@ -302,10 +306,6 @@ export class Menu {
     } else {
       throw new Error('unknown type');
     }
-  }
-
-  insertBefore(instance, beforeChild) {
-    this.appendChild(instance, beforeChild);
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {

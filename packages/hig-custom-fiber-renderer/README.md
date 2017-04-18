@@ -157,3 +157,5 @@ A set of examples of using the HIG primitives with the DOM.
 * Create a base class in hig-react-elements to help tidy up some boilerplate
 * Consider contributing to ReactPortal since it looks like we can't use it switch
   rendering modes yet (https://github.com/facebook/react/blob/f6c4fe6cbbdca375b50ac10373007a9b74279e95/src/renderers/dom/fiber/ReactDOMFiber.js#L534)
+* Try to back port this version of HIG.Web to hig-playground to see if we can have
+  a common implementation

@@ -16,7 +16,8 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HIG, { Slot } from './hig-react';
+import HIG, { Slot } from './react-hig-fiber';
+import { Button, Menu } from './react-hig';
 
 class App extends React.Component {
   constructor() {

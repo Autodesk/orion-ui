@@ -73,15 +73,23 @@ The actual UI components owned by the HIG.Web team. They implement the following
 ```typescript
 interface HIGElement {
   /**
-   * The constructor takes no props and should create a DOM element internally
+   * Returns the underlying DOM Node.
    */
-  new(): void;
+  el: HTMLElement;
+
+  /**
+   * The constructor takes props and should create a DOM element internally
+   * See interface defaults for the supported props
+   */
+  new(props?: Properties): void;
 
   /**
    * Inserts the HIG Element into the DOM using mountNode. If beforeChild is
    * specified the HIG Element should be inserted before that.
+   *
+   * If string, this is a CSS selector if more than one element matches it takes the first
    */
-   mount(mountNode: HTMLElement, beforeChild: HTMLElement | null);
+   mount(mountNode: string | HTMLElement, beforeChild: string | HTMLElement | null);
 
   /**
    * Removes the HIG Element from the DOM
@@ -89,14 +97,9 @@ interface HIGElement {
   unmount(): void;
 
   /**
-   * Returns the underlying DOM Node.
-   */
-  getDOMNode(): void;
-
-  /**
    * set${Property}
    *
-   * setters for each property that the Element supports. These
+   * setters for each property that the Element supports. Check interface.json for these methods. These
    * methods should always be void and take content specific arguments.
    *
    * Example - setLabel('hello'), setOpen(true)
@@ -107,7 +110,7 @@ interface HIGElement {
    * on${Event}
    *
    * Takes an event listener as an argument and returns a disposable.
-   * internally this listener should be wired to the DOM.
+   * internally this listener should be wired to the DOM. Check interface.json for these methods as well.
    *
    * Example
    *
@@ -118,14 +121,14 @@ interface HIGElement {
   onEvent(listener: Function): Disposable
 
   /**
-   * append${Element}
+   * add${Element}
    *
    * mounts the element provided to the component by calling Element#mount with
    * the appropriate mountNode and if needed beforeChild.
    *
-   * Example - appendSlot, appendSidebar, appendTop
+   * Example - addSlot, addSidebar, addTop, addGroup
    */
-  appendElement(element: HIGElement): void;
+  addElement(element: HIGElement): void;
 }
 
 /**
@@ -142,6 +145,7 @@ interface Disposable {
   dispose(): void;
 }
 
+type Properties = { [key: string]: any };
 ```
 
 ### index.js
@@ -151,6 +155,11 @@ A set of examples of using the HIG primitives with the DOM.
 
 ### TODO
 
+* Switch getDOMNode to el property getter
+* Use interface json (mock help method) to generate properties in Orion Elements
+  * Use defaults to figure out property names
+  * Add mock for event names with 'onEvent' style
+  * Rename append* methods to add* methods
 * Better error messaging for failure modes:
   * Trying to append the wrong child type
   * Trying to add a child to the DOM when it should be nested inside another HIG.Web component

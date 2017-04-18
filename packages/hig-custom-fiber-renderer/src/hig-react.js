@@ -28,29 +28,11 @@ import {
   unmountComponentAtNode
 } from 'react-dom';
 
-import { Slot as HIGWebSlot } from './hig-web';
-import {
-  Button,
-  Menu,
-  MenuTop,
-  Sidebar,
-  SidebarGroup,
-  SidebarItem
-} from './hig-react-elements';
+import { createElement } from './hig-react-elements';
 
 /**
  * HIG Fiber Renderer
  */
-
-const elements = {
-  'hig-slot': HIGWebSlot,
-  'hig-button': Button,
-  'hig-menu': Menu,
-  'hig-menu-top': MenuTop,
-  'hig-sidebar': Sidebar,
-  'hig-sidebar-group': SidebarGroup,
-  'hig-sidebar-item': SidebarItem
-};
 
 const HIGRenderer = ReactFiberReconciler({
   useSyncScheduling: true,
@@ -62,11 +44,7 @@ const HIGRenderer = ReactFiberReconciler({
     hostContext,
     internalInstanceHandle
   ) {
-    if (elements[type]) {
-      return new elements[type](props);
-    } else {
-      throw new Error(`Unknown type ${type}`);
-    }
+    return createElement(type, props);
   },
 
   getPublicInstance(instance) {
@@ -86,7 +64,7 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   appendChild(parentInstance, child) {
-    if (parentInstance instanceof HTMLElement && child.root) {
+    if (parentInstance instanceof HTMLElement) {
       child.mount(parentInstance, null);
     } else {
       parentInstance.appendChild(child);
@@ -94,13 +72,11 @@ const HIGRenderer = ReactFiberReconciler({
   },
 
   insertBefore(parentInstance, child, beforeChild) {
-    debugger;
-    // do insert
+    parentInstance.insertBefore(child, beforeChild);
   },
 
   removeChild(parentInstance, child) {
-    debugger;
-    // do remove
+    child.unmount();
   },
 
   shouldSetTextContent(props) {

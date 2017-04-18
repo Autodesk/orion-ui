@@ -21,12 +21,24 @@ export class Button {
   root = true;
 
   constructor() {
+    console.log('construct Button');
     this._el = document.createElement('button');
     this._el.classList.add('hig-button');
   }
 
   mount(mountNode, anchorNode) {
+    console.log('mount Button');
     mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
+  }
+
+  getDOMNode() {
+    return this._el;
   }
 
   setLabel(label) {
@@ -46,12 +58,20 @@ export class Slot {
   root = false;
 
   constructor() {
+    console.log('Construct Slot');
     this._el = document.createElement('div');
     this._el.classList.add('hig-slot');
   }
 
   mount(mountNode, anchorNode) {
+    console.log('Mount slot');
     mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
   }
 
   getDOMNode() {
@@ -63,6 +83,7 @@ export class Menu {
   root = true;
 
   constructor() {
+    console.log('construct Menu');
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu');
 
@@ -90,19 +111,33 @@ export class Menu {
   }
 
   mount(mountNode, anchorNode) {
+    console.log('mount Menu');
     mountNode.insertBefore(this._el, anchorNode);
   }
 
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
+  }
+
+  getDOMNode() {
+    return this._el;
+  }
+
   appendSlot(instance) {
+    console.log('append Slot to Menu');
     instance.mount(this._content, this._slotAnchor);
   }
 
   appendTop(instance) {
+    console.log('append Top to Menu');
     instance.mount(this._content, this._topAnchor);
   }
 
   appendSidebar(instance) {
     instance.mount(this._el, this._sidebarAnchor);
+    console.log('append Sidebar to Menu');
   }
 }
 
@@ -110,6 +145,7 @@ export class MenuTop {
   root = false;
 
   constructor() {
+    console.log('construct Top');
     this._el = document.createElement('div');
     this._el.classList.add('hig-menu-top');
 
@@ -121,7 +157,18 @@ export class MenuTop {
   }
 
   mount(mountNode, anchorNode) {
+    console.log('mount Top');
     mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
+  }
+
+  getDOMNode() {
+    return this._el;
   }
 
   setOnToggle(listener) {
@@ -137,12 +184,24 @@ export class Sidebar {
   root = false;
 
   constructor() {
+    console.log('construct Sidebar');
     this._el = document.createElement('div');
     this._el.classList.add('hig-sidebar');
   }
 
   mount(mountNode, anchorNode) {
+    console.log('mount Sidebar');
     mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
+  }
+
+  getDOMNode() {
+    return this._el;
   }
 
   setOpen(open) {
@@ -153,8 +212,13 @@ export class Sidebar {
     }
   }
 
-  appendGroup(instance) {
-    instance.mount(this._el, null);
+  appendGroup(instance, beforeChild) {
+    if (beforeChild) {
+      instance.mount(this._el, beforeChild.getDOMNode());
+    } else {
+      instance.mount(this._el, null);
+    }
+    console.log('append Group to Menu');
   }
 }
 
@@ -162,12 +226,24 @@ export class SidebarGroup {
   root = false;
 
   constructor() {
+    console.log('construct SidebarGroup');
     this._el = document.createElement('div');
     this._el.classList.add('hig-sidebar-group');
   }
 
   mount(mountNode, anchorNode) {
+    console.log('mount SidebarGroup');
     mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
+  }
+
+  getDOMNode() {
+    return this._el;
   }
 
   setSize(size) {
@@ -183,8 +259,14 @@ export class SidebarGroup {
     }
   }
 
-  appendItem(instance) {
-    instance.mount(this._el, null);
+  appendItem(instance, beforeChild) {
+    console.log('append Item to Group');
+
+    if (beforeChild) {
+      instance.mount(this._el, beforeChild.getDOMNode());
+    } else {
+      instance.mount(this._el, null);
+    }
   }
 }
 
@@ -192,12 +274,24 @@ export class SidebarItem {
   root = false;
 
   constructor() {
+    console.log('construct Item');
     this._el = document.createElement('button');
     this._el.classList.add('hig-group-item');
   }
 
   mount(mountNode, anchorNode) {
+    console.log('mount Item');
     mountNode.insertBefore(this._el, anchorNode);
+  }
+
+  unmount() {
+    if (this._el.parentNode) {
+      this._el.parentNode.removeChild(this._el);
+    }
+  }
+
+  getDOMNode() {
+    return this._el;
   }
 
   setLabel(label) {

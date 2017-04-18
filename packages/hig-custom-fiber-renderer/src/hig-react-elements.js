@@ -2,23 +2,26 @@ import * as HIGWeb from './hig-web';
 
 export class Button {
   constructor(props) {
-    this.instance = new HIGWeb.Button();
+    this.hig = new HIGWeb.Button();
 
     if (props.children) {
-      this.instance.setLabel(props.children);
+      this.hig.setLabel(props.children);
     }
 
     if (props.onClick) {
-      this._clickListener = this.instance.setOnClick(props.onClick);
+      this._clickListener = this.hig.setOnClick(props.onClick);
     }
   }
 
-  get root() {
-    return this.instance.root;
+  mount(mountNode, anchorNode) {
+    this.hig.mount(mountNode, anchorNode);
   }
 
-  mount(mountNode, anchorNode) {
-    this.instance.mount(mountNode, anchorNode);
+  unmount() {
+    if (this._clickListener) {
+      this._clickListener.dispose();
+    }
+    this.hig.unmount();
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
@@ -28,7 +31,7 @@ export class Button {
 
       switch (propKey) {
         case 'children': {
-          this.instance.setLabel(propValue);
+          this.hig.setLabel(propValue);
           break;
         }
         case 'onClick': {
@@ -36,7 +39,7 @@ export class Button {
             this._clickListener.dispose();
           }
 
-          this._clickListener = this.instance.setOnClick(propValue);
+          this._clickListener = this.hig.setOnClick(propValue);
           break;
         }
         default: {
@@ -49,19 +52,23 @@ export class Button {
 
 export class MenuTop {
   constructor(props) {
-    this.instance = new HIGWeb.MenuTop();
+    this.hig = new HIGWeb.MenuTop();
 
     if (props.onToggle) {
-      this._toggleListener = this.instance.setOnToggle(props.onToggle);
+      this._toggleListener = this.hig.setOnToggle(props.onToggle);
     }
   }
 
-  get root() {
-    return this.instance.root;
+  mount(mountNode, anchorNode) {
+    this.hig.mount(mountNode, anchorNode);
   }
 
-  mount(mountNode, anchorNode) {
-    this.instance.mount(mountNode, anchorNode);
+  unmount() {
+    if (this._toggleListener) {
+      this._toggleListener.dispose();
+    }
+
+    this.hig.unmount();
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
@@ -75,7 +82,7 @@ export class MenuTop {
             this._toggleListener.dispose();
           }
 
-          this._toggleListener = this.instance.setOnToggle(propValue);
+          this._toggleListener = this.hig.setOnToggle(propValue);
           break;
         }
         default: {
@@ -88,27 +95,30 @@ export class MenuTop {
 
 export class SidebarItem {
   constructor(props) {
-    this.instance = new HIGWeb.SidebarItem();
+    this.hig = new HIGWeb.SidebarItem();
 
     if (props.children) {
-      this.instance.setLabel(props.children);
+      this.hig.setLabel(props.children);
     }
 
     if (props.selected) {
-      this.instance.setSelected(props.selected);
+      this.hig.setSelected(props.selected);
     }
 
     if (props.onClick) {
-      this._clickListener = this.instance.setOnClick(props.onClick);
+      this._clickListener = this.hig.setOnClick(props.onClick);
     }
   }
 
-  get root() {
-    return this.instance.root;
+  mount(mountNode, anchorNode) {
+    this.hig.mount(mountNode, anchorNode);
   }
 
-  mount(mountNode, anchorNode) {
-    this.instance.mount(mountNode, anchorNode);
+  unmount() {
+    if (this._clickListener) {
+      this._clickListener.dispose();
+    }
+    this.hig.unmount();
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
@@ -118,11 +128,11 @@ export class SidebarItem {
 
       switch (propKey) {
         case 'children': {
-          this.instance.setLabel(propValue);
+          this.hig.setLabel(propValue);
           break;
         }
         case 'selected': {
-          this.instance.setSelected(propValue);
+          this.hig.setSelected(propValue);
           break;
         }
         case 'onClick': {
@@ -130,7 +140,7 @@ export class SidebarItem {
             this._clickListener.dispose();
           }
 
-          this._clickListener = this.instance.setOnClick(propValue);
+          this._clickListener = this.hig.setOnClick(propValue);
           break;
         }
         default: {
@@ -143,27 +153,35 @@ export class SidebarItem {
 
 export class SidebarGroup {
   constructor(props) {
-    this.instance = new HIGWeb.SidebarGroup();
+    this.hig = new HIGWeb.SidebarGroup();
 
     if (props.small) {
-      this.instance.setSize('small');
+      this.hig.setSize('small');
     }
-  }
-
-  get root() {
-    return this.instance.root;
   }
 
   mount(mountNode, anchorNode) {
-    this.instance.mount(mountNode, anchorNode);
+    this.hig.mount(mountNode, anchorNode);
   }
 
-  appendChild(instance) {
+  unmount() {
+    this.hig.unmount();
+  }
+
+  appendChild(instance, beforeChild = {}) {
     if (instance instanceof SidebarItem) {
-      this.instance.appendItem(instance);
+      this.hig.appendItem(instance.hig, beforeChild.hig);
     } else {
       throw new Error('unknown type');
     }
+  }
+
+  insertBefore(instance, beforeChild) {
+    this.appendChild(instance, beforeChild);
+  }
+
+  removeChild(instance) {
+    instance.remove();
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
@@ -174,9 +192,9 @@ export class SidebarGroup {
       switch (propKey) {
         case 'small': {
           if (propValue) {
-            this.instance.setSize('small');
+            this.hig.setSize('small');
           } else {
-            this.instance.setSize('large');
+            this.hig.setSize('large');
           }
           break;
         }
@@ -194,19 +212,19 @@ export class SidebarGroup {
 
 export class Sidebar {
   constructor(props) {
-    this.instance = new HIGWeb.Sidebar();
+    this.hig = new HIGWeb.Sidebar();
 
     if (props.open) {
-      this.instance.setOpen(open);
+      this.hig.setOpen(open);
     }
   }
 
-  get root() {
-    return this.instance.root;
+  mount(mountNode, anchorNode) {
+    this.hig.mount(mountNode, anchorNode);
   }
 
-  mount(mountNode, anchorNode) {
-    this.instance.mount(mountNode, anchorNode);
+  unmount() {
+    this.hig.unmount();
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
@@ -216,7 +234,7 @@ export class Sidebar {
 
       switch (propKey) {
         case 'open': {
-          this.instance.setOpen(propValue);
+          this.hig.setOpen(propValue);
           break;
         }
         case 'children': {
@@ -230,41 +248,85 @@ export class Sidebar {
     }
   }
 
-  appendChild(instance) {
+  appendChild(instance, beforeChild = {}) {
     if (instance instanceof SidebarGroup) {
-      this.instance.appendGroup(instance);
+      this.hig.appendGroup(instance.hig, beforeChild.hig);
     } else {
       throw new Error('unknown type');
     }
+  }
+
+  insertBefore(instance, beforeChild) {
+    this.appendChild(instance, beforeChild);
+  }
+}
+
+export class Slot {
+  constructor() {
+    this.hig = new HIGWeb.Slot();
+  }
+
+  getDOMNode() {
+    return this.hig.getDOMNode();
+  }
+
+  mount(mountNode, anchorNode) {
+    this.hig.mount(mountNode, anchorNode);
+  }
+
+  unmount() {
+    this.hig.unmount();
   }
 }
 
 export class Menu {
   constructor(props) {
-    this.instance = new HIGWeb.Menu();
-  }
-
-  get root() {
-    return this.instance.root;
+    this.hig = new HIGWeb.Menu();
   }
 
   mount(mountNode, anchorNode) {
-    this.instance.mount(mountNode, anchorNode);
+    this.hig.mount(mountNode, anchorNode);
   }
 
-  appendChild(instance) {
-    if (instance instanceof HIGWeb.Slot) {
-      this.instance.appendSlot(instance);
+  unmount() {
+    this.hig.unmount();
+  }
+
+  appendChild(instance, beforeChild = {}) {
+    if (instance instanceof Slot) {
+      this.hig.appendSlot(instance.hig, beforeChild.hig);
     } else if (instance instanceof MenuTop) {
-      this.instance.appendTop(instance);
+      this.hig.appendTop(instance.hig, beforeChild.hig);
     } else if (instance instanceof Sidebar) {
-      this.instance.appendSidebar(instance);
+      this.hig.appendSidebar(instance.hig, beforeChild.hig);
     } else {
       throw new Error('unknown type');
     }
   }
 
+  insertBefore(instance, beforeChild) {
+    this.appendChild(instance, beforeChild);
+  }
+
   commitUpdate(updatePayload, oldProps, newProps) {
     /* no-op */
+  }
+}
+
+const elements = {
+  'hig-slot': Slot,
+  'hig-button': Button,
+  'hig-menu': Menu,
+  'hig-menu-top': MenuTop,
+  'hig-sidebar': Sidebar,
+  'hig-sidebar-group': SidebarGroup,
+  'hig-sidebar-item': SidebarItem
+};
+
+export function createElement(type, props) {
+  if (elements[type]) {
+    return new elements[type](props);
+  } else {
+    throw new Error(`Unknown type ${type}`);
   }
 }

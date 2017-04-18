@@ -21,7 +21,12 @@ import HIG, { Slot } from './hig-react';
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { buttonLabel: 'Hello HIG', fn: false };
+    this.state = {
+      buttonLabel: 'Hello HIG',
+      fn: false,
+      group1: true,
+      group3: true
+    };
   }
 
   handleChange = event => {
@@ -34,6 +39,9 @@ class App extends React.Component {
   fn1 = () => this.setState({ fn: true });
 
   fn2 = () => this.setState({ fn: false });
+  toggleGroup1 = () => this.setState({ group1: !this.state.group1 });
+
+  toggleGroup3 = () => this.setState({ group3: !this.state.group3 });
 
   render() {
     const actualFn = this.state.fn ? this.fn2 : this.fn1;
@@ -44,21 +52,36 @@ class App extends React.Component {
           <hig-button>{this.state.buttonLabel}</hig-button>
           <hig-menu>
             <hig-menu-top onToggle={actualFn} />
+
+            {this.state.group1 &&
+              <Slot>
+                <p>Some DOM Content! {this.state.buttonLabel}</p>
+              </Slot>}
+
             <hig-sidebar open={this.state.fn}>
+              {this.state.group1 &&
+                <hig-sidebar-group>
+                  <hig-sidebar-item>Group Above</hig-sidebar-item>
+                </hig-sidebar-group>}
+
               <hig-sidebar-group small>
-                <hig-sidebar-item>Item 1</hig-sidebar-item>
+                <hig-sidebar-item onClick={this.toggleGroup1}>
+                  Toggle Group Above
+                </hig-sidebar-item>
+                <hig-sidebar-item onClick={this.toggleGroup3}>
+                  Toggle Group Below
+                </hig-sidebar-item>
                 <hig-sidebar-item onClick={actualFn}>
                   {this.state.buttonLabel}
                 </hig-sidebar-item>
               </hig-sidebar-group>
 
-              <hig-sidebar-group>
-                <hig-sidebar-item>Other Group Item</hig-sidebar-item>
-              </hig-sidebar-group>
+              {this.state.group3 &&
+                <hig-sidebar-group>
+                  <hig-sidebar-item>Group Below</hig-sidebar-item>
+                </hig-sidebar-group>}
             </hig-sidebar>
-            <Slot>
-              <p>Some DOM Content! {this.state.buttonLabel}</p>
-            </Slot>
+
           </hig-menu>
         </HIG>
         <input

@@ -10,10 +10,16 @@ dependencies:
     - npm run bootstrap
   cache_directories:
     - "node_modules"
+    - "packages/angular/node_modules"
+    - "package/angular-playground/node_modules"
     - "packages/components/node_modules"
     - "packages/components/bower_components"
+    - "packages/design-dsl/node_modules"
+    - "packages/hig-custom-fiber-renderer/node_modules"
+    - "packages/hig-playground/node_modules"
+    - "packages/marketing-playground/node_modules"
+    - "packages/react/node_modules"
     - "packages/react-playground/node_modules"
-    - "packages/scripts/node_modules"
     - "packages/style/node_modules"
 test:
   pre:

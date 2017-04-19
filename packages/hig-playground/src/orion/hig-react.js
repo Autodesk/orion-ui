@@ -39,6 +39,10 @@ class ButtonWrapper {
   }
 
   teardown() {
+    if (this.onClickDispose) {
+      this.onClickDispose();
+    }
+
     console.error('still no Button#unmount available');
     this._hig.el.parentNode.removeChild(this._hig.el);
   }

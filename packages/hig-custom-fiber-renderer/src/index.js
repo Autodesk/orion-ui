@@ -49,6 +49,11 @@ class App extends React.Component {
 
     return (
       <div>
+        <Button>Hello World</Button>
+        <Menu>
+          <Menu.Top />
+        </Menu>
+
         <HIG>
           <hig-button>{this.state.buttonLabel}</hig-button>
           <hig-menu>

@@ -24,19 +24,22 @@ import higify from './higify';
 
 class ButtonWrapper {
   constructor(props) {
-    this.props = props;
+    this._hig = new HIGButton({
+      title: props.title,
+      link: props.link
+    });
+
+    if (props.onClick) {
+      this.onClickDispose = this._hig.onClick(props.onClick);
+    }
   }
 
   mount(mountNode, anchorNode) {
-    this._hig = new HIGButton(mountNode);
-
-    // I need to be able to use insertBefore instead of just appendChild
-    mountNode.insertBefore(this._hig.el, anchorNode);
-
-    this.applyProps(this.props);
+    this._hig.mount(mountNode, anchorNode);
   }
 
   teardown() {
+    console.error('still no Button#unmount available');
     this._hig.el.parentNode.removeChild(this._hig.el);
   }
 
@@ -49,12 +52,12 @@ class ButtonWrapper {
       this._hig.setLink(props.link);
     }
 
-    if (prevProps.onClick && props.onClick) {
-      console.warn('memory leak!');
+    if (prevProps.onClick !== props.onClick) {
+      this.onClickDispose();
     }
 
     if (props.onClick) {
-      this._hig.addHigEventListener('click', props.onClick);
+      this.onClickDispose = this._hig.onClick(props.onClick);
     }
   }
 }

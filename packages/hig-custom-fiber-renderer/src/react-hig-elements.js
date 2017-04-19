@@ -278,6 +278,10 @@ export class Slot {
     this.hig.mount(mountNode, anchorNode);
   }
 
+  commitUpdate() {
+    /* no-op */
+  }
+
   unmount() {
     this.hig.unmount();
   }

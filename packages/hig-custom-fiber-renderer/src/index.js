@@ -17,7 +17,7 @@ limitations under the License.
 import React from 'react';
 import ReactDOM from 'react-dom';
 import HIG, { Slot } from './react-hig-fiber';
-import { Button, Menu } from './react-hig';
+import { Button, Menu, Slot as Slot2 } from './react-hig';
 
 class App extends React.Component {
   constructor() {
@@ -49,47 +49,71 @@ class App extends React.Component {
 
     return (
       <div>
-        <Button>Hello World</Button>
-        <Menu>
-          <Menu.Top />
-        </Menu>
 
-        <HIG>
-          <hig-button>{this.state.buttonLabel}</hig-button>
-          <hig-menu>
-            <hig-menu-top onToggle={actualFn} />
+        <div>
+          <h1>React Components Adapter</h1>
 
-            {this.state.group1 &&
-              <Slot>
-                <p>Some DOM Content! {this.state.buttonLabel}</p>
-              </Slot>}
+          <Button>Hello World</Button>
+          <Menu>
+            <Menu.Top />
+            <Menu.Sidebar open={true}>
+              <Menu.Sidebar.Group small>
+                <Menu.Sidebar.Item>Item 1.1</Menu.Sidebar.Item>
+                <Menu.Sidebar.Item>Item 1.2</Menu.Sidebar.Item>
+              </Menu.Sidebar.Group>
+              <Menu.Sidebar.Group>
+                <Menu.Sidebar.Item>Item 2.1</Menu.Sidebar.Item>
+                <Menu.Sidebar.Item>Item 2.2</Menu.Sidebar.Item>
+              </Menu.Sidebar.Group>
+            </Menu.Sidebar>
 
-            <hig-sidebar open={this.state.fn}>
+            <Slot2>
+              <p>Some DOM Content! {this.state.buttonLabel}</p>
+            </Slot2>
+          </Menu>
+        </div>
+
+        <div>
+          <h1>React Fiber Custom Renderer</h1>
+
+          <HIG>
+            <hig-button>{this.state.buttonLabel}</hig-button>
+            <hig-menu>
+              <hig-menu-top onToggle={actualFn} />
+
               {this.state.group1 &&
-                <hig-sidebar-group>
-                  <hig-sidebar-item>Group Above</hig-sidebar-item>
-                </hig-sidebar-group>}
+                <Slot>
+                  <p>Some DOM Content! {this.state.buttonLabel}</p>
+                </Slot>}
 
-              <hig-sidebar-group small>
-                <hig-sidebar-item onClick={this.toggleGroup1}>
-                  Toggle Group Above
-                </hig-sidebar-item>
-                <hig-sidebar-item onClick={this.toggleGroup3}>
-                  Toggle Group Below
-                </hig-sidebar-item>
-                <hig-sidebar-item onClick={actualFn}>
-                  {this.state.buttonLabel}
-                </hig-sidebar-item>
-              </hig-sidebar-group>
+              <hig-sidebar open={this.state.fn}>
+                {this.state.group1 &&
+                  <hig-sidebar-group>
+                    <hig-sidebar-item>Group Above</hig-sidebar-item>
+                  </hig-sidebar-group>}
 
-              {this.state.group3 &&
-                <hig-sidebar-group>
-                  <hig-sidebar-item>Group Below</hig-sidebar-item>
-                </hig-sidebar-group>}
-            </hig-sidebar>
+                <hig-sidebar-group small>
+                  <hig-sidebar-item onClick={this.toggleGroup1}>
+                    Toggle Group Above
+                  </hig-sidebar-item>
+                  <hig-sidebar-item onClick={this.toggleGroup3}>
+                    Toggle Group Below
+                  </hig-sidebar-item>
+                  <hig-sidebar-item onClick={actualFn}>
+                    {this.state.buttonLabel}
+                  </hig-sidebar-item>
+                </hig-sidebar-group>
 
-          </hig-menu>
-        </HIG>
+                {this.state.group3 &&
+                  <hig-sidebar-group>
+                    <hig-sidebar-item>Group Below</hig-sidebar-item>
+                  </hig-sidebar-group>}
+              </hig-sidebar>
+
+            </hig-menu>
+          </HIG>
+        </div>
+
         <input
           type="text"
           value={this.state.buttonLabel}

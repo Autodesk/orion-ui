@@ -33,7 +33,7 @@ export default function createComponent(type) {
       this._el = ReactDOM.findDOMNode(this);
       this._mount = this._el.parentNode;
 
-      this._anchor = document.createComment('anchor');
+      this._anchor = document.createComment(`${type}-anchor`);
 
       if (!this._mount) {
         throw new Error('can only mount if there is a parentNode');
@@ -48,21 +48,6 @@ export default function createComponent(type) {
       }
     }
 
-    // renderSlot(props) {
-    //   if (type !== 'slot') {
-    //     return;
-    //   }
-
-    //   const element = React.isValidElement(props.children)
-    //     ? props.children
-    //     : <div>{props.children}</div>;
-    //   ReactDOM.unstable_renderSubtreeIntoContainer(
-    //     this,
-    //     element,
-    //     this.instance.getSlotNode()
-    //   );
-    // }
-
     componentWillUnmount() {
       this._mount.replaceChild(this._el, this._anchor);
       this.instance.unmount();
@@ -70,19 +55,13 @@ export default function createComponent(type) {
 
     componentWillReceiveProps(nextProps) {
       const updatePayload = prepareUpdate(this.props, nextProps);
-      this.instance.commitUpdate(updatePayload, this.props, nextProps);
-      // this.renderSlot(nextProps);
+
+      if (updatePayload) {
+        this.instance.commitUpdate(updatePayload, this.props, nextProps);
+      }
     }
 
     render() {
-      React.Children.forEach(this.props.children, child => {
-        if (child && child.type && !child.type.HIG_COMPONENT) {
-          console.error(
-            `HIG unapproved! ${type} can not render DOM elements directly. Tried to render ${child.type}.`
-          );
-        }
-      });
-
       return <hig-component>{this.props.children}</hig-component>;
     }
 
@@ -90,6 +69,10 @@ export default function createComponent(type) {
       return {
         parent: this.instance
       };
+    }
+
+    getDOMNode() {
+      return this.instance.getDOMNode();
     }
   };
 
@@ -110,9 +93,48 @@ export default function createComponent(type) {
   return Adapter;
 }
 
+function createSlotComponent(type) {
+  const BaseComponent = createComponent(type);
+
+  const Adapter = class extends React.Component {
+    componentDidMount() {
+      this.renderSlot(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+      this.renderSlot(nextProps);
+    }
+
+    renderSlot(props) {
+      // renderSubtreeIntoContainer needs a single React Element instead of a collection
+      // wrap in a div if we have to. Fix this once Fiber is released since we can
+      // render fragments
+      const element = React.isValidElement(props.children)
+        ? props.children
+        : <div>{props.children}</div>;
+
+      ReactDOM.unstable_renderSubtreeIntoContainer(
+        this,
+        element,
+        this.instance.getDOMNode()
+      );
+    }
+
+    render() {
+      return <BaseComponent ref={r => this.instance = r} {...this.props} />;
+    }
+  };
+
+  Adapter.displayName = `${type}-container`;
+
+  return Adapter;
+}
+
 export const Button = createComponent('hig-button');
 export const Menu = createComponent('hig-menu');
 Menu.Top = createComponent('hig-menu-top');
 Menu.Sidebar = createComponent('hig-sidebar');
 Menu.Sidebar.Group = createComponent('hig-sidebar-group');
 Menu.Sidebar.Item = createComponent('hig-sidebar-item');
+
+export const Slot = createSlotComponent('hig-slot');

@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import 'hig.web/dist/hig.css';
-import { Button as HIGButton } from 'hig.web';
+// import 'hig.web/dist/hig.css';
+import { Button as HIGButton } from '../hig.web';
 
 import { PropTypes } from 'react';
 

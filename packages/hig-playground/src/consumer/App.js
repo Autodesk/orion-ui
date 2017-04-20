@@ -16,9 +16,11 @@ limitations under the License.
 */
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-
 import { Menu } from '../orion';
-import * as HIG from '../orion/hig-react';
+import * as HIG from '@orion-ui/react-hig';
+
+import 'ionicons/css/ionicons.min.css';
+import '@orion-ui/react-hig/lib/react-hig.css';
 
 import WelcomeMessage from './containers/WelcomeMessage';
 

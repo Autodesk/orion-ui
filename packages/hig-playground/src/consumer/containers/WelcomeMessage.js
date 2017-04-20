@@ -17,7 +17,7 @@ limitations under the License.
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from '../../orion/hig-react';
+import { Button } from '@orion-ui/react-hig';
 
 export class WelcomeMessage extends React.Component {
   handleDeselect = event => {

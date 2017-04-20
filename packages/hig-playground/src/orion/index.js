@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import React from 'react';
-import { Menu as HIGMenu, Slot } from './hig-react';
+import { Menu as HIGMenu, Slot } from '@orion-ui/react-hig';
 
 export class Menu extends React.Component {
   static defaultProps = {

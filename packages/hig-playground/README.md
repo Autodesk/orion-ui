@@ -140,13 +140,12 @@ type OnToggleFn = () => void;
 
 interface Group {
   id: string;
-  size?: 'small';
   items: GroupItem[];
 }
 
 interface GroupItem {
   id: string;
-  label: string;
+  title: string;
 }
 ```
 
@@ -201,6 +200,7 @@ Properties
 name | type | default | required | description
 ---  | ---  | ---     | ---      | ---
 `onToggle` | `OnToggleFn` | undefined | false | the function to call when the Sidebar toggle button is clicked
+`logo` | `string` | undefined | false | http url to the logo icon
 
 Types
 
@@ -236,15 +236,12 @@ Valid Children
 
 Properties
 
-name | type | default | required | description
----  | ---  | ---     | ---      | ---
-`size` | `Size` | `large` | false | the visual size of the group
+**no properties**
 
 Types
 
-```typescript
-type Size = 'small' | 'large';
-```
+**no types**
+
 
 #### Menu.Sidebar.Item
 
@@ -258,8 +255,7 @@ Properties
 
 name | type | default | required | description
 ---  | ---  | ---     | ---      | ---
-`children` | `string` | "" | true | The label of the item
-`selected` | `boolean` | false | false | Controls if the item looks selected
+`title` | `string` | "" | true | The label of the item
 `onClick` | `OnClickFn` | undefined | false | the function to call when the Item is clicked
 
 Types
@@ -272,28 +268,6 @@ type OnClickFn = () => void;
 
 Overall feedback for hig.web
 
-Issues with Button:
-
-* Button only takes a single dom element in constructor which it calls appendChild on. appendChild doesn't have the required control over DOM insertion. Need to support insertBefore to solve this problem. insertBefore acts exactly like appendChild if the referenceNode is not provided.
-
-* There is no way to remove an event listener
-
-I want to have an api like this for button in React:
-
-<Button title="Hello World" link="http://google.com" onClick={this.handleClick} ...
-
-This means I can either map title -> setTitle explictly in which case the interface.json is pretty much useless, or I can try to transform setTitle => title via string manipulation. Thoughts? Also why does interface.json need to be packaged at runtime?
-
-* Instance creation issues
-
-I'd like to be able to create any child and then only append it in valid locations.
-
-e.g. Be able to create a MenuItem without having created a Menu yet and then only be able to do Menu.addItem(MenuItem)
-
-* Query Selectors - why do we use querySelectors in the constructor functions? Recommend using domElement references for simplicity sake.
-
-* Teardown - there is currently no way to tear down a component. Currently working around via this._hig.el.parentNode.removeChild(this._hig.el);
-
-* Button is currently an inline element but has padding on it. Should be inline-block if you want padding
-
-* Adding normalize.css to the page is a big no-no for components. Please remove it. All css added by HIG.Web must be namespaced and not global (this includes things like keyframe animations)
+* missing some setters for Sidebar Items (title and link)
+* defaults use underscore convention: logo_link and methods use camel-case convention: setLogoLink or onHamburgerClick. Can we use camelCase everywhere? Would prefer logoLink.
+* missing slot example. need it to complete the orion menu demo

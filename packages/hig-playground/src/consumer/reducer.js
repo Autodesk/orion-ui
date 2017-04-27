@@ -17,9 +17,8 @@ limitations under the License.
 const initialState = {
   menuOpen: false,
   welcomeMessage: 'Hello Main App Content!',
-  items: [{ id: 1, label: 'Item 1' }, { id: 2, label: 'Item 2' }],
-  lastItemId: 3,
-  selectedItem: null
+  items: [{ id: 1, title: 'Item 1' }, { id: 2, title: 'Item 2' }],
+  lastItemId: 3
 };
 
 export default function reducer(state = initialState, action) {

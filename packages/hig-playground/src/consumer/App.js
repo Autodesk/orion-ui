@@ -48,12 +48,11 @@ class App extends Component {
     const groups = [
       {
         id: 'group1',
-        size: 'small',
         items: this.props.items
       },
       {
         id: 'group2',
-        items: [{ id: 'item1', label: 'Other Group Item' }]
+        items: [{ id: 'item1', title: 'Other Group Item' }]
       }
     ];
 
@@ -67,13 +66,18 @@ class App extends Component {
             onItemClick={this.handleItemClickRedux}
             onToggle={this.handleToggleRedux}
             selectedItem={this.props.selectedItem}
+            logo="http://cdn1.digitalartsonline.co.uk/cmsdata/features/3437213/autodesk-logo-cmyk-color-logo-white-text-large-big-512.jpg"
           >
             <WelcomeMessage />
           </Menu>
         </div>
         <h1>Menu Controlled by Local State</h1>
         <div style={{ height: 200, width: '100%' }}>
-          <Menu groups={groups} onItemClick={this.handleItemClickLocal}>
+          <Menu
+            groups={groups}
+            onItemClick={this.handleItemClickLocal}
+            logo="http://cdn1.digitalartsonline.co.uk/cmsdata/features/3437213/autodesk-logo-cmyk-color-logo-white-text-large-big-512.jpg"
+          >
             <p>
               {(this.state.selectedItem && this.state.selectedItem.label) ||
                 'Hello Main App Content!'}
@@ -84,20 +88,22 @@ class App extends Component {
 
         <div style={{ height: 200, width: '100%' }}>
           <HIG.Menu>
-            <HIG.Menu.Top />
             <HIG.Menu.Sidebar open={true}>
-              <HIG.Menu.Sidebar.Group small>
-                <HIG.Menu.Sidebar.Item>Item 1</HIG.Menu.Sidebar.Item>
-                <HIG.Menu.Sidebar.Item>Item 2</HIG.Menu.Sidebar.Item>
+              <HIG.Menu.Sidebar.Group>
+                <HIG.Menu.Sidebar.Item title="Item 1" />
+                <HIG.Menu.Sidebar.Item title="Item 2" />
               </HIG.Menu.Sidebar.Group>
               <HIG.Menu.Sidebar.Group>
-                <HIG.Menu.Sidebar.Item>Item 1</HIG.Menu.Sidebar.Item>
-                <HIG.Menu.Sidebar.Item>Other Group Item</HIG.Menu.Sidebar.Item>
+                <HIG.Menu.Sidebar.Item title="Item 1" />
+                <HIG.Menu.Sidebar.Item title="Other Group Item" />
               </HIG.Menu.Sidebar.Group>
             </HIG.Menu.Sidebar>
-            <HIG.Slot>
-              <p>Hello Main App Content!</p>
-            </HIG.Slot>
+
+            <HIG.Menu.Content>
+              <HIG.Menu.Content.Top
+                logo="http://cdn1.digitalartsonline.co.uk/cmsdata/features/3437213/autodesk-logo-cmyk-color-logo-white-text-large-big-512.jpg"
+              />
+            </HIG.Menu.Content>
           </HIG.Menu>
         </div>
       </div>
@@ -108,7 +114,14 @@ class App extends Component {
 const mapStateToProps = state => {
   return {
     menuOpen: state.menuOpen,
-    items: state.items,
+    items: state.items.map(item => {
+      return {
+        ...item,
+        title: state.selectedItem
+          ? state.selectedItem.id === item.id ? 'selected' : item.title
+          : item.title
+      };
+    }),
     selectedItem: state.selectedItem
   };
 };

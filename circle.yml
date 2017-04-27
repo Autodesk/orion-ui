@@ -24,6 +24,7 @@ dependencies:
 test:
   pre:
     - npm run test-lib
+    - cd packages/hig.web && npm run build
     - cd packages/react && npm run start-storybook:
         background: true
   override:

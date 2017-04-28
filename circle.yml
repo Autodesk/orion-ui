@@ -19,13 +19,13 @@ dependencies:
     - "packages/marketing-playground/node_modules"
     - "packages/react-hig/node_modules"
     - "packages/react-playground/node_modules"
-    - "packages/react/node_modules"
+    - "packages/react-components/node_modules"
     - "packages/style/node_modules"
 test:
   pre:
     - cd packages/hig.web && npm run build
     - npm run build-lib
-    - cd packages/react && npm run start-storybook:
+    - cd packages/react-components && npm run start-storybook:
         background: true
   override:
     - npm run test-ci

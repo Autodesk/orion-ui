@@ -1,4 +1,11 @@
 {
-  "lerna": "2.0.0-rc.1",
-  "version": "1.0.3"
+  "lerna": "2.0.0-rc.4",
+  "version": "1.0.3",
+  "commands": {
+    "publish": {
+      "ignore": [
+        "packages/hig.web"
+      ]
+    }
+  }
 }

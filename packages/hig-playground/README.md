@@ -263,11 +263,3 @@ Types
 ```typescript
 type OnClickFn = () => void;
 ```
-
-## hig.web
-
-Overall feedback for hig.web
-
-* missing some setters for Sidebar Items (title and link)
-* defaults use underscore convention: logo_link and methods use camel-case convention: setLogoLink or onHamburgerClick. Can we use camelCase everywhere? Would prefer logoLink.
-* missing slot example. need it to complete the orion menu demo

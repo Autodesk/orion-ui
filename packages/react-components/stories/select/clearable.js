@@ -16,66 +16,66 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean, number } from '@kadira/storybook-addon-knobs';
+import { boolean } from '@kadira/storybook-addon-knobs';
 
 import Select from '../../src/2016-12-01/select';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-module.exports = function optionFocus() {
+export default function clearable() {
   const props = {
-    focusedKey: number('Focus Index', 8, {
-      range: true,
-      min: 1,
-      max: 8,
-      step: 1
-    }),
-    open: boolean('Open', true),
+    clearable: boolean('Clearable', true),
     options: [
-      { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 },
-      { value: 'three', label: 'Three', key: 3 },
-      { value: 'four', label: 'Four', key: 4 },
-      { value: 'five', label: 'Five', key: 5 },
-      { value: 'six', label: 'Six', key: 6 },
-      { value: 'seven', label: 'Seven', key: 7 },
-      { value: 'eight', label: 'Eight', key: 8 }
-    ]
+      { label: 'One', value: 'one', key: 1 },
+      { label: 'Two', value: 'two', key: 2 },
+      { label: 'Three', value: 'three', key: 3 }
+    ],
+    selectedIndex: 1
   };
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = ${JSON.stringify(props.options, null, 2)};
+  const options = [
+    { label: 'One', value: 'one', key: 1 },
+    { label: 'Two', value: 'two', key: 2 },
+    { label: 'Three', value: 'three', key: 3 },
+  ];
 
   return (
-    <Select options={options} open={true} focusedKey={${props.focusedKey}} />
+    <Select options={options} selectedIndex={1} clearable={${props.clearable}} />
   )
 }
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
-
   const angular = `
 // app controller
 import 'angular';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [])
-.controller('AppController', function() {
-  var app = this;
-  app.options = ${JSON.stringify(props.options, null, 2)};
-  app.focusedKey = ${props.focusedKey};
-}]);
+angular
+  .module('app', ['orion'])
+  .controller('AppController', function () {
+    var app = this;
+    app.selectedIndex = 1;
+    app.clearable = ${props.clearable};
+    app.sizes = [
+      { label: 'One', value: 'one', key: 1 },
+      { label: 'Two', value: 'two', key: 2 },
+      { label: 'Three', value: 'three', key: 3 },
+    ];
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="app.options" open="app.true" focused-key="app.focusedKey" />
+  <orion-select clearable="app.clearable" selected-index="app.selectedIndex" options="app.sizes"></orion-select>
 </body>
 </html>`;
 
@@ -84,4 +84,4 @@ angular.module('app', [])
       <Select {...props} />
     </WithSource>
   );
-};
+}

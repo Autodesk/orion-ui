@@ -17,36 +17,17 @@ limitations under the License.
 */
 import React from 'react';
 
-// import { Datepicker } from '../../src/2016-12-01/datepicker';
+import Datepicker from '../../src/2016-12-01/datepicker';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function interactive() {
+export default function unfocusedWoDate() {
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
-    constructor(props) {
-      super(props);
-
-      this.state = {
-        datePickerState: {}
-      };
-
-      this.onChange = (event) => {
-        if (event.type === 'focusedDayChange') {
-          // do something special
-        }
-
-        this.setState({ selectState: event.state });
-      }
-    }
-
     render() {
-        const date = moment();
-        return <Datepicker {...this.state.datePickerState} date={date} onChange={this.onChange}  />;
+        return <Datepicker date={null} focus={false} />;
     }
 }
 
@@ -56,22 +37,13 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
-    app.date = moment();
-    app.datePickerState = {};
-
-    app.onChange = (event) => {
-        if (event.type === 'focusedDayChange') {
-          // do something special
-        }
-
-      app.datePickerState = event.state;
-    }
+    app.date = null;
+    app.focus = false;
   });
 
 // app.html
@@ -79,16 +51,13 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker
-      date="{{app.date}}"
-      datePickerState="{{app.datePickerState}}"
-      ng-change="app.onChange(datePickerState)" />
+    <orion-datepicker date="app.date" focus="app.focus" />
   </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <span>todo</span>
+      <Datepicker />
     </WithSource>
   );
 }

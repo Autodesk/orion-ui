@@ -17,27 +17,33 @@ limitations under the License.
 */
 import React from 'react';
 import moment from 'moment';
-import { boolean } from '@kadira/storybook-addon-knobs';
+import { object } from '@kadira/storybook-addon-knobs';
 
 import Datepicker from '../../src/2016-12-01/datepicker';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function focus() {
+export default function i18n() {
   const props = {
-    focus: boolean('Focus', true),
-    currentDate: moment('2015-01-14'),
-    focusDate: moment('2015-01-14')
+    date: moment('2016-06-28'),
+    focus: true,
+    focusDate: moment('2016-06-28'),
+    i18n: object('Phrases', {
+      previousMonth: '前一个月',
+      nextMonth: '下个月',
+      clearDate: '清除日期'
+    })
   };
 
   const react = `
 import React from 'react';
 import moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
+        const i18n = ${JSON.stringify(props.i18n, null, 10)};
         const date = moment();
-        return <Datepicker date={date} focus={${props.focus}} />;
+        return <Datepicker date={date} focus={true} i18n={i18n}  />;
     }
 }
 
@@ -47,13 +53,14 @@ ReactDOM.render(React.createElement(App), document.body);`;
 // app controller
 
 import 'angular';
-import * as moment from 'moment';
+import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
 angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
-    app.focus = ${props.focus};
+    app.date = moment();
+    app.i18n = ${JSON.stringify(props.i18n, null, 10)};
   });
 
 // app.html
@@ -61,7 +68,7 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker focus="app.focus" />
+    <orion-datepicker focus="true" date="app.date" i18n="app.i18n" />
   </body>
 </html>`;
 

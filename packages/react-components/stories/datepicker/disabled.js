@@ -16,23 +16,25 @@ limitations under the License.
 
 */
 import React from 'react';
-import { text } from '@kadira/storybook-addon-knobs';
+import { boolean } from '@kadira/storybook-addon-knobs';
 
-import Datepicker from '../../src/2016-12-01/datepicker';
+// import { Datepicker } from '../../src/2016-12-01/datepicker';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function customPlaceholderText() {
+export default function disabled() {
   const props = {
-    placeholder: text('Placeholder', '__ / __ / ____')
+    disabled: boolean('Disabled', true)
   };
 
   const react = `
 import React from 'react';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import moment from 'moment';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
-        return <Datepicker placeholder="${props.placeholder}" />;
+        const date = moment();
+        return <Datepicker date={date} disabled={${props.disabled}}  />;
     }
 }
 
@@ -48,7 +50,8 @@ import '@orion-ui/angular/lib/2016-12-01';
 angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
-    app.placeholder = "${props.placeholder}";
+    app.date = moment();
+    app.disabled = ${props.disabled};
   });
 
 // app.html
@@ -56,13 +59,13 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker placeholder="app.placeholder" />
+    <orion-datepicker date="app.date" disabled="app.disabled" />
   </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Datepicker {...props} />
+      <span>todo</span>
     </WithSource>
   );
 }

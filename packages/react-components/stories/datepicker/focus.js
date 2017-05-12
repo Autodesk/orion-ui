@@ -16,72 +16,58 @@ limitations under the License.
 
 */
 import React from 'react';
+import moment from 'moment';
 import { boolean } from '@kadira/storybook-addon-knobs';
 
-import Select from '../../src/2016-12-01/select';
+import Datepicker from '../../src/2016-12-01/datepicker';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function clearable() {
+export default function focus() {
   const props = {
-    clearable: boolean('Clearable', true),
-    options: [
-      { label: 'One', value: 'one', key: 1 },
-      { label: 'Two', value: 'two', key: 2 },
-      { label: 'Three', value: 'three', key: 3 }
-    ],
-    selectedIndex: 1
+    focus: boolean('Focus', true),
+    currentDate: moment('2015-01-14'),
+    focusDate: moment('2015-01-14')
   };
 
   const react = `
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import moment from 'moment';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
-render() {
-  const options = [
-    { label: 'One', value: 'one', key: 1 },
-    { label: 'Two', value: 'two', key: 2 },
-    { label: 'Three', value: 'three', key: 3 },
-  ];
-
-  return (
-    <Select options={options} selectedIndex={1} clearable={${props.clearable}} />
-  )
-}
+    render() {
+        const date = moment();
+        return <Datepicker date={date} focus={${props.focus}} />;
+    }
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
+
   const angular = `
 // app controller
+
 import 'angular';
+import * as moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
-angular
-  .module('app', ['orion'])
-  .controller('AppController', function () {
+angular.module('app', ['orion'])
+  .controller('AppController', function() {
     var app = this;
-    app.selectedIndex = 1;
-    app.clearable = ${props.clearable};
-    app.sizes = [
-      { label: 'One', value: 'one', key: 1 },
-      { label: 'Two', value: 'two', key: 2 },
-      { label: 'Three', value: 'three', key: 3 },
-    ];
+    app.focus = ${props.focus};
   });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-<body ng-controller="AppController as app">
-  <orion-select clearable="app.clearable" selected-index="app.selectedIndex" options="app.sizes"></orion-select>
-</body>
+  <body ng-controller="AppController as app">
+    <orion-datepicker focus="app.focus" />
+  </body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Select {...props} />
+      <Datepicker {...props} />
     </WithSource>
   );
 }

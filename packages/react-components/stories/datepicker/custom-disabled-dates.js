@@ -46,7 +46,7 @@ export default function customDisabledDates() {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
     constructor() {

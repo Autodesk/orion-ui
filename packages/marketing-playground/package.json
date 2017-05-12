@@ -7,7 +7,7 @@
     "react-scripts": "0.9.5"
   },
   "dependencies": {
-    "@orion-ui/react": "^1.0.3",
+    "@orion-ui/react-components": "^1.0.3",
     "@skatejs/web-components": "^1.0.0",
     "@webcomponents/custom-elements": "^1.0.0-rc.3",
     "react": "^15.4.2",

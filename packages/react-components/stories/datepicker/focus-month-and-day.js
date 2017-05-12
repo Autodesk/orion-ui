@@ -17,26 +17,29 @@ limitations under the License.
 */
 import React from 'react';
 import moment from 'moment';
-import { boolean } from '@kadira/storybook-addon-knobs';
+import { text, boolean } from '@kadira/storybook-addon-knobs';
 
 import Datepicker from '../../src/2016-12-01/datepicker';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function clearable() {
+export default function focusMonthAndDay() {
   const props = {
-    clearable: boolean('Clearable', true),
-    date: moment('2017-01-01')
+    focusDate: moment(text('Focus Date', '2015-01-02')),
+    focus: boolean('Focus', true),
+    currentDate: moment('2014-12-01')
   };
 
   const react = `
 import React from 'react';
+import ReactDOM from 'react-dom';
 import moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
     render() {
         const date = moment();
-        return <Datepicker date={date} clearable={${props.clearable}} />;
+        const focusDate = moment("${props.focusDate}")
+        return <Datepicker date={date} focus={${props.focus}} focusDate={focusDate} />;
     }
 }
 
@@ -53,7 +56,8 @@ angular.module('app', ['orion'])
   .controller('AppController', function() {
     var app = this;
     app.date = moment();
-    app.clearable = ${props.clearable};
+    app.focus = ${props.focus};
+    app.focusDate = moment("${props.focusDate}")
   });
 
 // app.html
@@ -61,10 +65,9 @@ angular.module('app', ['orion'])
 <!doctype html>
 <html lang="en" ng-app="app">
   <body ng-controller="AppController as app">
-    <orion-datepicker date="app.date" clearable="app.clearable />
+    <orion-datepicker date="app.date" focus="app.focus" focusDate="app.focusDate" />
   </body>
-</html>
-        `;
+</html>`;
 
   return (
     <WithSource react={react} angular={angular}>

@@ -16,33 +16,44 @@ limitations under the License.
 
 */
 import React from 'react';
-import { boolean } from '@kadira/storybook-addon-knobs';
+import { boolean, number } from '@kadira/storybook-addon-knobs';
 
 import Select from '../../src/2016-12-01/select';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function collapsed() {
+module.exports = function optionFocus() {
   const props = {
-    open: boolean('Open', false),
+    focusedKey: number('Focus Index', 8, {
+      range: true,
+      min: 1,
+      max: 8,
+      step: 1
+    }),
+    open: boolean('Open', true),
     options: [
       { value: 'one', label: 'One', key: 1 },
-      { value: 'two', label: 'Two', key: 2 }
+      { value: 'two', label: 'Two', key: 2 },
+      { value: 'three', label: 'Three', key: 3 },
+      { value: 'four', label: 'Four', key: 4 },
+      { value: 'five', label: 'Five', key: 5 },
+      { value: 'six', label: 'Six', key: 6 },
+      { value: 'seven', label: 'Seven', key: 7 },
+      { value: 'eight', label: 'Eight', key: 8 }
     ]
   };
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
-  const options = [
-    { value: 'one', label: 'One', key: 1 },
-    { value: 'two', label: 'Two', key: 2 }
-  ];
+  const options = ${JSON.stringify(props.options, null, 2)};
 
-  return <Select options={options} open={${props.open}} />;
+  return (
+    <Select options={options} open={true} focusedKey={${props.focusedKey}} />
+  )
 }
 }
 
@@ -51,22 +62,20 @@ ReactDOM.render(React.createElement(App), document.body);`;
   const angular = `
 // app controller
 import 'angular';
-import '@orion-ui/angular/lib/2016-12-01';
 
-angular
-  .module('app', ['orion'])
-  .controller('AppController', function () {
-    var app = this;
-    app.open = ${props.open};
-    app.options = ${JSON.stringify(props.options, null, 2)};
-  });
+angular.module('app', [])
+.controller('AppController', function() {
+  var app = this;
+  app.options = ${JSON.stringify(props.options, null, 2)};
+  app.focusedKey = ${props.focusedKey};
+}]);
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="app.options" open="app.open"></orion-select>
+  <orion-select options="app.options" open="app.true" focused-key="app.focusedKey" />
 </body>
 </html>`;
 
@@ -75,4 +84,4 @@ angular
       <Select {...props} />
     </WithSource>
   );
-}
+};

@@ -16,57 +16,66 @@ limitations under the License.
 
 */
 import React from 'react';
-import moment from 'moment';
+import { boolean, number } from '@kadira/storybook-addon-knobs';
 
-import Datepicker from '../../src/2016-12-01/datepicker';
+import Select from '../../src/2016-12-01/select';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function unfocusedWithDate() {
+export default function optionFocus() {
   const props = {
-    currentDate: moment('2015-01-14'),
-    date: moment('2015-01-14')
+    focusedKey: number('Focus Key', 2, {
+      range: true,
+      min: 1,
+      max: 2,
+      step: 1
+    }),
+    open: boolean('Open', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 }
+    ]
   };
 
   const react = `
 import React from 'react';
-import moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
-    render() {
-        const date = moment();
-        return <Datepicker date={date} focus={false} />;
-    }
+render() {
+  const options = ${JSON.stringify(props.options, null, 2)};
+
+  return (
+    <Select options={options} open={true} focusedKey={${props.focusedKey}} />
+  )
+}
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
 
   const angular = `
 // app controller
-
 import 'angular';
-import moment from 'moment';
-import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', ['orion'])
-  .controller('AppController', function() {
-    var app = this;
-    app.date = moment();
-    app.focus = false;
-  });
+angular.module('app', [])
+.controller('AppController', function() {
+  var app = this;
+  app.options = ${JSON.stringify(props.options, null, 2)};
+  app.focusedKey = ${props.focusedKey};
+}]);
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-  <body ng-controller="AppController as app">
-    <orion-datepicker date="app.date" focus="app.focus" />
-  </body>
+<body ng-controller="AppController as app">
+  <orion-select options="app.options" open="app.true" focused-key="app.focusedKey" />
+</body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Datepicker {...props} />
+      <Select {...props} />
     </WithSource>
   );
 }

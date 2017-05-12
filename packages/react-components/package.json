@@ -1,5 +1,5 @@
 {
-  "name": "@orion-ui/react",
+  "name": "@orion-ui/react-components",
   "version": "1.0.3",
   "description": "orion ui react components",
   "main": "lib/index.js",

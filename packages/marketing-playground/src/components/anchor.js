@@ -15,7 +15,7 @@ limitations under the License.
 
 */
 import React, { Component, PropTypes } from 'react';
-import { Button } from '@orion-ui/react/lib/2016-12-01';
+import { Button } from '@orion-ui/react-components/lib/2016-12-01';
 
 export default class Anchor extends Component {
   constructor(props) {
@@ -30,7 +30,11 @@ export default class Anchor extends Component {
   }
 
   render() {
-    return <Button size="large" onClick={this.handleClick}>{this.props.children}</Button>
+    return (
+      <Button size="large" onClick={this.handleClick}>
+        {this.props.children}
+      </Button>
+    );
   }
 }
 
@@ -39,4 +43,4 @@ Anchor.propTypes = {
    * The url to redirect to when clicked
    */
   href: PropTypes.string.isRequired
-}
+};

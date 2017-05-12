@@ -15,7 +15,7 @@ We have several examples [on the website](https://cdn.web-platform.io/orion-ui/o
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Button from '@orion-ui/react/lib/2016-12-01/button';
+import Button from '@orion-ui/react-components/lib/2016-12-01/button';
 
 class HelloMessage extends React.Component {
   render() {
@@ -35,7 +35,7 @@ This example will render "Hello John" into the page and the button will be perfe
 
 Orion is available in a few different packages on npm:
 
-* [`@orion-ui/react`](https://www.npmjs.com/package/@orion-ui/react) is the react library
+* [`@orion-ui/react-components`](https://www.npmjs.com/package/@orion-ui/react-components) is the react library
 * [`@orion-ui/angular`](https://www.npmjs.com/package/@orion-ui/angular) is the angular 1.x library
 * [`@orion-ui/components`](https://www.npmjs.com/package/@orion-ui/components) is the vanilla web component library
 

@@ -21,38 +21,37 @@ import { boolean, number } from '@kadira/storybook-addon-knobs';
 import Select from '../../src/2016-12-01/select';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function optionFocus() {
+export default function selectedIndex() {
   const props = {
-    focusedKey: number('Focus Key', 2, {
-      range: true,
-      min: 1,
-      max: 2,
-      step: 1
-    }),
     open: boolean('Open', true),
     options: [
       { value: 'one', label: 'One', key: 1 },
       { value: 'two', label: 'Two', key: 2 }
-    ]
+    ],
+    selectedIndex: number('Selected Index', 1, {
+      range: true,
+      min: 0,
+      max: 1,
+      step: 1
+    })
   };
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
 render() {
   const options = ${JSON.stringify(props.options, null, 2)};
 
   return (
-    <Select options={options} open={true} focusedKey={${props.focusedKey}} />
+    <Select options={options} open={${props.open}} selectedIndex={${props.selectedIndex}} />
   )
 }
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
-
   const angular = `
 // app controller
 import 'angular';
@@ -61,7 +60,8 @@ angular.module('app', [])
 .controller('AppController', function() {
   var app = this;
   app.options = ${JSON.stringify(props.options, null, 2)};
-  app.focusedKey = ${props.focusedKey};
+  app.open = ${props.open};
+  app.selectedIndex = ${props.selectedIndex};
 }]);
 
 // app.html
@@ -69,7 +69,7 @@ angular.module('app', [])
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select options="app.options" open="app.true" focused-key="app.focusedKey" />
+  <orion-select options="app.options" open="app.open" selected-index="app.selectedIndex" />
 </body>
 </html>`;
 

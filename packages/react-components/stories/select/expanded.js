@@ -16,65 +16,59 @@ limitations under the License.
 
 */
 import React from 'react';
-import moment from 'moment';
-import { object } from '@kadira/storybook-addon-knobs';
+import { boolean } from '@kadira/storybook-addon-knobs';
 
-import Datepicker from '../../src/2016-12-01/datepicker';
+import Select from '../../src/2016-12-01/select';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function i18n() {
+export default function expanded() {
   const props = {
-    date: moment('2016-06-28'),
-    focus: true,
-    focusDate: moment('2016-06-28'),
-    i18n: object('Phrases', {
-      previousMonth: '前一个月',
-      nextMonth: '下个月',
-      clearDate: '清除日期'
-    })
+    open: boolean('Open', true),
+    options: [
+      { value: 'one', label: 'One', key: 1 },
+      { value: 'two', label: 'Two', key: 2 }
+    ]
   };
 
   const react = `
 import React from 'react';
-import moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import ReactDOM from 'react-dom';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
-    render() {
-        const i18n = ${JSON.stringify(props.i18n, null, 10)};
-        const date = moment();
-        return <Datepicker date={date} focus={true} i18n={i18n}  />;
-    }
+render() {
+  const options = ${JSON.stringify(props.options, null, 2)};
+
+  return <Select options={options} open={${props.open}} />;
+}
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
-
   const angular = `
 // app controller
-
 import 'angular';
-import moment from 'moment';
 import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', ['orion'])
-  .controller('AppController', function() {
+angular
+  .module('app', ['orion'])
+  .controller('AppController', function () {
     var app = this;
-    app.date = moment();
-    app.i18n = ${JSON.stringify(props.i18n, null, 10)};
+    app.open = ${props.open};
+    app.options = ${JSON.stringify(props.options, null, 2)};
   });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
-  <body ng-controller="AppController as app">
-    <orion-datepicker focus="true" date="app.date" i18n="app.i18n" />
-  </body>
+<body ng-controller="AppController as app">
+  <orion-select options="app.options" open="app.open"></orion-select>
+</body>
 </html>`;
 
   return (
     <WithSource react={react} angular={angular}>
-      <Datepicker {...props} />
+      <Select {...props} />
     </WithSource>
   );
 }

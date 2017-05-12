@@ -16,73 +16,60 @@ limitations under the License.
 
 */
 import React from 'react';
+import { boolean, text } from '@kadira/storybook-addon-knobs';
 
 import Select from '../../src/2016-12-01/select';
 import { WithSource } from '../../.storybook/addons/source-addon';
 
-export default function interactive() {
+module.exports = function someSearchResults() {
   const props = {
+    filter: text('Filter', 'd'),
+    open: boolean('Open', true),
     options: [
       { value: 'one', label: 'One', key: 1 },
       { value: 'two', label: 'Two', key: 2 }
-    ]
+    ],
+    searchable: boolean('Searchable', true)
   };
 
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+render() {
+  const options = ${JSON.stringify(props.options, null, 2)};
 
-    this.state = {
-      selectState: Select.State.create()
-    };
-
-    this.onChange = (event) => {
-      if (event.type === 'selectedIndexChange') {
-        // do something
-      }
-
-      this.setState({ selectState: event.state });
-    }
-  }
-
-  render() {
-    const options = ${JSON.stringify(props.options, null, 2)};
-
-    return <Select {...this.state.selectState} options={options} onChange={this.onChange} />;
-  }
+  return (
+    <Select options={options} open={${props.open}} searchable={${props.searchable}} filter="${props.filter}" />
+  )
+}
 }
 
 ReactDOM.render(React.createElement(App), document.body);`;
+
   const angular = `
 // app controller
 import 'angular';
-import {Select} from '@orion-ui/angular/lib/2016-12-01';
+import '@orion-ui/angular/lib/2016-12-01';
 
-angular.module('app', [Select.moduleName])
-.controller('AppController', function() {
-  var app = this;
-  app.options = ${JSON.stringify(props.options, null, 2)};
-
-  app.onChange = (event) => {
-    if (event.detail.type === 'optionSelected') {
-      // do something
-    }
-  }
-});
+angular
+  .module('app', ['orion'])
+  .controller('AppController', function () {
+    var app = this;
+    app.sizes = ${JSON.stringify(props.options, null, 2)};
+    app.searchable = ${props.searchable};
+    app.open = ${props.searchable};
+    app.filter = ${props.searchable};
+  });
 
 // app.html
 
 <!doctype html>
 <html lang="en" ng-app="app">
 <body ng-controller="AppController as app">
-  <orion-select
-    options="app.options"
-    on-change="app.onChange" />
+  <orion-select options="app.options" open="app.open" searchable="app.searchable" filter="app.filter" />
 </body>
 </html>`;
 
@@ -91,4 +78,4 @@ angular.module('app', [Select.moduleName])
       <Select {...props} />
     </WithSource>
   );
-}
+};

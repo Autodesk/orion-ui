@@ -23,7 +23,7 @@ import { WithSource } from '../../.storybook/addons/source-addon';
 export default function unfocusedWoDate() {
   const react = `
 import React from 'react';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
     render() {

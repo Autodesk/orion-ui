@@ -33,7 +33,7 @@ export default function disabled() {
   const react = `
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Select} from '@orion-ui/react/lib/2016-12-01';
+import {Select} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
 render() {

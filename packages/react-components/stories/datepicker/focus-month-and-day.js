@@ -33,7 +33,7 @@ export default function focusMonthAndDay() {
 import React from 'react';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
-import {Datepicker} from '@orion-ui/react/lib/2016-12-01';
+import {Datepicker} from '@orion-ui/react-components/lib/2016-12-01';
 
 class App extends React.Component {
     render() {

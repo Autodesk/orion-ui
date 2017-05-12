@@ -17,7 +17,7 @@ limitations under the License.
 
 import '@skatejs/web-components';
 import 'tachyons/css/tachyons.css';
-import { Select } from '@orion-ui/react/lib/2016-12-01';
+import { Select } from '@orion-ui/react-components/lib/2016-12-01';
 import React, { Component } from 'react';
 
 import './App.css';
@@ -43,7 +43,7 @@ class App extends Component {
   render() {
     const frameworks = [
       { label: 'React', value: 'react', key: 1 },
-      { label: 'Angular', value: 'angular', key: 2 },
+      { label: 'Angular', value: 'angular', key: 2 }
     ];
     const selectedFramework = frameworks[this.state.selectedIndex].value;
 
@@ -64,8 +64,12 @@ class App extends Component {
               <li className="f4 pv3 fx-row fai-c">
                 <span className="w-10 f1">1</span>
                 Install the library for
-                <span className="mr1"></span>
-                <Select options={frameworks} selectedIndex={this.state.selectedIndex} onChange={this.setFramework} />
+                <span className="mr1" />
+                <Select
+                  options={frameworks}
+                  selectedIndex={this.state.selectedIndex}
+                  onChange={this.setFramework}
+                />
               </li>
               <li className="f4 pv3 fx-row fai-c">
                 <span className="w-10 f1">2</span>
@@ -89,35 +93,83 @@ class App extends Component {
             <thead>
               <tr>
                 <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Name</th>
-                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Description</th>
-                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Website</th>
-                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">Source</th>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">
+                  Description
+                </th>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">
+                  Website
+                </th>
+                <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">
+                  Source
+                </th>
               </tr>
             </thead>
             <tbody className="lh-copy">
               <tr>
                 <td className="pv3 pr3 bb b--black-20">React Minimal</td>
-                <td className="pv3 pr3 bb b--black-20">Simple integration using <a href="https://github.com/facebookincubator/create-react-app">create-react-app</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-minimal.glitch.me">view site</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-react-minimal">view source</a></td>
+                <td className="pv3 pr3 bb b--black-20">
+                  Simple integration using
+                  {' '}
+                  <a
+                    href="https://github.com/facebookincubator/create-react-app"
+                  >
+                    create-react-app
+                  </a>
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://orion-react-minimal.glitch.me">view site</a>
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://glitch.com/edit/#!/orion-react-minimal">
+                    view source
+                  </a>
+                </td>
               </tr>
               <tr>
                 <td className="pv3 pr3 bb b--black-20">Angular Minimal</td>
-                <td className="pv3 pr3 bb b--black-20">Simple integration example</td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-angular-minimal2.glitch.me/">view site</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/project/orion-angular-minimal2">view source</a></td>
+                <td className="pv3 pr3 bb b--black-20">
+                  Simple integration example
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://orion-angular-minimal2.glitch.me/">
+                    view site
+                  </a>
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a
+                    href="https://glitch.com/edit/#!/project/orion-angular-minimal2"
+                  >
+                    view source
+                  </a>
+                </td>
               </tr>
               <tr>
                 <td className="pv3 pr3 bb b--black-20">Weather</td>
-                <td className="pv3 pr3 bb b--black-20">An app using Orion components and an external API</td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-weather.glitch.me">view site</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-weather">view source</a></td>
+                <td className="pv3 pr3 bb b--black-20">
+                  An app using Orion components and an external API
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://orion-weather.glitch.me">view site</a>
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://glitch.com/edit/#!/orion-weather">
+                    view source
+                  </a>
+                </td>
               </tr>
               <tr>
                 <td className="pv3 pr3 bb b--black-20">React/Redux</td>
-                <td className="pv3 pr3 bb b--black-20">An app using Redux to show time travel debugging</td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://orion-react-redux.glitch.me/">view site</a></td>
-                <td className="pv3 pr3 bb b--black-20"><a href="https://glitch.com/edit/#!/orion-react-redux">view source</a></td>
+                <td className="pv3 pr3 bb b--black-20">
+                  An app using Redux to show time travel debugging
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://orion-react-redux.glitch.me/">view site</a>
+                </td>
+                <td className="pv3 pr3 bb b--black-20">
+                  <a href="https://glitch.com/edit/#!/orion-react-redux">
+                    view source
+                  </a>
+                </td>
               </tr>
             </tbody>
           </table>

@@ -244,8 +244,77 @@ class GlobalNav extends HIGElement {
 
 Above you can see we call the `showSideNav` or `hideSideNav` methods in two places:
 
-1. componentDidMount - this sets up the initial view state of the component
-2. commitUpdate - this is called in response to a change in the sideNavOpen property value
+1. `componentDidMount` - this sets up the initial view state of the component
+2. `commitUpdate` - this is called in response to a change in the sideNavOpen property value
 
 ### Children (Partials)
 
+Managing partials is the most complex part of adapting hig.web to React. In hig.web an instance of a parent is required to
+construct an instance of a partial. react-hig manages this by using React Context to provide partial components access to their parent.
+
+
+#### During Construction:
+
+* if there is a parent instance in the React Context
+  * call `parentInstance.createElement(type, props)`
+* else
+  * call the top level `createElement(type, props)`
+
+Both of these methods are expected to return an instance of a sub-class of HIGElement (a react-hig construct).
+
+#### After Mounting:
+
+* if there is a parent instance in the React Context
+  * call `parentInstance.insertBefore` or `parentInstance.appendChild` as needed
+* else
+  * call `instance.mount(domElement, anchorElement)`
+
+
+Container elements need to implement both `insertBefore` and `appendChild` which have the following signature:
+
+```typescript
+interface ContainerElement {
+
+}
+```
+HIGElement#mount is already implemented and by default calls the hig.web instance's #mount method.
+
+#### Singleton children
+
+GlobalNav -> {SideNav, Container}
+
+<GlobalNav>
+  <SideNav />
+  <SideNav />
+  <Container />
+</GlobalNav>
+
+#### Single collection of children
+
+Section -> {Group[]}
+
+<Section>
+  <Group />
+  <Group />
+  <Group />
+</Section>
+
+#### Multiple child collections
+
+SideNav -> {Section[], Link[]}
+
+
+<SideNav sections={[<Section />, <Section />]} links={[<Link />, <Link />]}>
+</SideNav>
+
+<SideNav>
+  <Sections>
+    <Section />
+    <Section />
+  <Sections />
+
+  <Links>
+    <Link />
+    <Link />
+  </Links>
+</SideNav>

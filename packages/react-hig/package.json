@@ -40,5 +40,8 @@
     "start": "npm run lib -- --watch",
     "test": "react-scripts test --env=jsdom",
     "test-ci": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.{ts,tsx}"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.10"
   }
 }

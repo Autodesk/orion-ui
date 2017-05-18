@@ -5,7 +5,7 @@
   "description": "the autodesk ui library",
   "main": "index.js",
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --scope @orion-ui/react-hig",
     "build": "NODE_ENV=production lerna run build && npm run copy-package-builds",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",

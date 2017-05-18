@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "NODE_ENV=production lerna run build && npm run copy-package-builds && npm run set-marketing-to-root",
+    "build": "NODE_ENV=production lerna run build && npm run copy-package-builds",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "copy-package-builds": "node ./scripts/copy-package-builds.js",

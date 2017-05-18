@@ -16,8 +16,7 @@
     "react-dom": "^15.4.1"
   },
   "scripts": {
-    "start": "BROWSER=none PORT=3004 react-scripts start",
-    "build": "react-scripts build",
-    "test": "echo 'No tests configured'"
+    "disable-start": "BROWSER=none PORT=3004 react-scripts start",
+    "disable-build": "react-scripts build"
   }
 }

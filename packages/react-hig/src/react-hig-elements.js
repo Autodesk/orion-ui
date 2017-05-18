@@ -19,6 +19,21 @@ import * as HIG from 'hig.web';
 import partitionProps from './partitionProps';
 import HIGNodeList from './HIGNodeList';
 
+export const types = {
+  BUTTON: 'hig-button',
+  GLOBAL_NAV: 'hig-global-nav',
+  CONTAINER: 'hig-container',
+  TOP_NAV: 'hig-top-nav',
+  SUB_NAV: 'hig-sub-nav',
+  SIDE_NAV: 'hig-side-nav',
+  SIDE_NAV_SECTIONS: 'hig-side-nav-sections',
+  SIDE_NAV_LINKS: 'hig-side-nav-links',
+  SIDE_NAV_SECTION: 'hig-side-nav-section',
+  SIDE_NAV_LINK: 'hig-side-nav-link',
+  SIDE_NAV_GROUP: 'hig-side-nav-group',
+  SIDE_NAV_ITEM: 'hig-side-nav-item'
+};
+
 class HIGElement {
   constructor(HIGConstructor, initialProps) {
     this.initialProps = initialProps;
@@ -742,21 +757,6 @@ class GlobalNav extends HIGElement {
     }
   }
 }
-
-export const types = {
-  BUTTON: 'hig-button',
-  GLOBAL_NAV: 'hig-global-nav',
-  CONTAINER: 'hig-container',
-  TOP_NAV: 'hig-top-nav',
-  SUB_NAV: 'hig-sub-nav',
-  SIDE_NAV: 'hig-side-nav',
-  SIDE_NAV_SECTIONS: 'hig-side-nav-sections',
-  SIDE_NAV_LINKS: 'hig-side-nav-links',
-  SIDE_NAV_SECTION: 'hig-side-nav-section',
-  SIDE_NAV_LINK: 'hig-side-nav-link',
-  SIDE_NAV_GROUP: 'hig-side-nav-group',
-  SIDE_NAV_ITEM: 'hig-side-nav-item'
-};
 
 /**
  * Creates a publicly accessible element

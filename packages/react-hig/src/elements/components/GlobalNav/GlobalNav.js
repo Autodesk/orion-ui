@@ -16,8 +16,8 @@ limitations under the License.
 */
 import * as HIG from 'hig.web';
 
-import HIGElement from '../HIGElement';
-import createComponent from '../../adapters/createComponent';
+import HIGElement from '../../HIGElement';
+import createComponent from '../../../adapters/createComponent';
 
 import ContainerComponent, { Container } from './Container';
 import SideNavComponent, { SideNav } from './SideNav';

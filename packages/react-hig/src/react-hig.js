@@ -16,7 +16,9 @@ limitations under the License.
 */
 import createSlotComponent from './adapters/createSlotComponent';
 
-export { default as Button } from './elements/Button';
-export { default as GlobalNav } from './elements/GlobalNav/GlobalNav';
+export { default as Button } from './elements/basics/Button';
+export {
+  default as GlobalNav
+} from './elements/components/GlobalNav/GlobalNav';
 
 export const Slot = createSlotComponent();

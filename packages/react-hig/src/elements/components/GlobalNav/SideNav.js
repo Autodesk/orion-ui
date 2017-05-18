@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import HIGElement from '../HIGElement';
-import createComponent from '../../adapters/createComponent';
+import createComponent from '../../../adapters/createComponent';
+import HIGElement from '../../HIGElement';
 
 import SectionListComponent, { SectionList } from './SectionList';
 import LinkListComponent, { LinkList } from './LinkList';

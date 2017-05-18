@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import createComponent from '../../adapters/createComponent';
-import HIGElement from '../HIGElement';
-import HIGNodeList from '../HIGNodeList';
+import createComponent from '../../../adapters/createComponent';
+import HIGElement from '../../HIGElement';
+import HIGNodeList from '../../HIGNodeList';
 import ItemComponent, { Item } from './Item';
 
 export class Group extends HIGElement {

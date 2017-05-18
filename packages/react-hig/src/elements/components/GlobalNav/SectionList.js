@@ -14,22 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import createComponent from '../../adapters/createComponent';
-import HIGNodeList from '../HIGNodeList';
+import createComponent from '../../../adapters/createComponent';
+import HIGNodeList from '../../HIGNodeList';
 
-import LinkComponent, { Link } from './Link';
+import SectionComponent, { Section } from './Section';
 
 // Does not extend HIGElement because it's not a real HIG component
-export class LinkList {
+export class SectionList {
   constructor(higInstance) {
     this.hig = higInstance;
-    this.links = new HIGNodeList();
+    this.sections = new HIGNodeList();
   }
 
   mount() {
     this.mounted = true;
 
-    for (let instance of this.links) {
+    for (let instance of this.sections) {
       this.hig.addSection(instance.hig);
       instance.mount();
     }
@@ -45,19 +45,19 @@ export class LinkList {
 
   createElement(ElementConstructor, props) {
     switch (ElementConstructor) {
-      case Link:
-        return new Link(this.hig.partials.Link, props);
+      case Section:
+        return new Section(this.hig.partials.Section, props);
       default:
         throw new Error(`Unknown type ${ElementConstructor.name}`);
     }
   }
 
   appendChild(instance) {
-    if (instance instanceof Link) {
-      this.links.appendChild(instance);
+    if (instance instanceof Section) {
+      this.sections.appendChild(instance);
 
       if (this.mounted) {
-        this.hig.addLink(instance.hig);
+        this.hig.addSection(instance.hig);
         instance.mount();
       }
     } else {
@@ -66,21 +66,21 @@ export class LinkList {
   }
 
   insertBefore(instance, insertBeforeIndex) {
-    const beforeChild = this.links.item(insertBeforeIndex);
-    this.links.insertBefore(instance, beforeChild);
-    this.hig.addLink(instance.hig, beforeChild.hig);
+    const beforeChild = this.sections.item(insertBeforeIndex);
+    this.sections.insertBefore(instance, beforeChild);
+    this.hig.addSection(instance.hig, beforeChild.hig);
     instance.mount();
   }
 
   removeChild(instance) {
-    const index = this.links.indexOf(instance);
-    this.links.splice(index, 1);
+    const index = this.sections.indexOf(instance);
+    this.sections.splice(index, 1);
     instance.unmount();
   }
 }
 
-const LinkListComponent = createComponent(LinkList);
+const SectionListComponent = createComponent(SectionList);
 
-LinkListComponent.Item = LinkComponent;
+SectionListComponent.Item = SectionComponent;
 
-export default LinkListComponent;
+export default SectionListComponent;

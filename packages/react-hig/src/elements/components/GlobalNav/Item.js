@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import createComponent from '../../adapters/createComponent';
-import HIGElement from '../HIGElement';
+import createComponent from '../../../adapters/createComponent';
+import HIGElement from '../../HIGElement';
 
 export class Item extends HIGElement {
   commitUpdate(updatePayload, oldProps, newProps) {

@@ -14,43 +14,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import * as HIG from 'hig.web';
+
 import HIGElement from '../HIGElement';
 import createComponent from '../../adapters/createComponent';
 
-export class TopNav extends HIGElement {
-  commitUpdate(updatePayload, oldProps, newProp) {
+class Button extends HIGElement {
+  constructor(initialProps) {
+    super(HIG.Button, initialProps);
+  }
+
+  commitUpdate(updatePayload, oldProps, newProps) {
+    const mapping = {
+      title: 'setTitle',
+      link: 'setLink'
+    };
+
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
       const propValue = updatePayload[i + 1];
 
-      switch (propKey) {
-        case 'logo':
-          this.hig.setLogo(propValue);
-          break;
-        case 'logoLink':
-          this.hig.setLogoLink(propValue);
-          break;
-        case 'onHamburgerClick': {
-          const dispose = this._disposeFunctions.get('onHamburgerClickDispose');
-
-          if (dispose) {
-            dispose();
-          }
-
-          this._disposeFunctions.set(
-            'onHamburgerClickDispose',
-            this.hig.onHamburgerClick(propValue)
-          );
-          break;
-        }
-        default: {
-          console.warn(`${propKey} is unknown`);
-        }
+      if (mapping[propKey]) {
+        this.hig[mapping[propKey]](propValue);
+      } else {
+        this.commitPropChange(propKey, propValue);
       }
     }
   }
 }
 
-const TopNavComponent = createComponent(TopNav);
+const ButtonComponent = createComponent(Button);
 
-export default TopNavComponent;
+export default ButtonComponent;

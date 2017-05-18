@@ -24,10 +24,10 @@ import './index.css';
 import logo from './bim-logo.png';
 
 const SideNav = GlobalNav.SideNav;
-const Sections = GlobalNav.SideNav.Sections;
-const Section = GlobalNav.SideNav.Sections.Item;
-const Group = GlobalNav.SideNav.Sections.Group;
-const Item = GlobalNav.SideNav.Sections.Group.Item;
+const SectionList = GlobalNav.SideNav.SectionList;
+const Section = GlobalNav.SideNav.SectionList.Item;
+const Group = GlobalNav.SideNav.SectionList.Item.Group;
+const Item = GlobalNav.SideNav.SectionList.Item.Group.Item;
 const Container = GlobalNav.Container;
 const TopNav = GlobalNav.Container.TopNav;
 const SubNav = GlobalNav.Container.SubNav;
@@ -67,7 +67,7 @@ class App extends React.Component {
       <div>
         <GlobalNav sideNavOpen={this.state.open}>
           <SideNav>
-            <Sections>
+            <SectionList>
               <Section headerLabel="Project" headerName="ThunderStorm">
                 <Group>
                   {this.state.group1 &&
@@ -102,9 +102,8 @@ class App extends React.Component {
                   <Item icon="project-management" title="Item 2" link="#" />
                 </Group>
               </Section>
-            </Sections>
+            </SectionList>
           </SideNav>
-
           <Container>
             <TopNav
               logo={logo}
@@ -148,8 +147,19 @@ class App extends React.Component {
             </Slot>
           </Container>
         </GlobalNav>
+
+        <Button title="regular button" link="http://autodesk.com" />
+
       </div>
     );
+    /*return (
+      <div>
+        <GlobalNav sideNavOpen={this.state.open}>
+
+
+        </GlobalNav>
+      </div>
+    );*/
   }
 }
 

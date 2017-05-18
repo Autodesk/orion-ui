@@ -22,13 +22,14 @@ import HIGNodeList from './HIGNodeList';
 class HIGElement {
   constructor(HIGConstructor, initialProps) {
     this.initialProps = initialProps;
-    const { defaults, events } = partitionProps(
+    const { defaults, events, possibleEvents } = partitionProps(
       initialProps,
       HIGConstructor._interface
     );
 
     // Store the events until we mount
     this.events = events;
+    this.possibleEvents = possibleEvents;
 
     // Where we store event handler dispose functions
     this._disposeFunctions = new Map();
@@ -47,11 +48,7 @@ class HIGElement {
     this.mounted = true;
 
     Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
+      this.setupEvent(eventName, this.events[eventName]);
     });
 
     if (this.componentDidMount) {
@@ -75,18 +72,39 @@ class HIGElement {
     // sub-classes should implement if they need to
   }
 
-  replaceEvent(eventKey, eventFn) {
-    const disposeKey = `${eventKey}Dispose`;
+  commitPropChange(propKey, propValue) {
+    if (this.events[propKey]) {
+      this.replaceEvent(propKey, propValue);
+    } else if (this.possibleEvents.indexOf(propKey) !== -1) {
+      this.setupEvent(propKey, propValue);
+    } else {
+      console.warn(`${propKey} is unknown`);
+    }
+  }
 
+  setupEvent(eventName, eventFn) {
+    // in this case we are setting up a new event
+    const dispose = this.hig[eventName](eventFn);
+    this._disposeFunctions.set(eventName, dispose);
+    this.events[eventName] = eventFn;
+  }
+
+  replaceEvent(eventName, eventFn) {
     // Find the old dispose function
-    const dispose = this._disposeFunctions.get(disposeKey);
+    const dispose = this._disposeFunctions.get(eventName);
 
     // If found, dispose of it
     if (dispose) {
       dispose();
     }
 
-    this._disposeFunctions.set(disposeKey, this.hig[eventKey](eventFn));
+    if (eventFn) {
+      // Replace in the local events map
+      this.events[eventName] = eventFn;
+      this._disposeFunctions.set(eventName, this.hig[eventName](eventFn));
+    } else {
+      delete this.events[eventName];
+    }
   }
 }
 
@@ -96,26 +114,19 @@ class Button extends HIGElement {
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
+    const mapping = {
+      title: 'setTitle',
+      link: 'setLink'
+    };
+
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
       const propValue = updatePayload[i + 1];
 
-      switch (propKey) {
-        case 'title': {
-          this.hig.setTitle(propValue);
-          break;
-        }
-        case 'link': {
-          this.hig.setLink(propValue);
-          break;
-        }
-        case 'onClick': {
-          this.replaceEvent(propKey, propValue);
-          break;
-        }
-        default: {
-          console.warn(`${propKey} is unknown`);
-        }
+      if (mapping[propKey]) {
+        this.hig[mapping[propKey]](propValue);
+      } else {
+        this.commitPropChange(propKey, propValue);
       }
     }
   }

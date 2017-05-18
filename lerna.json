@@ -2,6 +2,12 @@
   "lerna": "2.0.0-rc.4",
   "version": "1.0.3",
   "commands": {
+    "bootstrap": {
+      "scope": [
+        "@orion-ui/react-hig",
+        "hig.web"
+      ]
+    },
     "publish": {
       "ignore": [
         "packages/hig.web"

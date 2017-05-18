@@ -3,6 +3,7 @@
   "version": "1.0.3",
   "description": "orion ui react components",
   "main": "lib/index.js",
+  "private": true,
   "jest": {
     "coverageDirectory": "coverage/jest",
     "testPathIgnorePatterns": [
@@ -15,19 +16,19 @@
     ]
   },
   "scripts": {
-    "lib": "babel src --out-dir lib --copy-file",
+    "disable-lib": "babel src --out-dir lib --copy-file",
     "gemini-report": "gemini test gemini/* --reporter html --reporter flat",
     "gemini-update": "gemini update gemini/*",
     "gemini": "gemini test gemini/*",
     "jest-coverage": "jest --coverage",
     "jest": "jest --watch",
-    "build": "NODE_ENV=production npm run lib && npm run build-storybook",
+    "disable-build": "NODE_ENV=production npm run lib && npm run build-storybook",
     "report-coverage": "cat coverage/jest/lcov.info | codacy-coverage",
     "start-storybook": "start-storybook -p 9001 -c .storybook",
     "start": "NODE_ENV=development npm run lib -- --watch",
     "build-storybook": "build-storybook -c .storybook -o build",
-    "test": "jest --coverage",
-    "test-ci": "jest --coverage && npm run report-coverage && npm run gemini"
+    "disable-test": "jest --coverage",
+    "disable-ci": "jest --coverage && npm run report-coverage && npm run gemini"
   },
   "author": "Autodesk Inc.",
   "license": "Apache-2.0",

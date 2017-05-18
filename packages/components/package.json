@@ -1,5 +1,6 @@
 {
   "name": "@orion-ui/components",
+  "private": true,
   "version": "1.0.3",
   "description": "orion ui components",
   "main": "lib/index.js",
@@ -18,8 +19,8 @@
   },
   "scripts": {
     "prepublish": "bower install",
-    "lib": "babel src --out-dir lib --copy-file",
-    "build": "NODE_ENV=production npm run lib",
+    "disable-lib": "babel src --out-dir lib --copy-file",
+    "disable-build": "NODE_ENV=production npm run lib",
     "start": "NODE_ENV=development npm run lib -- --watch",
     "jest-coverage": "jest --coverage",
     "jest": "jest --watch",
@@ -27,8 +28,8 @@
     "debug-wct": "polyserve .",
     "wct": "wct",
     "wct-sauce": "wct --plugin sauce --skip-plugin local",
-    "test-ci": "node scripts/test-ci.js",
-    "test": "npm run jest-coverage && npm run browserify && npm run wct"
+    "disable-test-ci": "node scripts/test-ci.js",
+    "disable-test": "npm run jest-coverage && npm run browserify && npm run wct"
   },
   "dependencies": {
     "@orion-ui/style": "^1.0.3"

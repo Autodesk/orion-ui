@@ -123,7 +123,10 @@ class App extends React.Component {
                 onChange={this.handleChange}
               />
 
-              <Button title="regular button" link="http://autodesk.com" />
+              <Button
+                title={this.state.buttonLabel}
+                link="http://autodesk.com"
+              />
 
               Raw denim flexitarian green juice kinfolk. Umami hammock trust fund everyday carry, woke wolf viral sriracha austin. Fingerstache affogato messenger bag salvia, cray iPhone bushwick blue bottle marfa gentrify dreamcatcher pop-up. Slow-carb etsy enamel pin cronut, raclette post-ironic hashtag. Hoodie dreamcatcher enamel pin lumbersexual before they sold out, authentic selvage tumblr vinyl. Hot chicken chillwave coloring book fixie vice venmo echo park portland. Tote bag master cleanse cronut banjo banh mi pitchfork, celiac photo booth.
 

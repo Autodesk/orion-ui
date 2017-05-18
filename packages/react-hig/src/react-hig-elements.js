@@ -19,11 +19,12 @@ import * as HIG from 'hig.web';
 import partitionProps from './partitionProps';
 import HIGNodeList from './HIGNodeList';
 
-export class Button {
-  constructor(initialProps) {
+class HIGElement {
+  constructor(HIGConstructor, initialProps) {
+    this.initialProps = initialProps;
     const { defaults, events } = partitionProps(
       initialProps,
-      HIG.Button._interface
+      HIGConstructor._interface
     );
 
     // Store the events until we mount
@@ -33,11 +34,17 @@ export class Button {
     this._disposeFunctions = new Map();
 
     // Create the hig instance with the defaults as per the interface
-    this.hig = new HIG.Button(defaults);
+    this.hig = new HIGConstructor(defaults);
+
+    this.mounted = false;
   }
 
   mount(mountNode, beforeChild) {
-    this.hig.mount(mountNode, beforeChild);
+    if (mountNode) {
+      this.hig.mount(mountNode, beforeChild);
+    }
+
+    this.mounted = true;
 
     Object.keys(this.events).forEach(eventName => {
       // Send function to the hig instance to be registered
@@ -46,6 +53,10 @@ export class Button {
       // Save the dispose function as a field in case it needs to be updated
       this._disposeFunctions.set(`${eventName}Dispose`, dispose);
     });
+
+    if (this.componentDidMount) {
+      this.componentDidMount();
+    }
   }
 
   unmount() {
@@ -53,6 +64,35 @@ export class Button {
     Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
     this._disposeFunctions.clear();
     this.hig.unmount();
+
+    if (this.componentDidUnmount) {
+      this.componentDidUnmount();
+    }
+  }
+
+  commitUpdate(updatePayload, oldProps, newProps) {
+    /* no-op */
+    // sub-classes should implement if they need to
+  }
+
+  replaceEvent(eventKey, eventFn) {
+    const disposeKey = `${eventKey}Dispose`;
+
+    // Find the old dispose function
+    const dispose = this._disposeFunctions.get(disposeKey);
+
+    // If found, dispose of it
+    if (dispose) {
+      dispose();
+    }
+
+    this._disposeFunctions.set(disposeKey, this.hig[eventKey](eventFn));
+  }
+}
+
+class Button extends HIGElement {
+  constructor(initialProps) {
+    super(HIG.Button, initialProps);
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
@@ -70,16 +110,7 @@ export class Button {
           break;
         }
         case 'onClick': {
-          const dispose = this._disposeFunctions.get('onClickDispose');
-
-          if (dispose) {
-            dispose();
-          }
-
-          this._disposeFunctions.set(
-            'onClickDispose',
-            this.hig.onClick(propValue)
-          );
+          this.replaceEvent(propKey, propValue);
           break;
         }
         default: {
@@ -90,36 +121,7 @@ export class Button {
   }
 }
 
-class TopNav {
-  constructor(HIGConstructor, initialProps) {
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
-  }
-
-  componentDidMount() {
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-  }
-
-  unmount() {
-    this.hig.unmount();
-  }
-
+class TopNav extends HIGElement {
   commitUpdate(updatePayload, oldProps, newProp) {
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
@@ -153,36 +155,7 @@ class TopNav {
   }
 }
 
-class SubNav {
-  constructor(HIGConstructor, initialProps) {
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
-  }
-
-  componentDidMount() {
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-  }
-
-  unmount() {
-    this.hig.unmount();
-  }
-
+class SubNav extends HIGElement {
   commitUpdate(updatePayload, oldProps, newProp) {
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
@@ -203,43 +176,16 @@ class SubNav {
   }
 }
 
-class MenuContainer {
-  constructor(HIGConstructor, initialProps) {
-    this.mounted = false;
-
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
-  }
-
+class MenuContainer extends HIGElement {
   componentDidMount() {
-    this.mounted = true;
-
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-
     if (this.topNav) {
       this.hig.addTopNav(this.topNav.hig);
-      this.topNav.componentDidMount();
+      this.topNav.mount();
     }
 
     if (this.subNav) {
       this.hig.addSubNav(this.subNav.hig);
-      this.subNav.componentDidMount();
+      this.subNav.mount();
     }
 
     if (this.slot) {
@@ -247,33 +193,29 @@ class MenuContainer {
     }
   }
 
-  unmount() {
-    // Dispose of any functions registered here
-    Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
-    this._disposeFunctions.clear();
-    this.hig.unmount();
-  }
-
-  commitUpdate(updatePayload, oldProps, newProp) {
-    /* no-op */
-  }
-
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.TOP_NAV:
+        return new TopNav(this.hig.partials.TopNav, props);
+      case types.SUB_NAV:
+        return new SubNav(this.hig.partials.SubNav, props);
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance) {
     if (instance instanceof TopNav) {
       if (this.mounted) {
         this.hig.addTopNav(instance.hig);
-        instance.componentDidMount();
+        instance.mount();
       } else {
         this.topNav = instance;
       }
     } else if (instance instanceof SubNav) {
       if (this.mounted) {
         this.hig.addSubNav(instance.hig);
-        instance.componentDidMount();
+        instance.mount();
       } else {
         this.subNav = instance;
       }
@@ -297,41 +239,7 @@ class MenuContainer {
   }
 }
 
-class SideNavItem {
-  constructor(HIGConstructor, initialProps) {
-    this.initialProps = initialProps;
-
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
-  }
-
-  componentDidMount() {
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-  }
-
-  unmount() {
-    // Dispose of any functions registered here
-    Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
-    this._disposeFunctions.clear();
-    this.hig.unmount();
-  }
-
+class SideNavItem extends HIGElement {
   commitUpdate(updatePayload, oldProps, newProps) {
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
@@ -382,53 +290,27 @@ class SideNavItem {
   }
 }
 
-class SideNavGroup {
+class SideNavGroup extends HIGElement {
   constructor(HIGConstructor, initialProps) {
+    super(HIGConstructor, initialProps);
     // items that get appended before mounting
     this.items = new HIGNodeList();
-
-    this.initialProps = initialProps;
-
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
   }
 
   componentDidMount() {
-    this.mounted = true;
-
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-
     for (let instance of this.items) {
       this.hig.addItem(instance.hig);
-      instance.componentDidMount();
+      instance.mount();
     }
   }
 
-  unmount() {
-    // Dispose of any functions registered here
-    Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
-    this._disposeFunctions.clear();
-    this.hig.unmount();
-  }
-
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.SIDE_NAV_ITEM:
+        return new SideNavItem(this.hig.partials.Item, props);
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance) {
@@ -437,7 +319,7 @@ class SideNavGroup {
 
       if (this.mounted) {
         this.hig.addItem(instance.hig);
-        instance.componentDidMount();
+        instance.mount();
       }
     } else {
       throw new Error('unknown type');
@@ -448,56 +330,26 @@ class SideNavGroup {
     const beforeChild = this.items.item(insertBeforeIndex);
     this.items.insertBefore(instance, beforeChild);
     this.hig.addItem(instance.hig, beforeChild.hig);
-    instance.componentDidMount();
+    instance.mount();
   }
 
   removeChild(instance) {
     this.items.removeChild(instance);
     instance.unmount();
   }
-
-  commitUpdate(updatePayload, oldProps, newProp) {
-    /* no-op */
-  }
 }
 
-class SideNavSection {
+class SideNavSection extends HIGElement {
   constructor(HIGConstructor, initialProps) {
+    super(HIGConstructor, initialProps);
     this.groups = new HIGNodeList();
-
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
   }
 
   componentDidMount() {
-    this.mounted = true;
-
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-
     for (let instance of this.groups) {
       this.hig.addGroup(instance.hig);
-      instance.componentDidMount();
+      instance.mount();
     }
-  }
-
-  unmount() {
-    this.hig.unmount();
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
@@ -523,7 +375,12 @@ class SideNavSection {
   }
 
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.SIDE_NAV_GROUP:
+        return new SideNavGroup(this.hig.partials.Group, props);
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance) {
@@ -532,7 +389,7 @@ class SideNavSection {
 
       if (this.mounted) {
         this.hig.addGroup(instance.hig);
-        instance.componentDidMount();
+        instance.mount();
       }
     } else {
       throw new Error(`unknown type ${instance}`);
@@ -543,7 +400,7 @@ class SideNavSection {
     const beforeChild = this.groups.item(insertBeforeIndex);
     this.groups.insertBefore(instance, beforeChild);
     this.hig.addGroup(instance.hig, beforeChild.hig);
-    instance.componentDidMount();
+    instance.mount();
   }
 
   removeChild(instance) {
@@ -553,18 +410,19 @@ class SideNavSection {
   }
 }
 
+// Does not extend HIGElement because it's not a real HIG component
 class SideNavSections {
   constructor(higInstance) {
     this.hig = higInstance;
     this.sections = new HIGNodeList();
   }
 
-  componentDidMount() {
+  mount() {
     this.mounted = true;
 
     for (let instance of this.sections) {
       this.hig.addSection(instance.hig);
-      instance.componentDidMount();
+      instance.mount();
     }
   }
 
@@ -577,7 +435,12 @@ class SideNavSections {
   }
 
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.SIDE_NAV_SECTION:
+        return new SideNavSection(this.hig.partials.Section, props);
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance) {
@@ -586,7 +449,7 @@ class SideNavSections {
 
       if (this.mounted) {
         this.hig.addSection(instance.hig);
-        instance.componentDidMount();
+        instance.mount();
       }
     } else {
       throw new Error(`unknown type ${instance}`);
@@ -597,7 +460,7 @@ class SideNavSections {
     const beforeChild = this.sections.item(insertBeforeIndex);
     this.sections.insertBefore(instance, beforeChild);
     this.hig.addSection(instance.hig, beforeChild.hig);
-    instance.componentDidMount();
+    instance.mount();
   }
 
   removeChild(instance) {
@@ -607,36 +470,7 @@ class SideNavSections {
   }
 }
 
-class SideNavLink {
-  constructor(HIGConstructor, initialProps) {
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGConstructor._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGConstructor(defaults);
-  }
-
-  componentDidMount() {
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-  }
-
-  unmount() {
-    this.hig.unmount();
-  }
-
+class SideNavLink extends HIGElement {
   commitUpdate(updatePayload, oldProps, newProp) {
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
@@ -684,18 +518,19 @@ class SideNavLink {
   }
 }
 
+// Does not extend HIGElement because it's not a real HIG component
 class SideNavLinks {
   constructor(higInstance) {
     this.hig = higInstance;
     this.links = new HIGNodeList();
   }
 
-  componentDidMount() {
+  mount() {
     this.mounted = true;
 
     for (let instance of this.links) {
       this.hig.addSection(instance.hig);
-      instance.componentDidMount();
+      instance.mount();
     }
   }
 
@@ -708,7 +543,12 @@ class SideNavLinks {
   }
 
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.SIDE_NAV_LINK:
+        return new SideNavLink(this.hig.partials.Link, props);
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance) {
@@ -717,7 +557,7 @@ class SideNavLinks {
 
       if (this.mounted) {
         this.hig.addLink(instance.hig);
-        instance.componentDidMount();
+        instance.mount();
       }
     } else {
       throw new Error(`unknown type ${instance}`);
@@ -728,7 +568,7 @@ class SideNavLinks {
     const beforeChild = this.links.item(insertBeforeIndex);
     this.links.insertBefore(instance, beforeChild);
     this.hig.addLink(instance.hig, beforeChild.hig);
-    instance.componentDidMount();
+    instance.mount();
   }
 
   removeChild(instance) {
@@ -738,55 +578,26 @@ class SideNavLinks {
   }
 }
 
-class SideNav {
-  constructor(HIGSidebar, initialProps) {
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIGSidebar._interface
-    );
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    this.hig = new HIGSidebar(defaults);
-  }
-
+class SideNav extends HIGElement {
   componentDidMount() {
-    this.mounted = true;
-
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-
     if (this.sections) {
-      this.sections.componentDidMount();
+      this.sections.mount();
     }
 
     if (this.links) {
-      this.links.componentDidMount();
+      this.links.mount();
     }
   }
 
-  unmount() {
-    // Dispose of any functions registered here
-    Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
-    this._disposeFunctions.clear();
-    this.hig.unmount();
-  }
-
-  commitUpdate(updatePayload, oldProps, newProp) {
-    // no-op
-  }
-
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.SIDE_NAV_SECTIONS:
+        return new SideNavSections(this.hig); // special case hand over the hig instance
+      case types.SIDE_NAV_LINKS:
+        return new SideNavLinks(this.hig); // special case hand over the hig instance
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance) {
@@ -832,40 +643,12 @@ class SideNav {
   }
 }
 
-class GlobalNav {
+class GlobalNav extends HIGElement {
   constructor(initialProps) {
-    this.initialProps = initialProps;
-
-    const { defaults, events } = partitionProps(
-      initialProps,
-      HIG.GlobalNav._interface
-    );
-
-    this.mounted = false;
-
-    // Store the events until we mount
-    this.events = events;
-
-    // Where we store event handler dispose functions
-    this._disposeFunctions = new Map();
-
-    // Create the hig instance with the defaults as per the interface
-    this.hig = new HIG.GlobalNav(defaults);
+    super(HIG.GlobalNav, initialProps);
   }
 
-  mount(mountNode, anchorNode) {
-    this.hig.mount(mountNode, anchorNode);
-    this.mounted = true;
-
-    // Wire up events
-    Object.keys(this.events).forEach(eventName => {
-      // Send function to the hig instance to be registered
-      const dispose = this.hig[eventName](this.events[eventName]);
-
-      // Save the dispose function as a field in case it needs to be updated
-      this._disposeFunctions.set(`${eventName}Dispose`, dispose);
-    });
-
+  componentDidMount() {
     // Add any children
     if (this.sideNav) {
       this.hig.addSideNav(this.sideNav.hig);
@@ -884,15 +667,15 @@ class GlobalNav {
     }
   }
 
-  unmount() {
-    // Dispose of any functions registered here
-    Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
-    this._disposeFunctions.clear();
-    this.hig.unmount();
-  }
-
   createElement(type, props) {
-    return createPrivateElement(this.hig, type, props);
+    switch (type) {
+      case types.CONTAINER:
+        return new MenuContainer(this.hig.partials.Container, props);
+      case types.SIDE_NAV:
+        return new SideNav(this.hig.partials.SideNav, props);
+      default:
+        throw new Error(`Unknown type ${type}`);
+    }
   }
 
   appendChild(instance, beforeChild = {}) {
@@ -963,36 +746,6 @@ export const types = {
   SIDE_NAV_GROUP: 'hig-side-nav-group',
   SIDE_NAV_ITEM: 'hig-side-nav-item'
 };
-
-/**
- * Creates a hig element which requires a parent node reference
- */
-function createPrivateElement(parent, type, props) {
-  switch (type) {
-    case types.CONTAINER:
-      return new MenuContainer(parent.partials.Container, props);
-    case types.TOP_NAV:
-      return new TopNav(parent.partials.TopNav, props);
-    case types.SUB_NAV:
-      return new SubNav(parent.partials.SubNav, props);
-    case types.SIDE_NAV:
-      return new SideNav(parent.partials.SideNav, props);
-    case types.SIDE_NAV_SECTIONS:
-      return new SideNavSections(parent);
-    case types.SIDE_NAV_SECTION:
-      return new SideNavSection(parent.partials.Section, props);
-    case types.SIDE_NAV_LINKS:
-      return new SideNavLinks(parent);
-    case types.SIDE_NAV_LINK:
-      return new SideNavLink(parent.partials.Link, props);
-    case types.SIDE_NAV_GROUP:
-      return new SideNavGroup(parent.partials.Group, props);
-    case types.SIDE_NAV_ITEM:
-      return new SideNavItem(parent.partials.Item, props);
-    default:
-      throw new Error(`Unknown type ${type}`);
-  }
-}
 
 /**
  * Creates a publicly accessible element

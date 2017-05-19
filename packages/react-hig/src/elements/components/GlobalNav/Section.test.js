@@ -3,7 +3,6 @@ import * as HIG from 'hig.web';
 import React from 'react';
 
 import GlobalNav from './GlobalNav';
-import SectionList from './SectionList';
 import Section from './Section';
 import Group from './Group';
 

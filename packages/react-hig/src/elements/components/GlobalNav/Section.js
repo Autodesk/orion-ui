@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import * as PropTypes from 'prop-types';
+
 import createComponent from '../../../adapters/createComponent';
 import HIGElement from '../../HIGElement';
 import HIGNodeList from '../../HIGNodeList';
-
+import HIGChildValidator from '../../HIGChildValidator';
 import GroupComponent, { Group } from './Group';
 
 export class Section extends HIGElement {
@@ -85,13 +87,18 @@ export class Section extends HIGElement {
   }
 
   removeChild(instance) {
-    const index = this.groups.indexOf(instance);
-    this.groups.splice(index, 1);
+    this.groups.removeChild(instance);
     instance.unmount();
   }
 }
 
 const SectionComponent = createComponent(Section);
+
+SectionComponent.propTypes = {
+  headerLabel: PropTypes.string,
+  headerName: PropTypes.string,
+  children: HIGChildValidator([GroupComponent])
+};
 
 SectionComponent.Group = GroupComponent;
 

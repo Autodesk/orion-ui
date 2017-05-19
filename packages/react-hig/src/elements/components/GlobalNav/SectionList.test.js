@@ -161,7 +161,7 @@ describe('<SectionList>', () => {
     );
   });
 
-  it('can not render HTML elements as children', () => {
+  it('can not render HTML text as children', () => {
     global.console.error = jest.fn();
 
     mount(

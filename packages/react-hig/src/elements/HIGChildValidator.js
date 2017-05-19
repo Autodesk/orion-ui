@@ -29,6 +29,11 @@ const HIGChildValidator = validChildren =>
 
     let error = null;
     React.Children.forEach(prop, function(child) {
+      // Guard against null children
+      if (child === null) {
+        return;
+      }
+
       const childDisplayName = getDisplayName(child.type || child);
 
       if (validChildren.indexOf(child.type) === -1) {

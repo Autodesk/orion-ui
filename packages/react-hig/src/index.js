@@ -31,6 +31,7 @@ const Item = GlobalNav.SideNav.SectionList.Item.Group.Item;
 const Container = GlobalNav.Container;
 const TopNav = GlobalNav.Container.TopNav;
 const SubNav = GlobalNav.Container.SubNav;
+const Slot = GlobalNav.Container.Slot;
 
 class App extends React.Component {
   constructor() {

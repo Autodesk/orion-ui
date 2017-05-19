@@ -19,6 +19,7 @@ import createComponent from '../../../adapters/createComponent';
 
 import TopNavComponent, { TopNav } from './TopNav';
 import SubNavComponent, { SubNav } from './SubNav';
+import Slot from './Slot';
 
 export class Container extends HIGElement {
   componentDidMount() {
@@ -89,5 +90,6 @@ const ContainerComponent = createComponent(Container);
 
 ContainerComponent.TopNav = TopNavComponent;
 ContainerComponent.SubNav = SubNavComponent;
+ContainerComponent.Slot = Slot;
 
 export default ContainerComponent;

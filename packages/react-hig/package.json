@@ -15,13 +15,13 @@
     "prop-types": "^15.5.8"
   },
   "devDependencies": {
-    "hig.web": "^1.0.0",
+    "@kadira/storybook": "^2.21.0",
     "babel-plugin-object-rest-spread": "0.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015-rollup": "^3.0.0",
+    "hig.web": "^1.0.0",
     "ionicons": "^2.0.1",
     "jest-enzyme": "2.1.2",
-    "prop-types": "^15.5.8",
     "react": "^15.4.1",
     "react-devtools-core": "^2.0.12",
     "react-dom": "^15.4.1",
@@ -31,7 +31,8 @@
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-watch": "^3.2.2"
+    "rollup-watch": "^3.2.2",
+    "storybook-addon-jsx": "^3.0.1"
   },
   "scripts": {
     "build": "npm run lib && react-scripts build",
@@ -39,7 +40,9 @@
     "playground": "react-scripts start",
     "start": "npm run lib -- --watch",
     "test": "react-scripts test --env=jsdom",
-    "test-ci": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.{ts,tsx}"
+    "test-ci": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.{ts,tsx}",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
     "prop-types": "^15.5.10"

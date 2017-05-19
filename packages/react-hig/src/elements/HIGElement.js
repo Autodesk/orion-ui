@@ -16,6 +16,11 @@ limitations under the License.
 */
 import partitionProps from '../interface/partitionProps';
 
+/**
+ * The base class for all React-Hig Elements. These elements hook into the
+ * adapters/createComponent adapter, store low level state like event listeners
+ * and call the appropriate methods on hig.web instance when needed
+ */
 export default class HIGElement {
   constructor(HIGConstructor, initialProps) {
     this.initialProps = initialProps;

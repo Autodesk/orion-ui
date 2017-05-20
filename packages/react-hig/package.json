@@ -18,6 +18,7 @@
     "@storybook/addon-info": "^3.0.0-alpha.0",
     "@storybook/addon-knobs": "^3.0.0-alpha.1",
     "@storybook/react": "^3.0.0-alpha.1",
+    "@types/react": "^15.0.24",
     "babel-plugin-object-rest-spread": "0.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015-rollup": "^3.0.0",
@@ -45,7 +46,8 @@
     "test": "react-scripts test --env=jsdom",
     "test-ci": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.{ts,tsx}",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "type-check": "tsc"
   },
   "dependencies": {
     "prop-types": "^15.5.10"

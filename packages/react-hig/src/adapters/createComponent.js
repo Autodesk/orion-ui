@@ -20,9 +20,14 @@ import * as PropTypes from 'prop-types';
 
 import prepareUpdate from './prepareUpdate';
 
+import { Component } from "react";
+
 export default function createComponent(ElementConstructor) {
   const displayName = ElementConstructor.name;
 
+  /**
+   * @augments {Component<{onClick: any, title: any}, {}>}
+   */
   const Adapter = class extends React.Component {
     constructor(props, context) {
       super(props);
@@ -57,7 +62,7 @@ export default function createComponent(ElementConstructor) {
         if (
           this._anchor.nextSibling &&
           this._anchor.nextSibling.nodeType ===
-            this._anchor.nextSibling.COMMENT_NODE
+          this._anchor.nextSibling.COMMENT_NODE
         ) {
           this.context.parent.insertBefore(this.instance, insertBeforeIndex);
         } else {
@@ -106,6 +111,17 @@ export default function createComponent(ElementConstructor) {
       }
     }
   };
+
+  /**
+   * React prop-types
+   */
+  Adapter.propTypes = {}
+
+
+  /**
+   * Empty __docgenInfo for storybook reflection
+   */
+  Adapter.__docgenInfo = {};
 
   Adapter.displayName = displayName;
 

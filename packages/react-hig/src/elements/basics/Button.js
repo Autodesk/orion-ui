@@ -54,7 +54,6 @@ ButtonComponent.propTypes = {
 };
 
 ButtonComponent.__docgenInfo = {
-  description: 'This is an awesome looking button for React.',
   props: {
     title: {
       description: 'sets the title of a button'

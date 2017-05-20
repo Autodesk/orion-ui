@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import * as PropTypes from 'prop-types';
 import createComponent from '../../../adapters/createComponent';
 import HIGElement from '../../HIGElement';
 
@@ -69,5 +70,9 @@ export class Item extends HIGElement {
 }
 
 const ItemComponent = createComponent(Item);
+
+ItemComponent.propTypes = {
+  icon: PropTypes.string
+};
 
 export default ItemComponent;

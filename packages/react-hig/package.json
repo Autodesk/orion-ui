@@ -15,7 +15,9 @@
     "prop-types": "^15.5.8"
   },
   "devDependencies": {
-    "@kadira/storybook": "^2.21.0",
+    "@storybook/addon-info": "^3.0.0-alpha.0",
+    "@storybook/addon-knobs": "^3.0.0-alpha.1",
+    "@storybook/react": "^3.0.0-alpha.1",
     "babel-plugin-object-rest-spread": "0.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015-rollup": "^3.0.0",
@@ -25,14 +27,15 @@
     "react": "^15.4.1",
     "react-devtools-core": "^2.0.12",
     "react-dom": "^15.4.1",
-    "react-scripts": "canary",
+    "react-scripts": "1.0.1",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-css-only": "^0.2.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-watch": "^3.2.2",
-    "storybook-addon-jsx": "^3.0.1"
+    "storybook-addon-jsx": "^3.0.1",
+    "typescript": "^2.3.2"
   },
   "scripts": {
     "build": "npm run lib && react-scripts build",

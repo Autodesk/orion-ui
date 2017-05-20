@@ -37,7 +37,7 @@ export default function createSlotComponent() {
     }
   };
 
-  Adapter.displayName = `hig-slot`;
+  Adapter.displayName = `Slot`;
 
   // Reset all the context for any children of the slot
   // In case we go back to the HIG context

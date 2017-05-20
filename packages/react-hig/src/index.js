@@ -73,7 +73,7 @@ class App extends React.Component {
                 <Group>
                   {this.state.group1 &&
                     <Item
-                      icon="project-management"
+                      icon={[]}
                       title="Item 1"
                       link="#"
                       onClick={() => alert('item 1 clicked')}

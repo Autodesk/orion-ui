@@ -15,6 +15,7 @@ limitations under the License.
 
 */
 import HIGElement from '../../HIGElement';
+import HIGChildValidator from '../../HIGChildValidator';
 import createComponent from '../../../adapters/createComponent';
 
 import TopNavComponent, { TopNav } from './TopNav';
@@ -87,6 +88,18 @@ export class Container extends HIGElement {
 }
 
 const ContainerComponent = createComponent(Container);
+
+ContainerComponent.propTypes = {
+  children: HIGChildValidator([TopNav, SubNav, Slot])
+}
+
+ContainerComponent.__docgenInfo = {
+  props: {
+    children: {
+      description: 'support adding TopNav, SubNav, and Slot'
+    }
+  }
+}
 
 ContainerComponent.TopNav = TopNavComponent;
 ContainerComponent.SubNav = SubNavComponent;

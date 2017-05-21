@@ -15,9 +15,11 @@
     "prop-types": "^15.5.8"
   },
   "devDependencies": {
-    "@storybook/addon-info": "^3.0.0-alpha.0",
+    "@storybook/addon-info": "^3.0.0-alpha.1",
     "@storybook/addon-knobs": "^3.0.0-alpha.1",
     "@storybook/react": "^3.0.0-alpha.1",
+    "@types/jest": "^19.2.3",
+    "@types/node": "^7.0.21",
     "@types/react": "^15.0.24",
     "babel-plugin-object-rest-spread": "0.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",

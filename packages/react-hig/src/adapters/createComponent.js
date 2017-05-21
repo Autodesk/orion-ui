@@ -20,13 +20,11 @@ import * as PropTypes from 'prop-types';
 
 import prepareUpdate from './prepareUpdate';
 
-import { Component } from "react";
-
 export default function createComponent(ElementConstructor) {
   const displayName = ElementConstructor.name;
 
   /**
-   * @augments {Component<{onClick: any, title: any}, {}>}
+   * @augments {React.Component<*, *>}
    */
   const Adapter = class extends React.Component {
     constructor(props, context) {

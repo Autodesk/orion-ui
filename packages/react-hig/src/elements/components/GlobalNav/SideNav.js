@@ -92,6 +92,14 @@ SideNavComponent.propTypes = {
   children: HIGChildValidator([SectionListComponent, LinkListComponent])
 };
 
+SideNavComponent.__docgenInfo = {
+  props: {
+    children: {
+      description: 'support adding SectionList, and LinkList'
+    }
+  }
+}
+
 SideNavComponent.SectionList = SectionListComponent;
 SideNavComponent.LinkList = LinkListComponent;
 

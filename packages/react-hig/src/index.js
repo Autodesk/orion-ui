@@ -16,7 +16,7 @@ limitations under the License.
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, GlobalNav, Slot } from './react-hig';
+import { Button, GlobalNav } from './react-hig';
 
 import 'hig.web/dist/hig.css';
 import './index.css';
@@ -73,7 +73,7 @@ class App extends React.Component {
                 <Group>
                   {this.state.group1 &&
                     <Item
-                      icon={[]}
+                      icon="project-management"
                       title="Item 1"
                       link="#"
                       onClick={() => alert('item 1 clicked')}

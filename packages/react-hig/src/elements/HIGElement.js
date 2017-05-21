@@ -53,6 +53,8 @@ export default class HIGElement {
     Object.keys(this.events).forEach(eventName => {
       this.setupEvent(eventName, this.events[eventName]);
     });
+
+    this.componentDidMount();
   }
 
   componentDidMount() {
@@ -68,6 +70,7 @@ export default class HIGElement {
     Array.from(this._disposeFunctions).forEach(([_, dispose]) => dispose());
     this._disposeFunctions.clear();
     this.hig.unmount();
+    this.componentDidUnmount();
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {

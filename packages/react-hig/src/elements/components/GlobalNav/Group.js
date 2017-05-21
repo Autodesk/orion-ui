@@ -75,6 +75,14 @@ GroupComponent.propTypes = {
   children: HIGChildValidator([ItemComponent])
 };
 
+GroupComponent.__docgenInfo = {
+  props: {
+    children: {
+      description: 'support adding Item'
+    }
+  }
+}
+
 GroupComponent.Item = ItemComponent;
 
 export default GroupComponent;

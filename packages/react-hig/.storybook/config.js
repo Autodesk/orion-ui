@@ -10,7 +10,7 @@ function loadStories() {
 
 setAddon(infoAddon);
 
-addDecorator(WithExample);
+// addDecorator(WithExample);
 addDecorator(withKnobs);
 
 configure(loadStories, module);

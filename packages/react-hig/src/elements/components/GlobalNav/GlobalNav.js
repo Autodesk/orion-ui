@@ -133,6 +133,18 @@ GlobalNavComponent.propTypes = {
   children: HIGChildValidator([SideNavComponent, ContainerComponent])
 };
 
+GlobalNavComponent.__docgenInfo = {
+  props: {
+    sideNavOpen: {
+      description: 'show or hide the SideNav'
+    },
+
+    children: {
+      description: 'support adding SideNav or Container'
+    }
+  }
+}
+
 GlobalNavComponent.Container = ContainerComponent;
 GlobalNavComponent.SideNav = SideNavComponent;
 

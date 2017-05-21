@@ -72,7 +72,35 @@ export class Item extends HIGElement {
 const ItemComponent = createComponent(Item);
 
 ItemComponent.propTypes = {
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  title: PropTypes.string,
+  link: PropTypes.string,
+  onClick: PropTypes.func,
+  onHover: PropTypes.func
 };
+
+ItemComponent.__docgenInfo = {
+  props: {
+    icon: {
+      description: 'sets the icon of an item'
+    },
+
+    title: {
+      description: 'sets the title of an item'
+    },
+
+    link: {
+      description: 'sets the link of an item'
+    },
+
+    onClick: {
+      description: 'triggered when a link is clicked on'
+    },
+
+    onHover: {
+      description: 'triggered when a link is hovered over'
+    }
+  }
+}
 
 export default ItemComponent;

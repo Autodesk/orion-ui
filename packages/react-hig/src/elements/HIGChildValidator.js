@@ -35,28 +35,13 @@ const HIGChildValidator = validChildren =>
         return;
       }
 
-      if (React.isValidElement(child)) {
-        const cType = child.type;
-
-        if (typeof cType === 'string') {
-          const childDisplayName = getDisplayName(child.type);
-          error = new Error(
-            `'${childDisplayName}' is not a valid child of ${componentName}. Children should be of type '${validChildren
-              .map(c => getDisplayName(c))
-              .join(', ')}'.`
-          );
-        } else {
-          const childDisplayName = getDisplayName(child.type || child);
-
-          if (validChildren.indexOf(cType) === -1) {
-            error = new Error(
-              `'${childDisplayName}' is not a valid child of ${componentName}. Children should be of type '${validChildren
-                .map(c => getDisplayName(c))
-                .join(', ')}'.`
-            );
-          }
-        }
-      } else {
+      const childDisplayName = getDisplayName(child.type || child);
+      if (validChildren.indexOf(child.type) === -1) {
+        error = new Error(
+          `'${childDisplayName}' is not a valid child of ${componentName}. Children should be of type '${validChildren
+            .map(c => c.displayName)
+            .join(', ')}'.`
+        );
       }
     });
     return error;

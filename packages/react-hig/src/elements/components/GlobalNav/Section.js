@@ -100,6 +100,22 @@ SectionComponent.propTypes = {
   children: HIGChildValidator([GroupComponent])
 };
 
+SectionComponent.__docgenInfo = {
+  props: {
+    headerLabel: {
+      description: 'sets the label'
+    },
+
+    headerName: {
+      description: 'sets the name'
+    },
+
+    children: {
+      description: 'support adding Group'
+    }
+  }
+}
+
 SectionComponent.Group = GroupComponent;
 
 export default SectionComponent;

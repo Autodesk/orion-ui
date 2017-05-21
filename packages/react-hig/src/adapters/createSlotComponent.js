@@ -53,5 +53,17 @@ export default function createSlotComponent() {
     })
   };
 
+  Adapter.propTypes = {
+    children: PropTypes.node.isRequired
+  }
+
+  Adapter.__docgenInfo = {
+    props: {
+      children: {
+        description: 'support adding any DOM node'
+      }
+    }
+  }
+
   return Adapter;
 }

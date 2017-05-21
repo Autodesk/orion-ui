@@ -85,6 +85,14 @@ SectionListComponent.propTypes = {
   children: HIGChildValidator([SectionComponent])
 };
 
+SectionListComponent.__docgenInfo = {
+  props: {
+    children: {
+      description: 'support adding Section'
+    }
+  }
+}
+
 SectionListComponent.Item = SectionComponent;
 
 export default SectionListComponent;

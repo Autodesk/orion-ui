@@ -41,14 +41,14 @@
     "typescript": "^2.3.2"
   },
   "scripts": {
-    "build": "npm run lib && react-scripts build",
+    "build": "npm run lib && react-scripts build && npm run build-storybook",
     "lib": "rollup -c && cp node_modules/hig.web/dist/hig.css lib/react-hig.css",
     "playground": "react-scripts start",
     "start": "npm run lib -- --watch",
     "test": "react-scripts test --env=jsdom",
     "test-ci": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.{ts,tsx}",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public",
+    "build-storybook": "build-storybook -s public -o build/storybook",
     "type-check": "tsc"
   },
   "dependencies": {

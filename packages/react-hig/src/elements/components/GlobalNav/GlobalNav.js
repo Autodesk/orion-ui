@@ -143,7 +143,7 @@ GlobalNavComponent.__docgenInfo = {
       description: 'support adding SideNav or Container'
     }
   }
-}
+};
 
 GlobalNavComponent.Container = ContainerComponent;
 GlobalNavComponent.SideNav = SideNavComponent;

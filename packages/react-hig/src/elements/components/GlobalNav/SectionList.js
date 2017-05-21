@@ -91,7 +91,7 @@ SectionListComponent.__docgenInfo = {
       description: 'support adding Section'
     }
   }
-}
+};
 
 SectionListComponent.Item = SectionComponent;
 

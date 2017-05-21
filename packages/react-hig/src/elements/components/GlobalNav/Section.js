@@ -114,7 +114,7 @@ SectionComponent.__docgenInfo = {
       description: 'support adding Group'
     }
   }
-}
+};
 
 SectionComponent.Group = GroupComponent;
 

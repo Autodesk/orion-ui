@@ -81,7 +81,7 @@ GroupComponent.__docgenInfo = {
       description: 'support adding Item'
     }
   }
-}
+};
 
 GroupComponent.Item = ItemComponent;
 

@@ -98,7 +98,7 @@ SideNavComponent.__docgenInfo = {
       description: 'support adding SectionList, and LinkList'
     }
   }
-}
+};
 
 SideNavComponent.SectionList = SectionListComponent;
 SideNavComponent.LinkList = LinkListComponent;

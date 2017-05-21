@@ -101,6 +101,6 @@ ItemComponent.__docgenInfo = {
       description: 'triggered when a link is hovered over'
     }
   }
-}
+};
 
 export default ItemComponent;

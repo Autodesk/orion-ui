@@ -60,7 +60,7 @@ export default function createComponent(ElementConstructor) {
         if (
           this._anchor.nextSibling &&
           this._anchor.nextSibling.nodeType ===
-          this._anchor.nextSibling.COMMENT_NODE
+            this._anchor.nextSibling.COMMENT_NODE
         ) {
           this.context.parent.insertBefore(this.instance, insertBeforeIndex);
         } else {
@@ -113,8 +113,7 @@ export default function createComponent(ElementConstructor) {
   /**
    * React prop-types
    */
-  Adapter.propTypes = {}
-
+  Adapter.propTypes = {};
 
   /**
    * Empty __docgenInfo for storybook reflection

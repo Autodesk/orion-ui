@@ -91,7 +91,7 @@ const ContainerComponent = createComponent(Container);
 
 ContainerComponent.propTypes = {
   children: HIGChildValidator([TopNav, SubNav, Slot])
-}
+};
 
 ContainerComponent.__docgenInfo = {
   props: {
@@ -99,7 +99,7 @@ ContainerComponent.__docgenInfo = {
       description: 'support adding TopNav, SubNav, and Slot'
     }
   }
-}
+};
 
 ContainerComponent.TopNav = TopNavComponent;
 ContainerComponent.SubNav = SubNavComponent;

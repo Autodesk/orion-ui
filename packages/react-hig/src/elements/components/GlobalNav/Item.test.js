@@ -154,7 +154,7 @@ describe('<Item>', () => {
     doStandardChecks(config);
   });
 
-  describe('onHover', () => { });
+  describe('onHover', () => {});
 
-  describe('onClick', () => { });
+  describe('onClick', () => {});
 });

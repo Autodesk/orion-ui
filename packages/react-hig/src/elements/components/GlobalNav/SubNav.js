@@ -44,7 +44,7 @@ const SubNavComponent = createComponent(SubNav);
 SubNavComponent.propTypes = {
   moduleIndicatorName: PropTypes.string,
   moduleIndicatorIcon: PropTypes.string
-}
+};
 
 SubNavComponent.__docgenInfo = {
   props: {
@@ -56,6 +56,6 @@ SubNavComponent.__docgenInfo = {
       description: 'sets the moduleIndicatorIcon'
     }
   }
-}
+};
 
 export default SubNavComponent;

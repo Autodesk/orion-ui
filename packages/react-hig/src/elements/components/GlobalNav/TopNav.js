@@ -58,7 +58,7 @@ TopNavComponent.propTypes = {
   logo: PropTypes.string,
   logoLink: PropTypes.string,
   onHamburgerClick: PropTypes.func
-}
+};
 
 TopNavComponent.__docgenInfo = {
   props: {
@@ -74,6 +74,6 @@ TopNavComponent.__docgenInfo = {
       description: 'trigged when hamburger icon is clicked'
     }
   }
-}
+};
 
 export default TopNavComponent;

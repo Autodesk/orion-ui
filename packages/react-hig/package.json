@@ -12,7 +12,7 @@
   "peerDependencies": {
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "prop-types": "^15.5.8"
+    "prop-types": "^15.5.10"
   },
   "devDependencies": {
     "@storybook/addon-info": "^3.0.0-alpha.1",
@@ -27,6 +27,7 @@
     "hig.web": "^1.0.0",
     "ionicons": "^2.0.1",
     "jest-enzyme": "2.1.2",
+    "prop-types": "^15.5.10",
     "react": "^15.4.1",
     "react-devtools-core": "^2.0.12",
     "react-dom": "^15.4.1",
@@ -51,7 +52,5 @@
     "build-storybook": "build-storybook -s public -o build/storybook",
     "type-check": "tsc"
   },
-  "dependencies": {
-    "prop-types": "^15.5.10"
-  }
+  "dependencies": {}
 }

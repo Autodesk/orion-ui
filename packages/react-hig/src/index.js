@@ -151,8 +151,18 @@ class App extends React.Component {
           </Container>
         </GlobalNav>
 
+        <Button title="regular button" link="http://autodesk.com" />
+
       </div>
     );
+    /*return (
+      <div>
+        <GlobalNav sideNavOpen={this.state.open}>
+
+
+        </GlobalNav>
+      </div>
+    );*/
   }
 }
 

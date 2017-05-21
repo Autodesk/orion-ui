@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import 'style-loader!css-loader!hig.web/dist/hig.css';
+import 'hig.web/dist/hig.css';
 
 import '../elements/basics/Button.story';
 import '../elements/components/GlobalNav/GlobalNav.story';

@@ -19,7 +19,6 @@ limitations under the License.
  * Makes it simple to manage a list of child nodes within a react-hig element
  */
 export default class HIGNodeList {
-
   constructor({ type, HIGConstructor, onAdd }) {
     if (!type) {
       throw new Error('type is required');
@@ -30,7 +29,7 @@ export default class HIGNodeList {
     }
 
     if (!onAdd) {
-      throw new Error('onInsert is required')
+      throw new Error('onInsert is required');
     }
 
     /**

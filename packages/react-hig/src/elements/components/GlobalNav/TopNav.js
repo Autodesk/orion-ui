@@ -15,10 +15,21 @@ limitations under the License.
 
 */
 import * as PropTypes from 'prop-types';
-import createComponent from '../../../adapters/createComponent';
 import HIGElement from '../../HIGElement';
+import HIGChildValidator from '../../HIGChildValidator';
+import createComponent from '../../../adapters/createComponent';
+
+import ProfileComponent, { Profile } from './Profile';
 
 export class TopNav extends HIGElement {
+  componentDidMount() {
+    // Add any children
+    if (this.profile) {
+      this.hig.addProfile(this.profile.hig);
+      this.profile.mount();
+    }
+  }
+
   commitUpdate(updatePayload, oldProps, newProp) {
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
@@ -50,6 +61,43 @@ export class TopNav extends HIGElement {
       }
     }
   }
+
+  createElement(ElementConstructor, props) {
+    switch (ElementConstructor) {
+      case Profile:
+        return new Profile(this.hig.partials.Profile, props);
+      default:
+        throw new Error(`Unknown type ${ElementConstructor.name}`);
+    }
+  }
+
+  appendChild(instance, beforeChild = {}) {
+    if (instance instanceof Profile) {
+      if (this.profile) {
+        throw new Error('only one Profile is allowed');
+      } else {
+        this.profile = instance;
+        if (this.mounted) {
+          this.hig.addProfile(instance.hig);
+          instance.mount();
+        }
+      }
+    } else {
+      throw new Error('unknown type');
+    }
+  }
+
+  insertBefore(instance) {
+    this.appendChild(instance);
+  }
+
+  removeChild(instance) {
+    if (instance instanceof Profile) {
+      this.profile = null;
+    }
+
+    instance.unmount();
+  }
 }
 
 const TopNavComponent = createComponent(TopNav);
@@ -57,7 +105,9 @@ const TopNavComponent = createComponent(TopNav);
 TopNavComponent.propTypes = {
   logo: PropTypes.string,
   logoLink: PropTypes.string,
-  onHamburgerClick: PropTypes.func
+  onHamburgerClick: PropTypes.func,
+  addProfile: PropTypes.func,
+  children: HIGChildValidator([ProfileComponent])
 };
 
 TopNavComponent.__docgenInfo = {
@@ -72,8 +122,14 @@ TopNavComponent.__docgenInfo = {
 
     onHamburgerClick: {
       description: 'trigged when hamburger icon is clicked'
+    },
+
+    addProfile: {
+      description: 'adds Profile to the top nav'
     }
   }
 };
+
+TopNavComponent.Profile = ProfileComponent;
 
 export default TopNavComponent;

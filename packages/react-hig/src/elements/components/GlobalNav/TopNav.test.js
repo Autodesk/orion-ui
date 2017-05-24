@@ -1,0 +1,87 @@
+/**
+Copyright 2016 Autodesk,Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
+import { mount } from 'enzyme';
+import * as HIG from 'hig.web';
+import React from 'react';
+
+import GlobalNav from './GlobalNav';
+import Container from './Container';
+import TopNav from './TopNav';
+import Profile from './Profile';
+
+describe('<TopNav>', () => {
+  function createHigNavWithContainer() {
+    const domContainer = document.createElement('div');
+    const higNav = new HIG.GlobalNav();
+    higNav.mount(domContainer);
+
+    const container = new higNav.partials.Container();
+    higNav.addContainer(container);
+
+    return { container, domContainer };
+  }
+
+  // Create the GlobalNav context for the TopNav to be attached to
+  let defaults = {
+    logo: '../../../bim-logo.png',
+    logoLink: 'http://www.autodesk.com'
+  };
+  let profileDefaults = { image: '../../../bim-logo.png' };
+
+  it('renders a topnav', () => {
+    const reactContainer = document.createElement('div');
+
+    mount(
+      <GlobalNav>
+        <GlobalNav.Container>
+          <TopNav {...defaults}>
+            <Profile {...profileDefaults} />
+          </TopNav>
+        </GlobalNav.Container>
+      </GlobalNav>,
+      { attachTo: reactContainer }
+    );
+    expect(reactContainer.firstElementChild.outerHTML).toMatchSnapshot();
+  });
+
+  it('contains the correct chidren', () => {
+    const { container, domContainer } = createHigNavWithContainer();
+
+    const topNav = new container.partials.TopNav({ ...defaults });
+    container.addTopNav(topNav);
+
+    const profile = new topNav.partials.Profile({ ...profileDefaults });
+    topNav.addProfile(profile);
+
+    const reactContainer = document.createElement('div');
+    mount(
+      <GlobalNav>
+        <GlobalNav.Container>
+          <TopNav {...defaults}>
+            <Profile {...profileDefaults} />
+          </TopNav>
+        </GlobalNav.Container>
+      </GlobalNav>,
+      { attachTo: reactContainer }
+    );
+
+    expect(reactContainer.firstElementChild.outerHTML).toEqual(
+      domContainer.firstElementChild.outerHTML
+    );
+  });
+});

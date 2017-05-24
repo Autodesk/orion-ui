@@ -28,4 +28,4 @@ describe('react-hig', () => {
   it('exports GlobalNav', () => {
     expect(GlobalNav).toEqual(ReactHIG.GlobalNav);
   });
-})
+});

@@ -17,19 +17,65 @@ limitations under the License.
 import * as PropTypes from 'prop-types';
 import createComponent from '../../../adapters/createComponent';
 import HIGElement from '../../HIGElement';
+import HIGChildValidator from '../../HIGChildValidator';
+
+import TabsComponent, { Tabs } from './Tabs';
 
 export class SubNav extends HIGElement {
+  componentDidMount() {
+    if (this.tabs) {
+      this.hig.addTabs(this.tabs.hig);
+      this.tabs.mount();
+    }
+  }
+
+  createElement(ElementConstructor, props) {
+    switch (ElementConstructor) {
+      case Tabs:
+        return new Tabs(this.hig.partials.Tabs, props);
+      default:
+        throw new Error(`Unknown type ${ElementConstructor.name}`);
+    }
+  }
+
+  appendChild(instance, beforeChild = {}) {
+    if (instance instanceof Tabs) {
+      if (this.tabs) {
+        throw new Error('only one Tabs is allowed');
+      } else {
+        this.tabs = instance;
+        if (this.mounted) {
+          this.hig.addTabs(instance.hig);
+          instance.mount();
+        }
+      }
+    } else {
+      throw new Error('unknown type');
+    }
+  }
+
+  removeChild(instance) {
+    if (instance instanceof Tabs) {
+      this.tabs = null;
+    }
+
+    instance.unmount();
+  }
+
   commitUpdate(updatePayload, oldProps, newProp) {
     for (let i = 0; i < updatePayload.length; i += 2) {
       const propKey = updatePayload[i];
-      // const propValue = updatePayload[i + 1];
+      const propValue = updatePayload[i + 1];
 
       switch (propKey) {
         case 'moduleIndicatorName':
-          console.warn('moduleIndicatorName has no method in interface.json');
+          this.hig.setModuleIndicatorName(propValue);
           break;
         case 'moduleIndicatorIcon':
-          console.warn('moduleIndicatorName has no method in interface.json');
+          this.hig.setModuleIndicatorIcon(propValue);
+          break;
+        case 'children':
+          // No-op
           break;
         default: {
           console.warn(`${propKey} is unknown`);
@@ -43,7 +89,8 @@ const SubNavComponent = createComponent(SubNav);
 
 SubNavComponent.propTypes = {
   moduleIndicatorName: PropTypes.string,
-  moduleIndicatorIcon: PropTypes.string
+  moduleIndicatorIcon: PropTypes.string,
+  children: HIGChildValidator([TabsComponent])
 };
 
 SubNavComponent.__docgenInfo = {
@@ -54,8 +101,14 @@ SubNavComponent.__docgenInfo = {
 
     moduleIndicatorIcon: {
       description: 'sets the moduleIndicatorIcon'
+    },
+
+    children: {
+      description: 'supports adding Tabs'
     }
   }
 };
+
+SubNavComponent.Tabs = TabsComponent;
 
 export default SubNavComponent;

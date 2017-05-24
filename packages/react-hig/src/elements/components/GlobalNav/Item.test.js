@@ -68,7 +68,7 @@ function higContext(defaults) {
 describe('<Item>', () => {
   function doStandardChecks(config) {
     it(`sets ${config.key} by default`, () => {
-      const defaults = { [config.key]: [config.sampleValue] };
+      const defaults = { [config.key]: config.sampleValue };
       const { higContainer } = higContext(defaults);
 
       const reactContainer = document.createElement('div');
@@ -85,7 +85,7 @@ describe('<Item>', () => {
     });
 
     it(`updates ${config.key}`, () => {
-      const defaults = { [config.key]: [config.sampleValue] };
+      const defaults = { [config.key]: config.sampleValue };
       const { higItem, higContainer } = higContext(defaults);
 
       const reactContainer = document.createElement('div');

@@ -25,13 +25,11 @@ import Tab from './Tab';
 const Context = props => {
   return (
     <GlobalNav>
-      <GlobalNav.Container>
-        <GlobalNav.Container.SubNav>
-          <Tabs>
-            {props.tabs.map(label => <Tab key={label} label={label} />)}
-          </Tabs>
-        </GlobalNav.Container.SubNav>
-      </GlobalNav.Container>
+      <GlobalNav.SubNav>
+        <Tabs>
+          {props.tabs.map(label => <Tab key={label} label={label} />)}
+        </Tabs>
+      </GlobalNav.SubNav>
     </GlobalNav>
   );
 };

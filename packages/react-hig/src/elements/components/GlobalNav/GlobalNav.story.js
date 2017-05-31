@@ -26,11 +26,10 @@ const SectionList = GlobalNav.SideNav.SectionList;
 const Section = GlobalNav.SideNav.SectionList.Item;
 const Group = GlobalNav.SideNav.SectionList.Item.Group;
 const Item = GlobalNav.SideNav.SectionList.Item.Group.Item;
-const TopNav = GlobalNav.Container.TopNav;
+const TopNav = GlobalNav.TopNav;
 const Profile = TopNav.Profile;
-const SubNav = GlobalNav.Container.SubNav;
-const Slot = GlobalNav.Container.Slot;
-const Container = GlobalNav.Container;
+const SubNav = GlobalNav.SubNav;
+const Slot = GlobalNav.Slot;
 
 const LONG_COPY = (
   <div>
@@ -185,14 +184,9 @@ storiesOf('GlobalNav', module)
     const sideNavOpen = boolean('sideNavOpen', true);
     return (
       <GlobalNav sideNavOpen={sideNavOpen}>
-        <Container>
-          <TopNav logo={logo} />
-          <SubNav
-            moduleIndicatorName="Insight"
-            moduleIndicatorIcon="hamburger"
-          />
-          <Slot>{LONG_COPY}</Slot>
-        </Container>
+        <TopNav logo={logo} />
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
       </GlobalNav>
     );
   })
@@ -236,14 +230,8 @@ storiesOf('GlobalNav', module)
             </Section>
           </SectionList>
         </SideNav>
-
-        <Container>
-          <SubNav
-            moduleIndicatorName="Insight"
-            moduleIndicatorIcon="hamburger"
-          />
-          <Slot>{LONG_COPY}</Slot>
-        </Container>
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
       </GlobalNav>
     );
   })
@@ -287,11 +275,8 @@ storiesOf('GlobalNav', module)
             </Section>
           </SectionList>
         </SideNav>
-
-        <Container>
-          <TopNav logo={logo} />
-          <Slot>{LONG_COPY}</Slot>
-        </Container>
+        <TopNav logo={logo} />
+        <Slot>{LONG_COPY}</Slot>
       </GlobalNav>
     );
   })
@@ -316,11 +301,8 @@ storiesOf('GlobalNav', module)
             </Section>
           </SectionList>
         </SideNav>
-
-        <Container>
-          <TopNav logo={logo} />
-          <Slot>{LONG_COPY}</Slot>
-        </Container>
+        <TopNav logo={logo} />
+        <Slot>{LONG_COPY}</Slot>
       </GlobalNav>
     );
   })
@@ -343,13 +325,10 @@ storiesOf('GlobalNav', module)
             </Section>
           </SectionList>
         </SideNav>
-
-        <Container>
-          <TopNav logo={logo} />
-          <Slot>
-            {LONG_COPY}
-          </Slot>
-        </Container>
+        <TopNav logo={logo} />
+        <Slot>
+          {LONG_COPY}
+        </Slot>
       </GlobalNav>
     );
   })
@@ -358,13 +337,10 @@ storiesOf('GlobalNav', module)
     return (
       <GlobalNav sideNavOpen={sideNavOpen}>
         <SideNav />
-
-        <Container>
-          <TopNav logo={logo} />
-          <Slot>
-            {LONG_COPY}
-          </Slot>
-        </Container>
+        <TopNav logo={logo} />
+        <Slot>
+          {LONG_COPY}
+        </Slot>
       </GlobalNav>
     );
   });

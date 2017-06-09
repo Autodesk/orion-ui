@@ -18,7 +18,9 @@ import * as PropTypes from 'prop-types';
 import HIGElement from '../../HIGElement';
 import HIGChildValidator from '../../HIGChildValidator';
 import createComponent from '../../../adapters/createComponent';
-
+import ProjectAccountSwitcherComponent, {
+  ProjectAccountSwitcher
+} from './ProjectAccountSwitcher';
 import ProfileComponent, { Profile } from './Profile';
 
 export class TopNav extends HIGElement {
@@ -27,6 +29,11 @@ export class TopNav extends HIGElement {
     if (this.profile) {
       this.hig.addProfile(this.profile.hig);
       this.profile.mount();
+    }
+
+    if (this.projectAccountSwitcher) {
+      this.hig.addProjectAccountSwitcher(this.projectAccountSwitcher.hig);
+      this.projectAccountSwitcher.mount();
     }
   }
 
@@ -39,6 +46,11 @@ export class TopNav extends HIGElement {
     switch (ElementConstructor) {
       case Profile:
         return new Profile(this.hig.partials.Profile, props);
+      case ProjectAccountSwitcher:
+        return new ProjectAccountSwitcher(
+          this.hig.partials.ProjectAccountSwitcher,
+          props
+        );
       default:
         throw new Error(`Unknown type ${ElementConstructor.name}`);
     }
@@ -52,6 +64,16 @@ export class TopNav extends HIGElement {
         this.profile = instance;
         if (this.mounted) {
           this.hig.addProfile(instance.hig);
+          instance.mount();
+        }
+      }
+    } else if (instance instanceof ProjectAccountSwitcher) {
+      if (this.projectAccountSwitcher) {
+        throw new Error('only one TopNav is allowed');
+      } else {
+        this.projectAccountSwitcher = instance;
+        if (this.mounted) {
+          this.hig.addProjectAccountSwitcher(instance.hig);
           instance.mount();
         }
       }
@@ -80,7 +102,11 @@ TopNavComponent.propTypes = {
   logoLink: PropTypes.string,
   onHamburgerClick: PropTypes.func,
   addProfile: PropTypes.func,
-  children: HIGChildValidator([ProfileComponent])
+  addProjectAccountSwitcher: PropTypes.func,
+  children: HIGChildValidator([
+    ProfileComponent,
+    ProjectAccountSwitcherComponent
+  ])
 };
 
 TopNavComponent.__docgenInfo = {
@@ -99,10 +125,15 @@ TopNavComponent.__docgenInfo = {
 
     addProfile: {
       description: 'adds Profile to the top nav'
+    },
+
+    addProjectAccountSwitcher: {
+      description: 'Pass in an instance of a ProjectAccountSwitcher partial to mount it to the TopNav'
     }
   }
 };
 
 TopNavComponent.Profile = ProfileComponent;
+TopNavComponent.ProjectAccountSwitcher = ProjectAccountSwitcherComponent;
 
 export default TopNavComponent;

@@ -28,6 +28,9 @@ const Group = GlobalNav.SideNav.SectionList.Item.Group;
 const Item = GlobalNav.SideNav.SectionList.Item.Group.Item;
 const TopNav = GlobalNav.TopNav;
 const Profile = TopNav.Profile;
+const ProjectAccountSwitcher = GlobalNav.TopNav.ProjectAccountSwitcher;
+const Account = GlobalNav.TopNav.ProjectAccountSwitcher.Account;
+const Project = GlobalNav.TopNav.ProjectAccountSwitcher.Project;
 const SubNav = GlobalNav.SubNav;
 const Slot = GlobalNav.Slot;
 
@@ -57,6 +60,10 @@ const LONG_COPY = (
 
 import logo from '../../../images/bim-logo.png';
 import profileImage from '../../../images/profileImage.png';
+import project1 from '../../../images/project-1.png';
+import project2 from '../../../images/project-2.png';
+import project3 from '../../../images/project-3.png';
+import project4 from '../../../images/project-4.png';
 
 storiesOf('GlobalNav', module)
   .addWithInfo(
@@ -103,6 +110,46 @@ storiesOf('GlobalNav', module)
             </SectionList>
           </SideNav>
           <TopNav logo={logo}>
+
+            <ProjectAccountSwitcher
+              activeLabel="Oakland Medical Center"
+              activeImage={project1}
+              activeType="account"
+              isOpen={false}
+              onClickOutside={action('clicked')}
+              onClick={action('clicked')}
+            >
+              <Account
+                image={project2}
+                label="Stanford hospital"
+                key="1"
+                active={false}
+                onClick={action('clicked')}
+              />
+              <Account
+                image=""
+                label="Oakland Medical Center"
+                key="2"
+                active={true}
+                onClick={action('clicked')}
+              />
+
+              <Project
+                image={project4}
+                label=""
+                key="3"
+                active={false}
+                onClick={action('clicked')}
+              />
+
+              <Project
+                image={project1}
+                label="Stanford hospital"
+                key="4"
+                active={false}
+                onClick={action('clicked')}
+              />
+            </ProjectAccountSwitcher>
             <Profile
               name="Jane Designer"
               email="jane.designer@example.com"
@@ -138,6 +185,57 @@ storiesOf('GlobalNav', module)
             onProfileImageClick={action('clicked')}
             onProfileImageClick={action('clicked')}
           />
+        </TopNav>
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
+      </GlobalNav>
+    );
+  })
+  .addWithInfo('w projectAccountSwitcherOpen', ``, () => {
+    const isOpen = boolean('isOpen', true);
+    return (
+      <GlobalNav>
+        <SideNav />
+        <TopNav logo={logo}>
+          <ProjectAccountSwitcher
+            activeLabel="Oakland Medical Center"
+            activeImage={project1}
+            activeType="account"
+            isOpen={isOpen}
+            onClickOutside={action('clicked')}
+            onClick={action('clicked')}
+          >
+            <Account
+              image={project2}
+              label="Stanford hospital"
+              key="1"
+              active={false}
+              onClick={action('clicked')}
+            />
+            <Account
+              image={project1}
+              label="Oakland Medical Center"
+              key="2"
+              active={true}
+              onClick={action('clicked')}
+            />
+
+            <Project
+              image=""
+              label="California Pacific"
+              key="3"
+              active={true}
+              onClick={action('clicked')}
+            />
+
+            <Project
+              image={project3}
+              label="Stanford hospital"
+              key="4"
+              active={false}
+              onClick={action('clicked')}
+            />
+          </ProjectAccountSwitcher>
         </TopNav>
         <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
         <Slot>{LONG_COPY}</Slot>

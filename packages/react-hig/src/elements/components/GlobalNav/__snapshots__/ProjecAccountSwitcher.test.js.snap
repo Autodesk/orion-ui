@@ -41,6 +41,9 @@ exports[`<ProjectAccountSwitcher> constructor has a good snapshot 1`] = `
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->
@@ -92,6 +95,9 @@ exports[`<ProjectAccountSwitcher> setting and updating props can set props for a
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->
@@ -143,6 +149,9 @@ exports[`<ProjectAccountSwitcher> setting and updating props can set props for a
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->
@@ -194,6 +203,9 @@ exports[`<ProjectAccountSwitcher> setting and updating props can set props for a
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->
@@ -245,6 +257,9 @@ exports[`<ProjectAccountSwitcher> setting and updating props can update props fo
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->
@@ -296,6 +311,9 @@ exports[`<ProjectAccountSwitcher> setting and updating props can update props fo
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->
@@ -347,6 +365,9 @@ exports[`<ProjectAccountSwitcher> setting and updating props can update props fo
     </div>
 </div><!--FLYOUT-->
 </div><!--PROJECT_ACCOUNT_SWITCHER-->
+    <div class=\\"hig__global-nav__top-nav__group hig__global-nav__top-nav__group--right\\">
+        <!--SHORTCUT-->
+    </div>
     <!--PROFILE-->
 </div><!--TOPNAV-->
         <!--SUBNAV-->

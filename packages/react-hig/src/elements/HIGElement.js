@@ -25,6 +25,7 @@ import partitionProps from '../interface/partitionProps';
 export default class HIGElement {
   constructor(HIGConstructor, initialProps) {
     this.initialProps = initialProps;
+
     const { defaults, events, possibleEvents } = partitionProps(
       initialProps,
       HIGConstructor._interface
@@ -129,6 +130,20 @@ export default class HIGElement {
       this._disposeFunctions.set(eventName, this.hig[eventName](eventFn));
     } else {
       delete this.events[eventName];
+    }
+  }
+
+  requireSingleInstance(instance, requiredSinglesList) {
+    const name = instance.constructor.name;
+    if (requiredSinglesList.includes(name) && this[name.toLowerCase()]) {
+      throw new Error('only one ' + name + ' is allowed');
+    }
+  }
+
+  checkValidChild(instance, validChildrenList) {
+    const name = instance.constructor.name;
+    if (!validChildrenList.includes(name)) {
+      throw new Error(name + ' is not a valid child element of this parent.');
     }
   }
 }

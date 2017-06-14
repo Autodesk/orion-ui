@@ -14,16 +14,34 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+//import * as HIG from 'hig.web';
 import * as PropTypes from 'prop-types';
+
 import HIGElement from '../../HIGElement';
 import HIGChildValidator from '../../HIGChildValidator';
 import createComponent from '../../../adapters/createComponent';
+
+import HIGNodeList from '../../HIGNodeList';
 import ProjectAccountSwitcherComponent, {
   ProjectAccountSwitcher
 } from './ProjectAccountSwitcher';
 import ProfileComponent, { Profile } from './Profile';
+import ShortcutComponent, { Shortcut } from './Shortcut';
+import HelpComponent, { Help } from './Help';
 
 export class TopNav extends HIGElement {
+  constructor(HIGConstructor, initialProps) {
+    super(HIGConstructor, initialProps);
+
+    this.shortcuts = new HIGNodeList({
+      type: Shortcut,
+      HIGConstructor: this.hig.partials.Shortcut,
+      onAdd: (instance, beforeInstance) => {
+        this.hig.addShortcut(instance, beforeInstance);
+      }
+    });
+  }
+
   componentDidMount() {
     // Add any children
     if (this.profile) {
@@ -34,6 +52,13 @@ export class TopNav extends HIGElement {
     if (this.projectAccountSwitcher) {
       this.hig.addProjectAccountSwitcher(this.projectAccountSwitcher.hig);
       this.projectAccountSwitcher.mount();
+    }
+
+    this.shortcuts.componentDidMount();
+
+    if (this.help) {
+      this.hig.addHelp(this.help.hig);
+      this.help.mount();
     }
   }
 
@@ -51,34 +76,27 @@ export class TopNav extends HIGElement {
           this.hig.partials.ProjectAccountSwitcher,
           props
         );
+      case Help:
+        return new Help(this.hig.partials.Help, props);
+      case Shortcut:
+        return this.shortcuts.createElement(ElementConstructor, props);
       default:
         throw new Error(`Unknown type ${ElementConstructor.name}`);
     }
   }
 
   appendChild(instance, beforeChild = {}) {
-    if (instance instanceof Profile) {
-      if (this.profile) {
-        throw new Error('only one Profile is allowed');
-      } else {
-        this.profile = instance;
-        if (this.mounted) {
-          this.hig.addProfile(instance.hig);
-          instance.mount();
-        }
-      }
-    } else if (instance instanceof ProjectAccountSwitcher) {
-      if (this.projectAccountSwitcher) {
-        throw new Error('only one TopNav is allowed');
-      } else {
-        this.projectAccountSwitcher = instance;
-        if (this.mounted) {
-          this.hig.addProjectAccountSwitcher(instance.hig);
-          instance.mount();
-        }
-      }
+    this.requireSingleInstance(instance);
+    this.checkValidChild(instance);
+
+    if (instance instanceof Shortcut) {
+      this.shortcuts.insertBefore(instance);
     } else {
-      throw new Error('unknown type');
+      this[this.getPropertyNameFor(instance)] = instance;
+      if (this.mounted) {
+        this.hig[this.getFunctionNameFor(instance)](instance.hig);
+        instance.mount();
+      }
     }
   }
 
@@ -93,6 +111,29 @@ export class TopNav extends HIGElement {
 
     instance.unmount();
   }
+
+  requireSingleInstance(instance) {
+    const requiredSingle = ['Profile', 'ProjectAccountSwitcher', 'Help'];
+    super.requireSingleInstance(instance, requiredSingle);
+  }
+
+  checkValidChild(instance) {
+    const validInstances = [
+      'Profile',
+      'ProjectAccountSwitcher',
+      'Shortcut',
+      'Help'
+    ];
+    super.checkValidChild(instance, validInstances);
+  }
+  getPropertyNameFor(instance) {
+    const initial = instance.constructor.name.charAt(0).toLowerCase();
+    const rest = instance.constructor.name.slice(1);
+    return initial + rest;
+  }
+  getFunctionNameFor(instance) {
+    return 'add' + instance.constructor.name;
+  }
 }
 
 const TopNavComponent = createComponent(TopNav);
@@ -105,7 +146,9 @@ TopNavComponent.propTypes = {
   addProjectAccountSwitcher: PropTypes.func,
   children: HIGChildValidator([
     ProfileComponent,
-    ProjectAccountSwitcherComponent
+    ProjectAccountSwitcherComponent,
+    ShortcutComponent,
+    HelpComponent
   ])
 };
 
@@ -134,6 +177,8 @@ TopNavComponent.__docgenInfo = {
 };
 
 TopNavComponent.Profile = ProfileComponent;
+TopNavComponent.Shortcut = ShortcutComponent;
+TopNavComponent.Help = HelpComponent;
 TopNavComponent.ProjectAccountSwitcher = ProjectAccountSwitcherComponent;
 
 export default TopNavComponent;

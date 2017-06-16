@@ -139,11 +139,4 @@ export default class HIGElement {
       throw new Error('only one ' + name + ' is allowed');
     }
   }
-
-  checkValidChild(instance, validChildrenList) {
-    const name = instance.constructor.name;
-    if (!validChildrenList.includes(name)) {
-      throw new Error(name + ' is not a valid child element of this parent.');
-    }
-  }
 }

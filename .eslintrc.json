@@ -1,4 +1,5 @@
 {
+  "code":   "100",
   "parser": "babel-eslint",
   "extends": [
     "prettier",

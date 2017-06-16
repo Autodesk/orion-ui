@@ -118,13 +118,15 @@ export class TopNav extends HIGElement {
   }
 
   checkValidChild(instance) {
-    const validInstances = [
-      'Profile',
-      'ProjectAccountSwitcher',
-      'Shortcut',
-      'Help'
-    ];
-    super.checkValidChild(instance, validInstances);
+    const validInstances = [Profile, ProjectAccountSwitcher, Shortcut, Help];
+    if (!validInstances.includes(instance.constructor)) {
+      throw new Error(
+        instance.constructor.name +
+          ' is not a valid child element of this parent.'
+      );
+    }
+
+    //super.checkValidChild(instance, validInstances);
   }
   getPropertyNameFor(instance) {
     const initial = instance.constructor.name.charAt(0).toLowerCase();

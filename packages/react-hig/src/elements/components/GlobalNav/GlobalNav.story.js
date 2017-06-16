@@ -23,9 +23,11 @@ import GlobalNav from './GlobalNav';
 
 const SideNav = GlobalNav.SideNav;
 const SectionList = GlobalNav.SideNav.SectionList;
-const Section = GlobalNav.SideNav.SectionList.Item;
-const Group = GlobalNav.SideNav.SectionList.Item.Group;
-const Item = GlobalNav.SideNav.SectionList.Item.Group.Item;
+const Section = GlobalNav.SideNav.SectionList.Section;
+const Collapse = GlobalNav.SideNav.SectionList.Section.Collapse;
+const Group = GlobalNav.SideNav.SectionList.Section.Group;
+const Module = GlobalNav.SideNav.SectionList.Section.Group.Module;
+const Submodule = GlobalNav.SideNav.SectionList.Section.Group.Module.Submodule;
 const TopNav = GlobalNav.TopNav;
 const Profile = TopNav.Profile;
 const Shortcut = TopNav.Shortcut;
@@ -145,36 +147,10 @@ storiesOf('GlobalNav', module)
           <SideNav>
             <SectionList>
               <Section headerLabel="Project" headerName="ThunderStorm">
-                <Group>
-                  <Item
-                    icon="project-management"
-                    title="Item 1"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
-                  <Item
-                    icon="project-management"
-                    title="Item 2"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
-                  <Item
-                    icon="project-management"
-                    title="Item 3"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
-                </Group>
+                <Group />
               </Section>
               <Section headerLabel="Project" headerName="Thunderstorm">
-                <Group>
-                  <Item
-                    icon="project-management"
-                    title="Item 1"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
-                </Group>
+                <Group />
               </Section>
             </SectionList>
           </SideNav>
@@ -334,35 +310,42 @@ storiesOf('GlobalNav', module)
           <SideNav>
             <SectionList>
               <Section headerLabel="Project" headerName="ThunderStorm">
+                <Collapse onClick={action('clicked')} isCollapsed={true} />
                 <Group>
-                  <Item
+                  <Module
                     icon="project-management"
                     title="Item 1"
                     link="#"
                     onClick={action('clicked')}
-                  />
-                  <Item
-                    icon="project-management"
-                    title="Item 2"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
-                  <Item
-                    icon="project-management"
-                    title="Item 3"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
+                    submodulesClosed={true}
+                  >
+                    <Submodule
+                      title="Item 2"
+                      link="#"
+                      onClick={action('clicked')}
+                    />
+                  </Module>
                 </Group>
               </Section>
-              <Section headerLabel="Project" headerName="Thunderstorm">
+              <Section
+                headerLabel="Contractor"
+                headerName="Oakland Medical Center"
+              >
+                <Collapse onClick={action('clicked')} isCollapsed={false} />
                 <Group>
-                  <Item
+                  <Module
                     icon="project-management"
                     title="Item 1"
                     link="#"
                     onClick={action('clicked')}
-                  />
+                    submodulesClosed={false}
+                  >
+                    <Submodule
+                      title="Item 2"
+                      link="#"
+                      onClick={action('clicked')}
+                    />
+                  </Module>
                 </Group>
               </Section>
             </SectionList>
@@ -399,35 +382,42 @@ storiesOf('GlobalNav', module)
         <SideNav>
           <SectionList>
             <Section headerLabel="Project" headerName="ThunderStorm">
+              <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
-                <Item
+                <Module
                   icon="project-management"
                   title="Item 1"
                   link="#"
                   onClick={action('clicked')}
-                />
-                <Item
-                  icon="project-management"
-                  title="Item 2"
-                  link="#"
-                  onClick={action('clicked')}
-                />
-                <Item
-                  icon="project-management"
-                  title="Item 3"
-                  link="#"
-                  onClick={action('clicked')}
-                />
+                  submodulesClosed={true}
+                >
+                  <Submodule
+                    title="Item 2"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
               </Group>
             </Section>
-            <Section headerLabel="Project" headerName="Thunderstorm">
+            <Section
+              headerLabel="Contractor"
+              headerName="Oakland Medical Center"
+            >
+              <Collapse onClick={action('clicked')} isCollapsed={false} />
               <Group>
-                <Item
+                <Module
                   icon="project-management"
                   title="Item 1"
                   link="#"
                   onClick={action('clicked')}
-                />
+                  submodulesClosed={false}
+                >
+                  <Submodule
+                    title="Item 2"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
               </Group>
             </Section>
           </SectionList>
@@ -444,35 +434,42 @@ storiesOf('GlobalNav', module)
         <SideNav>
           <SectionList>
             <Section headerLabel="Project" headerName="ThunderStorm">
+              <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
-                <Item
+                <Module
                   icon="project-management"
                   title="Item 1"
                   link="#"
                   onClick={action('clicked')}
-                />
-                <Item
-                  icon="project-management"
-                  title="Item 2"
-                  link="#"
-                  onClick={action('clicked')}
-                />
-                <Item
-                  icon="project-management"
-                  title="Item 3"
-                  link="#"
-                  onClick={action('clicked')}
-                />
+                  submodulesClosed={true}
+                >
+                  <Submodule
+                    title="Item 2"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
               </Group>
             </Section>
-            <Section headerLabel="Project" headerName="Thunderstorm">
+            <Section
+              headerLabel="Contractor"
+              headerName="Oakland Medical Center"
+            >
+              <Collapse onClick={action('clicked')} isCollapsed={false} />
               <Group>
-                <Item
+                <Module
                   icon="project-management"
                   title="Item 1"
                   link="#"
                   onClick={action('clicked')}
-                />
+                  submodulesClosed={false}
+                >
+                  <Submodule
+                    title="Item 2"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
               </Group>
             </Section>
           </SectionList>
@@ -489,17 +486,29 @@ storiesOf('GlobalNav', module)
         <SideNav>
           <SectionList>
             <Section headerLabel="Project" headerName="ThunderStorm">
-              <Group />
-            </Section>
-            <Section headerLabel="Project" headerName="Thunderstorm">
+              <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
-                <Item
+                <Module
                   icon="project-management"
                   title="Item 1"
                   link="#"
                   onClick={action('clicked')}
-                />
+                  submodulesClosed={true}
+                >
+                  <Submodule
+                    title="Item 2"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
               </Group>
+            </Section>
+            <Section
+              headerLabel="Contractor"
+              headerName="Oakland Medical Center"
+            >
+              <Collapse onClick={action('clicked')} isCollapsed={false} />
+              <Group />
             </Section>
           </SectionList>
         </SideNav>
@@ -514,17 +523,28 @@ storiesOf('GlobalNav', module)
       <GlobalNav sideNavOpen={sideNavOpen}>
         <SideNav>
           <SectionList>
-            <Section headerLabel="Project" headerName="ThunderStorm" />
-            <Section headerLabel="Project" headerName="Thunderstorm">
+            <Section headerLabel="Project" headerName="ThunderStorm">
+              <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
-                <Item
+                <Module
                   icon="project-management"
                   title="Item 1"
                   link="#"
                   onClick={action('clicked')}
-                />
+                  submodulesClosed={true}
+                >
+                  <Submodule
+                    title="Item 2"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
               </Group>
             </Section>
+            <Section
+              headerLabel="Contractor"
+              headerName="Oakland Medical Center"
+            />
           </SectionList>
         </SideNav>
         <TopNav logo={logo} />

@@ -31,9 +31,11 @@ import profileImage from './images/profileImage.png';
 
 const SideNav = GlobalNav.SideNav;
 const SectionList = GlobalNav.SideNav.SectionList;
-const Section = GlobalNav.SideNav.SectionList.Item;
-const Group = GlobalNav.SideNav.SectionList.Item.Group;
-const Item = GlobalNav.SideNav.SectionList.Item.Group.Item;
+const Section = GlobalNav.SideNav.SectionList.Section;
+const Collapse = GlobalNav.SideNav.SectionList.Section.Collapse;
+const Group = GlobalNav.SideNav.SectionList.Section.Group;
+const Module = GlobalNav.SideNav.SectionList.Section.Group.Module;
+const Submodule = GlobalNav.SideNav.SectionList.Section.Group.Module.Submodule;
 const TopNav = GlobalNav.TopNav;
 const Profile = GlobalNav.TopNav.Profile;
 const Shortcut = GlobalNav.TopNav.Shortcut;
@@ -54,6 +56,8 @@ class App extends React.Component {
       fn: false,
       group1: true,
       group3: true,
+      section1Collapsed: true,
+      section2Collapsed: true,
       open: false,
       profileFlyoutOpen: false,
       isOpen: false,
@@ -103,6 +107,12 @@ class App extends React.Component {
   toggleGroup1 = () => this.setState({ group1: !this.state.group1 });
 
   toggleGroup3 = () => this.setState({ group3: !this.state.group3 });
+
+  toggleSection1 = () =>
+    this.setState({ section1Collapsed: !this.state.section1Collapsed });
+
+  toggleSection2 = () =>
+    this.setState({ section2Collapsed: !this.state.section2Collapsed });
 
   addTabBefore = () => {
     const nextLabel = Math.floor(Math.random() * 100000, 5);
@@ -244,6 +254,320 @@ class App extends React.Component {
     ];
   };
 
+  menu = () => {
+    return {
+      sections: [
+        {
+          label: 'Project',
+          name: 'Oakwood Medical Center',
+          groups: [
+            {
+              modules: [
+                {
+                  icon: 'insight',
+                  label: 'Insight',
+                  submodules: [
+                    {
+                      label: 'Overview',
+                      contentImage: 'content/Oakwood__Insight__Overview@2x.png'
+                    },
+                    {
+                      label: 'Risk',
+                      contentImage: 'content/Oakwood__Insight__Risk@2x.png'
+                    },
+                    {
+                      label: 'Quality',
+                      contentImage: 'content/Oakwood__Insight__Quality@2x.png'
+                    },
+                    {
+                      label: 'Reports',
+                      contentImage: 'content/Oakwood__Insight__Reports@2x.png'
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              // end group 1
+              modules: [
+                {
+                  icon: 'construction-management',
+                  label: 'Authoring Collaboration',
+                  submodules: [
+                    {
+                      label: 'Cloud Work Sharing',
+                      contentImage: 'content/Oakwood__AuthoringCollaboration__CloudWorkSharing@2x.png'
+                    },
+                    {
+                      label: 'Fluent',
+                      contentImage: 'content/Oakwood__AuthoringCollaboration__Fluent@2x.png'
+                    },
+                    {
+                      label: 'Approvals',
+                      contentImage: 'content/Oakwood__AuthoringCollaboration__Approvals@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'document-management',
+                  label: 'Document Management',
+                  submodules: [
+                    {
+                      type: 'submodule',
+                      label: 'Document Workflow',
+                      contentImage: 'content/Oakwood__DocumentManagement__DocumentWorkflow@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'placeholder',
+                  label: 'Model Coordination',
+                  submodules: [
+                    {
+                      label: 'Overview',
+                      contentImage: 'content/Oakwood__ModelCoordination__Overview@2x.png'
+                    },
+                    {
+                      label: 'Models',
+                      contentImage: 'content/Oakwood__ModelCoordination__Models@2x.png'
+                    },
+                    {
+                      label: 'Checklists',
+                      contentImage: 'content/Oakwood__ModelCoordination__Checklists@2x.png'
+                    },
+                    {
+                      label: 'Clashes',
+                      contentImage: 'content/Oakwood__ModelCoordination__Clashes@2x.png'
+                    },
+                    {
+                      label: 'Issues',
+                      contentImage: 'content/Oakwood__ModelCoordination__Issues@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'project-management',
+                  label: 'Project Management',
+                  submodules: [
+                    {
+                      label: 'RFIs',
+                      contentImage: 'content/Oakwood__ProjectManagement__RFIs@2x.png'
+                    },
+                    {
+                      label: 'Submittals',
+                      contentImage: 'content/Oakwood__ProjectManagement__Submittals@2x.png'
+                    },
+                    {
+                      label: 'Daily Log',
+                      contentImage: 'content/Oakwood__ProjectManagement__DailyLog@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'quantities',
+                  label: 'Quantities',
+                  submodules: [
+                    {
+                      label: '2D',
+                      contentImage: 'content/Oakwood__Quantities__2D@2x.png'
+                    },
+                    {
+                      label: '3D',
+                      contentImage: 'content/Oakwood__Quantities__3D@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'cost-control',
+                  label: 'Cost Control',
+                  submodules: [
+                    {
+                      label: 'Bid Management',
+                      contentImage: 'content/Oakwood__CostControl__BidManagement@2x.png'
+                    },
+                    {
+                      label: 'Estimating',
+                      contentImage: 'content/Oakwood__CostControl__Estimating@2x.png'
+                    },
+                    {
+                      label: 'Budget',
+                      contentImage: 'content/Oakwood__CostControl__Budget@2x.png'
+                    },
+                    {
+                      label: 'Change Orders',
+                      contentImage: 'content/Oakwood__CostControl__ChangeOrders@2x.png'
+                    },
+                    {
+                      label: 'Pay Applications',
+                      contentImage: 'content/Oakwood__CostControl__PayApplications@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'schedule',
+                  label: 'Schedule',
+                  submodules: [
+                    {
+                      label: 'Master Schedule',
+                      contentImage: 'content/Oakwood__Schedule__MasterSchedule@2x.png'
+                    },
+                    {
+                      label: 'Production Plan',
+                      contentImage: 'content/Oakwood__Schedule__ProductionPlan@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'field',
+                  label: 'Field',
+                  submodules: [
+                    {
+                      label: 'Quality',
+                      contentImage: 'content/Oakwood__Field__Quality@2x.png'
+                    },
+                    {
+                      label: 'Safety',
+                      contentImage: 'content/Oakwood__Field__Safety@2x.png'
+                    },
+                    {
+                      label: 'Commissioning',
+                      contentImage: 'content/Oakwood__Field__Commissioning@2x.png'
+                    },
+                    {
+                      label: 'Checklists',
+                      contentImage: 'content/Oakwood__Field__Checklists@2x.png'
+                    },
+                    {
+                      label: 'Issues',
+                      contentImage: 'content/Oakwood__Field__Issues@2x.png'
+                    },
+                    {
+                      label: 'Activities',
+                      contentImage: 'content/Oakwood__Field__Activities@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'layout',
+                  label: 'Layout',
+                  contentImage: 'content/Oakwood__Layout@2x.png',
+                  submodules: []
+                },
+                {
+                  icon: 'buildingops',
+                  label: 'Building Ops',
+                  contentImage: 'content/Oakwood__BuildingOps@2x.png',
+                  submodules: []
+                }
+              ]
+            },
+            {
+              // end group 2
+              modules: [
+                {
+                  icon: 'library',
+                  label: 'Library',
+                  contentImage: 'content/Oakwood__Library@2x.png',
+                  submodules: []
+                },
+                {
+                  icon: 'photos',
+                  label: 'Photos',
+                  contentImage: 'content/Oakwood__Photos@2x.png',
+                  submodules: []
+                },
+                {
+                  icon: 'assets',
+                  label: 'Assets',
+                  contentImage: 'content/Oakwood__Assets@2x.png',
+                  submodules: []
+                },
+                {
+                  icon: 'locations',
+                  label: 'Location',
+                  contentImage: 'content/Oakwood__Locations@2x.png',
+                  submodules: []
+                }
+              ]
+            },
+            {
+              // end group 3
+              modules: [
+                {
+                  icon: 'project-admin',
+                  label: 'Project Admin',
+                  contentImage: 'content/Oakwood__ProjectAdmin@2x.png',
+                  submodules: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          // end section 1
+          label: 'Account',
+          name: 'Global Construction',
+          groups: [
+            {
+              modules: [
+                {
+                  icon: 'insight',
+                  label: 'Insight',
+                  contentImage: 'content/GlobalConstruction__Insight@2x.png',
+                  submodules: []
+                },
+                {
+                  icon: 'field',
+                  label: 'Field',
+                  submodules: [
+                    {
+                      label: 'Checklists Templates',
+                      contentImage: 'content/GlobalConstruction__Field__ChecklistsTemplates@2x.png'
+                    },
+                    {
+                      label: 'Issues Templates',
+                      contentImage: 'content/GlobalConstruction__Field__IssuesTemplates@2x.png'
+                    }
+                  ]
+                },
+                {
+                  icon: 'account-admin',
+                  label: 'Account Admin',
+                  submodules: [
+                    {
+                      label: 'Projects',
+                      contentImage: 'content/GlobalConstruction__AccountAdmin__Projects@2x.png'
+                    },
+                    {
+                      label: 'Members',
+                      contentImage: 'content/GlobalConstruction__AccountAdmin__Members@2x.png'
+                    },
+                    {
+                      label: 'Companies',
+                      contentImage: 'content/GlobalConstruction__AccountAdmin__Companies@2x.png'
+                    },
+                    {
+                      label: 'Services',
+                      contentImage: 'content/GlobalConstruction__AccountAdmin__Services@2x.png'
+                    },
+                    {
+                      label: 'Analytics',
+                      contentImage: 'content/GlobalConstruction__AccountAdmin__Analytics@2x.png'
+                    },
+                    {
+                      label: 'Settings',
+                      contentImage: 'content/GlobalConstruction__AccountAdmin__Settings@2x.png'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+  };
+
   render() {
     return (
       <div>
@@ -251,39 +575,80 @@ class App extends React.Component {
           <SideNav>
             <SectionList>
               <Section headerLabel="Project" headerName="ThunderStorm">
-                <Group>
-                  {this.state.group1 &&
-                    <Item
-                      icon="project-management"
-                      title="Item 1"
-                      link="#"
-                      onClick={() => alert('item 1 clicked')}
-                    />}
-                  <Item icon="project-management" title="Item 2" link="#" />
-
-                  {this.state.group1 &&
-                    <Item icon="project-management" title="Item 3" link="#" />}
-                </Group>
-
-                <Group>
-                  <Item
-                    icon="project-management"
-                    title={this.state.buttonLabel}
-                    link="#"
-                  />
-                </Group>
+                <Collapse
+                  onClick={this.toggleSection1}
+                  isCollapsed={this.state.section1Collapsed}
+                />
+                {this.menu().sections[0].groups.map(
+                  function(group) {
+                    return (
+                      <Group>
+                        {group.modules.map(
+                          function(module) {
+                            return (
+                              <Module
+                                icon={module.icon}
+                                contentImage={module.contentImage}
+                                title={module.label}
+                                submodulesClosed={this.state.section1Collapsed}
+                                key={module.label}
+                              >
+                                {module.submodules.map(function(submodule) {
+                                  return (
+                                    <Submodule
+                                      title={submodule.label}
+                                      link="#"
+                                      key={submodule.label}
+                                    />
+                                  );
+                                })}
+                              </Module>
+                            );
+                          }.bind(this)
+                        )}
+                      </Group>
+                    );
+                  }.bind(this)
+                )}
+              </Section>
+              <Section headerLabel="Account" headerName="GlobalConstruction">
+                <Collapse
+                  isCollapsed={this.state.section2Collapsed}
+                  onClick={this.toggleSection2}
+                />
+                {this.menu().sections[1].groups.map(
+                  function(group) {
+                    return (
+                      <Group>
+                        {group.modules.map(
+                          function(module) {
+                            return (
+                              <Module
+                                icon={module.icon}
+                                contentImage={module.contentImage}
+                                title={module.label}
+                                submodulesClosed={this.state.section2Collapsed}
+                                key={module.label}
+                              >
+                                {module.submodules.map(function(submodule) {
+                                  return (
+                                    <Submodule
+                                      title={submodule.label}
+                                      link="#"
+                                      key={submodule.label}
+                                    />
+                                  );
+                                })}
+                              </Module>
+                            );
+                          }.bind(this)
+                        )}
+                      </Group>
+                    );
+                  }.bind(this)
+                )}
               </Section>
 
-              <Section headerLabel="Project" headerName="Thunderstorm">
-                <Group>
-                  <Item
-                    icon="project-management"
-                    title="Toggle Group 1"
-                    onClick={this.toggleGroup1}
-                  />
-                  <Item icon="project-management" title="Item 2" link="#" />
-                </Group>
-              </Section>
             </SectionList>
           </SideNav>
           <TopNav

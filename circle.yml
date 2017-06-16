@@ -31,7 +31,7 @@ dependencies:
     - "packages/style/node_modules"
 test:
   pre:
-    - cd packages/hig.web && npm run build
+    - npm run build
     - npm run build-lib
     # - cd packages/react-components && npm run start-storybook:
     #     background: true

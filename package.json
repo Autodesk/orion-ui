@@ -15,7 +15,7 @@
     "deploy": "node ./scripts/deploy.js --gh-token $GITHUB_TOKEN --gh-sha $CIRCLE_SHA1",
     "ensure-copyright": "node ./scripts/ensure-copyright.js --dir ./",
     "set-marketing-to-root": "node ./scripts/set-package-to-root.js -p marketing-playground",
-    "build-lib": "NODE_ENV=development lerna run lib --stream",
+    "build-lib": "NODE_ENV=development lerna run  --loglevel=error lib --stream",
     "test-ci": "npm run ensure-copyright && npm run lint && lerna run test-ci --ignore hig.web --stream",
     "test": "npm run ensure-copyright && npm run lint && lerna run test --stream",
     "start": "lerna run start --no-sort --stream --concurrency 50",

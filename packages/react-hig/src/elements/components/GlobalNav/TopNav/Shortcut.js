@@ -1,5 +1,4 @@
-/**
-Copyright 2016 Autodesk,Inc.
+/* Copyright 2016 Autodesk,Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,47 +13,45 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
  */
-import HIGElement from '../../HIGElement';
-import * as PropTypes from 'prop-types';
-import createComponent from '../../../adapters/createComponent';
 
-export class Help extends HIGElement {
+import HIGElement from '../../../HIGElement';
+import * as PropTypes from 'prop-types';
+import createComponent from '../../../../adapters/createComponent';
+
+export class Shortcut extends HIGElement {
   commitUpdate(updatePayload, oldProps, newProps) {
     const mapping = {
       title: 'setTitle',
-      link: 'setLink'
+      link: 'setLink',
+      icon: 'setIcon'
     };
 
-    for (let i = 0; i < updatePayload.length; i += 2) {
-      const propKey = updatePayload[i];
-      const propValue = updatePayload[i + 1];
-
-      if (mapping[propKey]) {
-        this.hig[mapping[propKey]](propValue);
-      } else {
-        this.commitPropChange(propKey, propValue);
-      }
-    }
+    super.commitUpdateWithMapping(updatePayload, mapping);
   }
 }
 
-const HelpComponent = createComponent(Help);
+const ShortcutComponent = createComponent(Shortcut);
 
-HelpComponent.propTypes = {
+ShortcutComponent.propTypes = {
   title: PropTypes.string,
-  link: PropTypes.string
+  link: PropTypes.string,
+  icon: PropTypes.string
 };
 
-HelpComponent.__docgenInfo = {
+ShortcutComponent.__docgenInfo = {
   props: {
     title: {
-      description: 'sets the title of a Help shortcut'
+      description: 'sets the title of a shortcut'
     },
 
     link: {
-      description: 'sets the link of a Help shortcut'
+      description: 'sets the link of a shortcut'
+    },
+
+    icon: {
+      description: 'sets the shortcut icon to one of a set of pre-defined icons'
     }
   }
 };
 
-export default HelpComponent;
+export default ShortcutComponent;

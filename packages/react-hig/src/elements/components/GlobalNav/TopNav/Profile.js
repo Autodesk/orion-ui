@@ -16,8 +16,8 @@ limitations under the License.
 */
 
 import * as PropTypes from 'prop-types';
-import HIGElement from '../../HIGElement';
-import createComponent from '../../../adapters/createComponent';
+import HIGElement from '../../../HIGElement';
+import createComponent from '../../../../adapters/createComponent';
 
 export class Profile extends HIGElement {
   componentDidMount() {
@@ -55,7 +55,6 @@ export class Profile extends HIGElement {
 const ProfileComponent = createComponent(Profile);
 
 ProfileComponent.propTypes = {
-  open: PropTypes.bool,
   image: PropTypes.string,
   name: PropTypes.string,
   email: PropTypes.string,

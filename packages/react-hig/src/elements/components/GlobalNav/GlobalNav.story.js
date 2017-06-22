@@ -32,6 +32,7 @@ const TopNav = GlobalNav.TopNav;
 const Profile = TopNav.Profile;
 const Shortcut = TopNav.Shortcut;
 const Help = TopNav.Help;
+const TopNavSearch = TopNav.Search;
 const ProjectAccountSwitcher = GlobalNav.TopNav.ProjectAccountSwitcher;
 const Account = GlobalNav.TopNav.ProjectAccountSwitcher.Account;
 const Project = GlobalNav.TopNav.ProjectAccountSwitcher.Project;
@@ -103,29 +104,6 @@ const LONG_COPY = (
       poke, photo booth quinoa cronut pickled meggings tumeric. Yr wayfarers mustache pitchfork, art party bitters craft
       beer single-origin coffee.
     </p>
-
-    Helvetica keytar leggings beard single-origin coffee, mustache organic pabst lumbersexual chartreuse art party
-    waistcoat wolf mixtape 8-bit. Craft beer meggings subway tile hashtag, put a bird on it portland 8-bit cardigan
-    knausgaard. Snackwave try-hard dreamcatcher, XOXO freegan iceland kinfolk readymade microdosing typewriter vegan
-    vinyl live-edge hella direct trade. Heirloom flexitarian brunch, subway tile beard leggings hella echo park kinfolk
-    poutine mustache cold-pressed. Copper mug marfa crucifix, kale chips bitters XOXO disrupt four dollar toast
-    gluten-free scenester farm-to-table. 8-bit YOLO pickled photo booth biodiesel bushwick, gentrify ennui hoodie
-    bespoke poutine twee tumblr cornhole tilde. Hammock authentic cold-pressed, chartreuse messenger bag blue bottle
-    four dollar toast DIY raw denim cray squid poke biodiesel lo-fi taxidermy.
-
-    Messenger bag cardigan schlitz meggings pinterest, ramps whatever keytar taxidermy four loko PBR&B XOXO vaporware
-    DIY direct trade. Occupy banjo succulents tacos, cred raw denim neutra chicharrones actually kickstarter food truck
-    artisan paleo tumblr. Vinyl synth migas shabby chic, whatever shoreditch brooklyn deep v. 90's gochujang retro
-    shoreditch, leggings banh mi dreamcatcher freegan four dollar toast unicorn kogi. Locavore scenester leggings
-    cronut. Forage irony slow-carb plaid fap af. Art party asymmetrical typewriter trust fund, lyft skateboard gastropub
-    small batch artisan squid iceland vegan disrupt master cleanse.
-
-    Scenester fingerstache kitsch post-ironic snackwave, plaid microdosing gastropub whatever. Next level truffaut swag,
-    offal health goth franzen craft beer tousled 90's retro cardigan man bun keffiyeh ugh. Vegan offal tumblr,
-    distillery prism venmo iPhone 90's vaporware 8-bit cronut semiotics. Prism distillery leggings austin selvage
-    mustache. Venmo gentrify schlitz, ennui cred master cleanse umami sustainable freegan. Chartreuse yuccie freegan,
-    poke four dollar toast echo park messenger bag shabby chic bespoke waistcoat glossier. Offal intelligentsia
-    keffiyeh, XOXO waistcoat neutra squid brunch pug tumeric man braid knausgaard.
   </div>
 );
 
@@ -137,84 +115,76 @@ import project3 from '../../../images/project-3.png';
 import project4 from '../../../images/project-4.png';
 
 storiesOf('GlobalNav', module)
-  .addWithInfo(
-    'default',
-    ``,
-    () => {
-      const sideNavOpen = boolean('sideNavOpen', false);
-      return (
-        <GlobalNav sideNavOpen={sideNavOpen}>
-          <SideNav>
-            <SectionList>
-              <Section headerLabel="Project" headerName="ThunderStorm">
-                <Group />
-              </Section>
-              <Section headerLabel="Project" headerName="Thunderstorm">
-                <Group />
-              </Section>
-            </SectionList>
-          </SideNav>
-          <TopNav logo={logo}>
+  .addWithInfo('default', <div><p>Global Nav basic usage</p></div>, () => {
+    const sideNavOpen = boolean('sideNavOpen', false);
+    return (
+      <GlobalNav sideNavOpen={sideNavOpen}>
+        <SideNav>
+          <SectionList>
+            <Section headerLabel="Project" headerName="ThunderStorm">
+              <Group />
+            </Section>
+            <Section headerLabel="Project" headerName="Thunderstorm">
+              <Group />
+            </Section>
+          </SectionList>
+        </SideNav>
+        <TopNav logo={logo}>
 
-            <ProjectAccountSwitcher
-              activeLabel="Oakland Medical Center"
-              activeImage={project1}
-              activeType="account"
-              isOpen={false}
-              onClickOutside={action('clicked')}
+          <ProjectAccountSwitcher
+            activeLabel="Oakland Medical Center"
+            activeImage={project1}
+            activeType="account"
+            isOpen={false}
+            onClickOutside={action('clicked')}
+            onClick={action('clicked')}
+          >
+            <Account
+              image={project2}
+              label="Stanford hospital"
+              active={false}
               onClick={action('clicked')}
-            >
-              <Account
-                image={project2}
-                label="Stanford hospital"
-                active={false}
-                onClick={action('clicked')}
-              />
-              <Account
-                image=""
-                label="Oakland Medical Center"
-                active={true}
-                onClick={action('clicked')}
-              />
-
-              <Project
-                image={project4}
-                label=""
-                active={false}
-                onClick={action('clicked')}
-              />
-
-              <Project
-                image={project1}
-                label="Stanford hospital"
-                active={false}
-                onClick={action('clicked')}
-              />
-            </ProjectAccountSwitcher>
-            <Shortcut icon="gear" title="GEAR" link="#" />
-            <Help title="HELLLP MEEEE!!!!" link="#`" />
-            <Profile
-              name="Jane Designer"
-              email="jane.designer@example.com"
-              signOutLabel="Sign Out"
-              open={false}
-              image={profileImage}
-              onProfileImageClick={action('clicked')}
-              onSignOutClick={action('clicked')}
             />
-          </TopNav>
-          <SubNav
-            moduleIndicatorName="Insight"
-            moduleIndicatorIcon="hamburger"
+            <Account
+              image=""
+              label="Oakland Medical Center"
+              active={true}
+              onClick={action('clicked')}
+            />
+
+            <Project
+              image={project4}
+              label=""
+              active={false}
+              onClick={action('clicked')}
+            />
+
+            <Project
+              image={project1}
+              label="Stanford hospital"
+              active={false}
+              onClick={action('clicked')}
+            />
+          </ProjectAccountSwitcher>
+          <Shortcut icon="gear" title="GEAR" link="#" />
+          <Help title="HELLLP MEEEE!!!!" link="#`" />
+          <Profile
+            name="Jane Designer"
+            email="jane.designer@example.com"
+            signOutLabel="Sign Out"
+            open={false}
+            image={profileImage}
+            onProfileImageClick={action('clicked')}
+            onSignOutClick={action('clicked')}
           />
-          <Slot>{LONG_COPY}</Slot>
-        </GlobalNav>
-      );
-    },
-    { propTables: [GlobalNav] }
-  )
+        </TopNav>
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
+      </GlobalNav>
+    );
+  })
   .addWithInfo('w profileFlyoutOpen', ``, () => {
-    const profileFlyoutOpen = boolean('profileFlyoutOpen', true);
+    const profileFlyoutOpenKnob = boolean('profileFlyoutOpen', true);
     return (
       <GlobalNav>
         <SideNav />
@@ -223,7 +193,7 @@ storiesOf('GlobalNav', module)
             name="Jane Designer"
             email="jane.designer@example.com"
             signOutLabel="Sign Out"
-            open={profileFlyoutOpen}
+            open={profileFlyoutOpenKnob}
             image={profileImage}
             onProfileImageClick={action('clicked')}
             onProfileImageClick={action('clicked')}
@@ -300,67 +270,59 @@ storiesOf('GlobalNav', module)
       </GlobalNav>
     );
   })
-  .addWithInfo(
-    'w sideNavOpen',
-    ``,
-    () => {
-      const sideNavOpen = boolean('sideNavOpen', true);
-      return (
-        <GlobalNav sideNavOpen={sideNavOpen}>
-          <SideNav>
-            <SectionList>
-              <Section headerLabel="Project" headerName="ThunderStorm">
-                <Collapse onClick={action('clicked')} isCollapsed={true} />
-                <Group>
-                  <Module
-                    icon="project-management"
-                    title="Item 1"
+  .addWithInfo('w sideNavOpen', ``, () => {
+    const sideNavOpen = boolean('sideNavOpen', true);
+    return (
+      <GlobalNav sideNavOpen={sideNavOpen}>
+        <SideNav>
+          <SectionList>
+            <Section headerLabel="Project" headerName="ThunderStorm">
+              <Collapse onClick={action('clicked')} isCollapsed={true} />
+              <Group>
+                <Module
+                  icon="project-management"
+                  title="Item 1"
+                  link="#"
+                  onClick={action('clicked')}
+                  submodulesClosed={true}
+                >
+                  <Submodule
+                    title="Item 2"
                     link="#"
                     onClick={action('clicked')}
-                    submodulesClosed={true}
-                  >
-                    <Submodule
-                      title="Item 2"
-                      link="#"
-                      onClick={action('clicked')}
-                    />
-                  </Module>
-                </Group>
-              </Section>
-              <Section
-                headerLabel="Contractor"
-                headerName="Oakland Medical Center"
-              >
-                <Collapse onClick={action('clicked')} isCollapsed={false} />
-                <Group>
-                  <Module
-                    icon="project-management"
-                    title="Item 1"
+                  />
+                </Module>
+              </Group>
+            </Section>
+            <Section
+              headerLabel="Contractor"
+              headerName="Oakland Medical Center"
+            >
+              <Collapse onClick={action('clicked')} isCollapsed={false} />
+              <Group>
+                <Module
+                  icon="project-management"
+                  title="Item 1"
+                  link="#"
+                  onClick={action('clicked')}
+                  submodulesClosed={false}
+                >
+                  <Submodule
+                    title="Item 2"
                     link="#"
                     onClick={action('clicked')}
-                    submodulesClosed={false}
-                  >
-                    <Submodule
-                      title="Item 2"
-                      link="#"
-                      onClick={action('clicked')}
-                    />
-                  </Module>
-                </Group>
-              </Section>
-            </SectionList>
-          </SideNav>
-          <TopNav logo={logo} />
-          <SubNav
-            moduleIndicatorName="Insight"
-            moduleIndicatorIcon="hamburger"
-          />
-          <Slot>{LONG_COPY}</Slot>
-        </GlobalNav>
-      );
-    },
-    { propTables: [GlobalNav] }
-  )
+                  />
+                </Module>
+              </Group>
+            </Section>
+          </SectionList>
+        </SideNav>
+        <TopNav logo={logo} />
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
+      </GlobalNav>
+    );
+  })
   .addWithInfo('? no children', ``, () => {
     const sideNavOpen = boolean('sideNavOpen', true);
     return <GlobalNav sideNavOpen={sideNavOpen} />;
@@ -428,7 +390,7 @@ storiesOf('GlobalNav', module)
     );
   })
   .addWithInfo('? no SubNav', ``, () => {
-    const sideNavOpen = boolean('sideNavOpen', true);
+    const sideNavOpen = boolean('sideNavOpen', false);
     return (
       <GlobalNav sideNavOpen={sideNavOpen}>
         <SideNav>
@@ -442,27 +404,6 @@ storiesOf('GlobalNav', module)
                   link="#"
                   onClick={action('clicked')}
                   submodulesClosed={true}
-                >
-                  <Submodule
-                    title="Item 2"
-                    link="#"
-                    onClick={action('clicked')}
-                  />
-                </Module>
-              </Group>
-            </Section>
-            <Section
-              headerLabel="Contractor"
-              headerName="Oakland Medical Center"
-            >
-              <Collapse onClick={action('clicked')} isCollapsed={false} />
-              <Group>
-                <Module
-                  icon="project-management"
-                  title="Item 1"
-                  link="#"
-                  onClick={action('clicked')}
-                  submodulesClosed={false}
                 >
                   <Submodule
                     title="Item 2"

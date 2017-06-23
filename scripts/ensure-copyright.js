@@ -55,21 +55,17 @@ function reportResult(result) {
   }
 }
 
-function fdReadFirstN(fd, nBytes) {
-
-}
+function fdReadFirstN(fd, nBytes) {}
 
 function hasCopyrightNotice(file) {
   const copyrightLen = LICENCE.length;
   // 100 seems enough to compensate for extra whitespace or other comments
   // in front of the notice - eslint-env-jest, for example.
   const fd = fs.openSync(file, 'r');
-  var buf = new Buffer(copyrightLen+100);
-  fs.readSync(fd, buf, 0, copyrightLen+98);
+  var buf = new Buffer(copyrightLen + 100);
+  fs.readSync(fd, buf, 0, copyrightLen + 98);
 
-  const fileContent = buf
-    .toString()
-    .replace(spaceCrunch, ' ');
+  const fileContent = buf.toString().replace(spaceCrunch, ' ');
   return fileContent.indexOf(LICENCE) !== -1;
 }
 

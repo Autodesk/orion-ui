@@ -17,16 +17,18 @@ limitations under the License.
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { select, boolean } from '@storybook/addon-knobs';
+import { select, boolean, text } from '@storybook/addon-knobs';
 
 import GlobalNav from './GlobalNav';
 
 const SideNav = GlobalNav.SideNav;
+const Search = GlobalNav.SideNav.Search;
 const SectionList = GlobalNav.SideNav.SectionList;
 const Section = GlobalNav.SideNav.SectionList.Section;
-const Collapse = GlobalNav.SideNav.SectionList.Section.Collapse;
+const Collapse = GlobalNav.SideNav.SectionList.Section.SectionCollapse;
 const Group = GlobalNav.SideNav.SectionList.Section.Group;
 const Module = GlobalNav.SideNav.SectionList.Section.Group.Module;
+const ModuleCollapse = GlobalNav.SideNav.SectionList.Section.Group.Module.ModuleCollapse;
 const Submodule = GlobalNav.SideNav.SectionList.Section.Group.Module.Submodule;
 const TopNav = GlobalNav.TopNav;
 const Profile = TopNav.Profile;
@@ -270,52 +272,130 @@ storiesOf('GlobalNav', module)
       </GlobalNav>
     );
   })
-  .addWithInfo('w sideNavOpen', ``, () => {
+  .addWithInfo('w sideNavOpen with query', ``, () => {
+    const sideNavOpen = boolean('sideNavOpen', true);
+    const query = text('query', 'Field');
+    return (
+      <GlobalNav sideNavOpen={sideNavOpen}>
+        <SideNav>
+          <SectionList>
+            <Section headerLabel="Project" headerName="ThunderStorm">
+              <Group>
+                <Module icon="insight" title="Insight" key={'Insight'}>
+                  <Submodule
+                    title="Overview"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Risk"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Risk"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
+              </Group>
+            </Section>
+            <Section headerLabel="Account" headerName="Global Construction">
+              <Group>
+                <Module
+                  icon="field"
+                  title="Field"
+                  link="#"
+                  onClick={action('clicked')}
+                  submodulesClosed={false}
+                >
+                  <Submodule
+                    title="Checklists Templates"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Issues Templates"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
+                <Module
+                  icon="field"
+                  title="Field"
+                  link="#"
+                  onClick={action('clicked')}
+                  submodulesClosed={false}
+                />
+              </Group>
+            </Section>
+          </SectionList>
+          <Search placeholder="Find module or submodule" query={query} />
+        </SideNav>
+        <TopNav logo={logo} />
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
+      </GlobalNav>
+    );
+  })
+  .addWithInfo('w sideNavOpen without query', ``, () => {
     const sideNavOpen = boolean('sideNavOpen', true);
     return (
       <GlobalNav sideNavOpen={sideNavOpen}>
         <SideNav>
           <SectionList>
             <Section headerLabel="Project" headerName="ThunderStorm">
-              <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
-                <Module
-                  icon="project-management"
-                  title="Item 1"
-                  link="#"
-                  onClick={action('clicked')}
-                  submodulesClosed={true}
-                >
+                <Module icon="insight" title="Insight" key={'Insight'}>
                   <Submodule
-                    title="Item 2"
+                    title="Overview"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Risk"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Risk"
                     link="#"
                     onClick={action('clicked')}
                   />
                 </Module>
               </Group>
             </Section>
-            <Section
-              headerLabel="Contractor"
-              headerName="Oakland Medical Center"
-            >
-              <Collapse onClick={action('clicked')} isCollapsed={false} />
+            <Section headerLabel="Account" headerName="Global Construction">
               <Group>
                 <Module
-                  icon="project-management"
-                  title="Item 1"
+                  icon="field"
+                  title="Field"
                   link="#"
                   onClick={action('clicked')}
                   submodulesClosed={false}
                 >
                   <Submodule
-                    title="Item 2"
+                    title="Checklists Templates"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Issues Templates"
                     link="#"
                     onClick={action('clicked')}
                   />
                 </Module>
+                <Module
+                  icon="field"
+                  title="Field"
+                  link="#"
+                  onClick={action('clicked')}
+                  submodulesClosed={false}
+                />
               </Group>
             </Section>
           </SectionList>
+          <Search placeholder="Find module or submodule" />
         </SideNav>
         <TopNav logo={logo} />
         <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
@@ -347,14 +427,14 @@ storiesOf('GlobalNav', module)
               <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
                 <Module
-                  icon="project-management"
-                  title="Item 1"
+                  icon="field"
+                  title="Field"
                   link="#"
                   onClick={action('clicked')}
-                  submodulesClosed={true}
+                  submodulesClosed={false}
                 >
                   <Submodule
-                    title="Item 2"
+                    title="Checklists Templates"
                     link="#"
                     onClick={action('clicked')}
                   />
@@ -368,14 +448,14 @@ storiesOf('GlobalNav', module)
               <Collapse onClick={action('clicked')} isCollapsed={false} />
               <Group>
                 <Module
-                  icon="project-management"
-                  title="Item 1"
+                  icon="field"
+                  title="Field"
                   link="#"
                   onClick={action('clicked')}
                   submodulesClosed={false}
                 >
                   <Submodule
-                    title="Item 2"
+                    title="Checklists Templates"
                     link="#"
                     onClick={action('clicked')}
                   />
@@ -420,45 +500,46 @@ storiesOf('GlobalNav', module)
       </GlobalNav>
     );
   })
-  .addWithInfo('? empty Group in SideNav', ``, () => {
+  .addWithInfo('empty Group in SideNav', ``, () => {
     const sideNavOpen = boolean('sideNavOpen', true);
     return (
       <GlobalNav sideNavOpen={sideNavOpen}>
         <SideNav>
           <SectionList>
             <Section headerLabel="Project" headerName="ThunderStorm">
-              <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
-                <Module
-                  icon="project-management"
-                  title="Item 1"
-                  link="#"
-                  onClick={action('clicked')}
-                  submodulesClosed={true}
-                >
+                <Module icon="insight" title="Insight" key={'Insight'}>
                   <Submodule
-                    title="Item 2"
+                    title="Overview"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Risk"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Risk"
                     link="#"
                     onClick={action('clicked')}
                   />
                 </Module>
               </Group>
             </Section>
-            <Section
-              headerLabel="Contractor"
-              headerName="Oakland Medical Center"
-            >
-              <Collapse onClick={action('clicked')} isCollapsed={false} />
+            <Section headerLabel="Account" headerName="Global Construction">
               <Group />
             </Section>
           </SectionList>
+          <Search placeholder="Find module or submodule" />
         </SideNav>
         <TopNav logo={logo} />
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
         <Slot>{LONG_COPY}</Slot>
       </GlobalNav>
     );
   })
-  .addWithInfo('? empty Section in SideNav', ``, () => {
+  .addWithInfo('empty Section in SideNav', ``, () => {
     const sideNavOpen = boolean('sideNavOpen', true);
     return (
       <GlobalNav sideNavOpen={sideNavOpen}>
@@ -468,14 +549,14 @@ storiesOf('GlobalNav', module)
               <Collapse onClick={action('clicked')} isCollapsed={true} />
               <Group>
                 <Module
-                  icon="project-management"
-                  title="Item 1"
+                  icon="field"
+                  title="Field"
                   link="#"
                   onClick={action('clicked')}
-                  submodulesClosed={true}
+                  submodulesClosed={false}
                 >
                   <Submodule
-                    title="Item 2"
+                    title="Checklists Templates"
                     link="#"
                     onClick={action('clicked')}
                   />
@@ -488,10 +569,8 @@ storiesOf('GlobalNav', module)
             />
           </SectionList>
         </SideNav>
-        <TopNav logo={logo} />
-        <Slot>
-          {LONG_COPY}
-        </Slot>
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
       </GlobalNav>
     );
   })

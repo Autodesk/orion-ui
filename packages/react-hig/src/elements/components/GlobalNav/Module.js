@@ -20,17 +20,25 @@ import HIGElement from '../../HIGElement';
 import HIGNodeList from '../../HIGNodeList';
 import HIGChildValidator from '../../HIGChildValidator';
 import SubmoduleComponent, { Submodule } from './Submodule';
+import ModuleCollapseComponent, { ModuleCollapse } from './ModuleCollapse';
 
 export class Module extends HIGElement {
   constructor(HIGConstructor, initialProps) {
     super(HIGConstructor, initialProps);
-    this.modules = new HIGNodeList({
+    this.submodules = new HIGNodeList({
       type: Submodule,
       HIGConstructor: this.hig.partials.Submodule,
       onAdd: (instance, beforeInstance) => {
         this.hig.addSubmodule(instance, beforeInstance);
       }
     });
+    this.state = {
+      title: initialProps.title,
+      query: initialProps.query,
+      expanded: false
+    };
+
+    this.toggleCollapsed = this.toggleCollapsed.bind(this);
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
@@ -41,22 +49,88 @@ export class Module extends HIGElement {
     };
 
     this.commitUpdateWithMapping(updatePayload, mapping);
+
+    if (Object.keys(updatePayload).includes('title')) {
+      this.state.title = updatePayload.title;
+    }
+
+    if (Object.keys(updatePayload).includes('query')) {
+      this.state.query = updatePayload.query;
+      this._render();
+    }
+
+    if (Object.keys(updatePayload).includes('expanded')) {
+      this.state.expanded = updatePayload.expanded;
+      this._render();
+    }
+  }
+
+  toggleCollapsed() {
+    this.state.expanded = !this.state.expanded;
+    this._render();
   }
 
   componentDidMount() {
-    this.modules.componentDidMount();
+    this.submodules.componentDidMount();
+    if (this.submodules.length > 0) {
+      this.collapse = new ModuleCollapse(this.hig.partials.Collapse, {
+        isCollapsed: !this.state.expanded
+      });
+      this.hig.addCollapse(this.collapse.hig);
+      this.collapse.mount();
+      this.collapse.hig.onClick(this.toggleCollapsed);
+    }
+    this._render();
   }
 
   createElement(ElementConstructor, props) {
-    return this.modules.createElement(ElementConstructor, props);
+    return this.submodules.createElement(ElementConstructor, props);
   }
 
   insertBefore(instance, insertBeforeIndex) {
-    this.modules.insertBefore(instance, insertBeforeIndex);
+    this.submodules.insertBefore(instance, insertBeforeIndex);
   }
 
   removeChild(instance) {
-    this.modules.removeChild(instance);
+    this.submodules.removeChild(instance);
+  }
+
+  matches(query) {
+    if (!query) {
+      return true;
+    }
+    return this.state.title.toLowerCase().match(query.toLowerCase());
+  }
+
+  isVisible() {
+    return this.state.isVisible;
+  }
+
+  _render() {
+    if (this.collapse) {
+      this.collapse.commitUpdate(['isCollapsed', !this.state.expanded]);
+    }
+
+    const childMatches = this.submodules.map(submodule => {
+      submodule.commitUpdate({
+        query: this.state.query,
+        expanded: this.state.expanded
+      });
+
+      return submodule.isVisible();
+    });
+
+    if (
+      childMatches.some(m => m) ||
+      this.matches(this.state.query) ||
+      !this.state.query
+    ) {
+      this.hig.show();
+      this.state.isVisible = true;
+    } else {
+      this.hig.hide();
+      this.state.isVisible = false;
+    }
   }
 }
 
@@ -66,14 +140,9 @@ ModuleComponent.propTypes = {
   icon: PropTypes.string,
   title: PropTypes.string,
   link: PropTypes.string,
-  show: PropTypes.func,
-  hide: PropTypes.func,
-  activate: PropTypes.func,
-  deactivate: PropTypes.func,
-  showSubmodules: PropTypes.func,
-  hideSubmodules: PropTypes.func,
-  submodulesClosed: PropTypes.bool,
-  addSubmodule: PropTypes.func,
+  active: PropTypes.bool,
+  query: PropTypes.string,
+  expanded: PropTypes.bool,
   onClick: PropTypes.func,
   onHover: PropTypes.func,
   children: HIGChildValidator([SubmoduleComponent])
@@ -101,24 +170,12 @@ ModuleComponent.__docgenInfo = {
       description: 'hide (used for filtering)'
     },
 
-    activate: {
-      description: 'activates the module'
+    active: {
+      description: '[Boolean] Designates that the module is active'
     },
 
-    deactivate: {
-      description: 'deactivates the module'
-    },
-
-    showSubmodules: {
-      description: 'show the submodules'
-    },
-
-    hideSubmodules: {
-      description: 'hide the submodules'
-    },
-
-    addSubmodule: {
-      description: 'add submodule'
+    expanded: {
+      description: '[Boolean] When true shows submodules, when false hides them'
     },
 
     onClick: {
@@ -136,5 +193,6 @@ ModuleComponent.__docgenInfo = {
 };
 
 ModuleComponent.Submodule = SubmoduleComponent;
+ModuleComponent.ModuleCollapse = ModuleCollapseComponent;
 
 export default ModuleComponent;

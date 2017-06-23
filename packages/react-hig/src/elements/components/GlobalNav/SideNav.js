@@ -14,21 +14,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+import * as PropTypes from 'prop-types';
 import createComponent from '../../../adapters/createComponent';
 import HIGElement from '../../HIGElement';
 import HIGChildValidator from '../../HIGChildValidator';
 
 import SectionListComponent, { SectionList } from './SectionList';
 import LinkListComponent, { LinkList } from './LinkList';
+import SearchComponent, { Search } from './Search';
 
 export class SideNav extends HIGElement {
   componentDidMount() {
+    this.filter = this.filter.bind(this);
+
     if (this.sections) {
       this.sections.mount();
     }
 
     if (this.links) {
       this.links.mount();
+    }
+
+    if (this.search) {
+      this.hig.addSearch(this.search.hig);
+      this.search.mount();
+      this.search.hig.onInput(this.filter);
+      this.search.hig.onClearIconClick(this.filter);
     }
   }
 
@@ -38,6 +49,8 @@ export class SideNav extends HIGElement {
         return new SectionList(this.hig); // special case hand over the hig instance
       case LinkList:
         return new LinkList(this.hig); // special case hand over the hig instance
+      case Search:
+        return new Search(this.hig.partials.Search, props);
       default:
         throw new Error(`Unknown type ${ElementConstructor.name}`);
     }
@@ -64,6 +77,17 @@ export class SideNav extends HIGElement {
           instance.componentDidMount();
         }
       }
+    } else if (instance instanceof Search) {
+      if (this.search) {
+        throw new Error('only one Search is allowed');
+      } else {
+        this.search = instance;
+
+        if (this.mounted) {
+          instance.componentDidMount();
+          instance.hig.onInput(this.filter);
+        }
+      }
     } else {
       throw new Error('unknown type');
     }
@@ -82,14 +106,33 @@ export class SideNav extends HIGElement {
       this.links = null;
     }
 
+    if (instance instanceof Search) {
+      this.search = null;
+    }
+
     instance.unmount();
+  }
+
+  filter(event) {
+    const query = event.target.value;
+    this.sections.forEach(section => {
+      section.commitUpdate(['query', query]);
+    });
   }
 }
 
 const SideNavComponent = createComponent(SideNav);
 
 SideNavComponent.propTypes = {
-  children: HIGChildValidator([SectionListComponent, LinkListComponent])
+  addSection: PropTypes.func,
+  addLink: PropTypes.func,
+  addSearch: PropTypes.func,
+  setCopyright: PropTypes.func,
+  children: HIGChildValidator([
+    SectionListComponent,
+    LinkListComponent,
+    SearchComponent
+  ])
 };
 
 SideNavComponent.__docgenInfo = {
@@ -102,5 +145,6 @@ SideNavComponent.__docgenInfo = {
 
 SideNavComponent.SectionList = SectionListComponent;
 SideNavComponent.LinkList = LinkListComponent;
+SideNavComponent.Search = SearchComponent;
 
 export default SideNavComponent;

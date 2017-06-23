@@ -68,8 +68,10 @@ export default class HIGNodeList {
     if (this.mounted) {
       if (beforeChild) {
         this.onAdd(instance.hig, beforeChild.hig);
+        instance.mount();
       } else {
         this.onAdd(instance.hig);
+        instance.mount();
       }
     }
   }
@@ -108,5 +110,17 @@ export default class HIGNodeList {
       default:
         throw new Error(`Unknown type ${ElementConstructor.name}`);
     }
+  }
+
+  forEach(handler) {
+    this.nodes.forEach(handler);
+  }
+
+  map(handler) {
+    return this.nodes.map(handler);
+  }
+
+  get length() {
+    return this.nodes.length;
   }
 }

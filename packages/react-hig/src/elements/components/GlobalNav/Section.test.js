@@ -19,11 +19,13 @@ import * as HIG from 'hig.web';
 import React from 'react';
 
 import GlobalNav from './GlobalNav';
+import SectionList from './SectionList';
 import Section from './Section';
 import Group from './Group';
 import Module from './Module';
 import Submodule from './Submodule';
-import Collapse from './Collapse';
+import SectionCollapse from './SectionCollapse';
+import SideNav from './SideNav';
 
 const SubmoduleContext = props => {
   return (
@@ -31,7 +33,7 @@ const SubmoduleContext = props => {
       <GlobalNav.SideNav>
         <GlobalNav.SideNav.SectionList>
           <Section headerLabel="Project" headerName="ThunderStorm">
-            <Collapse isCollapsed={props.isCollapsed} />
+            <SectionCollapse isCollapsed={props.isCollapsed} />
             <Group>
               <Module
                 icon="gear"
@@ -77,7 +79,11 @@ function higContext(defaults) {
 
   const higSection = new higSideNav.partials.Section(defaults);
 
+  const collapse1 = new higSection.partials.Collapse({});
+
   higSideNav.addSection(higSection);
+
+  higSection.addCollapse(collapse1);
 
   return { higNav, higSideNav, higSection, higContainer };
 }
@@ -211,6 +217,9 @@ describe('<Section>', () => {
       var group2 = new higSection.partials.Group();
       higSection.addGroup(group2);
 
+      group1.hide();
+      group2.hide();
+
       const reactContainer = document.createElement('div');
 
       const wrapper = mount(
@@ -241,9 +250,12 @@ describe('<Section>', () => {
 
       var group2 = new higSection.partials.Group();
       higSection.addGroup(group2);
+      group2.hide();
 
       // ADD GROUP 1 before GROUP 2
       higSection.addGroup(group1, group2);
+      group1.hide();
+      group2.hide();
 
       class CustomComponent extends React.Component {
         constructor(props) {
@@ -301,7 +313,7 @@ describe('<Section>', () => {
 
       expect(console.error).toBeCalledWith(
         expect.stringMatching(
-          /'div' is not a valid child of Section. Children should be of type 'Group, Collapse'/
+          /'div' is not a valid child of Section. Children should be of type 'Group, SectionCollapse'/
         )
       );
     });
@@ -317,31 +329,65 @@ describe('<Section>', () => {
 
       expect(console.error).toBeCalledWith(
         expect.stringMatching(
-          /'Hello world!' is not a valid child of Section. Children should be of type 'Group, Collapse'/
+          /'Hello world!' is not a valid child of Section. Children should be of type 'Group, SectionCollapse'/
         )
       );
     });
   });
+  describe('Section with Query', () => {
+    const Context = props => {
+      return (
+        <GlobalNav>
+          <SideNav>
+            <SectionList>
+              <Section
+                headerLabel="Project"
+                headerName="Thunderstor"
+                query={props.query}
+              >
+                <Group>
+                  <Module title={props.moduleTitle}>
+                    <Submodule title={props.submoduleTitle1} />
+                    <Submodule title={props.submoduleTitle2} />
+                  </Module>
+                </Group>
+              </Section>
 
-  describe('submodules', () => {
-    it('can show submodules when submodulesCollapsed is false', () => {
-      var props = { isCollapsed: false };
+            </SectionList>
+          </SideNav>
+        </GlobalNav>
+      );
+    };
 
+    function setupReactContext(props) {
       const reactContainer = document.createElement('div');
+      mount(<Context {...props} />, { attachTo: reactContainer });
+      return { reactContainer };
+    }
 
-      const wrapper = mount(<SubmoduleContext {...props} />, {
-        attachTo: reactContainer
-      });
-    });
+    it('shows modules/submodules that correspond to query', () => {
+      const props = {
+        placeholder: 'Search Here',
+        headerLabel: 'Oakland Medical Center',
+        headerName: 'Thunderstorm',
+        moduleTitle: 'Document Workflow',
+        submoduleTitle1: 'Document',
+        submoduleTitle2: 'Workflow',
+        query: 'Document'
+      };
 
-    it('can show submodules when submodulesCollapsed is true', () => {
-      var props = { isCollapsed: true };
+      const { reactContainer } = setupReactContext(props);
 
-      const reactContainer = document.createElement('div');
+      var hiddenSubmodule = reactContainer.getElementsByClassName(
+        'hig__global-nav__side-nav__section__group__module__submodule--hide'
+      );
 
-      const wrapper = mount(<SubmoduleContext {...props} />, {
-        attachTo: reactContainer
-      });
+      var submodule = reactContainer.getElementsByClassName(
+        'hig__global-nav__side-nav__section__group__module__submodule'
+      );
+
+      expect(hiddenSubmodule.length).toEqual(1);
+      expect(submodule.length).toEqual(2);
     });
   });
 });

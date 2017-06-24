@@ -41,6 +41,7 @@ const Context = props => {
           name={props.name}
           email={props.email}
           signOutLabel={props.signOutLabel}
+          signOutLink={props.signOutLink}
           onSignOutClick={onSignoutClick}
           profileSettingsLabel={props.profileSettingsLabel}
           profileSettingsLink={props.profileSettingsLink}
@@ -83,10 +84,18 @@ describe('<Profile>', () => {
       expect(reactContainer.firstChild.outerHTML).toMatchSnapshot();
     });
   });
+  describe('events handlers', () => {
+    it('It can set onProfileClickOutside', () => {
+      const foo = {
+        onProfileClickOutside: 'PropTypes.func',
+        onSignOutClick: 'PropTypes.func',
+        onProfileImageClick: 'PropTypes.func'
+      };
+    });
+  });
 
   describe('setting and updating props', () => {
     const shex = new SharedExamples(Context, createHigContext);
-
     const configSets = [
       {
         key: 'email',
@@ -123,6 +132,12 @@ describe('<Profile>', () => {
         sampleValue: 'http://www.google.com',
         updateValue: 'http://www.sanrio.com',
         mutator: 'setProfileSettingsLink'
+      },
+      {
+        key: 'signOutLink',
+        sampleValue: '/signout',
+        updateValue: 'http://www.google.com',
+        mutator: 'setSignOutLink'
       }
     ];
 

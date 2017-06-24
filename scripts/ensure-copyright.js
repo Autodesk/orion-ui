@@ -25,9 +25,11 @@ const glob = require('glob');
 
 require('shelljs/global');
 
+const spaceCrunch = /\s+/g;
 const LICENCE = fs
   .readFileSync(path.join(knownPaths.root, 'LICENSE'))
-  .toString();
+  .toString()
+  .replace(spaceCrunch, ' ');
 
 program
   .description('ensures each file has a copyright notice')
@@ -53,8 +55,17 @@ function reportResult(result) {
   }
 }
 
+function fdReadFirstN(fd, nBytes) {}
+
 function hasCopyrightNotice(file) {
-  const fileContent = fs.readFileSync(file).toString();
+  const copyrightLen = LICENCE.length;
+  // 100 seems enough to compensate for extra whitespace or other comments
+  // in front of the notice - eslint-env-jest, for example.
+  const fd = fs.openSync(file, 'r');
+  var buf = new Buffer(copyrightLen + 100);
+  fs.readSync(fd, buf, 0, copyrightLen + 98);
+
+  const fileContent = buf.toString().replace(spaceCrunch, ' ');
   return fileContent.indexOf(LICENCE) !== -1;
 }
 

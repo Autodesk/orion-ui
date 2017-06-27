@@ -119,53 +119,6 @@ class App extends React.Component {
     this.setState({ activeTab: activeTabIndex });
   };
 
-  setActiveProjectOrAccount = activeProjectOrAccountItem => {
-    this.setState({ activeProjectOrAccount: activeProjectOrAccountItem.id });
-    this.setProjectOrAccountTarget(activeProjectOrAccountItem);
-  };
-
-  setProjectOrAccountTarget = targetItem => {
-    if (targetItem.type === 'account') {
-      this.state.accounts.forEach(
-        function(account) {
-          if (account.id === targetItem.id) {
-            this.setState({ projectOrAcccountTarget: account });
-          }
-        }.bind(this)
-      );
-    }
-
-    if (targetItem.type === 'project') {
-      this.state.projects.forEach(
-        function(project) {
-          if (project.id === targetItem.id) {
-            this.setState({ projectOrAcccountTarget: project });
-          }
-        }.bind(this)
-      );
-    }
-  };
-
-  singleProjectOrAccount = () => {
-    // one of these is empty/undefined and the other has only one item
-    var projectsIsEmpty = this.state.projects === undefined ||
-      this.state.projects.length === 0;
-    var accountsIsEmpty = this.state.accounts === undefined ||
-      this.state.accounts.length === 0;
-    if (projectsIsEmpty && !accountsIsEmpty) {
-      var accountsHasOneItem = this.state.accounts.length === 1;
-    } else if (!projectsIsEmpty && accountsIsEmpty) {
-      var projectsHasOneItem = this.state.projects.length === 1;
-    } else {
-      accountsHasOneItem = (projectsHasOneItem = false);
-    }
-    if (accountsHasOneItem || projectsHasOneItem) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   render() {
     return (
       <div>
@@ -236,52 +189,31 @@ class App extends React.Component {
             logoLink="http://autodesk.com"
             onHamburgerClick={this.toggleSideNav}
           >
-            {this.singleProjectOrAccount()
-              ? <ProjectAccountSwitcher
-                  activeLabel={this.state.projectOrAcccountTarget.label}
-                  activeImage={this.state.projectOrAcccountTarget.image}
-                  activeType={this.state.projectOrAcccountTarget.type}
-                  hideProjectAccountFlyout={true}
-                />
-              : <ProjectAccountSwitcher
-                  activeLabel={this.state.projectOrAcccountTarget.label}
-                  activeImage={this.state.projectOrAcccountTarget.image}
-                  activeType={this.state.projectOrAcccountTarget.type}
-                  hideProjectAccountFlyout={false}
-                >
-                  {this.state.projects.map((project, i) => {
-                    return (
-                      <Project
-                        image={project.image}
-                        label={project.label}
-                        key={project.id}
-                        active={
-                          this.state.activeProjectOrAccount === project.id
-                        }
-                        onClick={this.setActiveProjectOrAccount.bind(this, {
-                          id: project.id,
-                          type: project.type
-                        })}
-                      />
-                    );
-                  })}
-                  {this.state.accounts.map((account, i) => {
-                    return (
-                      <Account
-                        image={account.image}
-                        label={account.label}
-                        key={account.id}
-                        active={
-                          this.state.activeProjectOrAccount === account.id
-                        }
-                        onClick={this.setActiveProjectOrAccount.bind(this, {
-                          id: account.id,
-                          type: account.type
-                        })}
-                      />
-                    );
-                  })}
-                </ProjectAccountSwitcher>}
+            <ProjectAccountSwitcher
+              onAccountChange={account =>
+                console.log(`Account selected`, account)}
+              onProjectChange={project =>
+                console.log(`Project selected`, project)}
+            >
+              {this.state.projects.map((project, i) => {
+                return (
+                  <Project
+                    image={project.image}
+                    label={project.label}
+                    key={project.id}
+                  />
+                );
+              })}
+              {this.state.accounts.map((account, i) => {
+                return (
+                  <Account
+                    image={account.image}
+                    label={account.label}
+                    key={account.id}
+                  />
+                );
+              })}
+            </ProjectAccountSwitcher>
 
             <Shortcut icon="gear" title="Gears for Fears" link="/gears" />
 

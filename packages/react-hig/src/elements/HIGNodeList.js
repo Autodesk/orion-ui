@@ -112,6 +112,10 @@ export default class HIGNodeList {
     }
   }
 
+  get length() {
+    return this.nodes.length;
+  }
+
   forEach(handler) {
     this.nodes.forEach(handler);
   }
@@ -120,7 +124,7 @@ export default class HIGNodeList {
     return this.nodes.map(handler);
   }
 
-  get length() {
-    return this.nodes.length;
+  find(callback) {
+    return this.nodes.find(callback);
   }
 }

@@ -20,31 +20,46 @@ import HIGElement from '../../../HIGElement';
 import createComponent from '../../../../adapters/createComponent';
 
 export class Account extends HIGElement {
+  constructor(HIGConstructor, initialProps) {
+    super(HIGConstructor, initialProps);
+
+    this.props = { ...initialProps };
+    this.callOnActivateCallback = this.callOnActivateCallback.bind(this);
+  }
+
+  componentDidMount() {
+    this.hig.onClick(this.callOnActivateCallback);
+  }
+
   commitUpdate(updatePayload, oldProps, newProp) {
-    const mapping = {
-      image: 'setImage',
-      label: 'setLabel'
-    };
+    this.props = { ...this.props, ...updatePayload };
 
-    for (let i = 0; i < updatePayload.length; i += 2) {
-      const propKey = updatePayload[i];
-      const propValue = updatePayload[i + 1];
+    this.processUpdateProps(updatePayload)
+      .mapToHIGFunctions({
+        image: 'setImage',
+        label: 'setLabel'
+      })
+      .mapToHIGEventListeners(['onClick'])
+      .handle('active', value => {
+        if (value) {
+          this.hig.activate();
+          this.callOnActivateCallback();
+        } else {
+          this.hig.deactivate();
+        }
+      });
+  }
 
-      switch (propKey) {
-        case mapping[propKey]:
-          this.hig[mapping[propKey]](propValue);
-          break;
-        case 'active':
-          if (propValue) {
-            this.hig.activate();
-          } else {
-            this.hig.deactivate();
-          }
-          break;
-        default:
-          this.commitPropChange(propKey, propValue);
-      }
+  onActivate(callback) {
+    this._onActivate = callback;
+  }
+
+  callOnActivateCallback() {
+    if (!this._onActivate) {
+      return;
     }
+
+    this._onActivate(this);
   }
 }
 

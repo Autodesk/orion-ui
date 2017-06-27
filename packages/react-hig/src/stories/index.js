@@ -20,3 +20,4 @@ import '../elements/basics/Button.story';
 import '../elements/components/GlobalNav/TopNav/Search.story.js';
 import '../elements/components/GlobalNav/TopNav/Profile.story';
 import '../elements/components/GlobalNav/GlobalNav.story';
+import '../elements/components/GlobalNav/TopNav/ProjectAccountSwitcher.story';

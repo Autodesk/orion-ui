@@ -43,54 +43,40 @@ export class ProjectAccountSwitcher extends HIGElement {
       }
     });
 
-    ['openFlyout', 'closeFlyout'].forEach(fn => {
+    [
+      '_render',
+      'openFlyout',
+      'closeFlyout',
+      'setActiveAccount',
+      'setActiveProject'
+    ].forEach(fn => {
       this[fn] = this[fn].bind(this);
     });
+
+    this.props = { ...initialProps };
+    this.state = {};
   }
 
   componentDidMount() {
     this.accounts.componentDidMount();
     this.projects.componentDidMount();
 
-    if (this.initialProps.isOpen === true) {
-      this.hig.open();
-    }
-
-    if (this.initialProps.hideProjectAccountFlyout) {
-      this.hig.hideCaret();
-    }
-
-    this.hig.onClick(this.openFlyout);
-    this.hig.onClickOutside(this.closeFlyout);
-  }
-
-  openFlyout() {
-    this.hig.open();
-  }
-
-  closeFlyout() {
-    this.hig.close();
+    this.commitUpdate(this.props);
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
-    const mapping = {
-      activeImage: 'setActiveImage',
-      activeLabel: 'setActiveLabel',
-      activeType: 'setActiveType'
-    };
-
-    const openIndex = updatePayload.indexOf('isOpen');
-    if (openIndex >= 0) {
-      const [openKey, openSetting] = updatePayload.splice(openIndex, 2);
-      if (openKey) {
-        if (openSetting === true) {
-          this.hig.open();
-        } else {
-          this.hig.close();
-        }
-      }
-    }
-    this.commitUpdateWithMapping(updatePayload, mapping);
+    this.processUpdateProps(updatePayload)
+      .mapToHIGEventListeners(['onClick', 'onClickOutside'])
+      .handle('open', value => {
+        this.props.open = value;
+      })
+      .handle('onAccountChange', value => {
+        this.props.onAccountChange = value;
+      })
+      .handle('onProjectChange', value => {
+        this.props.onProjectChange = value;
+      })
+      .then(this._render);
   }
 
   createElement(ElementConstructor, props) {
@@ -107,10 +93,93 @@ export class ProjectAccountSwitcher extends HIGElement {
   insertBefore(instance, beforeChild = {}) {
     if (instance instanceof Account) {
       this.accounts.insertBefore(instance);
+      instance.onActivate(this.setActiveAccount);
+      if (this.state.activeAccount === undefined) {
+        this.state.activeAccount = instance;
+      }
     } else if (instance instanceof Project) {
       this.projects.insertBefore(instance);
+      instance.onActivate(this.setActiveProject);
+      if (this.state.activeProject === undefined) {
+        this.state.activeProject = instance;
+      }
     } else {
-      throw new Error('unknown type');
+      throw new Error(
+        `${this.constructor.name} cannot have a child of type ${instance.constructor.name}`
+      );
+    }
+  }
+
+  openFlyout() {
+    this.state.open = true;
+    this._render();
+  }
+
+  closeFlyout() {
+    this.state.open = false;
+    this._render();
+  }
+
+  setActiveAccount(account) {
+    this.state.activeAccount = account;
+    this.state.open = false;
+    this._render();
+    if (this.props.onAccountChange) {
+      this.props.onAccountChange(account);
+    }
+  }
+
+  setActiveProject(project) {
+    this.state.activeProject = project;
+    this.state.open = false;
+    this._render();
+    if (this.props.onProjectChange) {
+      this.props.onProjectChange(project);
+    }
+  }
+
+  _render() {
+    let open = this.props.open;
+    if (open === undefined) {
+      open = this.state.open;
+    }
+    open ? this.hig.open() : this.hig.close();
+
+    if (this.projects.length > 1 || this.accounts.length > 1) {
+      this.hig.showCaret();
+      this.configureHIGEventListener('onClick', this.openFlyout);
+      this.configureHIGEventListener('onClickOutside', this.closeFlyout);
+    } else {
+      this.hig.hideCaret();
+      this.configureHIGEventListener('onClick', undefined);
+      this.configureHIGEventListener('onClickOutside', undefined);
+    }
+
+    this.accounts.forEach(account => {
+      account === this.state.activeAccount
+        ? account.hig.activate()
+        : account.hig.deactivate();
+    });
+    this.projects.forEach(project => {
+      project === this.state.activeProject
+        ? project.hig.activate()
+        : project.hig.deactivate();
+    });
+
+    if (this.state.activeAccount && this.state.activeProject) {
+      this.hig.setActiveLabel(
+        `${this.state.activeAccount.props.label} / ${this.state.activeProject.props.label}`
+      );
+      this.hig.setActiveImage(this.state.activeProject.props.image);
+      this.hig.setActiveType('project');
+    } else if (this.state.activeAccount) {
+      this.hig.setActiveLabel(this.state.activeAccount.props.label);
+      this.hig.setActiveImage(this.state.activeAccount.props.image);
+      this.hig.setActiveType('account');
+    } else if (this.state.activeProject) {
+      this.hig.setActiveLabel(this.state.activeProject.props.label);
+      this.hig.setActiveImage(this.state.activeProject.props.image);
+      this.hig.setActiveType('project');
     }
   }
 }
@@ -118,48 +187,22 @@ export class ProjectAccountSwitcher extends HIGElement {
 const ProjectAccountSwitcherComponent = createComponent(ProjectAccountSwitcher);
 
 ProjectAccountSwitcherComponent.propTypes = {
-  isOpen: PropTypes.bool,
-  hideProjectAccountFlyout: PropTypes.bool,
-  hideCaret: PropTypes.func,
-  activeLabel: PropTypes.string,
-  activeImage: PropTypes.string,
-  activeType: PropTypes.string,
-  onClickOutside: PropTypes.func,
-  onClick: PropTypes.func,
+  open: PropTypes.bool,
+  onAccountChange: PropTypes.func,
+  onProjectChange: PropTypes.func,
   children: HIGChildValidator([AccountComponent, ProjectComponent])
 };
 
 ProjectAccountSwitcherComponent.__docgenInfo = {
   props: {
-    activeLabel: {
-      description: 'sets {String} the label displayed in the top nav'
-    },
-    activeImage: {
-      description: 'sets {String} the image displayed in the top nav'
-    },
-    activeType: {
-      description: 'sets the {String} type of the item displayed in the top nav'
-    },
-    addAccount: {
-      description: '{func} pass in an instance of a ProjectAccountSwitcher Account'
-    },
-    addProject: {
-      description: '{func} pass in an instance of a ProjectAccountSwitcher Project'
-    },
     open: {
-      description: '{func} opens the project/account switcher'
+      description: '{bool} opens the project/account switcher'
     },
-    close: {
-      description: '{func} closes the project/account switcher'
+    onAccountChange: {
+      description: 'calls the provided callback when an account is activated in the switcher'
     },
-    removeCaretFromTarget: {
-      description: '{func} removes caret from Target in the project/account switcher'
-    },
-    onClickOutside: {
-      description: '{func} calls the provided callback when the switcher is open and the user clicks outside the switcher'
-    },
-    onClick: {
-      description: '{func} calls the provided callback when user clicks on the switcher in the top nav'
+    onProjectChange: {
+      description: 'calls the provided callback when a project is activated in the switcher'
     },
     children: {
       description: 'support adding Project and Account'

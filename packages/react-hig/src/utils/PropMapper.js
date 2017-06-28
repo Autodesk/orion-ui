@@ -16,45 +16,39 @@ limitations under the License.
 */
 
 export default class PropMapper {
-  constructor(props, instance) {
-    this.props = this.toPropsArray(props);
+  constructor(updatedProps, instance) {
+    this.props = this.toPropsArray(updatedProps);
     this.instance = instance;
     this.hig = instance.hig;
-    this.accessedProps = new Set();
-
-    ['validate'].forEach(fn => {
-      this[fn] = this[fn].bind(this);
-    });
-
-    setTimeout(this.validate, 0);
+    this.instance.props = Object.assign(
+      {},
+      instance.props,
+      this.toPropsObject(this.props)
+    );
   }
 
   mapToHIGFunctions(mapping) {
     Object.keys(mapping).forEach(propKey => {
-      this.accessedProps.add(propKey);
-
       const higKey = mapping[propKey];
       this.handle(propKey, value => this.hig[higKey](value));
     });
     return this;
   }
 
-  mapToHIGEventListeners(props) {
-    props.forEach(propKey => {
-      this.accessedProps.add(propKey);
-
-      this.instance.configureHIGEventListener(propKey, props[propKey]);
+  mapToHIGEventListeners(propKeys) {
+    propKeys.forEach(propKey => {
+      this.handle(propKey, value => {
+        this.instance.configureHIGEventListener(propKey, value);
+      });
     });
     return this;
   }
 
-  handle(prop, callback) {
-    this.accessedProps.add(prop);
-
-    const propIndex = this.props.indexOf(prop);
+  handle(propKey, handleValue) {
+    const propIndex = this.props.indexOf(propKey);
     if (propIndex >= 0) {
-      const value = this.props.splice(propIndex, 2)[1];
-      callback(value);
+      const value = this.props[propIndex + 1];
+      handleValue(value);
     }
     return this;
   }
@@ -62,24 +56,6 @@ export default class PropMapper {
   then(callback) {
     callback(this.props);
     return this;
-  }
-
-  validate() {
-    const propKeys = this.props.filter((val, i) => {
-      return i % 2 === 0; // index is an even number
-    });
-    let difference = new Array(
-      ...propKeys.filter(prop => !this.accessedProps.has(prop))
-    );
-    difference = difference.filter(prop => {
-      return prop !== 'children';
-    });
-
-    if (difference.length > 0) {
-      console.warn(
-        `Orion ${this.hig.constructor.name} does not handle "${difference.join('", "')}"`
-      );
-    }
   }
 
   toPropsArray(props) {
@@ -93,5 +69,16 @@ export default class PropMapper {
       },
       []
     );
+  }
+
+  toPropsObject(propsArray) {
+    const propsObject = {};
+    for (let i = 0; i < propsArray.length; i += 2) {
+      const propKey = propsArray[i];
+      const propValue = propsArray[i + 1];
+
+      propsObject[propKey] = propValue;
+    }
+    return propsObject;
   }
 }

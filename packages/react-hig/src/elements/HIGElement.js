@@ -26,6 +26,7 @@ import PropMapper from '../utils/PropMapper';
 export default class HIGElement {
   constructor(HIGConstructor, initialProps) {
     this.initialProps = initialProps;
+    this.props = initialProps;
 
     const { defaults, events, possibleEvents } = partitionProps(
       initialProps,
@@ -53,7 +54,7 @@ export default class HIGElement {
     this.mounted = true;
 
     Object.keys(this.events).forEach(eventName => {
-      this.setupEvent(eventName, this.events[eventName]);
+      this.addHIGEventListener(eventName, this.events[eventName]);
     });
 
     this.componentDidMount();

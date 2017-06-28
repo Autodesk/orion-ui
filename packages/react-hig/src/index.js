@@ -53,16 +53,7 @@ class App extends React.Component {
     this.state = {
       buttonLabel: 'Toggle HIG Menu',
       fn: false,
-      group1: true,
-      group3: true,
-      open: false,
-      profileFlyoutOpen: false,
-      activeTab: 0,
-      activeProjectOrAccount: 0,
-      projectOrAcccountTarget: topNavFixtures.accountList()[0] ||
-        topNavFixtures.projectList()[0],
       tabs: [{ label: 'One', id: 0 }, { label: 'Two', id: 1 }],
-      searchPlaceholder: 'search for...',
       projects: topNavFixtures.projectList(),
       accounts: topNavFixtures.accountList()
     };
@@ -75,20 +66,12 @@ class App extends React.Component {
     });
   };
 
-  handleInputChange = event => {
-    console.log("I'm listening to an input change");
+  handleTopNavSearchInputChange = event => {
+    console.log('TopNav Search input', event.target.value);
   };
 
   toggleSideNav = event => {
     this.setState({ open: !this.state.open });
-  };
-
-  openProfileFlyout = event => {
-    this.setState({ profileFlyoutOpen: true });
-  };
-
-  closeProfileFlyout = event => {
-    this.setState({ profileFlyoutOpen: false });
   };
 
   profileSignOutClick = event => {
@@ -113,10 +96,6 @@ class App extends React.Component {
     const nextTabs = Array.from(this.state.tabs);
     nextTabs.pop();
     this.setState({ tabs: nextTabs });
-  };
-
-  setActiveTab = activeTabIndex => {
-    this.setState({ activeTab: activeTabIndex });
   };
 
   render() {
@@ -227,26 +206,20 @@ class App extends React.Component {
               signOutLink="http://www.sanrio.com"
             />
 
-            <TopNavSearch
-              placeholder={this.state.searchPlaceholder}
-              onInput={this.handleInputChange}
-            />
+            <TopNavSearch onInput={this.handleTopNavSearchInputChange} />
 
           </TopNav>
           <SubNav
             moduleIndicatorName="Documents Library"
             moduleIndicatorIcon="hamburger"
           >
-            <Tabs>
+            <Tabs
+              onTabChange={tab => {
+                console.log('client tab handler');
+              }}
+            >
               {this.state.tabs.map((tab, i) => {
-                return (
-                  <Tab
-                    key={tab.id}
-                    label={tab.label}
-                    active={this.state.activeTab === tab.id}
-                    onClick={this.setActiveTab.bind(this, tab.id)}
-                  />
-                );
+                return <Tab key={tab.id} label={tab.label} />;
               })}
             </Tabs>
           </SubNav>

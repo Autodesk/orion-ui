@@ -19,35 +19,66 @@ import HIGElement from '../../HIGElement';
 import PropTypes from 'prop-types';
 
 export class Tab extends HIGElement {
+  constructor(HIGConstructor, initialProps) {
+    super(HIGConstructor, initialProps);
+
+    ['onActiveTab', 'callOnActiveTab', '_render'].forEach(fn => {
+      this[fn] = this[fn].bind(this);
+    });
+
+    this.state = {
+      active: false
+    };
+  }
+
   componentDidMount() {
-    if (this.initialProps.active) {
-      this.hig.activate();
-    } else {
-      this.hig.deactivate();
-    }
+    this.hig.onClick(this.callOnActiveTab);
+    this._render();
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
-    for (let i = 0; i < updatePayload.length; i += 2) {
-      const propKey = updatePayload[i];
-      const propValue = updatePayload[i + 1];
-
-      switch (propKey) {
-        case 'label':
-          this.hig.setLabel(propValue);
-          break;
-        case 'active':
-          if (propValue) {
-            this.hig.activate();
-          } else {
-            this.hig.deactivate();
-          }
-          break;
-        default: {
-          this.commitPropChange(propKey, propValue);
+    this.processUpdateProps(updatePayload)
+      .mapToHIGEventListeners(['onClick'])
+      .mapToHIGFunctions({
+        label: 'setLabel'
+      })
+      .handle('active', value => {
+        if (value) {
+          this.callOnActiveTab();
         }
-      }
+      })
+      .then(this._render);
+  }
+
+  callOnActiveTab() {
+    if (!this._onActiveTab) {
+      return;
     }
+
+    this._onActiveTab(this);
+  }
+
+  onActiveTab(callback) {
+    this._onActiveTab = callback;
+  }
+
+  activate() {
+    this.state.active = true;
+    this._render();
+  }
+
+  deactivate() {
+    this.state.active = false;
+    this._render();
+  }
+
+  _render() {
+    let active = this.props.active;
+    if (active === undefined) {
+      active = this.state.active;
+    }
+
+    active ? this.hig.activate() : this.hig.deactivate();
   }
 }
 
@@ -55,7 +86,8 @@ const TabComponent = createComponent(Tab);
 
 TabComponent.propTypes = {
   active: PropTypes.bool,
-  label: PropTypes.string
+  label: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 TabComponent.__docgenInfo = {
@@ -65,6 +97,9 @@ TabComponent.__docgenInfo = {
     },
     label: {
       description: 'sets the text of a tab'
+    },
+    onClick: {
+      description: 'calls provided handler when tab recieves a click'
     }
   }
 };

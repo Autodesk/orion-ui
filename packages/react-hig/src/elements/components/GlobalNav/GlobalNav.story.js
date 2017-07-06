@@ -27,6 +27,8 @@ const SectionList = GlobalNav.SideNav.SectionList;
 const Section = GlobalNav.SideNav.SectionList.Section;
 const Collapse = GlobalNav.SideNav.SectionList.Section.SectionCollapse;
 const Group = GlobalNav.SideNav.SectionList.Section.Group;
+const LinkList = GlobalNav.SideNav.LinkList;
+const Link = GlobalNav.SideNav.LinkList.Link;
 const Module = GlobalNav.SideNav.SectionList.Section.Group.Module;
 const ModuleCollapse = GlobalNav.SideNav.SectionList.Section.Group.Module.ModuleCollapse;
 const Submodule = GlobalNav.SideNav.SectionList.Section.Group.Module.Submodule;
@@ -43,6 +45,14 @@ const Tabs = GlobalNav.SubNav.Tabs;
 const Tab = GlobalNav.SubNav.Tabs.Tab;
 const Slot = GlobalNav.Slot;
 
+const links = [
+  { title: 'Autodesk Main', url: 'http://www.autodesk.com' },
+  {
+    title: 'AutoCAD',
+    url: 'https://www.autodesk.com/products/autocad/overview'
+  },
+  { title: 'Maya', url: 'https://www.autodesk.com/products/maya/overview' }
+];
 const LONG_COPY = (
   <div>
     <p>
@@ -177,7 +187,7 @@ storiesOf('GlobalNav', module)
         </SideNav>
         <TopNav logo={logo}>
           <ProjectAccountSwitcher
-            open={boolean(false)}
+            open={boolean('Project Account Switcher open:', false)}
             onProjectChange={action('Project activated')}
             onAccountChange={action('Account activated')}
           >
@@ -257,6 +267,19 @@ storiesOf('GlobalNav', module)
               </Group>
             </Section>
           </SectionList>
+
+          <LinkList>
+            {links.map((link, i) => {
+              return (
+                <Link
+                  title={text(`Link ${i + 1} title`, link.title)}
+                  link={link.url}
+                  key={i}
+                />
+              );
+            })}
+          </LinkList>
+
           <Search placeholder="Find module or submodule" />
         </SideNav>
         <TopNav logo={logo} />
@@ -426,6 +449,53 @@ storiesOf('GlobalNav', module)
               </Group>
             </Section>
           </SectionList>
+          <Search placeholder="Find module or submodule" />
+        </SideNav>
+        <TopNav logo={logo} />
+        <SubNav moduleIndicatorName="Insight" moduleIndicatorIcon="hamburger" />
+        <Slot>{LONG_COPY}</Slot>
+      </GlobalNav>
+    );
+  })
+  .addWithInfo('SideNav open w/ custom hover/click Links', ``, () => {
+    return (
+      <GlobalNav sideNavOpen={true}>
+        <SideNav>
+          <SectionList>
+            <Section headerLabel="Project" headerName="ThunderStorm">
+              <Group>
+                <Module icon="insight" title="Insight" key={'Insight'}>
+                  <Submodule
+                    title="Overview"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Extreme Risk"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                  <Submodule
+                    title="Calculated risk"
+                    link="#"
+                    onClick={action('clicked')}
+                  />
+                </Module>
+              </Group>
+            </Section>
+          </SectionList>
+          <LinkList>
+            <Link
+              title="Hello Kitty"
+              link="#"
+              onClick={action('I was clicked')}
+            />
+            <Link
+              title="Dear Daniel"
+              link="http://www.sanrio.com"
+              onHover={action("I'm being hovered")}
+            />
+          </LinkList>
           <Search placeholder="Find module or submodule" />
         </SideNav>
         <TopNav logo={logo} />

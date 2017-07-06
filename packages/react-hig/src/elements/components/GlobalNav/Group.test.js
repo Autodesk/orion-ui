@@ -58,6 +58,7 @@ function higContext() {
   const collapse1 = new higSection.partials.Collapse({});
 
   higSection.addCollapse(collapse1);
+  collapse1.minimize();
 
   const higGroup = new higSection.partials.Group();
 
@@ -76,6 +77,7 @@ describe('<Group>', () => {
         title: 'Module 1',
         link: '#'
       };
+
       const module1 = new higGroup.partials.Module(module1Defaults);
       higGroup.addModule(module1);
 
@@ -112,7 +114,8 @@ describe('<Group>', () => {
       const module1Defaults = {
         icon: 'project-management',
         title: 'Module 1',
-        link: '#'
+        link: '#',
+        key: '1'
       };
       const module1 = new higGroup.partials.Module(module1Defaults);
 
@@ -121,7 +124,8 @@ describe('<Group>', () => {
       const module2Defaults = {
         icon: 'project-management',
         title: 'Module 2',
-        link: '#'
+        link: '#',
+        key: '2'
       };
       const module2 = new higGroup.partials.Module(module2Defaults);
       higGroup.addModule(module2);

@@ -46,6 +46,9 @@ export class Group extends HIGElement {
 
   insertBefore(instance, insertBeforeIndex) {
     this.modules.insertBefore(instance, insertBeforeIndex);
+    if (this.mounted) {
+      this._render();
+    }
   }
 
   removeChild(instance) {
@@ -60,11 +63,26 @@ export class Group extends HIGElement {
     return this.state.isVisible;
   }
 
+  expandModules() {
+    this.modules.forEach(module => {
+      module.expandAll();
+    });
+    this._render();
+  }
+
+  collapseModules() {
+    this.modules.forEach(module => {
+      module.collapseAll();
+    });
+    this._render();
+  }
+
   _render() {
     const matches = this.modules.map(module => {
       module.commitUpdate({
         query: this.props.query,
-        expanded: this.props.expanded
+        activeModule: this.props.activeModule,
+        activeSubmodule: this.props.activeSubmodule
       });
 
       return module.isVisible();

@@ -37,6 +37,7 @@ export class Search extends HIGElement {
   }
 
   componentDidMount() {
+    this.clear();
     this.hig.onFocusIn(this.showClearIcon);
     this.hig.onFocusOut(this.hideClearIcon);
     this.hig.onClearIconClick(this.clear);

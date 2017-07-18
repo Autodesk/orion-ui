@@ -33,7 +33,9 @@
     "url": "https://github.com/orion-ui/orion/issues"
   },
   "homepage": "https://github.com/orion-ui/orion#readme",
-  "dependencies": {},
+  "dependencies": {
+    "sinon": "^2.3.8"
+  },
   "devDependencies": {
     "@kadira/storybook-addon-knobs": "^1.7.1",
     "@kadira/storybook-addons": "^1.6.1",

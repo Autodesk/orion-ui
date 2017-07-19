@@ -70,12 +70,32 @@ ButtonComponent.__docgenInfo = {
       description: 'sets the link of a button'
     },
 
+    size: {
+      description: 'specifies size of button'
+    },
+
+    type: {
+      description: 'specifies type of button'
+    },
+
+    icon: {
+      description: 'specifies icon for button'
+    },
+
     onClick: {
       description: 'triggers when you click the button'
     },
 
     onHover: {
       description: 'triggers when you hover over the button'
+    },
+
+    onFocus: {
+      description: 'triggers focus is moved to button'
+    },
+
+    onBlur: {
+      description: 'triggers blur when focuss is moved away from icon'
     }
   }
 };

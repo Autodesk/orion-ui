@@ -20,14 +20,13 @@ import React from 'react';
 
 import GlobalNav from './GlobalNav';
 import Tabs from './Tabs';
-import Tab from './Tab';
 
 const Context = props => {
   return (
     <GlobalNav>
       <GlobalNav.SubNav>
         <Tabs>
-          <Tab active={props.active} label={props.label} />
+          <Tabs.Tab active={props.active} label={props.label} key={props.id} />
         </Tabs>
       </GlobalNav.SubNav>
     </GlobalNav>
@@ -36,7 +35,7 @@ const Context = props => {
 
 describe('<Tab>', () => {
   it('renders a tab', () => {
-    const initialProps = { label: 'Such Tab', active: false };
+    const initialProps = { label: 'Such Tab', key: 1, id: 1 };
     const reactContainer = document.createElement('div');
     const wrapper = mount(<Context {...initialProps} />, {
       attachTo: reactContainer
@@ -46,8 +45,8 @@ describe('<Tab>', () => {
   });
 
   it('updates props', () => {
-    const initialProps = { label: 'Such Tab', active: false };
-    const updatedProps = { label: 'Many Tab', active: true };
+    const initialProps = { label: 'Such Tab', key: 2, id: 2 };
+    const updatedProps = { label: 'Many Tab', key: 3, id: 3 };
     const reactContainer = document.createElement('div');
     const wrapper = mount(<Context {...initialProps} />, {
       attachTo: reactContainer

@@ -14,86 +14,81 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-import createComponent from '../../../adapters/createComponent';
-import HIGElement from '../../HIGElement';
-import HIGNodeList from '../../HIGNodeList';
-import HIGChildValidator from '../../HIGChildValidator';
+import React from 'react';
 
-import TabComponent, { Tab } from './Tab';
+import TabsAdapter from '../../../adapters/TabsAdapter';
+import TabAdapter from '../../../adapters/TabAdapter';
 
-// Does not extend HIGElement because it's not a real HIG component
-export class Tabs extends HIGElement {
-  constructor(HigContructor, initialProps) {
-    super(HigContructor, initialProps);
-    this.tabs = new HIGNodeList({
-      type: Tab,
-      HIGConstructor: this.hig.partials.Tab,
-      onAdd: (instance, beforeInstance) => {
-        this.hig.addTab(instance, beforeInstance);
-      }
-    });
-    this.props = initialProps;
-    this.state = {};
-
-    ['setActiveTab'].forEach(fn => {
-      this[fn] = this[fn].bind(this);
-    });
-  }
-
-  componentDidMount() {
-    this.tabs.componentDidMount();
-    this._render();
-  }
-
-  createElement(ElementConstructor, props) {
-    return this.tabs.createElement(ElementConstructor, props);
-  }
-
-  insertBefore(instance, insertBeforeIndex) {
-    this.tabs.insertBefore(instance, insertBeforeIndex);
-    instance.onActiveTab(this.setActiveTab);
-    if (this.state.activeTab === undefined) {
-      this.state.activeTab = instance;
-    }
-  }
-
-  removeChild(instance) {
-    this.tabs.removeChild(instance);
-  }
-
-  commitUpdate(updatePayload, oldProps, newProp) {
-    this.props = { ...this.props, ...updatePayload };
-  }
-
-  setActiveTab(tab) {
-    this.state.activeTab = tab;
-    if (this.props.onTabChange) {
-      this.props.onTabChange(tab);
-    }
-    this._render();
-  }
-
-  _render() {
-    this.tabs.forEach(tab => {
-      this.state.activeTab === tab ? tab.activate() : tab.deactivate();
-    });
+class Tab extends React.Component {
+  // This is never actually rendered
+  render() {
+    return <div />;
   }
 }
 
-const TabsComponent = createComponent(Tabs);
+function isTab(child) {
+  return child != null && child.type === Tab;
+}
 
-TabsComponent.propTypes = {
-  children: HIGChildValidator([TabComponent])
-};
+class Tabs extends React.Component {
+  constructor(props) {
+    super(props);
+    const selectedTabId = this.getInitialSelectedTabId();
+    this.state = { selectedTabId };
+  }
 
-TabsComponent.__docgenInfo = {
-  props: {
-    children: {
-      description: 'support adding Tab components'
+  getInitialSelectedTabId() {
+    const { defaultSelectedTabId, selectedTabId } = this.props;
+
+    if (selectedTabId !== undefined) {
+      return selectedTabId;
+    } else if (defaultSelectedTabId !== undefined) {
+      return defaultSelectedTabId;
+    } else {
+      // select first tab in absence of user input
+      const tabs = this.getTabChildren();
+      return tabs.length === 0 ? undefined : tabs[0].props.id;
     }
   }
-};
+  getTabChildren() {
+    return React.Children.toArray(this.props.children).filter(isTab);
+  }
 
-TabsComponent.Tab = TabComponent;
+  render() {
+    const tabs = React.Children.map(
+      this.props.children,
+      child => isTab(child) ? this.renderTab(child) : null
+    );
+    return (
+      <TabsAdapter>
+        {tabs}
+      </TabsAdapter>
+    );
+  }
 
-export default TabsComponent;
+  renderTab(tab) {
+    const { id } = tab.props;
+
+    return (
+      <TabAdapter
+        {...tab.props}
+        active={id === this.state.selectedTabId}
+        onClick={this.handleTabClick.bind(this, id)}
+      />
+    );
+  }
+
+  handleTabClick(newTabId) {
+    if (this.props.onChange) {
+      this.props.onChange(newTabId, this.state.selectedTabId);
+    }
+
+    if (this.props.selectedTabId === undefined) {
+      this.setState({ selectedTabId: newTabId });
+    }
+  }
+}
+
+Tabs.Tab = Tab;
+
+export default Tabs;

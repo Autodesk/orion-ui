@@ -44,7 +44,7 @@ const Project = GlobalNav.TopNav.ProjectAccountSwitcher.Project;
 const TopNavSearch = GlobalNav.TopNav.Search;
 const SubNav = GlobalNav.SubNav;
 const Tabs = GlobalNav.SubNav.Tabs;
-const Tab = GlobalNav.SubNav.Tabs.Tab;
+
 const Slot = GlobalNav.Slot;
 
 const topNavFixtures = new TopNavFixtures();
@@ -149,7 +149,6 @@ class App extends React.Component {
                           </Module>
                         );
                       })}
-
                     </Group>
                   );
                 })}
@@ -236,20 +235,19 @@ class App extends React.Component {
             />
 
             <TopNavSearch onInput={this.handleTopNavSearchInputChange} />
-
           </TopNav>
           <SubNav
             moduleIndicatorName="Documents Library"
             moduleIndicatorIcon="hamburger"
           >
             <Tabs
-              onTabChange={tab => {
-                console.log('client tab handler');
-              }}
+              defaultSelectedTabId={this.state.tabs[0].id}
+              onChange={(newTabId, oldTabId) =>
+                console.log(`New Tab: ${newTabId}`)}
             >
-              {this.state.tabs.map((tab, i) => {
-                return <Tab key={tab.id} label={tab.label} />;
-              })}
+              {this.state.tabs.map(tab => (
+                <Tabs.Tab key={tab.id} id={tab.id} label={tab.label} />
+              ))}
             </Tabs>
           </SubNav>
 
@@ -398,7 +396,11 @@ class App extends React.Component {
             </div>
 
             {topNavFixtures.hipsterContent().map((paragraph, i) => {
-              return <p key={i}>{paragraph}</p>;
+              return (
+                <p key={i}>
+                  {paragraph}
+                </p>
+              );
             })}
           </Slot>
         </GlobalNav>

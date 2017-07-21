@@ -1,22 +1,28 @@
 /**
-Copyright 2016 Autodesk,Inc.
+ Copyright 2016 Autodesk,Inc.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
 
-*/
+ */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, GlobalNav, IconButton } from './react-hig';
+import {
+  Button,
+  GlobalNav,
+  IconButton,
+  Checkbox,
+  RadioButton
+} from './react-hig';
 
 import 'hig.web/dist/hig.css';
 import './index.css';
@@ -58,6 +64,12 @@ const links = [
   { title: 'Maya', url: 'https://www.autodesk.com/products/maya/overview' }
 ];
 
+const checkboxStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between'
+};
+
 class App extends React.Component {
   constructor() {
     super();
@@ -70,6 +82,10 @@ class App extends React.Component {
       modules: []
     };
   }
+
+  logEvent = event => {
+    console.log(event.type);
+  };
 
   handleChange = event => {
     const buttonLabel = event.target.value;
@@ -258,7 +274,6 @@ class App extends React.Component {
               onChange={this.handleChange}
             />
             <div>
-
               <Button title="Add tab before" onClick={this.addTabBefore} />
               <Button title="Add tab after" onClick={this.addTabAfter} />
 
@@ -394,7 +409,6 @@ class App extends React.Component {
                 }}
               />
             </div>
-
             {topNavFixtures.hipsterContent().map((paragraph, i) => {
               return (
                 <p key={i}>
@@ -402,6 +416,77 @@ class App extends React.Component {
                 </p>
               );
             })}
+            <hr />
+            <div style={checkboxStyle}>
+              <h3>Checkbox elements</h3>
+              <Checkbox
+                label="I AGREE"
+                name="tsandcs"
+                value="asd"
+                required="true"
+              />
+              <Checkbox
+                label="Not required"
+                name="tsandcs"
+                value="dfdf"
+                required="false"
+              />
+              <Checkbox
+                label="Disabled"
+                name="tsandcs"
+                value="hhh"
+                disabled="true"
+              />
+              <Checkbox
+                label="Checked"
+                name="tsandcs"
+                value="werr"
+                checked="true"
+              />
+              <Checkbox name="nolabel" value="somevalue" />
+              <Checkbox
+                label="Click me"
+                onHover={this.logEvent}
+                onChange={this.logEvent}
+                onFocus={this.logEvent}
+              />
+            </div>
+            <div style={checkboxStyle}>
+              <h3>Radio Button elements</h3>
+              <div>empty button<RadioButton /></div><hr />
+              <RadioButton
+                label="I AGREE"
+                name="tsandcs"
+                value="asd"
+                required="true"
+              />
+              <RadioButton
+                label="Not required"
+                name="tsandcs"
+                value="dfdf"
+                required="false"
+              />
+              <RadioButton
+                label="Disabled"
+                name="tsandcs"
+                value="hhh"
+                disabled="true"
+              />
+              <RadioButton
+                label="Checked"
+                name="tsandcs"
+                value="werr"
+                checked="true"
+              />
+              {' '}
+              <hr />
+              <RadioButton
+                label="Click me"
+                onHover={this.logEvent}
+                onChange={this.logEvent}
+                onFocus={this.logEvent}
+              />
+            </div>
           </Slot>
         </GlobalNav>
       </div>

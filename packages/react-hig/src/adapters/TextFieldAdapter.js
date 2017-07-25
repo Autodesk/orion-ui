@@ -25,13 +25,8 @@ class TextFieldAdapter extends HIGElement {
     super(HIG.TextField, initialProps);
   }
 
-  componentDidMount() {
-    this.commitUpdate([
-      'disabled',
-      this.initialProps.disabled,
-      'required',
-      this.initialProps.required
-    ]);
+  forceReset(props) {
+    this.commitUpdate(['value', props.value]);
   }
 
   commitUpdate(updatePayload, oldProps, newProps) {
@@ -67,7 +62,10 @@ class TextFieldAdapter extends HIGElement {
             dispose();
           }
 
-          this._disposeFunctions.set('onBlur', this.hig.onBlur(propValue));
+          this._disposeFunctions.set(
+            'onBlurDispose',
+            this.hig.onBlur(propValue)
+          );
           break;
         }
         case 'onChange': {
@@ -77,7 +75,10 @@ class TextFieldAdapter extends HIGElement {
             dispose();
           }
 
-          this._disposeFunctions.set('onChange', this.hig.onChange(propValue));
+          this._disposeFunctions.set(
+            'onChangeDispose',
+            this.hig.onChange(propValue)
+          );
           break;
         }
         case 'onFocus': {
@@ -87,7 +88,10 @@ class TextFieldAdapter extends HIGElement {
             dispose();
           }
 
-          this._disposeFunctions.set('onFocus', this.hig.onFocus(propValue));
+          this._disposeFunctions.set(
+            'onFocusDispose',
+            this.hig.onFocus(propValue)
+          );
           break;
         }
         case 'onInput': {
@@ -97,7 +101,10 @@ class TextFieldAdapter extends HIGElement {
             dispose();
           }
 
-          this._disposeFunctions.set('onInput', this.hig.onInput(propValue));
+          this._disposeFunctions.set(
+            'onInputDispose',
+            this.hig.onInput(propValue)
+          );
           break;
         }
         case 'placeholder': {
@@ -115,7 +122,9 @@ class TextFieldAdapter extends HIGElement {
           break;
         }
         default: {
-          return;
+          console.warn(
+            `${this.constructor.name} doesn't handle the prop ${propKey}`
+          );
         }
       }
     }
@@ -135,46 +144,8 @@ TextFieldComponent.propTypes = {
   onFocus: PropTypes.func,
   onInput: PropTypes.func,
   placeholder: PropTypes.string,
-  required: PropTypes.bool,
+  required: PropTypes.string,
   value: PropTypes.string
-};
-
-TextFieldComponent.__docgenInfo = {
-  props: {
-    disabled: {
-      description: 'prevents interaction with the text field'
-    },
-    icon: {
-      description: 'icon for the text field'
-    },
-    instructions: {
-      description: 'instructional text for the text field'
-    },
-    label: {
-      description: 'label for the text field'
-    },
-    name: {
-      description: 'name of the field as submitted with a form'
-    },
-    onBlur: {
-      description: 'callback called when user moves focus away from the text field'
-    },
-    onChange: {
-      description: 'callback called when user changes the value of the text field and moves focus away'
-    },
-    onFocus: {
-      description: 'callback called when user moves focus onto the text field'
-    },
-    onInput: {
-      description: 'callback called when user changes the value of the text field'
-    },
-    placeholder: {
-      description: 'text prompting the user to enter text'
-    },
-    required: {
-      description: 'text indicating that the user must enter a value for this text field'
-    }
-  }
 };
 
 export default TextFieldComponent;

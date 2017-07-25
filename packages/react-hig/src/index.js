@@ -82,6 +82,8 @@ class App extends React.Component {
       accounts: topNavFixtures.accountList(),
       modules: []
     };
+
+    this.setTextFieldValue = this.setTextFieldValue.bind(this);
   }
 
   handleTopNavSearchInputChange = event => {
@@ -128,6 +130,13 @@ class App extends React.Component {
       messageParts = messageParts.concat(`: ${event.target.value}`);
     }
     console.log(messageParts.join(''));
+  }
+
+  setTextFieldValue(event) {
+    this.logEvent(event, TextField);
+    this.setState({
+      textFieldValue: event.target.value
+    });
   }
 
   render() {
@@ -374,6 +383,7 @@ class App extends React.Component {
                 }}
               />
             </section>
+
             <section>
               <h3>Icon Button</h3>
               <IconButton
@@ -413,6 +423,7 @@ class App extends React.Component {
                 }}
               />
             </section>
+
             <section>
               <h3>Checkbox</h3>
               <div style={checkboxStyle}>
@@ -420,25 +431,20 @@ class App extends React.Component {
                   label="I AGREE"
                   name="tsandcs"
                   value="asd"
-                  required="true"
+                  required={true}
                 />
-                <Checkbox
-                  label="Not required"
-                  name="tsandcs"
-                  value="dfdf"
-                  required="false"
-                />
+                <Checkbox label="Not required" name="tsandcs" value="dfdf" />
                 <Checkbox
                   label="Disabled"
                   name="tsandcs"
                   value="hhh"
-                  disabled="true"
+                  disabled={true}
                 />
                 <Checkbox
                   label="Checked"
                   name="tsandcs"
                   value="werr"
-                  checked="true"
+                  checked={true}
                 />
                 <Checkbox name="nolabel" value="somevalue" />
                 <Checkbox
@@ -449,6 +455,7 @@ class App extends React.Component {
                 />
               </div>
             </section>
+
             <section>
               <h3>Radio Button</h3>
               <div style={checkboxStyle}>
@@ -487,6 +494,7 @@ class App extends React.Component {
                 />
               </div>
             </section>
+
             <section>
               <h3>TextField</h3>
               <TextField
@@ -495,7 +503,8 @@ class App extends React.Component {
                 onBlur={this.logEvent}
                 onChange={this.logEvent}
                 onFocus={this.logEvent}
-                onInput={this.logEvent}
+                onInput={this.setTextFieldValue}
+                value={this.state.textFieldValue}
               />
             </section>
 

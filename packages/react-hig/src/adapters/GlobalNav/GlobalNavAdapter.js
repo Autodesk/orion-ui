@@ -17,26 +17,24 @@ limitations under the License.
 import * as HIG from 'hig.web';
 import * as PropTypes from 'prop-types';
 
-import HIGElement from '../../HIGElement';
-import HIGChildValidator from '../../HIGChildValidator';
-import createComponent from '../../../adapters/createComponent';
+import HIGElement from '../../elements/HIGElement';
+import HIGChildValidator from '../../elements/HIGChildValidator';
+import createComponent from '../createComponent';
 
-import SideNavComponent, { SideNav } from './SideNav';
-import TopNavComponent, { TopNav } from './TopNav/TopNav';
-import SubNavComponent, { SubNav } from './SubNav';
-import Slot from './Slot';
+import SideNavComponent, {
+  SideNav
+} from '../../elements/components/GlobalNav/SideNav';
+import TopNavComponent, {
+  TopNav
+} from '../../elements/components/GlobalNav/TopNav/TopNav';
+import SubNavComponent, {
+  SubNav
+} from '../../elements/components/GlobalNav/SubNav';
+import Slot from '../../elements/components/GlobalNav/Slot';
 
 class GlobalNav extends HIGElement {
   constructor(initialProps) {
     super(HIG.GlobalNav, initialProps);
-
-    ['_toggleSideNav', '_render'].forEach(fn => {
-      this[fn] = this[fn].bind(this);
-    });
-
-    this.state = {
-      sideNavOpen: false
-    };
   }
 
   componentDidMount() {
@@ -66,8 +64,6 @@ class GlobalNav extends HIGElement {
     if (this.slot) {
       this.hig.addSlot(this.slot);
     }
-
-    this._render();
   }
 
   createElement(ElementConstructor, props) {
@@ -144,28 +140,24 @@ class GlobalNav extends HIGElement {
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
-    this.processUpdateProps(updatePayload)
-      .handle('sideNavOpen', value => {
-        this.state.sideNavOpen = value;
-      })
-      .then(this._render);
-  }
+    for (let i = 0; i < updatePayload.length; i += 2) {
+      const propKey = updatePayload[i];
+      const propValue = updatePayload[i + 1];
 
-  _toggleSideNav() {
-    this.state.sideNavOpen = !this.state.sideNavOpen;
-    this._render();
+      switch (propKey) {
+        case 'sideNavOpen': {
+          propValue ? this.hig.showSideNav() : this.hig.hideSideNav();
+          break;
+        }
+        default: {
+          console.warn(`${propKey} is unknown`);
+        }
+      }
+    }
   }
 
   _addSideNavOpenCallback(topNavInstance) {
     topNavInstance.onHamburgerClick(this._toggleSideNav);
-  }
-
-  _render() {
-    let sideNavOpen = this.props.sideNavOpen;
-    if (sideNavOpen === undefined) {
-      sideNavOpen = this.state.sideNavOpen;
-    }
-    sideNavOpen ? this.hig.showSideNav() : this.hig.hideSideNav();
   }
 }
 

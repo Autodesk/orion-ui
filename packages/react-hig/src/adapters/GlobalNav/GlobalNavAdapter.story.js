@@ -19,7 +19,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { select, boolean, text } from '@storybook/addon-knobs';
 
-import GlobalNav from './GlobalNav';
+import GlobalNav from './GlobalNavAdapter';
 
 const SideNav = GlobalNav.SideNav;
 const Search = GlobalNav.SideNav.Search;
@@ -119,12 +119,12 @@ const LONG_COPY = (
   </div>
 );
 
-import logo from '../../../images/bim-logo.png';
-import profileImage from '../../../images/profileImage.png';
-import project1 from '../../../images/project-1.png';
-import project2 from '../../../images/project-2.png';
-import project3 from '../../../images/project-3.png';
-import project4 from '../../../images/project-4.png';
+import logo from '../../images/bim-logo.png';
+import profileImage from '../../images/profileImage.png';
+import project1 from '../../images/project-1.png';
+import project2 from '../../images/project-2.png';
+import project3 from '../../images/project-3.png';
+import project4 from '../../images/project-4.png';
 
 storiesOf('GlobalNav', module)
   .addWithInfo('default', <div><p>Global Nav basic usage</p></div>, () => {

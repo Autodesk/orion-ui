@@ -16,52 +16,68 @@ limitations under the License.
 */
 
 import * as PropTypes from 'prop-types';
-import HIGElement from '../../../HIGElement';
-import createComponent from '../../../../adapters/createComponent';
+import createComponent from './createComponent';
+import HIGElement from '../elements/HIGElement';
 
-export class Account extends HIGElement {
+export class AccountAdapter extends HIGElement {
   constructor(HIGConstructor, initialProps) {
     super(HIGConstructor, initialProps);
 
     this.props = { ...initialProps };
-    this.callOnActivateCallback = this.callOnActivateCallback.bind(this);
   }
 
   componentDidMount() {
-    this.hig.onClick(this.callOnActivateCallback);
+    if (this.initialProps.active) {
+      this.hig.activate();
+    } else {
+      this.hig.deactivate();
+    }
   }
 
   commitUpdate(updatePayload, oldProps, newProp) {
-    this.processUpdateProps(updatePayload)
-      .mapToHIGFunctions({
-        image: 'setImage',
-        label: 'setLabel'
-      })
-      .mapToHIGEventListeners(['onClick'])
-      .handle('active', value => {
-        if (value) {
-          this.hig.activate();
-          this.callOnActivateCallback();
-        } else {
-          this.hig.deactivate();
+    for (let i = 0; i < updatePayload.length; i += 2) {
+      const propKey = updatePayload[i];
+      const propValue = updatePayload[i + 1];
+
+      switch (propKey) {
+        case 'active': {
+          if (propValue) {
+            this.hig.activate();
+          } else {
+            this.hig.deactivate();
+          }
+          break;
         }
-      });
-  }
+        case 'image': {
+          this.hig.setImage(propValue);
+          break;
+        }
+        case 'label': {
+          this.hig.setLabel(propValue);
+          break;
+        }
+        case 'onClick': {
+          const dispose = this._disposeFunctions.get('onClickDispose');
 
-  onActivate(callback) {
-    this._onActivate = callback;
-  }
+          if (dispose) {
+            dispose();
+          }
 
-  callOnActivateCallback() {
-    if (!this._onActivate) {
-      return;
+          this._disposeFunctions.set(
+            'onClickDispose',
+            this.hig.onClick(propValue)
+          );
+          break;
+        }
+        default: {
+          console.warn(`${propKey} is unknown`);
+        }
+      }
     }
-
-    this._onActivate(this);
   }
 }
 
-const AccountComponent = createComponent(Account);
+const AccountComponent = createComponent(AccountAdapter);
 
 AccountComponent.propTypes = {
   image: PropTypes.string,

@@ -19,7 +19,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { select, boolean, text } from '@storybook/addon-knobs';
 
-import GlobalNav from '../../../../adapters/GlobalNav/GlobalNavAdapter';
+import GlobalNav from './GlobalNav/GlobalNavAdapter';
 
 const SideNav = GlobalNav.SideNav;
 const Search = GlobalNav.SideNav.Search;
@@ -43,12 +43,12 @@ const Tabs = GlobalNav.SubNav.Tabs;
 const Tab = GlobalNav.SubNav.Tabs.Tab;
 const Slot = GlobalNav.Slot;
 
-import logo from '../../../../images/bim-logo.png';
-import profileImage from '../../../../images/profileImage.png';
-import project1 from '../../../../images/project-1.png';
-import project2 from '../../../../images/project-2.png';
-import project3 from '../../../../images/project-3.png';
-import project4 from '../../../../images/project-4.png';
+import logo from '../images/bim-logo.png';
+import profileImage from '../images/profileImage.png';
+import project1 from '../images/project-1.png';
+import project2 from '../images/project-2.png';
+import project3 from '../images/project-3.png';
+import project4 from '../images/project-4.png';
 
 storiesOf('ProjectAccountSwitcher', module)
   .addWithInfo('with multiple projects and accounts', '', () => {
@@ -56,13 +56,35 @@ storiesOf('ProjectAccountSwitcher', module)
       <GlobalNav>
         <TopNav logo={logo}>
           <ProjectAccountSwitcher
-            onProjectChange={action('Project activated')}
-            onAccountChange={action('Account activated')}
+            activeLabel="Hospital Builders / Oakland Medical Center"
+            activeImage={project1}
+            activeType={'project'}
+            open={true}
+            onClickOutside={action('clicked outside')}
+            onClick={action('clicked')}
+            showCaret={true}
           >
-            <Account image={project1} label="Hospital Builders" />
-            <Account image={project2} label="DPI Construction" />
-            <Project image={project3} label="Oakland Medical Center" />
-            <Project image={project4} label="Stanford Hospital" />
+            <Account
+              image={project1}
+              label="Hospital Builders"
+              active={true}
+              onClick={action('clicked account')}
+            />
+            <Account
+              image={project2}
+              label="DPI Construction"
+              onClick={action('clicked account')}
+            />
+            <Project
+              image={project3}
+              label="Oakland Medical Center"
+              active={true}
+            />
+            <Project
+              image={project4}
+              label="Stanford Hospital"
+              onClick={action('clicked account')}
+            />
           </ProjectAccountSwitcher>
           <Profile />
         </TopNav>
@@ -83,7 +105,15 @@ storiesOf('ProjectAccountSwitcher', module)
     return (
       <GlobalNav>
         <TopNav logo={logo}>
-          <ProjectAccountSwitcher>
+          <ProjectAccountSwitcher
+            activeLabel="Hospital Builders / Oakland Medical Center"
+            activeImage={project1}
+            activeType={'project'}
+            open={false}
+            onClickOutside={null}
+            onClick={null}
+            showCaret={false}
+          >
             <Account image={project1} label="Hospital Builders" />
             <Project image={project3} label="Oakland Medical Center" />
           </ProjectAccountSwitcher>

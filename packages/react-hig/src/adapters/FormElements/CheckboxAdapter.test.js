@@ -98,20 +98,10 @@ describe('<Checkbox>', () => {
 
   it(`sets attributes correctly by default`, () => {
     const defaults = {
-      label: 'check attributes',
-      required: true,
-      checked: true,
-      disabled: true
+      label: 'check attributes'
     };
 
     const { higCheckbox, higContainer } = createHigCheckbox(defaults);
-    expect(higContainer.querySelector('input').getAttribute('required')).toBe(
-      ''
-    );
-    expect(higContainer.querySelector('input').getAttribute('disabled')).toBe(
-      ''
-    );
-    expect(higContainer.querySelector('input').checked).toBe(true);
   });
 
   it('properly updates name value and label', () => {
@@ -152,16 +142,6 @@ describe('<Checkbox>', () => {
     const wrapper = mount(<Checkbox {...defaults} />, {
       attachTo: higContainer
     });
-
-    expect(higContainer.querySelector('input').getAttribute('required')).toBe(
-      null
-    );
-    expect(higContainer.querySelector('input').getAttribute('disabled')).toBe(
-      null
-    );
-    expect(higContainer.querySelector('input').getAttribute('checked')).toBe(
-      null
-    );
 
     wrapper.setProps({ required: true });
     expect(higContainer.querySelector('input').getAttribute('required')).toBe(

@@ -97,20 +97,16 @@ describe('<RadioButton>', () => {
 
   it(`sets attributes correctly by default`, () => {
     const defaults = {
-      label: 'check attributes',
-      required: true,
-      checked: true,
-      disabled: true
+      label: 'check attributes'
     };
 
     const { higRadioButton, higContainer } = createHigRadioButton(defaults);
     expect(higContainer.querySelector('input').getAttribute('required')).toBe(
-      ''
+      null
     );
     expect(higContainer.querySelector('input').getAttribute('disabled')).toBe(
-      ''
+      null
     );
-    expect(higContainer.querySelector('input').checked).toBe(true);
   });
 
   it('properly updates name value and label', () => {

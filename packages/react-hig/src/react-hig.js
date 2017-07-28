@@ -24,3 +24,6 @@ export {
 } from './adapters/FormElements/RadioButtonAdapter';
 export { default as TextField } from './adapters/FormElements/TextFieldAdapter';
 export { default as TextArea } from './adapters/FormElements/TextAreaAdapter';
+export {
+  default as FilterableSideNav
+} from './elements/components/GlobalNav/FilterableSideNav';

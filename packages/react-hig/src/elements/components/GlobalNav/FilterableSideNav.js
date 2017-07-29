@@ -22,9 +22,11 @@ export default class FilterableSideNav extends Component {
         PropTypes.shape({
           groups: PropTypes.arrayOf(
             PropTypes.shape({
-              modules: PropTypes.shape({
-                submodules: PropTypes.arrayOf(PropTypes.object)
-              })
+              modules: PropTypes.arrayOf(
+                PropTypes.shape({
+                  submodules: PropTypes.arrayOf(PropTypes.object)
+                })
+              )
             })
           )
         })
@@ -35,13 +37,47 @@ export default class FilterableSideNav extends Component {
   render() {
     return (
       <SideNav>
-        {
-          <LinkList>
-            {this.props.items.links.map((link, i) => {
-              return <Link {...link} key={link.title} />;
-            })}
-          </LinkList>
-        }
+        <SectionList>
+          {this.props.items.sections.map(section => {
+            return (
+              <Section {...section}>
+                <SectionCollapse />
+                {section.groups.map((group, i) => {
+                  return (
+                    <Group key={i}>
+                      {group.modules.map(module => {
+                        return (
+                          <Module
+                            icon={module.icon}
+                            contentImage={module.contentImage}
+                            title={module.label}
+                            key={module.label}
+                          >
+                            <ModuleCollapse />
+                            {module.submodules.map(submodule => {
+                              return (
+                                <Submodule
+                                  title={submodule.label}
+                                  link="#"
+                                  key={submodule.label}
+                                />
+                              );
+                            })}
+                          </Module>
+                        );
+                      })}
+                    </Group>
+                  );
+                })}
+              </Section>
+            );
+          })}
+        </SectionList>
+        <LinkList>
+          {this.props.items.links.map((link, i) => {
+            return <Link {...link} key={link.title} />;
+          })}
+        </LinkList>
       </SideNav>
     );
   }

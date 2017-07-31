@@ -19,7 +19,7 @@ import HIGElement from '../../../elements/HIGElement';
 import HIGNodeList from '../../../elements/HIGNodeList';
 import HIGChildValidator from '../../../elements/HIGChildValidator';
 import ModuleComponent, {
-  Module
+  ModuleAdapter
 } from '../../../adapters/GlobalNav/SideNav/ModuleAdapter';
 
 export class GroupAdapter extends HIGElement {
@@ -27,7 +27,7 @@ export class GroupAdapter extends HIGElement {
     super(HIGConstructor, initialProps);
 
     this.modules = new HIGNodeList({
-      type: Module,
+      type: ModuleAdapter,
       HIGConstructor: this.hig.partials.Module,
       onAdd: (instance, beforeInstance) => {
         this.hig.addModule(instance, beforeInstance);

@@ -19,14 +19,14 @@ import createComponent from '../../createComponent';
 import HIGElement from '../../../elements/HIGElement';
 import HIGNodeList from '../../../elements/HIGNodeList';
 import HIGChildValidator from '../../../elements/HIGChildValidator';
-import SubmoduleComponent, {
+import SubmoduleAdapterComponent, {
   SubmoduleAdapter
 } from '../../../adapters/GlobalNav/SideNav/SubmoduleAdapter';
 import ModuleCollapseComponent, {
   ModuleCollapseAdapter
 } from './ModuleCollapseAdapter';
 
-export class Module extends HIGElement {
+export class ModuleAdapter extends HIGElement {
   constructor(HIGConstructor, initialProps) {
     super(HIGConstructor, initialProps);
 
@@ -152,19 +152,22 @@ export class Module extends HIGElement {
   }
 }
 
-const ModuleComponent = createComponent(Module);
+const ModuleAdapterComponent = createComponent(ModuleAdapter);
 
-ModuleComponent.propTypes = {
+ModuleAdapterComponent.propTypes = {
   icon: PropTypes.string,
   title: PropTypes.string,
   link: PropTypes.string,
   active: PropTypes.bool,
   onClick: PropTypes.func,
   onHover: PropTypes.func,
-  children: HIGChildValidator([SubmoduleComponent, ModuleCollapseComponent])
+  children: HIGChildValidator([
+    SubmoduleAdapterComponent,
+    ModuleCollapseComponent
+  ])
 };
 
-ModuleComponent.__docgenInfo = {
+ModuleAdapterComponent.__docgenInfo = {
   props: {
     icon: {
       description: 'sets the icon of an Module'
@@ -196,7 +199,7 @@ ModuleComponent.__docgenInfo = {
   }
 };
 
-ModuleComponent.Submodule = SubmoduleComponent;
-ModuleComponent.ModuleCollapse = ModuleCollapseComponent;
+ModuleAdapterComponent.Submodule = SubmoduleAdapterComponent;
+ModuleAdapterComponent.ModuleCollapse = ModuleCollapseComponent;
 
-export default ModuleComponent;
+export default ModuleAdapterComponent;

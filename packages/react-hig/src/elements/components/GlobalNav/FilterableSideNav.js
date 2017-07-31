@@ -20,6 +20,8 @@ export default class FilterableSideNav extends Component {
       links: PropTypes.arrayOf(PropTypes.object),
       sections: PropTypes.arrayOf(
         PropTypes.shape({
+          headerLabel: PropTypes.string,
+          headerName: PropTypes.string,
           groups: PropTypes.arrayOf(
             PropTypes.shape({
               modules: PropTypes.arrayOf(
@@ -40,7 +42,10 @@ export default class FilterableSideNav extends Component {
         <SectionList>
           {this.props.items.sections.map(section => {
             return (
-              <Section {...section}>
+              <Section
+                {...section}
+                key={`${section.headerLabel}-${section.headerName}`}
+              >
                 <SectionCollapse />
                 {section.groups.map((group, i) => {
                   return (

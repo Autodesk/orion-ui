@@ -26,24 +26,16 @@ storiesOf('TextAreaAdapter', module)
     return (
       <TextAreaAdapter
         disabled={boolean('Disabled', false)}
-        instructions={text('Instructions', '')}
         label={text('Label', 'My text field')}
-        name={text('Name', 'my-text-field')}
         onBlur={action('blur')}
         onChange={action('change')}
         onFocus={action('focus')}
         onInput={action('input')}
-        placeholder={text('Placeholder', 'Tell me how you really feel')}
         required={text('Required', '')}
       />
     );
   })
   .addWithInfo('With no label and no events', ``, () => {
-    const iconOptions = {
-      assets: 'Assets',
-      gear: 'Gear'
-    };
-
     return (
       <TextAreaAdapter
         disabled={boolean('Disabled', false)}
